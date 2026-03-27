@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Tax Invoice - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+    }
+
+    .page {
+      width: 750px;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .top-bar {
+      background: #1987c8;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      margin-bottom: 1px;
+    }
+    .top-bar-title {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    .top-bar-title .slash { color: #aaa; margin: 0 8px; font-weight: normal; }
+    .top-bar-title .ar   { font-size: 14px; font-weight: normal; direction: rtl; }
+    .top-bar-invno {
+      font-size: 14px;
+      font-weight: bold;
+      color: #f0a500;
+      letter-spacing: 0.5px;
+    }
+
+    .sec-label {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #000;
+      text-transform: uppercase;
+    }
+    .sec-label .ar { direction: rtl; font-size: 10px; }
+
+    .b1-wrap {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+    }
+    .b1-buyer,
+    .b1-invoice     { flex: 1; padding: 10px 14px; }
+    .b1-buyer       { border-right: 1px solid #ddd; }
+
+    .field-row {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+    .field-lbl {
+      color: #999;
+      min-width: 120px;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .field-val {
+      font-size: 11px;
+      color: #000;
+      font-weight: normal;
+    }
+    .field-val.highlight { color: #f0a500; font-weight: bold; }
+
+    .line-sec-bar {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      gap: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    .line-sec-bar .line { flex: 1; height: 1px; background: #ccc; }
+    .line-sec-bar .lbl  { font-size: 10px; color: #555; white-space: nowrap; }
+    .line-sec-bar .ar   { direction: rtl; font-size: 10px; color: #555; }
+
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .items-table thead tr {
+      background: #1987c8;
+      color: #fff;
+    }
+    .items-table th {
+      padding: 5px 4px;
+      font-size: 10px;
+      font-weight: bold;
+      text-align: center;
+      border: none;
+    }
+    .items-table th.th-desc { text-align: left; }
+    .items-table th .ar {
+      display: block;
+      direction: rtl;
+      font-size: 9px;
+      font-weight: normal;
+      color: #fff;
+    }
+    .items-table td {
+      padding: 4px 4px;
+      font-size: 11px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .items-table td.td-desc { text-align: left; }
+    .items-table td.td-total { font-weight: bold; color: #000; }
+
+    .items-total-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 6px 12px;
+      background: #f5f5f5;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      gap: 16px;
+      font-size: 11px;
+    }
+    .items-total-row .tot-lbl { color: #555; }
+    .items-total-row .tot-val { font-weight: bold; font-size: 12px; min-width: 100px; text-align: right; }
+
+    .fin-wrap {
+      display: flex;
+      border-top: none;
+      margin-top: 0;
+      padding: 0 0 10px 0;
+    }
+    .fin-left {
+      flex: 0 0 42%;
+      border-right: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+    .qr-wrapper img {
+      width: 100px;
+      height: 100px;
+      display: block;
+    }
+    .fin-right {
+      flex: 1;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .fin-sec-lbl {
+      padding: 6px 8px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      font-size: 10px;
+      color: #888;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+    }
+    .fin-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 8px;
+      border-bottom: 1px solid #eee;
+      font-size: 11px;
+    }
+    .fin-row:last-child     { border-bottom: none; }
+    .fin-row .f-lbl         { color: #000; }
+    .fin-row .f-lbl.orange  { color: #e07000; }
+    .fin-row .f-lbl.bold    { font-weight: bold; }
+    .fin-row .f-amt         { text-align: right; min-width: 120px; }
+    .fin-row .f-amt.deduct  { color: #c00; }
+    .fin-row .f-amt.add     { color: #000; }
+    .fin-row .f-amt.bold    { font-weight: bold; }
+
+    .fin-row-dark {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: #1987c8;
+      color: #fff;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 0 0 5px 5px;
+    }
+    .fin-row-dark .f-amt {
+      color: #f0a500;
+      text-align: right;
+      font-size: 13px;
+    }
+
+    .words-box {
+      border: 1px solid #e8d98a;
+      background: #fffbe6;
+      margin: 2px 0;
+      border-radius: 6px;
+      padding: 5px 6px;
+    }
+    .words-title {
+      font-size: 9px;
+      font-weight: bold;
+      color: #b8960a;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .words-text {
+      font-size: 11px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .bank-row-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid #f5f5f5;
+      font-size: 10px;
+    }
+    .bank-row-item:last-child { border-bottom: none; }
+    .bank-row-item .bk-key   { color: #999; flex-shrink: 0; }
+    .bank-row-item .bk-val   { color: #000; text-align: right; }
+    .bank-row-item .bk-val.iban { color: #f0a500; font-weight: bold; }
+
+    .pay-col { flex: 1; padding: 0; border: 1px solid #ddd; }
+    .sub-sec-lbl {
+      font-size: 11px;
+      font-weight: bold;
+      padding: 6px 6px;
+      color: #000;
+      margin-top: 3px;
+    }
+    .pay-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 10px;
+      border-top: none;
+      font-size: 11px;
+    }
+    .pay-row:first-of-type { border-top: 1px solid #ccc; }
+    .pay-row .pk-lbl          { color: #000; flex: 1; }
+    .pay-row .pk-val          { font-weight: bold; text-align: right; min-width: 120px; white-space: nowrap; }
+    .pay-row .pk-val.negative { color: #000; }
+
+    .seal-img { max-height: 80px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  {{!-- TOP HEADER BAR --}}
+  <div class="top-bar">
+    <div class="top-bar-title">
+      <span class="ar">فاتورة ضريبية</span>
+      <span class="slash"> / </span>
+      <span>TAX INVOICE</span>
+    </div>
+    <div class="top-bar-invno">{{basicdetails.[0].inv_no}}</div>
+  </div>
+
+  {{!-- BLOCK 1 — BUYER | INVOICE DETAILS --}}
+  <div class="b1-wrap">
+
+    {{!-- Buyer Details --}}
+    <div class="b1-buyer">
+      <div class="field-row">
+        <span class="field-lbl">Name</span>
+        <span class="field-val">{{billing_address.[0].name}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">Building Number</span>
+        <span class="field-val">{{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">Street Name</span>
+        <span class="field-val">{{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">City</span>
+        <span class="field-val">{{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">District</span>
+        <span class="field-val">{{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">Country</span>
+        <span class="field-val">{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">TRN</span>
+        <span class="field-val">{{#if customer_details.[0].VAT_number}}{{customer_details.[0].VAT_number}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">PO Box Number</span>
+        <span class="field-val">{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">Customer Email</span>
+        <span class="field-val">{{#if customer_details.[0].email}}{{customer_details.[0].email}}{{/if}}</span>
+      </div>
+    </div>
+
+    {{!-- Invoice Details --}}
+    <div class="b1-invoice">
+      <div class="field-row">
+        <span class="field-lbl">Invoice Number</span>
+        <span class="field-val highlight">{{basicdetails.[0].inv_no}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">Invoice Date</span>
+        <span class="field-val">{{basicdetails.[0].inv_date}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">Reference Number</span>
+        <span class="field-val">{{#if basicdetails.[0].reference_no}}{{basicdetails.[0].reference_no}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">PO No</span>
+        <span class="field-val">{{#if basicdetails.[0].order_no}}{{basicdetails.[0].order_no}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">PO Date</span>
+        <span class="field-val">{{#if basicdetails.[0].po_date}}{{basicdetails.[0].po_date}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">Project</span>
+        <span class="field-val">{{#if basicdetails.[0].project_name}}{{basicdetails.[0].project_name}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">Project Value</span>
+        <span class="field-val">{{#if basicdetails.[0].project_estimated_amount}}{{formatAmount basicdetails.[0].project_estimated_amount bcdp}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">Our TRN</span>
+        <span class="field-val">{{#if branch.[0].vat}}{{branch.[0].vat}}{{/if}}</span>
+      </div>
+    </div>
+
+  </div>
+
+  {{!-- ITEMS TABLE --}}
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:5%;">S.N<span class="ar">الرقم</span></th>
+        <th class="th-desc" style="width:41%;">DESCRIPTION<span class="ar"> الوصف</span></th>
+        <th style="width:11%;">QTY<span class="ar">الكمية</span></th>
+        <th style="width:14%;">RATE<span class="ar">الوحدة</span></th>
+        <th style="width:15%;">TOTAL PRICE<span class="ar">القيمه الإجمالي</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td>{{addOne @index}}</td>
+        <td class="td-desc">
+          <div>{{item_name}}</div>
+          {{#if name_lang2}}<div style="direction:rtl; font-size:9.5px; color:#555;">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div style="font-size:9.5px; color:#777;">{{description}}</div>{{/if}}
+        </td>
+        <td>{{formatAmount quantity ../bcdp}}</td>
+        <td>{{formatAmount price ../bcdp}}</td>
+        <td class="td-total">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  {{!-- QR + FINANCIAL SUMMARY --}}
+  <div class="fin-wrap">
+
+    <div class="fin-left">
+      <div class="qr-wrapper">
+        {{{qrDataUri qrCodeBase64}}}
+      </div>
+    </div>
+
+    <div class="fin-right">
+
+      <div class="fin-row">
+        <span class="f-lbl">Total</span>
+        <span class="f-amt">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].subtotal bcdp}}</span>
+      </div>
+
+      {{#each basicdetails}}
+      <div class="fin-row">
+        <span class="f-lbl orange">{{ap}}% Advance Recovery</span>
+        <span class="f-amt deduct">{{isocode}} {{formatAmount aa ../bcdp}}</span>
+      </div>
+      {{/each}}
+
+      {{#each basicdetails}}
+      <div class="fin-row">
+        <span class="f-lbl orange">{{rp}}% Retention</span>
+        <span class="f-amt deduct">{{isocode}} {{formatAmount ra ../bcdp}}</span>
+      </div>
+      {{/each}}
+
+      <div class="fin-row">
+        <span class="f-lbl bold">Total Amount Claimed (Without 5% VAT)</span>
+        <span class="f-amt bold">{{basicdetails.[0].isocode}} {{formatAmount (subtract basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</span>
+      </div>
+
+      <div class="fin-row">
+        <span class="f-lbl orange">VAT 5%</span>
+        <span class="f-amt add">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].vatamt bcdp}}</span>
+      </div>
+
+      <div class="fin-row-dark">
+        <span>Total Amount Claimed (With 5% VAT)</span>
+        <span class="f-amt">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].grand_total bcdp}}</span>
+      </div>
+
+    </div>
+  </div>
+
+  {{!-- AMOUNT IN WORDS --}}
+  <div class="words-box">
+    <div class="words-title">TOTAL AMOUNT IN WORDS</div>
+    <div class="words-text">{{bcamountinwords}}</div>
+  </div>
+
+  {{!-- BILL PAYMENT DETAILS --}}
+  {{#if related_project_invoice}}
+  <div class="pay-col" style="margin-top:5px; border-radius:6px; margin-bottom:5px;">
+    <div class="sub-sec-lbl" style="border-bottom:1px solid #ddd;">Bill payment details:</div>
+    {{#each related_project_invoice}}
+    <div class="pay-row">
+      <span class="pk-lbl">Bill {{addOne @index}} Invoice no: {{inv_no}} dated {{inv_date}}</span>
+      <span class="pk-val">{{../basicdetails.[0].isocode}} {{formatAmount grand_total ../bcdp}}</span>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+
+  {{!-- PREPARED BY (left) | BANK DETAILS (right) --}}
+  <div style="display:flex; gap:0; margin-top:8px; border:1px solid #ddd; border-radius:6px; overflow:hidden;">
+
+    {{!-- LEFT — Prepared By + Seal --}}
+    <div style="flex:0 0 28%; border-right:1px solid #ddd; padding:10px 14px; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:120px;">
+      <div style="font-weight:bold; font-size:11px; text-align:center; margin-bottom:3px;">Prepared By</div>
+      <div style="font-size:10px; color:#555; direction:rtl; text-align:center; margin-bottom:10px;">سلمت بواسطة</div>
+      {{#if Seal}}
+        <img src="{{Seal}}" alt="Seal" style="max-height:70px; max-width:100px;">
+      {{else}}
+        <div style="height:70px;"></div>
+      {{/if}}
+    </div>
+
+    {{!-- RIGHT — Bank Details --}}
+    <div style="flex:1; padding:10px 14px;">
+      <div style="font-weight:bold; font-size:11px; text-align:center; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid #eee; padding-bottom:6px;">Bank Details</div>
+      <div style="display:flex; gap:10px;">
+
+        {{!-- left column --}}
+        <div style="flex:1;">
+          {{#if bankdetails.acc_name}}
+          <div class="bank-row-item">
+            <span class="bk-key" style="width:40%;">Account Name</span>
+            <span class="bk-val" style="text-align:left; width:60%;">{{bankdetails.acc_name}}</span>
+          </div>
+          {{/if}}
+          {{#if bankdetails.acc_no}}
+          <div class="bank-row-item">
+            <span class="bk-key" style="width:40%;">Account Number</span>
+            <span class="bk-val" style="text-align:left; width:60%;">{{bankdetails.acc_no}}</span>
+          </div>
+          {{/if}}
+          {{#if bankdetails.iban_no}}
+          <div class="bank-row-item">
+            <span class="bk-key" style="width:40%;">IBAN</span>
+            <span class="bk-val iban" style="text-align:left; width:60%;">{{bankdetails.iban_no}}</span>
+          </div>
+          {{/if}}
+        </div>
+
+        {{!-- right column --}}
+        <div style="flex:1;">
+          {{#if bankdetails.name}}
+          <div class="bank-row-item">
+            <span class="bk-key" style="width:35%;">Bank Name</span>
+            <span class="bk-val" style="text-align:left; width:65%;">{{bankdetails.name}}</span>
+          </div>
+          {{/if}}
+          {{#if bankdetails.branch_name}}
+          <div class="bank-row-item">
+            <span class="bk-key" style="width:35%;">Branch Name</span>
+            <span class="bk-val" style="text-align:left; width:65%;">{{bankdetails.branch_name}}</span>
+          </div>
+          {{/if}}
+          {{#if bankdetails.swift_no}}
+          <div class="bank-row-item">
+            <span class="bk-key" style="width:35%;">SWIFT Code</span>
+            <span class="bk-val" style="text-align:left; width:65%;">{{bankdetails.swift_no}}</span>
+          </div>
+          {{/if}}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  {{!-- Thanks --}}
+  <div style="margin-top:12px; font-size:11px;">Thanks & Regards,</div>
+
+</div>
+</body>
+</html>

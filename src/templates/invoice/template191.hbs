@@ -1,0 +1,595 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=yes" />
+    <title>188</title>
+     <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    /> 
+
+  </head>
+  <style>
+    body {
+      font-family: "Open Sans", sans-serif;
+    }
+
+     .page {
+        width: 100%;
+        margin: 0 auto;
+      }
+    .h1,
+    .h2,
+    .h3,
+    .h4,
+    .h5,
+    .h6,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .table > :not(caption) > * > * {
+      padding: 0.3rem 0.3rem;
+    }
+    table {
+      width: 100%;
+    }
+    .bg-dark {
+      background-color: #1a1a1a;
+    }
+    .bg-light {
+      background-color: #ecf7f9;
+    }
+    .bg-light1 {
+      background-color: #d9dbdb;
+    }
+    .head {
+      background-color: #1a1a1a;
+      padding: 15px 30px;
+    }
+    .head h1 {
+      color: #fff;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .arab {
+      font-family: "Cairo", sans-serif;
+    }
+    .text-gold {
+      color: #db9600 !important;
+    }
+    .head-light {
+      border-bottom: 1px solid #d7d7d7;
+      background-color: #fbfbfb;
+      padding: 8px 15px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .detail-td {
+      font-size: 12px;
+      width: 100%;
+    }
+    .detail-td td {
+      color: #7a7a7a;
+      padding: 5px;
+    }
+    .detail-td th {
+      color: #1a1a1a;
+      padding: 5px;
+      font-weight: 600;
+    }
+    .table_n th {
+      background-color: #1a1a1a;
+      color: #fff;
+      font-size: 12px;
+      line-height: 18px;
+    }
+    .table_n th span {
+      font-family: "Cairo", sans-serif;
+      font-weight: 500;
+      font-size: 11px;
+      color: #ddd;
+    }
+    .table_n1 {
+      border: 1px solid #ededed;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .table_n1 td:first-child {
+    }
+    .table_n1 td:last-child {
+      text-align: right;
+    }
+    .tabn td:last-child {
+      font-weight: 600;
+    }
+    .tabn td:first-child {
+      font-weight: 400;
+      color: #8b8b8b;
+    }
+    .tabn tr {
+      border-bottom: 1px solid #dee2e6;
+    }
+    .amount {
+      background-color: #fffbe6;
+      border: 1px solid #f2e49d;
+      padding: 8px;
+      width: 100%;
+      border-radius: 10px;
+    }
+    .amount h5 {
+      color: #d1b53f;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .amount h6 {
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+    .bank {
+      background-color: #fff;
+      border: 1px solid #d0d0d0;
+      padding: 8px;
+      width: 100%;
+      margin-top: 4px;
+      border-radius: 10px;
+    }
+    .bank h5 {
+      color: #1a1a1a;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 6px;
+    }
+    .bank h6 {
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+    .tabn1 td {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .tabn1 tr {
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .invoice {
+      width: 420px;
+      margin: 20px auto;
+      background: #f5f5f5;
+      padding: 15px;
+      color: #000;
+      font-size: 14px;
+      font-family: "Open Sans", sans-serif;
+    }
+
+    .center {
+      text-align: center;
+    }
+    .bold {
+      font-weight: bold;
+    }
+    .small {
+      font-size: 12px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #000;
+      margin: 10px 0;
+    }
+    .hr {
+      border: none;
+      border-top: 2px solid #000;
+      margin: 5px 0;
+      opacity: 1;
+    }
+
+    .tabled {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .tabled th,
+    .tabled td {
+      padding: 6px 4px;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .tabled th {
+      border-bottom: 1px solid #000;
+    }
+
+    .tabled td:last-child,
+    .tabled th:last-child {
+      text-align: right;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .total-row1 {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 8px;
+    }
+    .total-row1 div:last-child {
+      padding-left: 0px;
+      content: ":";
+    }
+    .total-row1 div:first-child {
+      width: 30%;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .box_table {
+      margin: 30px;
+      display: block;
+    }
+    table th {
+      font-weight: 600;
+    }
+    .table_sec td {
+      font-weight: 400;
+      line-height: 16px;
+      border: 1px solid #b9bcbf;
+      padding: 2px 0;
+      padding-left: 5px;
+      padding-right: 5px;
+      border-bottom: 0;
+      border-right: 0;
+      font-size: 12px;
+      vertical-align: top;
+    }
+    .table_sec th {
+      font-size: 12px;
+      color: #26323e;
+      padding: 2px 5px;
+      border: 1px solid #76716a;
+      border-bottom: 0;
+      border-right: 0;
+    }
+    .table_sec tr:last-child td {
+      border-bottom: 1px solid #b9bcbf;
+    }
+    .table_sec tr td:last-child {
+      border-right: 1px solid #b9bcbf;
+    }
+    .table_sec tr:last-child th {
+      border-bottom: 1px solid #76716a;
+    }
+    .table_sec tr th:last-child {
+      border-right: 1px solid #76716a;
+    }
+    .my_table table {
+      font-size: 13px;
+      line-height: 16px;
+    }
+    .my_table table th {
+      font-weight: 700;
+    }
+    .invoice_head {
+      font-weight: 700;
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+    .invoice_head span {
+      color: #b72031;
+    }
+    .b {
+      font-weight: 600;
+    }
+    .bd-code-snippet {
+      border: 1px solid #acaeaf;
+      border-radius: 6px;
+      padding: 8px;
+    }
+  </style>
+  <body>
+    <div class="section my_table">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h1 class="text-center invoice_head"><span>TAX INVOICE</span>
+              - فاتورة ضريبية
+            </h1>
+          </div>
+          <div class="col-lg-7">
+            <table
+              class="table table-bordered"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+            >
+              <tbody>
+                <tr>
+                  <td class="text-start b" colspan="3">
+                    <div class="total-row">
+                      <div>BUYER DETAILS</div>
+                      <div>تفاصيل المشتري </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-start b">Name</td>
+                  <td class="text-start">Hajara</td>
+                  <td class="text-end arab b">الإ سم</td>
+                </tr>
+                <tr>
+                  <td class="text-start b">VAT Number</td>
+                  <td class="text-start">333598756984125</td>
+                  <td class="text-end arab b">الرقم ضريبة الشراء</td>
+                </tr>
+                <tr>
+                  <td class="text-start b">Contact No</td>
+                  <td class="text-start">8965789654</td>
+                  <td class="text-end arab b">الاتصال ر</td>
+                </tr>
+                <tr>
+                  <td class="text-start b">Address</td>
+                  <td class="text-start">4589, Al-Sheikh Mosque Street, Ad
+                    Diriyah, Riyadh, Saudi Arabia, 52345</td>
+                  <td class="text-end arab b">العنوان</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-5">
+            <table
+              class="table table-bordered"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+            >
+              <tbody>
+                <tr>
+                  <td class="text-start b bg-light">Invoice No</td>
+                  <td class="text-center" style="">01-1099Eb</td>
+                  <td class="text-end b bg-light arab">رقم الفاتورة</td>
+                </tr>
+                <tr>
+                  <td class="text-start b bg-light">Invoice Date</td>
+                  <td class="text-center">23-Aug-2025</td>
+                  <td class="text-end b bg-light arab">تاريخ الفاتورة</td>
+                </tr>
+                <tr>
+
+                  <td class="text-start b bg-light">DN No</td>
+                  <td class="text-center"></td>
+                  <td class="text-end b bg-light arab">رقم الاقتباس</td>
+                </tr>
+                <tr>
+                  <td class="text-start b bg-light">DN Date</td>
+                  <td class="text-center"></td>
+                  <td class="text-end b bg-light arab">اشاره العملاء</td>
+                </tr>
+                <tr>
+                  <td class="text-start b bg-light">Mode of pay</td>
+                  <td class="text-center">CREDIT BILL / فاتورة</td>
+                  <td class="text-end b bg-light arab">ع طريقة</td>
+                </tr>
+                <tr>
+                  <td class="text-start b bg-light">PO No</td>
+                  <td class="text-center">783628764</td>
+                  <td class="text-end b bg-light arab">رقم الطلب الشراء</td>
+                </tr>
+                <tr>
+                  <td class="text-start b bg-light">PO Date</td>
+                  <td class="text-center">30-Nov--0001</td>
+                  <td class="text-end b bg-light arab">تاريخ امر الشراء</td>
+                </tr>
+                <tr>
+
+                  <td class="text-start b bg-light">Reference No</td>
+                  <td class="text-center">423424</td>
+                  <td class="text-end b bg-light">مرجع ر</td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-12">
+            <table
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              class="table table_sec"
+            >
+              <thead>
+                <tr style="background-color: #26323e;color: #fff;">
+                  <th class="text-center"><span class="arab">م</span><br
+                    />S.N</th>
+                  <th class="text-center"><span class="arab">الوصف</span><br
+                    />Description</th>
+                  <th class="text-center"><span class="arab">الكمية</span><br
+                    />QTY</th>
+                  <th class="text-center"><span class="arab">الوحدة</span><br
+                    />Unit</th>
+                  <th class="text-center"><span class="arab">سعر الوحدة</span><br
+                    />U.Rate</th>
+                  <th class="text-center"><span class="arab">مبلغ</span><br
+                    />Amount</th>
+                  <th class="text-center"><span class="arab">قيمة الضريبة</span><br
+                    />VAT Value</th>
+                  <th class="text-center"><span class="arab">القيمه الاجمالي</span><br
+                    />Total Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-center">1</td>
+                  <td class="text-center">Note Book </td>
+                  <td class="text-center">1</td>
+                  <td class="text-center">KGS</td>
+                  <td class="text-center">1,500.00</td>
+                  <td class="text-center">1,500.00</td>
+                  <td class="text-center">0.00</td>
+                  <td class="text-center" style="width:20%;">1,500.00</td>
+                </tr>
+                <tr>
+                  <td class="text-center" colspan="2">Total</td>
+                  <td class="text-center">10.00</td>
+                  <td class="text-center" colspan="5"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-lg-4 text-center">
+            <img
+              src="https://quickchart.io/qr?text=ARBFdGhpY0ZpbiBDb21wYW55AgADEzIwMjUtMDgtMjMgMDg6Mjg6MzEEBDE1MDAFATA=&size=150"
+            />
+          </div>
+          <div class="col-lg-8">
+            <table class="table table-bordered mb-0">
+              <tbody>
+                <tr>
+                  <td>Total Amount /<span class="arab">جمالي المبلغ </span></td>
+
+                  <td class="text-end">119.89</td>
+                </tr>
+                <tr>
+                  <td>Discount /<span class="arab">تخفيض</span></td>
+                  <td class="text-end">999.00</td>
+                </tr>
+                <tr>
+                  <td class="b">Net Amount /<span class="arab">لمجموع صافي
+                    </span></td>
+                  <td class="b text-end">16,390.50 </td>
+                </tr>
+                <tr>
+                  <td>VAT (15%) /<span class="arab">المضافة القيمة ضريبة
+                    </span></td>
+                  <td class="text-end">999.00</td>
+                </tr>
+                <tr>
+                  <td class="b">Grand Total /<span class="arab">لكلي المجموع
+                    </span></td>
+                  <td class="b text-end">16,390.50 </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-12">
+            <table class="table table-bordered">
+              <tr>
+                <td>Saudi Riyals Sixteen Thousand Three Hundred Ninety and Fifty
+                  Fifty</td>
+                <td class="arab text-end">ستة عشر ألف وثلاثمائة وتسعون ريال
+                  سعودي و خمسون هللة</td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <b>Terms and Conditions :-</b><br />
+                  Halalas Fifty and Ninety Hundred Three
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-lg-12">
+            <table
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              width="100%"
+              bgcolor="#efefef"
+              style="background-color: #fff;margin-bottom: 0px;margin-top: 0px;font-size: 12px;"
+              class="table_sec"
+            >
+              <tr>
+                <td colspan="2" class="bg-light1">
+                  <div class="total-row b mt-0">
+                    <div> Details Bank</div>
+                    <div>تفاصيل البنك</div>
+                  </div>
+                </td>
+                <td class="bg-light1">
+                  <div class="total-row b mt-0">
+                    <div>Prepared By</div>
+                    <div>أُعدت بواسطة</div>
+                  </div>
+                </td>
+                <td class="bg-light1">
+                  <div class="total-row b mt-0">
+                    <div>Approved By</div>
+                    <div>تمت بواسطة</div>
+                  </div>
+                </td>
+                <td class="bg-light1">
+                  <div class="total-row b mt-0">
+                    <div>Received By</div>
+                    <div>الاستلم</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Bank Name</td>
+                <td>Saudi National Bank</td>
+                <td
+                  style="text-align: center;border-bottom: 1px solid #cfd4d9;vertical-align: bottom;"
+                  rowspan="6"
+                >التوقيع
+                  <br />Signature:
+                </td>
+                <td
+                  style="text-align: center;border-bottom: 1px solid #cfd4d9;vertical-align: bottom;"
+                  rowspan="6"
+                >التوقيع مع الختم<br />Signature with Stamp</td>
+                <td
+                  style="text-align: left;border-bottom: 1px solid #cfd4d9;vertical-align: middle;"
+                  rowspan="6"
+                >
+                  <span style="display: block;"><small>Name:<br />الاسم</small>
+                  </span>
+                  <span style="display: block;"><small>Signature:<br
+                      />التوقيع</small></span>
+                  <span style="display: block;"><small>Date:<br
+                      />التاريخ</small></span>
+                </td>
+              </tr>
+              <tr>
+                <td>A/C Name</td>
+                <td>Hanna Company</td>
+              </tr>
+              <tr>
+                <td>A/C No</td>
+                <td>8740001348567</td>
+              </tr>
+              <tr>
+                <td>IBAN No</td>
+                <td>SA4410078400001856742</td>
+              </tr>
+              <tr>
+                <td>SWIFT No</td>
+                <td>NCBERWPON</td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+pdf-service/.env
+pdf-service/.gitignore
+pdf-service/CPANEL_DEPLOYMENT.md
+pdf-service/PROJECT_STRUCTURE.txt
+pdf-service/README.md
+pdf-service/package.json
+pdf-service/src/app.js
+pdf-service/src/controllers/pdfController.js
+pdf-service/src/server.js
+pdf-service/src/services/browserPoolService.js
+pdf-service/src/services/pdfService.js
+pdf-service/src/services/qrCodeService.js
+pdf-service/src/services/templateService.js
+pdf-service/src/templates/myinvois_doc.hbs
+pdf-service/src/test.js
