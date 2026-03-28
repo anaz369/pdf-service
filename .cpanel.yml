@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/signinqatar/pdf-service-new
+    - rsync -av --exclude '.git' --exclude 'node_modules' --exclude '.env' . $DEPLOYPATH/
+    - cd $DEPLOYPATH && /home/signinqatar/nodevenv/pdf-service-new/20/bin/npm install --production
