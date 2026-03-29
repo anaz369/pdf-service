@@ -1,0 +1,46 @@
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+name: 🚀 Deploy PDF Service
+
+jobs:
+  deploy:
+    name: 🎉 Deploy to cPanel
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Install dependencies
+        run: npm install
+
+      - name: 📂 Upload files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /home/signinqatar/pdf-service/
+          local-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.env
+
+      - name: 🔄 Trigger app restart via restart.txt
+        run: |
+          mkdir -p tmp
+          date > tmp/restart.txt
+
+      - name: 📂 Upload restart.txt via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftp.signinqatar.com
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /home/signinqatar/pdf-service/tmp/
+          local-dir: tmp/
