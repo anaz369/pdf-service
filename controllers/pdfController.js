@@ -16,7 +16,7 @@ class PdfController {
   async test(req, res) {
     try {
       res.json({
-        message: 'API is working fine test',
+        message: 'API is working fine test now',
         url: req.path,
         environment: process.platform,
         runtime: process.version,
