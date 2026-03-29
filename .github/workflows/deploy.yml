@@ -14,33 +14,31 @@ jobs:
       - name: 🚚 Checkout code
         uses: actions/checkout@v4
 
-      - name: 📦 Install dependencies
-        run: npm install
-
       - name: 📂 Upload files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /home/signinqatar/pdf-service/
+          server-dir: /pdf-service/
           local-dir: ./
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             **/.env
+            **/tmp/**
 
-      - name: 🔄 Trigger app restart via restart.txt
+      - name: 🔄 Trigger app restart
         run: |
           mkdir -p tmp
           date > tmp/restart.txt
 
-      - name: 📂 Upload restart.txt via FTP
+      - name: 📂 Upload restart.txt
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ftp.signinqatar.com
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /home/signinqatar/pdf-service/tmp/
+          server-dir: /pdf-service/tmp/
           local-dir: tmp/
