@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=yes" />
+<title>{{basicdetails.[0].inv_no}}</title>
+</head>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: "Open Sans", Arial, sans-serif; font-size:12px; color:#000; }
+    .container { width:780px; margin:0 auto; padding:10px; }
+    table { width:100%; border-collapse:collapse; }
+    .fs-11 { font-size:10px; }
+    .mt-1  { margin-top:6px; }
+    .mt-0  { margin-top:0; }
+    .w-10px { width:10px; }
+    .w-25  { width:25%; }
+    .vat   { vertical-align:top; }
+    .vam   { vertical-align:middle; }
+    .lih-20 { line-height:20px; }
+    .lih-24 { line-height:24px; }
+    .pr-0  { padding-right:0; }
+    .pl-0  { padding-left:0; }
+    .bt-1px { border-top:1px solid #000; }
+    .bl-1px { border-left:1px solid #000; }
+    .text-start  { text-align:left; }
+    .text-end    { text-align:right; }
+    .text-center { text-align:center; }
+    .b { font-weight:600; }
+
+    /* Two col layout */
+    .row { display:flex; flex-wrap:wrap; }
+    .col-6  { flex:0 0 50%; max-width:50%; padding:0 4px; }
+    .col-12 { flex:0 0 100%; max-width:100%; padding:0 4px; }
+    .pr-0 { padding-right:0 !important; }
+    .pl-0 { padding-left:0 !important; }
+
+    /* Styled tables */
+    .myy_table4 { border:1px solid #000; }
+    .myy_table4 td { padding:2px 8px; color:#282727; font-weight:600; font-size:11px; }
+    .myy_table4 th { padding:2px 8px; color:#000; font-weight:bold; font-size:12px; border-bottom:1px solid #000; }
+
+    .myy_table5 { border:1px solid #000; }
+    .myy_table5 td { padding:6px 8px; color:#282727; font-weight:600; font-size:11px; }
+    .myy_table5 th { padding:6px 8px; color:#000; font-weight:bold; font-size:12px; border-bottom:1px solid #000; }
+</style>
+<body>
+<div class="container">
+  <div class="row">
+
+    {{!-- ══ LEFT: To / Address / Reference / Date ══ --}}
+    <div class="col-6 pr-0">
+      <table class="fs-11 mt-1">
+        <tr>
+          <td class="fs-13 vat"><b>To</b></td>
+          <td class="w-10px vat">:</td>
+          <td>
+            {{billing_address.[0].name}}
+            {{#if billing_address_lang2.[0].name}}<br/>{{billing_address_lang2.[0].name}}{{/if}}
+          </td>
+        </tr>
+        <tr>
+          <td class="fs-13 vat"><b>Address</b></td>
+          <td class="w-10px vat">:</td>
+          <td>
+            {{joinAddress billing_address.[0] '، '}}
+            {{!-- {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}
+            {{#if billing_address.[0].address_line2}},{{billing_address.[0].address_line2}}{{/if}}
+            {{#if billing_address.[0].address_line4}},{{billing_address.[0].address_line4}}{{/if}}
+            {{#if billing_address.[0].address_line3}}<br/>{{billing_address.[0].address_line3}}{{/if}}
+            {{#if billing_address.[0].address_line5}}<br/>{{billing_address.[0].address_line5}}{{/if}} --}}
+          </td>
+        </tr>
+        <tr>
+          <td class="fs-13 vat"><b>Reference No</b></td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].reference_no}}{{basicdetails.[0].reference_no}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td class="fs-13 vat"><b>Date</b></td>
+          <td class="w-10px vat">:</td>
+          <td>{{basicdetails.[0].inv_date}}</td>
+        </tr>
+      </table>
+    </div>
+
+    {{!-- ══ RIGHT: From / Address / Invoice No / Job No / CR ══ --}}
+    <div class="col-6">
+      <table class="fs-11 mt-1">
+        <tr>
+          <td class="fs-13 vat"><b>From</b></td>
+          <td class="w-10px vat">:</td>
+          <td>
+            {{branch.[0].name}}
+            {{#if branch_lang2.[0].name}}<br/>{{branch_lang2.[0].name}}{{/if}}
+          </td>
+        </tr>
+        <tr>
+          <td class="fs-13 vat"><b>Address</b></td>
+          <td class="w-10px vat">:</td>
+          <td>
+            {{joinAddress branch.[0] '، '}}
+            {{!-- {{#if branch.[0].address_line1}}{{branch.[0].address_line1}}{{/if}}
+            {{#if branch.[0].address_line2}}, {{branch.[0].address_line2}}{{/if}}
+            {{#if branch.[0].address_line3}}<br/>{{branch.[0].address_line3}}{{/if}}
+            {{#if branch.[0].address_line4}}, {{branch.[0].address_line4}}{{/if}}
+            {{#if branch.[0].address_line5}}, {{branch.[0].address_line5}}{{/if}} --}}
+          </td>
+        </tr>
+        <tr>
+          <td class="fs-13 vat"><b>Invoice No</b></td>
+          <td class="w-10px vat">:</td>
+          <td><b>{{basicdetails.[0].inv_no}}</b></td>
+        </tr>
+        <tr>
+          <td class="fs-13 vat"><b>Job No</b></td>
+          <td class="w-10px vat">:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="fs-13 vat"><b>CR Number</b></td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if branch.[0].cr_no}}{{branch.[0].cr_no}}{{/if}}</td>
+        </tr>
+      </table>
+    </div>
+
+    {{!-- ══ LEFT: Shipment Details ══ --}}
+    <div class="col-6 pr-0">
+      <table class="fs-11 mt-1 myy_table4 lih-20">
+        <tr>
+          <td>Description of Goods</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].goods_desc}}{{basicdetails.[0].goods_desc}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Vessel / Flight</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].vessel}}{{basicdetails.[0].vessel}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Voyage / Flight No</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].voyage_no}}{{basicdetails.[0].voyage_no}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Port of Loading</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].port_loading}}{{basicdetails.[0].port_loading}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Destination Port</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].port_dest}}{{basicdetails.[0].port_dest}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Consignment Type</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].consignment_type}}{{basicdetails.[0].consignment_type}}{{/if}}</td>
+        </tr>
+      </table>
+    </div>
+
+    {{!-- ══ RIGHT: More Shipment Details ══ --}}
+    <div class="col-6 pl-0">
+      <table class="fs-11 mt-1 myy_table4 lih-20">
+        <tr>
+          <td>DMBL No / MAWB No</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].mawb_no}}{{basicdetails.[0].mawb_no}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Container Size</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].container_size}}{{basicdetails.[0].container_size}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Gross.Wt -KGS</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].gross_wt}}{{basicdetails.[0].gross_wt}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Chg.Wt -KGS</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].chg_wt}}{{basicdetails.[0].chg_wt}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Volume - CBM</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].volume}}{{basicdetails.[0].volume}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Packages</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].packages}}{{basicdetails.[0].packages}}{{/if}}</td>
+        </tr>
+      </table>
+    </div>
+
+    {{!-- ══ FULL: Veh / Consignee / Shipper ══ --}}
+    <div class="col-12">
+      <table class="fs-11 myy_table4 lih-20">
+        <tr>
+          <td>Veh No</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].veh_no}}{{basicdetails.[0].veh_no}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Consignee</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].consignee}}{{basicdetails.[0].consignee}}{{/if}}</td>
+        </tr>
+        <tr>
+          <td>Shipper</td>
+          <td class="w-10px vat">:</td>
+          <td>{{#if basicdetails.[0].shipper}}{{basicdetails.[0].shipper}}{{/if}}</td>
+        </tr>
+      </table>
+    </div>
+
+    {{!-- ══ ITEMS TABLE ══ --}}
+    <div class="col-12">
+      <table class="mt-0 myy_table5">
+        <thead>
+          <tr>
+            <th class="text-start">Charges</th>
+            <th class="text-start">Curr</th>
+            <th class="text-start">Ex.Rate</th>
+            <th class="text-center">Units</th>
+            <th class="text-center">QTY</th>
+            <th class="text-center">Price</th>
+            <th class="text-center">Rate</th>
+            <th class="text-center bl-1px">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each itemdetails}}
+          <tr>
+            <td class="text-start">
+              {{item_name}}
+              {{#if name_lang2}}<br/>{{name_lang2}}{{/if}}
+              {{#if description}}<br/>{{description}}{{/if}}
+            </td>
+            <td class="text-start">{{../basicdetails.[0].isocode}}</td>
+            <td class="text-start">{{#if ../ccrate}}{{../ccrate}}{{else}}0{{/if}}</td>
+            <td class="text-center">{{unit}}</td>
+            <td class="text-center">{{formatAmount quantity bcdp}}</td>
+            <td class="text-end">{{formatAmount price ../bcdp}}</td>
+            <td class="text-end">{{formatAmount taxable ../bcdp}}</td>
+            <td class="text-end bl-1px">{{formatAmount amount ../bcdp}}</td>
+          </tr>
+          {{/each}}
+          {{!-- Totals footer row --}}
+          <tr>
+            <td class="text-start fs-13 bt-1px" colspan="6">
+              Amount in words : <b>{{bcamountinwords}}</b>
+            </td>
+            <td class="text-end bt-1px">Total Amount</td>
+            <td class="text-end bt-1px bl-1px">{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {{!-- ══ BANK + QR ══ --}}
+    <div class="col-12">
+      <table class="mt-0 myy_table4">
+        <tr>
+          <td class="text-center" colspan="3"><b>Bank Details</b></td>
+          <td class="text-center bl-1px w-25" rowspan="7">
+            {{{qrDataUri qrCodeBase64}}}
+          </td>
+        </tr>
+        {{#if bankdetails.acc_name}}
+        <tr>
+          <td>ACCOUNT NAME</td>
+          <td>:</td>
+          <td>{{bankdetails.acc_name}}</td>
+        </tr>
+        {{/if}}
+        {{#if bankdetails.name}}
+        <tr>
+          <td>BANK</td>
+          <td>:</td>
+          <td>{{bankdetails.name}}</td>
+        </tr>
+        {{/if}}
+        {{#if bankdetails.acc_no}}
+        <tr>
+          <td>ACCOUNT</td>
+          <td>:</td>
+          <td>{{bankdetails.acc_no}}</td>
+        </tr>
+        {{/if}}
+        {{#if bankdetails.iban_no}}
+        <tr>
+          <td>IBAN</td>
+          <td>:</td>
+          <td>{{bankdetails.iban_no}}</td>
+        </tr>
+        {{/if}}
+        {{#if bankdetails.swift_no}}
+        <tr>
+          <td>SWIFT Code</td>
+          <td>:</td>
+          <td>{{bankdetails.swift_no}}</td>
+        </tr>
+        {{/if}}
+        {{#if bankdetails.branch_name}}
+        <tr>
+          <td>BRANCH</td>
+          <td>:</td>
+          <td>{{bankdetails.branch_name}}</td>
+        </tr>
+        {{/if}}
+      </table>
+    </div>
+
+    {{!-- ══ SIGNATURE ══ --}}
+    <div class="col-12">
+      <table class="mt-0 myy_table4">
+        <tr>
+          <td style="vertical-align:bottom; padding-bottom:6px; height:80px;">
+            {{#if Seal}}
+              <img src="{{Seal}}" style="max-height:60px;" onerror="this.style.display='none'"/>
+            {{/if}}
+            <br/><b>Name &amp; Signature</b>
+          </td>
+          <td class="text-end" style="vertical-align:bottom; padding-bottom:6px; height:80px;">
+            {{#if Signature}}
+              <img src="{{Signature}}" style="max-height:60px;" onerror="this.style.display='none'"/>
+            {{/if}}
+            <br/><b>For {{branch.[0].name}}</b>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

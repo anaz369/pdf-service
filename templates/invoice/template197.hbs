@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice - {{basicdetails.[0].inv_no}}</title>
+    <style>
+        @page {
+            size: 220mm 280mm;
+            margin: 0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 220mm;
+            height: 280mm;
+        }
+
+        .page {
+            position: relative;
+            width: 220mm;
+            height: 280mm;
+            background-image: url('{{LetterheadImageUrl}}');
+            background-size: 220mm 280mm;
+            background-repeat: no-repeat;
+            background-position: top left;
+            page-break-after: always;
+            overflow: hidden;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        .f {
+            position: absolute;
+            font-family: Arial, sans-serif;
+            font-size: 8.5pt;
+            color: #000;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        /* ── Meta fields ───────────────────────── */
+        .f-inv     { top: 55.7mm;  left: 15.4mm;  width: 60mm; }
+        .f-date    { top: 52.9mm;  left: 169mm;   width: 46mm; }
+        .f-ccode   { top: 60.1mm;  left: 185.5mm; width: 30mm; }
+        .f-name    { top: 64.9mm;  left: 18.4mm;  width: 140mm; overflow: hidden; text-overflow: ellipsis; }
+        .f-contact { top: 85.6mm;  left: 174.8mm; width: 42mm;  overflow: hidden; text-overflow: ellipsis; }
+
+        /* ── Items table ───────────────────────── */
+        .items-wrap {
+            position: absolute;
+            top: 80.5mm;
+            left: 3.6mm;
+            width: 213.2mm;
+            max-height: 158.9mm;
+            overflow: hidden;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .items-table td {
+            border: none;
+            padding: 0 1mm;
+            height: 8.8mm;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            font-size: 8.5pt;
+            color: #000;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .c-sno   { width: 12.9mm; text-align: center; }
+        .c-code  { width: 23.6mm; }
+        .c-desc  { width: 89.5mm; }
+        .c-qty   { width: 14.0mm; text-align: center; }
+        .c-unit  { width: 13.6mm; text-align: center; }
+        .c-price { width: 29.8mm; text-align: center; }
+        .c-amt   { width: 29.8mm; text-align: center; }
+
+        /* ── Footer ────────────────────────────── */
+        .f-words { top: 240.5mm; left: 43.6mm; width: 130mm; font-size: 8pt; overflow: hidden; text-overflow: ellipsis; }
+        .f-total { top: 240.5mm; left: 179mm;  width: 31mm;  text-align: right; padding-right: 2mm; font-weight: bold; }
+        .related-invoices {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 10px;
+  background: #fafafa;
+}
+.ri-title {
+  font-weight: bold;
+  font-size: 11px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.ri-list {
+  padding-left: 20px;
+  margin: 0;
+}
+.ri-list li {
+  font-size: 11px;
+  line-height: 2;
+  color: #000;
+}
+.ri-list li.ri-total {
+  font-weight: bold;
+  list-style: none;
+  margin-left: -20px;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #ddd;
+}
+    </style>
+</head>
+<body>
+
+{{!-- ── PAGE 1 ─────────────────────────────────── --}}
+<div class="page">
+
+    {{!-- Meta fields — root scope, no prefix needed --}}
+    <div class="f f-inv">{{basicdetails.[0].inv_no}}</div>
+    <div class="f f-date">{{basicdetails.[0].inv_date}}</div>
+    <div class="f f-ccode">{{customer_details.[0].profile_code}}</div>
+    <div class="f f-name">{{billing_address.[0].name}}</div>
+    <div class="f f-contact">{{billing_address.[0].phone}}</div>
+
+    <div class="items-wrap">
+        <table class="items-table"><tbody>
+        {{#each pageItems}}
+            <tr>
+                <td class="c-sno">{{addOffset @index ../startIndex}}</td>
+                <td class="c-code">{{item_code}}</td>
+                <td class="c-desc">{{item_name}}</td>
+                <td class="c-qty">{{quantity}}</td>
+                <td class="c-unit">{{unit}}</td>
+                <td class="c-price">{{price}}</td>
+                <td class="c-amt">{{amount}}</td>
+            </tr>
+        {{/each}}
+        </tbody></table>
+    </div>
+
+    {{#if isLastPage}}
+    <div class="f f-words">{{bcamountinwords}}</div>
+    <div class="f f-total">{{basicdetails.[0].balance}}</div>
+    {{/if}}
+
+</div>
+
+{{!-- ── EXTRA PAGES (page 2, 3...) ──────────────── --}}
+{{!--
+    Inside {{#each extraPages}} we are one level deep.
+    Root data needs ../ prefix to access:
+      ../basicdetails.[0]
+      ../billing_address.[0]
+      ../customer_details.[0]
+      ../bcamountinwords
+--}}
+{{#each extraPages}}
+<div class="page">
+
+    {{!-- Meta fields repeat on every page — use ../ to reach root --}}
+    <div class="f f-inv">{{../basicdetails.[0].inv_no}}</div>
+    <div class="f f-date">{{../basicdetails.[0].inv_date}}</div>
+    <div class="f f-ccode">{{../customer_details.[0].profile_code}}</div>
+    <div class="f f-name">{{../billing_address.[0].name}}</div>
+    <div class="f f-contact">{{../billing_address.[0].phone}}</div>
+
+    <div class="items-wrap">
+        <table class="items-table"><tbody>
+        {{#each this.pageItems}}
+            <tr>
+                <td class="c-sno">{{addOffset @index ../startIndex}}</td>
+                <td class="c-code">{{item_code}}</td>
+                <td class="c-desc">{{item_name}}</td>
+                <td class="c-qty">{{quantity}}</td>
+                <td class="c-unit">{{unit}}</td>
+                <td class="c-price">{{price}}</td>
+                <td class="c-amt">{{amount}}</td>
+            </tr>
+        {{/each}}
+        </tbody></table>
+    </div>
+
+    {{!-- Footer only on last page — two levels deep here (each extraPages > each pageItems) --}}
+    {{#if this.isLastPage}}
+    <div class="f f-words">{{../bcamountinwords}}</div>
+    <div class="f f-total">{{../basicdetails.[0].balance}}</div>
+    {{/if}}
+
+</div>
+{{/each}}
+
+</body>
+</html>

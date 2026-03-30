@@ -1,0 +1,354 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<!-- Forcing initial-scale shouldn't be necessary -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=yes" />
+<title>170</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+    body{
+    font-family: "Open Sans",sans-serif !important;
+}
+.container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+table{
+    width: 100%;
+}
+
+.center { text-align: center; }
+.bold { font-weight: bold; }
+.small { font-size: 12px; }
+
+.b{
+    font-weight: 600;
+}
+
+.border-dark td{
+    border: 0.5px solid #272727 !important;
+}
+.lih-20{
+    line-height: 15px !important;
+}
+.lih-25{
+    line-height: 20px !important;
+}
+
+.pl-0{
+    padding-left: 0px !important;
+}
+.pr-0{
+    padding-right: 0px !important;
+}
+
+.br{
+    border-right: 0px !important;
+}
+.bl{
+    border-left: 0px !important;
+}
+.bt{
+    border-top: 0px !important;
+}
+.myy_table{
+    border: 0.5px solid #ccc;
+}
+.myy_table td{
+    padding: 2px 4px;
+    {{!-- color: #282727; --}}
+    font-weight: 600;
+    font-size: 10px;
+}
+.myy_table th{
+    background-color: #f2f2f2;
+    padding: 2px 4px;
+    {{!-- color: #282727; --}}
+    font-weight: 600;
+    font-size: 11px;
+}
+.myy_table1 td{
+    border: 0.5px solid #ccc;
+}
+.myy_table1 th{
+    border: 0.5px solid #ccc;
+    line-height: 36px;
+}
+.myy_table2 td{
+    border: 0.5px solid #ccc;
+}
+.myy_table2 th{
+    border: 0.5px solid #ccc;
+    font-weight: bold;
+    background-color: #fff;
+    color: #000;
+}
+.myy_table3 th{
+    background-color: #19aec6;
+    color: #fff;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 15px;
+    border: 0.5px solid #fff;
+    padding: 2px 4px;
+}
+.myy_table3 td{
+    padding: 2px 4px;
+    {{!-- color: #282727; --}}
+    font-weight: 600;
+    font-size: 10px;
+    border-bottom: 0.5px solid #ccc;
+    line-height: 15px;
+}
+.myy_table4{
+    border: 0.5px solid #444343;
+}
+.myy_table4 td{
+    padding: 2px 4px;
+    {{!-- color: #282727; --}}
+    font-weight: 600;
+    font-size: 10px;
+}
+.myy_table4 th{
+    padding: 2px 4px;
+    color: #000;
+    font-weight: bold;
+    font-size: 11px;
+    border-bottom: 0.5px solid #444343;
+}
+
+.bl-1px{
+    border-left: 0.5px solid #444343;
+}
+
+.fs-11{
+    font-size: 10px;
+}
+
+
+
+</style>
+<body>
+    <div class="section">
+        <div class="container p-0">
+            <div class="row g-0">
+               
+                <div class="col-lg-12">
+                    <h4 class="text-center" style="font-size:18px;"><b> فاتورة نقدية / بالحساب<br>CASH / CREDIT INVOICE</b></h4>
+                </div>
+                
+                <div class="col-lg-6 col-md-6 col-sm-6 pe-0 ps-0">
+                    <table class="fs-11 mt-1 myy_table4">
+                        <tr>
+                            <th>Bill To</th>
+                        </tr>
+
+                        <tr>
+                            <td>{{billing_address.[0].name}}</td>
+                        </tr>
+
+                        {{#if billing_address.[0].address_line1}}
+                        <tr>
+                            <td>{{billing_address.[0].address_line1}}</td>
+                        </tr>
+                        {{/if}}
+
+                        {{#if billing_address.[0].address_line2}}
+                        <tr>
+                            <td>{{billing_address.[0].address_line2}}</td>
+                        </tr>
+                        {{/if}}
+
+                        {{#if billing_address.[0].address_line4}}
+                        <tr>
+                            <td>{{billing_address.[0].address_line4}}</td>
+                        </tr>
+                        {{/if}}
+
+                        {{#if billing_address.[0].address_line3}}
+                        <tr>
+                            <td>{{billing_address.[0].address_line3}}</td>
+                        </tr>
+                        {{/if}}
+
+                        {{#if billing_address.[0].address_line5}}
+                        <tr>
+                            <td>{{billing_address.[0].address_line5}}</td>
+                        </tr>
+                        {{/if}}
+
+                        {{#if customer_details.[0].contact_no1}}
+                        <tr>
+                            <td>Phone Number : {{customer_details.[0].contact_no1}}</td>
+                        </tr>
+                        {{/if}}
+
+                        {{#if customer_details.[0].VAT_number}}
+                        <tr>
+                            <td>VAT Number : {{customer_details.[0].VAT_number}}</td>
+                        </tr>
+                        {{/if}}
+
+                        {{#if customer_details.[0].cr_no}}
+                        <tr>
+                            <td>CR Number : {{customer_details.[0].cr_no}}</td>
+                        </tr>
+                        {{/if}}
+
+                    </table>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6 pl-0">
+                    <table class="fs-11 mt-1 lih-25 fw-600">
+                        <tr>
+                            <td class="text-end">Invoice Date: </td>
+                            <td class="text-end">{{basicdetails.[0].inv_date}}</td>
+                            <td class="text-end">:ﺗﺎﺭﻳﺦ ﺍﻟﻔﺎﺗﻮﺭﺓ</td>
+                        </tr>
+                        <tr>
+                            <td class="text-end">Invoice Number : </td>
+                            <td class="text-end">{{basicdetails.[0].inv_no}}</td>
+                            <td class="text-end">: ﺭﻗﻢ ﺍﻟﻔﺎﺗﻮﺭﺓ</td>
+                        </tr>
+                        <tr>
+                            <td class="text-end">P O Number : </td>
+                            <td class="text-end">{{#if basicdetails.[0].order_no}}{{basicdetails.[0].order_no}}{{/if}}</td>
+                            <td class="text-end">:ﺭﻗﻢ ﻃﻠﺐ ﺍﻟﺸﺮﺍﺀ</td>
+                        </tr>
+                        <tr>
+                            <td class="text-end">P O Date: </td>
+                            <td class="text-end">{{#if basicdetails.[0].po_date}}{{basicdetails.[0].po_date}}{{/if}}</td>
+                            <td class="text-end">:ﺗﺎﺭﻳﺦ ﺃﻣﺮ ﺍﻟﺸﺮﺍﺀ</td>
+                        </tr>
+                        <tr>
+                            <td class="text-end">Supply Date: </td>
+                            <td class="text-end">{{#if basicdetails.[0].sup_date}}{{basicdetails.[0].sup_date}}{{/if}}</td>
+                            <td class="text-end">:ﺗﺎﺭﻳﺦ ﺍﻟﺘﻮﺭﻳﺪ</td>
+                        </tr>
+                        <tr>
+                            <td class="text-end">Reference No: </td>
+                            <td class="text-end">{{#if basicdetails.[0].reference_no}}{{basicdetails.[0].reference_no}}{{/if}}</td>
+                            <td class="text-end">:ﺭﻗﻢ ﺍﻟﻤﺮﺟﻊ</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="col-lg-12">
+                    <table class="mt-1 myy_table4 lih-20">
+                        <tr>
+                            <th class="text-center"><b>Sl<br>سري</b></th>
+                            <th class="text-center bl-1px"><b>Item Code<br>رمز الصنف</b></th>
+                            <th class="text-center bl-1px"><b>Item Description<br>وصف الصنف</b></th>
+                            <th class="text-center bl-1px"><b>Unit<br>الوحدة</b></th>
+                            <th class="text-center bl-1px"><b>Qty<br>الكمية</b></th>
+                            <th class="text-center bl-1px"><b>Unit Price<br>سعر الوحدة</b></th>
+                            <th class="text-center bl-1px"><b>Total<br>الإجمالي</b></th>
+                        </tr>
+                        {{#each itemdetails}}
+                        <tr>
+                            <td class="text-center">{{addOne @index}}</td>
+                            <td class="text-start bl-1px">{{item_code}}</td>
+                            <td class="text-start bl-1px">
+                                <div>{{item_name}}</div>
+                                    {{#if name_lang2}}<div style="direction:rtl; font-size:9.5px; color:#555;">{{name_lang2}}</div>{{/if}}
+                                    {{#if description}}<div style="font-size:9.5px; color:#777;">{{description}}</div>{{/if}}
+                            </td>
+                            <td class="text-center bl-1px">{{unit}}</td>
+                            <td class="text-center bl-1px">{{formatAmount quantity ../bcdp}}</td>
+                            <td class="text-end bl-1px">{{formatAmount price ../bcdp}}</td>
+                            <td class="text-end bl-1px">{{formatAmount taxable ../bcdp}}</td>
+                        </tr>
+                        {{/each}}
+                    </table>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 pl-0">
+                    <table class="mt-1 myy_table myy_table2 border-dark">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td class="text-end"> المجموع ﺍﻟﻔﺮﻋﻲ</td>
+                            <td class="text-end">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].subtotal bcdp}}</td>
+                        </tr>
+                        {{#if zatcadiscount.[0].dld}}
+                            {{set "net" (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld)}}
+                            <tr>
+                                <td>{{zatcadiscount.[0].reason_name}}</td>
+                                <td class="text-end">{{zatcadiscount.[0].reason_name_lang2}}</td>
+                                <td class="text-end">
+                                    {{basicdetails.[0].isocode}} {{formatAmount zatcadiscount.[0].dld bcdp}}
+                                </td>
+                            </tr>
+                        {{else}}
+                            {{set "net" (subtract basicdetails.[0].subtotal basicdetails.[0].discount)}}
+                            {{#if basicdetails.[0].discount}}
+                            <tr>
+                                <td>Discount</td>
+                                <td class="text-end">تخفيض</td>
+                                <td class="text-end">
+                                    {{basicdetails.[0].isocode}} 
+                                    {{formatAmount basicdetails.[0].discount bcdp}}
+                                </td>
+                            </tr>
+                            {{/if}}
+                        {{/if}}
+                        <tr>
+                            <td>Net Value</td>
+                            <td class="text-end">ﺻﺎﻓﻲ ﺍﻟﻘﻴﻤﺔ</td>
+                            <td class="text-end">{{basicdetails.[0].isocode}} {{formatAmount _vars.net bcdp}}</td>
+                        </tr>
+                        <tr>
+                            <td>Delivery</td>
+                            <td class="text-end">توصيل</td>
+                            <td class="text-end">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].delivery_charge bcdp}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Subtotal</b></td>
+                            <td class="text-end"><b>المجموع الفرعي</b></td>
+                            <td class="text-end"><b>{{basicdetails.[0].isocode}} {{formatAmount (add _vars.net basicdetails.[0].delivery_charge) bcdp}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>P. Received</td>
+                            <td class="text-end">تم الاستلام جزئيًا</td>
+                            <td class="text-end">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].received bcdp}}</td>
+                        </tr>
+                        <tr>
+                            <td>Remaining</td>
+                            <td class="text-end">متبقي</td>
+                            <td class="text-end">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].balance bcdp}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-12">
+                    <table class="mt-1 myy_table4">
+                        <tr>
+                            <th>Total Amount in Words</th>
+                            <th class="text-end">ﺍﻟﻤﺒﻠﻎ ﺍﻹﺟﻤﺎﻟﻲ ﺑﺎﻟﻜﻠﻤﺎﺕ</th>
+                        </tr>
+                        <tr>
+                            <td>{{bcamountinwords}}</td>
+                            <td>{{bcamountinwordsar}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-12">
+                    
+                    <table class="myy_table4a">
+                        <tr>
+                            <td style="font-size:11px;"><b><u>Salesman Sign</u></b><br><span style="font-size: 10px;">{{basicdetails.[0].salesman_name}} & {{basicdetails.[0].inv_time}}</span><br><br><br><br><br><br></td>
+                            <td class="text-end" style="font-size:11px;"><b><u>Customer Sign</u></b><br><br><br><br><br><br><br></td>
+                        </tr>
+                        
+                    </table>
+                </div>
+
+                
+            </div> 
+        </div>
+    </div>
+</body>
+</html>

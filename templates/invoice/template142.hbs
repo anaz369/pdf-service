@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Tax Invoice - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+    }
+
+    .page {
+      width: 750px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* ════════════════════════════════════════════
+       ROUNDED BOX — used for every section
+    ════════════════════════════════════════════ */
+    .rbox {
+      border: 1px solid #344767;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    /* ════════════════════════════════════════════
+       BLOCK 1 — VENDOR | CUSTOMER
+       Two cols side by side, divider in middle
+    ════════════════════════════════════════════ */
+      .b1-wrap {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+
+    .b1-vendor,
+    .b1-customer {
+      flex: 1;
+      border: 1px solid #344767;
+      border-radius: 6px;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .b1-box-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 5px 10px 4px 10px;
+    }
+    .b1-box-hdr-en { font-weight: bold; font-size: 12px; }
+    .b1-box-hdr-ar { font-size: 12px; direction: rtl; color: #000; }
+
+    .b1-box-body {
+      padding: 2px 10px 8px 10px;
+      font-size: 11px;
+      line-height: 1.65;
+    }
+    .b1-box-body div { font-size: 11px; line-height: 1.65; }
+
+    .b1-vat {
+      margin-top: 2px;
+      font-size: 11px;
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .b1-vat-ar { font-size: 10px; direction: rtl; color: #333; }
+    /* ════════════════════════════════════════════
+       BLOCK 2 — TAX INVOICE BOX  +  QR (outside box)
+    ════════════════════════════════════════════ */
+    .b2-outer {
+      display: flex;
+      width: 100%;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+    .b2-box {
+      flex: 0 0 62%;
+      border: 1px solid #344767;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .b2-qr {
+      flex: 0 0 38%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-left: 10px;
+    }
+    .b2-qr img { width: 130px; height: 130px; display: block; }
+
+    /* Title bar */
+    .b2-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 10px 2px 10px;   /* tight top/bottom */
+    }
+    .b2-title-en { font-size: 18px; font-weight: bold; letter-spacing: 0.5px; }
+    .b2-title-ar { font-size: 15px; font-weight: bold; direction: rtl; }
+
+    /* Meta table */
+    .b2-meta { padding: 0 8px 4px 8px; }  /* zero top, small bottom */
+    .meta-table { width: 100%; border-collapse: collapse; }
+    .meta-table td {
+      border: none;
+      padding: 2px 0;              /* 2px top/bottom — very tight rows */
+      vertical-align: middle;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    .meta-en  { font-weight: bold; display: inline-block; min-width: 115px; }
+    .meta-val { display: inline-block; }
+    .meta-ar  { direction: rtl; text-align: right; font-size: 10.5px; color: #333; width: 35%; }
+
+    /* ════════════════════════════════════════════
+       BLOCK 3 — ITEMS TABLE
+    ════════════════════════════════════════════ */
+    .items-wrap {
+      border: 1px solid #344767;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .items-table th {
+      background: #f5f5f5;
+      border-bottom: 1px solid #aaa;
+      border-right: 1px solid #aaa;
+      padding: 2px 4px;
+      font-size: 10px;
+      font-weight: bold;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 1.3;
+    }
+    .items-table th .ar {
+      display: block;
+      direction: rtl;
+      font-size: 9.5px;
+      font-weight: normal;
+      color: #000;
+      text-align: center;
+    }
+    .items-table td {
+      {{!-- border: 1px solid #aaa; --}}
+      padding: 2px 4px;
+      font-size: 11px;
+      vertical-align: middle;
+      text-align: center;
+    }
+    .td-left { text-align: left !important; }
+
+    /* ════════════════════════════════════════════
+       BLOCK 4 — BANK | TOTALS
+    ════════════════════════════════════════════ */
+    /* ── Bank box ─────────────────────────────────── */
+    .bank-title {
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .bank-row {
+      font-size: 10.5px;
+      line-height: 1.85;
+      white-space: nowrap;
+    }
+    .bank-key {
+      display: inline-block;
+      min-width: 108px;
+    }
+
+    /* ── Totals table ─────────────────────────────── */
+    .tot-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .tot-table tr {
+      border-bottom: 1px solid #ccc;
+    }
+    .tot-table tr:last-child {
+      border-bottom: none;
+    }
+    .tot-td-en {
+      padding: 4px 8px;
+      font-size: 11px;
+      vertical-align: middle;
+      width: 48%;
+      border-right: 1px solid #ccc;
+    }
+    .tot-td-en.multiline {
+      white-space: normal;
+      line-height: 1.18;
+    }
+    .tot-td-right {
+      padding: 0;
+      vertical-align: middle;
+      width: 52%;
+    }
+    .tot-right-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 24px;
+    }
+    .tot-right-inner .ar-lbl {
+      direction: rtl;
+      text-align: right;
+      font-size: 10px;
+      padding: 3px 6px;
+      flex: 1;
+      line-height: 1.3;
+    }
+    .tot-right-inner .amt {
+      font-size: 11px;
+      text-align: right;
+      padding: 3px 8px;
+      white-space: nowrap;
+      min-width: 72px;
+    }
+
+    /* Remove old b4-wrap / b4-bank / b4-totals if present */
+    /* ════════════════════════════════════════════
+       BLOCK 5 — AMOUNT IN WORDS  (dark header style)
+    ════════════════════════════════════════════ */
+    .b5-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #344767;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 6px 6px 0 0;
+    }
+    .b5-header-en { font-weight: bold; font-size: 11.5px; color: #fff; }
+    .b5-header-ar { font-weight: bold; font-size: 11.5px; color: #fff; direction: rtl; }
+    .b5-body {
+      display: flex;
+      padding: 0;
+      border-left: 1px solid #344767;
+      border-right: 1px solid #344767;
+      border-bottom: 1px solid #344767;
+      border-radius: 0 0 6px 6px;
+    }
+    .b5-en {
+      flex: 0 0 55%;
+      padding: 4px 5px;
+      {{!-- border-right: 1px solid #888; --}}
+      font-size: 11px;
+    }
+    .b5-ar {
+      flex: 0 0 45%;
+      padding: 4px 5px;
+      direction: rtl;
+      text-align: right;
+      font-size: 11px;
+    }
+
+    /* ════════════════════════════════════════════
+       BLOCK 6 — TERMS
+    ════════════════════════════════════════════ */
+    .b6-pad { padding: 4px 10px; font-size: 11px; }
+    .b6-title { font-weight: bold; }
+
+    /* ════════════════════════════════════════════
+       BLOCK 7 — SIGNATURES
+    ════════════════════════════════════════════ */
+    .b7-wrap { display: flex; width: 100%; }
+    .b7-issued {
+      flex: 0 0 50%;
+      text-align: center;
+      min-height: 90px;
+      padding: 8px;
+      border-right: 1px solid #888;
+    }
+    .b7-received {
+      flex: 0 0 50%;
+      text-align: center;
+      min-height: 90px;
+      padding: 8px;
+    }
+    .sig-lbl  { font-size: 11px; margin-bottom: 5px; }
+    .sig-img  { max-height: 60px; margin-top: 4px; }
+    .seal-img { max-height: 60px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  {{!-- ══════════════════════════════════════════════
+       BLOCK 1 — VENDOR | CUSTOMER  (rounded box)
+  ══════════════════════════════════════════════ --}}
+  <div class="b1-wrap">
+
+  {{!-- ── VENDOR BOX ── --}}
+  <div class="b1-vendor">
+    {{!-- Header: same style as customer --}}
+    <div class="b1-box-hdr">
+      <span class="b1-box-hdr-en"><b>Vendor Details</b></span>
+      <span class="b1-box-hdr-ar">تفاصيل المورد</span>
+    </div>
+    {{!-- Body --}}
+    <div class="b1-box-body">
+      <div>{{branch.[0].name}}</div>
+        <div>{{branch.[0].address_line1}} {{#if branch.[0].address_line2}} {{branch.[0].address_line2}}{{/if}} {{#if branch.[0].address_line4}} {{branch.[0].address_line4}}{{/if}} {{#if branch.[0].address_line3}} {{branch.[0].address_line3}}{{/if}}  {{#if branch.[0].address_line5}} {{branch.[0].address_line5}}{{/if}}</div>
+      {{#if branch.[0].cr_no}}
+        <div>CR Number : {{branch.[0].cr_no}}</div>
+      {{/if}}
+      {{#if branch.[0].vat}}
+        <div class="b1-vat">
+          <span>VAT Number &nbsp; {{branch.[0].vat}}</span>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- ── CUSTOMER BOX ── --}}
+  <div class="b1-customer">
+    {{!-- Header: same style as vendor --}}
+    <div class="b1-box-hdr">
+      <span class="b1-box-hdr-en"><b>Customer Details</b></span>
+      <span class="b1-box-hdr-ar">تفاصيل العميل</span>
+    </div>
+    {{!-- Body --}}
+    <div class="b1-box-body">
+      <div>{{billing_address.[0].name}}</div>
+        <div>{{billing_address.[0].address_line1}} {{#if billing_address.[0].address_line2}}  {{billing_address.[0].address_line2}}{{/if}} {{#if billing_address.[0].address_line4}}  {{billing_address.[0].address_line4}}{{/if}} {{#if billing_address.[0].address_line3}}  {{billing_address.[0].address_line3}}{{/if}} {{#if billing_address.[0].address_line5}}  {{billing_address.[0].address_line5}}{{/if}}</div>
+      {{#if customer_details.[0].cr_no}}
+        <div>CR Number : {{customer_details.[0].cr_no}}</div>
+      {{/if}}
+      {{#if customer_details.[0].VAT_number}}
+        <div> VAT Number : {{customer_details.[0].VAT_number}}</div>
+      {{/if}}
+    </div>
+  </div>
+
+</div>
+
+
+  {{!-- ══════════════════════════════════════════════
+       BLOCK 2 — TAX INVOICE BOX (left 55%) + QR (right 45%)
+       QR is OUTSIDE the rounded box, floated right
+  ══════════════════════════════════════════════ --}}
+  <div class="b2-outer">
+
+    {{!-- Left: rounded box with title + meta --}}
+    <div class="b2-box">
+      <div class="b2-title">
+        <span class="b2-title-en">TAX INVOICE</span>
+        <span class="b2-title-ar">فاتورة ضريبية</span>
+      </div>
+      <div class="b2-meta">
+        <table class="meta-table">
+          {{#if basicdetails.[0].order_no}}
+          <tr>
+            <td><span class="meta-en">PO Number</span><span class="meta-val">{{basicdetails.[0].order_no}}</span></td>
+            <td class="meta-ar">رقم أمر الشراء</td>
+          </tr>
+          {{/if}}
+          <tr>
+            <td><span class="meta-en">Invoice Number</span><span class="meta-val">{{basicdetails.[0].inv_no}}</span></td>
+            <td class="meta-ar">رقم الفاتورة</td>
+          </tr>
+          <tr>
+            <td><span class="meta-en">Invoice Date</span><span class="meta-val">{{basicdetails.[0].inv_date}}</span></td>
+            <td class="meta-ar">تاريخ الفاتورة</td>
+          </tr>
+          {{#if basicdetails.[0].sup_date}}
+          <tr>
+            <td><span class="meta-en">Supply Date</span><span class="meta-val">{{basicdetails.[0].sup_date}}</span></td>
+            <td class="meta-ar">تاريخ العرض</td>
+          </tr>
+          {{/if}}
+          {{#if basicdetails.[0].due_date}}
+          <tr>
+            <td><span class="meta-en">Due Date</span><span class="meta-val">{{basicdetails.[0].due_date}}</span></td>
+            <td class="meta-ar">تاريخ الاستحقاق</td>
+          </tr>
+          {{/if}}
+        </table>
+      </div>
+    </div>
+
+    {{!-- Right: QR code — outside the box --}}
+    <div class="b2-qr">
+      {{{qrDataUri qrCodeBase64}}}
+    </div>
+
+  </div>
+
+  {{!-- ══════════════════════════════════════════════
+       BLOCK 3 — LINE ITEMS  (rounded box)
+  ══════════════════════════════════════════════ --}}
+  <div class="items-wrap">
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width:5%;">SI No<br/><span class="ar">سري</span></th>
+          <th style="width:36%; text-align:center;">Item Description<span class="ar" style="text-align:center; display:block;">وصف السلعة</span></th>
+          <th style="width:8%;">Qty<br/><span class="ar">الكمية</span></th>
+          <th style="width:10%;">Rate<br/><span class="ar">معدل</span></th>
+          <th style="width:13%;">Taxable Amount<br/><span class="ar">المبلغ الخاضع للضريبة</span></th>
+          <th style="width:14%;">Tax Amount(15%)<br/><span class="ar">قيمة الضريبة</span></th>
+          <th style="width:15%;">Item Subtotal<br/><span class="ar">المجموع الفرعي للعنصر</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each itemdetails}}
+        <tr>
+          <td>{{addOne @index}}</td>
+          <td class="td-left">
+            {{item_name}}
+            {{#if name_lang2}}<div style="direction:rtl; font-size:9.5px; color:#444;">{{name_lang2}}</div>{{/if}}
+            {{#if description}}<div style="direction:rtl; font-size:9.5px; color:#444;">{{description}}</div>{{/if}}
+          </td>
+          <td style="text-align:center;">{{formatAmount quantity bcdp}}</td>
+          <td style="text-align:right;">{{formatAmount price bcdp}}</td>
+          <td style="text-align:right;">{{formatAmount taxable bcdp}}</td>
+            {{!-- <td style="text-align:right;">{{formatAmount amount bcdp}}</td> --}}
+          <td style="text-align:right;">{{formatAmount tax bcdp}}</td>
+          <td style="text-align:right;">{{formatAmount amount bcdp}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+    {{!-- ══════════════════════════════════════════════
+       BLOCK 4 — BANK (left box) | TOTALS (right box)
+       Both in same row, each their own rounded box
+  ══════════════════════════════════════════════ --}}
+  <div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;">
+
+    {{!-- BANK BOX --}}
+    <div class="rbox" style="flex:0 0 42%; margin-bottom:0;">
+      <div style="padding:6px 10px;">
+        <div class="bank-title">Bank Account Details</div>
+        {{#if bankdetails.name}}
+        <div class="bank-row"><span class="bank-key">Bank Name</span>: {{bankdetails.name}}</div>
+        {{/if}}
+        {{#if bankdetails.acc_name}}
+        <div class="bank-row"><span class="bank-key">Account Name</span>: {{bankdetails.acc_name}}</div>
+        {{/if}}
+        {{#if bankdetails.acc_no}}
+        <div class="bank-row"><span class="bank-key">Account Number</span>: {{bankdetails.acc_no}}</div>
+        {{/if}}
+        {{#if bankdetails.iban_no}}
+        <div class="bank-row"><span class="bank-key">IBAN No</span>: {{bankdetails.iban_no}}</div>
+        {{/if}}
+        <div class="bank-row"><span class="bank-key">SWIFT No</span>: {{#if bankdetails.swift_no}}{{bankdetails.swift_no}}{{/if}}</div>
+        <div class="bank-row"><span class="bank-key">Branch Name</span>: {{#if bankdetails.branch_name}}{{bankdetails.branch_name}}{{/if}}</div>
+      </div>
+    </div>
+
+    {{!-- TOTALS BOX --}}
+    <div class="rbox" style="flex:1; margin-bottom:0;">
+      <table class="tot-table">
+        <tbody>
+
+          <tr>
+            <td class="tot-td-en">Gross Total</td>
+            <td class="tot-td-right">
+              <div class="tot-right-inner">
+                <span class="ar-lbl">المجموع الكلي</span>
+                <span class="amt">{{formatAmount (add basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</span>
+              </div>
+            </td>
+          </tr>
+{{#if (gt basicdetails.[0].discount 0)}}
+          <tr>
+            <td class="tot-td-en">Discount</td>
+            <td class="tot-td-right">
+              <div class="tot-right-inner">
+                <span class="ar-lbl">خصومات</span>
+                <span class="amt">{{formatAmount basicdetails.[0].discount bcdp}}</span>
+              </div>
+            </td>
+          </tr>
+ {{/if}}
+          <tr>
+            <td class="tot-td-en multiline">Total Taxable Amount (Excl. VAT)</td>
+            <td class="tot-td-right">
+              <div class="tot-right-inner">
+                <span class="ar-lbl">الإجمالي الواضع للضريبة</span>
+                <span class="amt">{{formatAmount basicdetails.[0].subtotal bcdp}}</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="tot-td-en">Total VAT</td>
+            <td class="tot-td-right">
+              <div class="tot-right-inner">
+                <span class="ar-lbl">مجموع ضريبة القيمة المضافة</span>
+                <span class="amt">{{formatAmount basicdetails.[0].vatamt bcdp}}</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="tot-td-en">Total Amount</td>
+            <td class="tot-td-right">
+              <div class="tot-right-inner">
+                <span class="ar-lbl">جمالي المبلغ المستحق</span>
+                <span class="amt">{{formatAmount basicdetails.[0].grand_total bcdp}}</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="tot-td-en">Received</td>
+            <td class="tot-td-right">
+              <div class="tot-right-inner">
+                <span class="ar-lbl">تم الاستلام</span>
+                <span class="amt">{{formatAmount basicdetails.[0].received bcdp}}</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="tot-td-en">Balance</td>
+            <td class="tot-td-right">
+              <div class="tot-right-inner">
+                <span class="ar-lbl">الرصيد</span>
+                <span class="amt">{{formatAmount basicdetails.[0].balance bcdp}}</span>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+  {{!-- ══════════════════════════════════════════════
+       BLOCK 5 — AMOUNT IN WORDS  (dark header bar)
+  ══════════════════════════════════════════════ --}}
+  <div style="margin-bottom:5px;">
+    <div class="b5-header">
+      <span class="b5-header-en">Amount in words</span>
+      <span class="b5-header-ar">المبلغ بالكلمات</span>
+    </div>
+    <div class="b5-body">
+      <div class="b5-en">{{bcamountinwords}}</div>
+      <div class="b5-ar">{{bcamountinwordsar}}</div>
+    </div>
+  </div>
+
+  {{!-- ══════════════════════════════════════════════
+       BLOCK 6 — TERMS  (rounded box)
+  ══════════════════════════════════════════════ --}}
+  <div class="rbox" style="margin-bottom:5px;">
+    <div class="b6-pad">
+      <span class="b6-title">Terms And Conditions/</span>
+      <span style="font-weight:bold; direction:rtl; font-size:11px;"> والشروط الأحكام</span>
+      {{#if invterms}}
+      <div style="margin-top:3px; font-size:11px;">{{invterms}}</div>
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- ══════════════════════════════════════════════
+       BLOCK 7 — ISSUED BY | RECEIVED BY  (rounded box)
+  ══════════════════════════════════════════════ --}}
+  <div class="rbox">
+    <div class="b7-wrap">
+      <div class="b7-issued">
+        <div class="sig-lbl">Issued By</div>
+        {{#if Seal}}
+          <img src="{{Seal}}" class="seal-img" alt="Seal">
+        {{/if}}
+        {{#if Signature}}
+          <img src="{{Signature}}" class="sig-img"  alt="Signature">
+        {{/if}}
+      </div>
+      <div class="b7-received">
+        <div class="sig-lbl">Received By</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

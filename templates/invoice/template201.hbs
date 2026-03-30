@@ -92,6 +92,7 @@
             font-size: 10px;
             margin-bottom: 4px;
             line-height: 1.5;
+            text-align: center;
         }
 
         .bill-to .customer-name {
@@ -151,6 +152,8 @@
         .item-name-en {
             font-weight: bold;
             display: block;
+            font-size: 9px;
+            
         }
 
         .item-name-ar {
@@ -182,12 +185,13 @@
         }
 
         .totals td.lbl .en {
-            display: block;
-            font-size: 10px;
+            display: inline;
+            font-size: 9px;
+            text-align: right;
         }
 
         .totals td.lbl .ar {
-            display: block;
+            display: inline;
             font-size: 9px;
             color: #444;
             text-align: right;
@@ -231,6 +235,8 @@
             padding-top: 5px;
             color: #333;
         }
+
+        
     </style>
 </head>
 <body>
@@ -245,6 +251,9 @@
         <div class="company-meta">
             {{#if branch.[0].cr_no}}C.R.: {{branch.[0].cr_no}}<br>{{/if}}
             {{#if branch.[0].vat}}VAT : {{branch.[0].vat}}<br>{{/if}}
+            {{#if compprof.[0].phone}}
+            <div>Phone: {{compprof.[0].phone}}</div>
+            {{/if}}
             {{joinAddress branch.[0]}}
         </div>
     </div>
@@ -269,21 +278,36 @@
         {{#if customer_details.[0].cr_no}}
         <div>C.R.: {{customer_details.[0].cr_no}}</div>
         {{/if}}
+        {{#if customer_details.[0].contact_no1}}
+        <div>Contact No: {{customer_details.[0].contact_no1}}</div>
+        {{/if}}
     </div>
 
     {{!-- ── Invoice Title ──────────────────────── --}}
+    {{#if branch.[0].vat}}
     <div class="inv-title">
-        INVOICE &nbsp;-&nbsp; <span class="ar">فاتورة ضريبية</span>
+       TAX INVOICE &nbsp;-&nbsp; <span class="ar">فاتورة ضريبية </span>
     </div>
+    {{else}}
+    <div class="inv-title">
+        INVOICE &nbsp;-&nbsp; <span class="ar">فاتورة </span>
+    </div>
+    {{/if}}
 
     {{!-- ── Items Table ──────────────────────────── --}}
     <table class="items-table">
         <thead>
             <tr>
+                {{#if itemdetails.[0].disc_amt}}
                 <th style="width:36%;">ITEM</th>
+                {{else}} 
+                 <th class="c" style="width:49%;">ITEM</th>
+                {{/if}}
                 <th class="c" style="width:9%;">QTY</th>
                 <th class="r" style="width:18%;">RATE</th>
-                <th class="r" style="width:13%;">TAX</th>
+                {{#if itemdetails.[0].disc_amt}}
+                <th class="r" style="width:13%;">DISCOUNT</th>
+                {{/if}}
                 <th class="r" style="width:24%;">AMOUNT</th>
             </tr>
         </thead>
@@ -295,13 +319,15 @@
                          when it's a boolean or same as item_name --}}
                     <span class="item-name-en">{{item_name}}</span>
                     {{#if name_lang2}}
-                    <span class="item-name-ar ar">{{name_lang2}}</span>
+                    <span class="item-name-ar" style="text-align:left;">{{name_lang2 }}</span>
                     {{/if}}
                 </td>
-                <td class="c">{{quantity}}</td>
-                <td class="r">{{price}}</td>
-                <td class="r">{{tax}}</td>
-                <td class="r">{{amount}}</td>
+                <td class="c">{{formatAmount quantity bcdp}}</td>
+                <td class="r">{{formatAmount price bcdp}}</td>
+                {{#if disc_amt}}
+                <td class="r">{{formatAmount disc_amt bcdp}}</td>
+                {{/if}}
+                <td class="r">{{formatAmount amount bcdp}}</td>
             </tr>
         {{/each}}
         </tbody>
@@ -312,47 +338,49 @@
     <table class="totals">
         <tr>
             <td class="lbl">
-                <span class="en">Total Taxable Amount</span>
-                <span class="ar">الإجمالي الواضع للضريبة (غير شاملة ضريبة القيمة المضافة)</span>
+                <span class="en">Total Taxable Amount / </span> <span class="ar">إجمالي المبلغ الخاضع للضريبة</span>
+                {{!-- <span class="ar">إجمالي المبلغ الخاضع للضريبة</span> --}}
             </td>
-            <td class="amt">{{subtotal}}</td>
+            <td class="amt">{{{currencyImg  ../isocode}}} {{formatAmount (divide subtotal ccrate) bcdp}}</td>
         </tr>
+        {{#if basicdetails.[0].vatamt}}
         <tr>
             <td class="lbl">
-                <span class="en">VAT</span>
-                <span class="ar">مجموع ضريبة القيمة المضافة - VAT</span>
+                <span class="en">VAT / </span> <span class="ar">إجمالي ضريبة القيمة المضافة</span>
+                {{!-- <span class="ar">إجمالي ضريبة القيمة المضافة</span> --}}
             </td>
-            <td class="amt">{{vatamt}}</td>
-        </tr>
-        {{#neq discount "0.00"}}
-        {{#if discount}}
-        <tr>
-            <td class="lbl">
-                <span class="en">Discount</span>
-                <span class="ar">الخصم</span>
-            </td>
-            <td class="amt">{{discount}}</td>
+            <td class="amt">{{{currencyImg  ../isocode}}} {{formatAmount (divide vatamt ccrate) bcdp}}</td>
         </tr>
         {{/if}}
-        {{/neq}}
+        {{#if basicdetails.[0].discount}}
+        <tr>
+            <td class="lbl">
+                <span class="en">Discount / </span> <span class="ar">الخصم</span>
+                {{!-- <span class="ar">الخصم</span> --}}
+            </td>
+            <td class="amt">{{{currencyImg  ../isocode}}} {{formatAmount (divide discount ccrate) bcdp}}</td>
+        </tr>
+        {{/if}}
+        {{!-- {{/neq}} --}}
         <tr class="total-due">
             <td class="lbl">
-                <span class="en">Total</span>
-                <span class="ar">اجمالي المبلغ المستحق</span>
+                <span class="en">Total / </span> <span class="ar">اجمالي المبلغ المستحق</span>
+                {{!-- <span class="ar">اجمالي المبلغ المستحق</span> --}}
             </td>
-            <td class="amt">{{balance}}</td>
+            <td class="amt">{{{currencyImg ../isocode}}} {{formatAmount (divide grand_total ccrate) bcdp}}</td>
         </tr>
     </table>
     {{/with}}
 
     {{!-- ── Amount in Words ─────────────────────── --}}
     <div class="amount-words">
-        {{#if bcamountinwordsar}}
-        <div class="ar">{{bcamountinwordsar}}</div>
-        {{/if}}
         {{#if bcamountinwords}}
         <div>{{bcamountinwords}}</div>
         {{/if}}
+        {{#if bcamountinwordsar}}
+        <div class="ar">{{bcamountinwordsar}}</div>
+        {{/if}}
+
     </div>
 
     {{!-- ── Footer ────────────────────────────────── --}}

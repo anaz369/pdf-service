@@ -49,6 +49,7 @@
       border: 1px solid #b8d8f0;
       border-bottom: none;
       padding: 6px 16px;
+
       font-size: 11px;
       text-align: center;
     }
@@ -295,61 +296,6 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .fin-wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-}
-
-.fin-left {
-  width: 120px;
-}
-
-.qr-wrapper img {
-  width: 100px;
-  height: 100px;
-}
-
-.fin-right {
-  flex: 1;
-}
-
-.fin-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 120px;
-  border-bottom: 1px solid #ccc;
-  padding: 4px 0;
-  font-size: 11px;
-}
-
-.f-lbl {
-  text-align: left;
-}
-
-.f-ar {
-  text-align: right;
-  direction: rtl;
-}
-
-.f-amt {
-  text-align: right;
-  font-weight: 500;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.fin-row.bold {
-  border-top: 2px solid #000;
-}
-
-.fin-words {
-  margin-top: 8px;
-  font-size: 10px;
-  text-align: center;
-}
   </style>
 </head>
 <body>
@@ -483,88 +429,50 @@
   {{!-- QR + FINANCIAL SUMMARY --}}
   <div class="fin-wrap">
 
-  <!-- LEFT : QR -->
-  <div class="fin-left">
-    <div class="qr-wrapper">
-      {{{qrDataUri qrCodeBase64}}}
+    <div class="fin-left">
+      <div class="qr-wrapper">
+        {{{qrDataUri qrCodeBase64}}}
+      </div>
+    </div>
+
+    <div class="fin-right">
+
+      <div class="fin-row">
+        <span class="f-lbl">Total</span>
+        <span class="f-amt">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].subtotal bcdp}}</span>
+      </div>
+
+      {{#each basicdetails}}
+      <div class="fin-row">
+        <span class="f-lbl orange">{{ap}}% Advance Recovery</span>
+        <span class="f-amt deduct">{{isocode}} {{formatAmount aa ../bcdp}}</span>
+      </div>
+      {{/each}}
+
+      {{#each basicdetails}}
+      <div class="fin-row">
+        <span class="f-lbl orange">{{rp}}% Retention</span>
+        <span class="f-amt deduct">{{isocode}} {{formatAmount ra ../bcdp}}</span>
+      </div>
+      {{/each}}
+
+      <div class="fin-row">
+        <span class="f-lbl bold">Total Amount Claimed (Without 5% VAT)</span>
+        <span class="f-amt bold">{{basicdetails.[0].isocode}} {{formatAmount (subtract basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</span>
+      </div>
+
+      <div class="fin-row">
+        <span class="f-lbl orange">VAT 5%</span>
+        <span class="f-amt add">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].vatamt bcdp}}</span>
+      </div>
+
+      <div class="fin-row-dark">
+        <span>Total Amount Claimed (With 5% VAT)</span>
+        <span class="f-amt">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].grand_total bcdp}}</span>
+      </div>
+
     </div>
   </div>
-
-  <!-- RIGHT : TOTALS -->
-  <div class="fin-right">
-
-    <div class="fin-row">
-      <span class="f-lbl">Total Price</span>
-      <span class="f-ar">السعر الإجمالي</span>
-      <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
-        {{formatAmount basicdetails.[0].subtotal bcdp}}
-      </span>
-    </div>
-
-    <div class="fin-row">
-      <span class="f-lbl">Total Discount</span>
-      <span class="f-ar">إجمالي الخصم</span>
-      <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
-        {{formatAmount basicdetails.[0].total_discount bcdp}}
-      </span>
-    </div>
-
-    {{#if basicdetails.[0].discount}}
-    <div class="fin-row">
-      <span class="f-lbl">Discount</span>
-      <span class="f-ar">خصم</span>
-      <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
-        {{formatAmount basicdetails.[0].discount bcdp}}
-      </span>
-    </div>
-    {{/if}}
-
-    <div class="fin-row">
-      <span class="f-lbl">VAT</span>
-      <span class="f-ar">ضريبة القيمة المضافة</span>
-      <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
-        {{formatAmount basicdetails.[0].vatamt bcdp}}
-      </span>
-    </div>
-
-    <div class="fin-row">
-      <span class="f-lbl">Additional Discount</span>
-      <span class="f-ar">خصم إضافي</span>
-      <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
-        {{formatAmount basicdetails.[0].additional_discount bcdp}}
-      </span>
-    </div>
-
-    <div class="fin-row bold">
-      <span>Total</span>
-      <span class="f-ar">المبلغ الإجمالي</span>
-      <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
-        {{formatAmount basicdetails.[0].grand_total bcdp}}
-      </span>
-    </div>
-
-    <div class="fin-row bold">
-      <span>Balance Due</span>
-      <span class="f-ar">الرصيد الواجب دفعه</span>
-      <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
-        {{formatAmount basicdetails.[0].balance bcdp}}
-      </span>
-    </div>
-
-    <div class="fin-words">
-      Total Invoice Amount in words : {{bcamountinwords}}<br>
-      مبلغ إجمالي بالكلمات الفاتورة : {{bcamountinwordsar}}
-    </div>
-
-  </div>
-</div>
 {{!-- AMOUNT IN WORDS + INVOICE NOTES — same row --}}
 <div style="display:flex; gap:8px; margin:2px 0;">
 
@@ -577,7 +485,7 @@
   {{!-- Invoice Notes --}}
   <div class="words-box" style="flex:1; margin:0; border-color:#ddd; background:#fff;">
     <div class="words-title" style="color:#555;">INVOICE NOTES</div>
-    <div class="words-text" style="font-weight:normal; color:#ff1717;">
+    <div class="words-text" style="font-weight:normal; color:#ff1717;;">
       {{#if basicdetails.[0].remark}}{{basicdetails.[0].remark}}{{/if}}
     </div>
   </div>
@@ -606,7 +514,7 @@
   {{/if}}
 
   {{!-- PREPARED BY (left) | BANK DETAILS (right) --}}
-  <div style="page-break-before: always; break-before: always;">
+  {{!-- <div style="page-break-before: always; break-before: always;"> --}}
     <div style="display:flex; gap:0; margin-top:5px; border:1px solid #ddd; border-radius:6px; overflow:hidden;">
 
       {{!-- LEFT — Prepared By + Seal + Created User --}}

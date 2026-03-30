@@ -4,7 +4,7 @@ const Handlebars    = require('handlebars');
 const fs            = require('fs').promises;
 const fsSync        = require('fs');
 const path          = require('path');
-const qrCodeService = require('./qrCodeService'); // ← your existing service
+const qrCodeService = require('./qrCodeService');
 
 // ── Currency symbols ───────────────────────────────────────
 const CURRENCY_SYMBOLS = {
@@ -18,63 +18,93 @@ const CURRENCY_SYMBOLS = {
   OMR: 'ر.ع',
   MYR: 'RM',
   INR: '₹',
+  JPY: '¥',
+  CNY: '¥',
+  AUD: 'A$',
+  CAD: 'C$',
 };
 
-// ── SAR SVG — searches common locations at startup ──────
-// Place sar.svg in ONE of these paths in your project:
-//   ✅ src/assets/sar.svg        (recommended)
-//   ✅ assets/sar.svg
-//   ✅ public/assets/sar.svg
-const SAR_SVG_CANDIDATES = [
-  require('path').join(__dirname, '..', 'assets', 'sar.svg'),
-  require('path').join(__dirname, '..', 'public', 'assets', 'sar.svg'),
-  require('path').join(process.cwd(), 'src', 'assets', 'sar.svg'),
-  require('path').join(process.cwd(), 'assets', 'sar.svg'),
-];
+// ── SVG helper — generic loader ────────────────────────────
+function findSvgPath(filename) {
+  const candidates = [
+    path.join(__dirname, '..', 'assets', filename),
+    path.join(__dirname, '..', 'public', 'assets', filename),
+    path.join(process.cwd(), 'src', 'assets', filename),
+    path.join(process.cwd(), 'assets', filename),
+  ];
+  return candidates.find(p => {
+    try { return fsSync.existsSync(p); } catch { return false; }
+  }) || null;
+}
 
-const SAR_SVG_PATH = SAR_SVG_CANDIDATES.find(p => {
-  try { return require('fs').existsSync(p); } catch { return false; }
-}) || null;
+function loadCurrencySvg(filename, fallbackText) {
+  const svgPath = findSvgPath(filename);
+  const result  = { inline: '', dataUri: '' };
 
-let sarSvgInline  = '';
-let sarSvgDataUri = '';
-
-function loadSarSvg() {
-  if (!SAR_SVG_PATH) {
-    console.warn('⚠ sar.svg not found in any candidate path. Place it at src/assets/sar.svg. Falling back to text.');
-    sarSvgInline  = '<span style="font-family:Arial;">ر.س</span>';
-    sarSvgDataUri = '';
-    return;
+  if (!svgPath) {
+    console.warn(`⚠ ${filename} not found. Falling back to text: ${fallbackText}`);
+    result.inline = `<span style="font-family:Arial;">${fallbackText}</span>`;
+    return result;
   }
 
   try {
-    const raw = fsSync.readFileSync(SAR_SVG_PATH, 'utf-8');
+    const raw = fsSync.readFileSync(svgPath, 'utf-8');
 
-    // Inline: strip XML declaration, inject sizing style
-    sarSvgInline = raw
-      .replace(/<\?xml[^?]*\?>/gi, '')   // remove <?xml ...?>
+    result.inline = raw
+      .replace(/<\?xml[^?]*\?>/gi, '')
       .trim()
       .replace(/<svg([^>]*)>/i, (match, attrs) => {
-        // Strip any hardcoded width/height attributes the SVG file may have
-        // then inject our own size via style so we fully control the size
         const cleaned = attrs
           .replace(/\s*width\s*=\s*["'][^"']*["']/gi, '')
           .replace(/\s*height\s*=\s*["'][^"']*["']/gi, '');
         return `<svg${cleaned} style="height:0.75em;width:auto;vertical-align:middle;display:inline-block;margin-right:2px;">`;
       });
 
-    // Data URI: for <img src="..."> usage
-    sarSvgDataUri = `data:image/svg+xml;base64,${Buffer.from(raw).toString('base64')}`;
-
-    console.log(`✓ SAR SVG loaded from: ${SAR_SVG_PATH}`);
+    result.dataUri = `data:image/svg+xml;base64,${Buffer.from(raw).toString('base64')}`;
+    console.log(`✓ ${filename} loaded from: ${svgPath}`);
   } catch (err) {
-    console.warn(`⚠ Could not read sar.svg: ${err.message}. Falling back to text.`);
-    sarSvgInline  = '<span style="font-family:Arial;">ر.س</span>';
-    sarSvgDataUri = '';
+    console.warn(`⚠ Could not read ${filename}: ${err.message}. Falling back to text.`);
+    result.inline = `<span style="font-family:Arial;">${fallbackText}</span>`;
   }
+
+  return result;
 }
 
-loadSarSvg();
+// ── Load SAR + AED SVGs at startup ────────────────────────
+let sarSvg = loadCurrencySvg('sar.svg', '﷼');
+let aedSvg = loadCurrencySvg('aed.svg', 'د.إ');
+
+// Map iso → svg object for easy lookup
+const SVG_CURRENCY_MAP = {
+  SAR: () => sarSvg,
+  AED: () => aedSvg,
+};
+
+// ── Bootstrap CSS — loaded once at startup from node_modules ──
+// No network call — reads from local disk (~1ms)
+// Auto-injected into any HBS template that uses Bootstrap classes
+// No CDN link needed in HBS templates
+let bootstrapCss = '';
+try {
+  const bootstrapPath = path.join(
+    __dirname, '..', '..', 'node_modules', 'bootstrap', 'dist', 'css', 'bootstrap.min.css'
+  );
+  console.log('[Bootstrap] Looking at path:', bootstrapPath);
+  console.log('[Bootstrap] File exists:', fsSync.existsSync(bootstrapPath));
+  bootstrapCss = fsSync.readFileSync(bootstrapPath, 'utf-8');
+  console.log('[Bootstrap] ✓ Loaded. Length:', bootstrapCss.length);
+} catch (err) {
+  console.warn('[Bootstrap] ✗ Failed:', err.message);
+  // Fallback — try same directory as templateService.js
+  try {
+    const fallbackPath = path.join(__dirname, '..', '..', 'node_modules', 'bootstrap', 'dist', 'css', 'bootstrap.min.css');
+    console.log('[Bootstrap] Trying fallback path:', fallbackPath);
+    bootstrapCss = fsSync.readFileSync(fallbackPath, 'utf-8');
+    console.log('[Bootstrap] ✓ Loaded from fallback. Length:', bootstrapCss.length);
+  } catch (err2) {
+    console.warn('[Bootstrap] ✗ Fallback also failed:', err2.message);
+  }
+}
 
 
 class TemplateService {
@@ -85,7 +115,6 @@ class TemplateService {
   }
 
   // ── PARTIALS ──────────────────────────────────────────────
-
   registerPartials() {
     const partialsDir = path.join(__dirname, '..', 'templates', 'partials');
     try {
@@ -105,18 +134,16 @@ class TemplateService {
   }
 
   // ── HELPERS ───────────────────────────────────────────────
-
   registerHelpers() {
 
-    // ── Your existing helpers (unchanged) ──────────────────
-
+    // ── Date / Currency formatting ─────────────────────────
     Handlebars.registerHelper('formatDate', function(dateStr) {
       if (!dateStr) return '----';
       try {
-        return new Date(dateStr).toLocaleString('en-GB', {
-          day: '2-digit', month: '2-digit', year: 'numeric',
-          hour: '2-digit', minute: '2-digit', hour12: true
-        });
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-GB', {
+          day: '2-digit', month: 'short', year: 'numeric'
+        }).replace(/ /g, '-');
       } catch { return dateStr; }
     });
 
@@ -125,29 +152,68 @@ class TemplateService {
       return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     });
 
-    Handlebars.registerHelper('upper',    (str)   => str ? str.toUpperCase() : '');
-    Handlebars.registerHelper('gt',       (a, b)  => a > b);
-    Handlebars.registerHelper('eq',       (a, b)  => a === b);
-    Handlebars.registerHelper('add',      (a, b)  => (parseFloat(a) || 0) + (parseFloat(b) || 0));
-    Handlebars.registerHelper('subtract', (a, b)  => (parseFloat(a) || 0) - (parseFloat(b) || 0));
-    Handlebars.registerHelper('multiply', (a, b)  => (parseFloat(a) || 0) * (parseFloat(b) || 0));
-    Handlebars.registerHelper('length',   (arr)   => arr ? arr.length : 0);
-    Handlebars.registerHelper('inc',      (val)   => parseInt(val) + 1);
-    Handlebars.registerHelper('default',  (v, d)  => v || d);
-    Handlebars.registerHelper('json',     (ctx)   => JSON.stringify(ctx, null, 2));
-    Handlebars.registerHelper('nl2br',    (text)  => text ? text.replace(/\n/g, ', ') : '');
+    Handlebars.registerHelper('formatAmount', function(value, decimals) {
+      const dp  = (typeof decimals === 'number') ? decimals : 2;
+      const num = parseFloat(String(value || '0').replace(/,/g, '')) || 0;
+      return num.toLocaleString('en-US', {
+        minimumFractionDigits: dp,
+        maximumFractionDigits: dp,
+      });
+    });
 
-    // ── Invoice helpers ────────────────────────────────────
+    // ── String helpers ─────────────────────────────────────
+    Handlebars.registerHelper('upper',    (str)  => str ? str.toUpperCase() : '');
+    Handlebars.registerHelper('default',  (v, d) => v || d);
+    Handlebars.registerHelper('json',     (ctx)  => JSON.stringify(ctx, null, 2));
+    Handlebars.registerHelper('nl2br', (text) => text ? new Handlebars.SafeString(text.replace(/\n/g, '<br/>')) : '');
 
-    Handlebars.registerHelper('addOne',   (val)  => parseInt(val, 10) + 1);
-    // addOffset: used for serial numbers across pages
-    // usage: {{addOffset @index ../startIndex}} → page2 row0 + offset18 = 19
-    Handlebars.registerHelper('addOffset', (index, offset) => parseInt(index, 10) + parseInt(offset, 10) + 1);
-    Handlebars.registerHelper('neq',      (a, b) => a !== b);
-    Handlebars.registerHelper('notEmpty', (val)  =>
+    // ── Comparison helpers ─────────────────────────────────
+    Handlebars.registerHelper('and', (a, b) => a && b);
+    Handlebars.registerHelper('eq',  (a, b) => a === b);
+    Handlebars.registerHelper('neq', (a, b) => a !== b);
+    Handlebars.registerHelper('gt',  (a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) >
+      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    );
+    Handlebars.registerHelper('lt',  (a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) <
+      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    );
+
+    // ── Math helpers — all strip commas before parsing ─────
+    Handlebars.registerHelper('add',(a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) +
+      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    );
+    Handlebars.registerHelper('subtract', (a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) -
+      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    );
+    Handlebars.registerHelper('multiply', (a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) *
+      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    );
+    Handlebars.registerHelper('divide',   (a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) /
+      (parseFloat(String(b || 1).replace(/,/g, '')) || 1)
+    );
+   // SET VARIABLE
+Handlebars.registerHelper('set', function (varName, varValue) {
+  if (!this._vars) this._vars = {};
+  this._vars[varName] = varValue;
+});
+    // ── Array / misc helpers ───────────────────────────────
+    Handlebars.registerHelper('length',    (arr) => arr ? arr.length : 0);
+    Handlebars.registerHelper('inc',       (val) => parseInt(val) + 1);
+    Handlebars.registerHelper('addOne',    (val) => parseInt(val, 10) + 1);
+    Handlebars.registerHelper('addOffset', (index, offset) =>
+      parseInt(index, 10) + parseInt(offset, 10) + 1
+    );
+    Handlebars.registerHelper('notEmpty',  (val) =>
       val !== null && val !== undefined && val !== '' && val !== '0' && val !== 0
     );
 
+    // ── Invoice-specific helpers ───────────────────────────
     Handlebars.registerHelper('ifFlag', function(settings, key, options) {
       const val = settings && settings[key];
       return (val == '1' || val === 1 || val === true)
@@ -168,58 +234,39 @@ class TemplateService {
       ].filter(Boolean).join(sep);
     });
 
-    Handlebars.registerHelper('formatAmount', function(value, decimals) {
-      const dp  = (typeof decimals === 'number') ? decimals : 2;
-      const num = parseFloat(String(value || '0').replace(/,/g, '')) || 0;
-      return num.toLocaleString('en-US', {
-        minimumFractionDigits: dp,
-        maximumFractionDigits: dp,
-      });
-    });
-
-    /**
-     * {{{currencySymbol isocode}}}   ← TRIPLE braces always
-     *
-     * SAR  → inline SVG read from assets/sar.svg
-     * Others → plain text symbol
-     */
+    // ── Currency symbol helpers ────────────────────────────
     Handlebars.registerHelper('currencySymbol', function(isocode) {
       const iso = (isocode || 'SAR').toUpperCase().trim();
-      if (iso === 'SAR') {
-        return new Handlebars.SafeString(sarSvgInline);
+
+      if (SVG_CURRENCY_MAP[iso]) {
+        const svg = SVG_CURRENCY_MAP[iso]();
+        if (svg.inline) return new Handlebars.SafeString(svg.inline);
       }
+
       return new Handlebars.SafeString(
         `<span>${CURRENCY_SYMBOLS[iso] || iso}</span>`
       );
     });
 
-    /**
-     * {{{currencyImg isocode "16px"}}}   ← TRIPLE braces
-     * Alternative: <img> tag with base64 data URI.
-     */
     Handlebars.registerHelper('currencyImg', function(isocode, size) {
       const iso    = (isocode || 'SAR').toUpperCase().trim();
-      const height = (typeof size === 'string') ? size : '14px';
-      if (iso === 'SAR' && sarSvgDataUri) {
-        return new Handlebars.SafeString(
-          `<img src="${sarSvgDataUri}" ` +
-          `style="height:${height};width:auto;vertical-align:middle;margin-right:2px;" alt="SAR">`
-        );
+      const height = (typeof size === 'string') ? size : '8px';
+
+      if (SVG_CURRENCY_MAP[iso]) {
+        const svg = SVG_CURRENCY_MAP[iso]();
+        if (svg.dataUri) {
+          return new Handlebars.SafeString(
+            `<img src="${svg.dataUri}" ` +
+            `style="height:${height};width:auto;vertical-align:middle;margin-right:2px;" alt="${iso}">`
+          );
+        }
       }
+
       return new Handlebars.SafeString(
         `<span>${CURRENCY_SYMBOLS[iso] || iso}</span>`
       );
     });
 
-    /**
-     * {{{qrDataUri qrCodeBase64}}}   ← TRIPLE braces
-     *
-     * QR code is now pre-generated in pdfController BEFORE rendering
-     * (using qrCodeService) and stored in data.qrCodeBase64.
-     * This helper just wraps it in an <img> tag.
-     *
-     * If qrCodeBase64 is empty, falls back to a plain text notice.
-     */
     Handlebars.registerHelper('qrDataUri', function(qrCodeBase64) {
       if (qrCodeBase64 && String(qrCodeBase64).length > 20) {
         return new Handlebars.SafeString(
@@ -235,52 +282,71 @@ class TemplateService {
   }
 
   // ── DATA PREPARATION ──────────────────────────────────────
-
-  /**
-   * Inject computed fields before rendering.
-   *
-   * QR code is NOT generated here — it is generated in pdfController
-   * via qrCodeService and stored in data.qrCodeBase64 before this runs.
-   */
   prepareTemplateData(data) {
     const basic = (data.basicdetails && data.basicdetails[0]) || {};
     const iso   = (basic.isocode || 'SAR').toUpperCase().trim();
 
-    data.isocode       = iso;
-    data.isSAR         = iso === 'SAR';
-    data.decimalPlaces = parseInt(((data.datasettings || {}).d581 || '2'), 10);
+    data.isocode = iso;
+    data.isSAR   = iso === 'SAR';
+    data.isAED   = iso === 'AED';
+
+    data.ccrate = parseFloat(
+      String(data.ccrate || basic.ccrate || 1).replace(/,/g, '')
+    ) || 1;
+
+    data.bcdp = parseInt(data.bcdp || basic.bcdp || 2);
 
     return data;
   }
 
   // ── RENDER ────────────────────────────────────────────────
-
-  async renderToString(templateName, data) {
+  async renderToString(templateName, data, docTypeFolder = 'invoice') {
     try {
       const templateData = this.prepareTemplateData(data);
 
-      if (!this.compiledTemplates.has(templateName)) {
+      const cacheKey = `${docTypeFolder}/${templateName}`;
+      if (!this.compiledTemplates.has(cacheKey)) {
         const templatePath = path.join(
-          __dirname, '..', 'templates', `${templateName}.hbs`
+          __dirname, '..', 'templates', docTypeFolder, `${templateName}.hbs`
         );
         console.log(`Loading template: ${templatePath}`);
         const source = await fs.readFile(templatePath, 'utf-8');
-        this.compiledTemplates.set(templateName, Handlebars.compile(source));
+        this.compiledTemplates.set(cacheKey, Handlebars.compile(source));
       }
 
-      const html = this.compiledTemplates.get(templateName)(templateData);
-      console.log(`Template rendered: ${templateName} (${html.length} chars)`);
+      let html = this.compiledTemplates.get(cacheKey)(templateData);
+
+      // ── Bootstrap CSS injection ──────────────────────────
+      // If template has Bootstrap CDN link → replace with inline styles
+      // No network call needed — served from local node_modules
+      console.log('[Bootstrap] bootstrapCss loaded:', bootstrapCss.length > 0);
+      console.log('[Bootstrap] html has cdn link:', html.includes('cdn.jsdelivr.net'));
+      if (bootstrapCss) {
+        const bootstrapStyle = `<style>${bootstrapCss}</style>`;
+        if (html.includes('cdn.jsdelivr.net')) {
+          html = html.replace(
+            /<link[^<]*bootstrap[^<]*>/gi,
+            bootstrapStyle
+          );
+          console.log('[Bootstrap] ✓ Injected. html length now:', html.length);
+        }
+      }
+
+      console.log(`Template rendered: ${cacheKey} (${html.length} chars)`);
       return html;
 
     } catch (error) {
       console.error(`Error rendering template ${templateName}:`, error);
       throw new Error(`Template rendering failed: ${error.message}`);
+      
     }
   }
 
+  // ── CACHE ─────────────────────────────────────────────────
   clearCache() {
     this.compiledTemplates.clear();
-    loadSarSvg(); // reload SVG too
+    sarSvg = loadCurrencySvg('sar.svg', '﷼');
+    aedSvg = loadCurrencySvg('aed.svg', 'د.إ');
     console.log('Template cache cleared');
   }
 
@@ -300,37 +366,22 @@ class TemplateService {
       throw error;
     }
   }
-  /**
-   * prepareRahathData()
-   * ─────────────────────────────────────────────────────────
-   * Splits itemdetails into pages for the pre-printed form.
-   *
-   * RAHATH form content area: 148mm tall, each row 8mm = 18 rows max per page.
-   * Injects into data:
-   *   data.pageItems   → items for page 1
-   *   data.extraPages  → [{pageItems, isLastPage}, ...] for page 2+
-   *   data.isLastPage  → true if all items fit on page 1
-   *
-   * Also converts LetterheadImageUrl to base64 if it is a URL,
-   * so the background-image works offline in Puppeteer.
-   */
+
+  // ── RAHATH PAGINATION ─────────────────────────────────────
   prepareRahathData(data, maxRowsPerPage = 18) {
     const items = data.itemdetails || [];
     const pages = [];
 
-    // Chunk items, track startIndex for serial number continuity
     for (let i = 0; i < items.length; i += maxRowsPerPage) {
       pages.push({ items: items.slice(i, i + maxRowsPerPage), startIndex: i });
     }
 
     if (pages.length === 0) pages.push({ items: [], startIndex: 0 });
 
-    // Page 1 — startIndex always 0
     data.pageItems  = pages[0].items;
     data.startIndex = pages[0].startIndex;
     data.isLastPage = pages.length === 1;
 
-    // Extra pages — startIndex: 18, 36, 54...
     data.extraPages = pages.slice(1).map((page, idx) => ({
       pageItems:  page.items,
       startIndex: page.startIndex,
