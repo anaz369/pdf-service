@@ -320,14 +320,14 @@
     <tr>
       <td class="lbl">Name</td>
       <td class="val" colspan="3">{{billing_address.[0].name}}</td>
-      <td class="ar-val" colspan="3">{{#if customer_details.[0].name_lang2}}{{customer_details.[0].name_lang2}}{{/if}}</td>
+      <td class="ar-val" colspan="3">{{#if billing_address.[0].name}}{{billing_address.[0].name}}{{/if}}</td>
       <td class="ar-lbl">الاسم</td>
     </tr>
 
     <tr>
       <td class="lbl">Street Name</td>
       <td class="val">{{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}</td>
-      <td class="lbl-mid">Cstmr Code</td>
+      <td class="lbl-mid">Customer Code</td>
       <td class="ar-val-text" style="text-align: left;">{{#if customer_details.[0].profile_code}}{{customer_details.[0].profile_code}}{{/if}}</td>
       <td class="ar-val" colspan="3">{{#if billing_address_lang2.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}</td>
       <td class="ar-lbl">اسم الشارع</td>
@@ -506,6 +506,8 @@
           {{/if}}
         </table>
       </td>
+      
+        
 
       {{!-- Signatures + QR --}}
       <td class="td-sign-qr">
@@ -519,7 +521,11 @@
               <span class="ar">أعدت بواسطة</span>
             </div>
 
-          
+            {{#if Signature}}
+              <div style="text-align:center; padding:5px 0;">
+                <img src="{{Signature}}" style="max-height:60px;" onerror="this.style.display='none'"/>
+              </div>
+            {{/if}}
 
             <div class="sign-bottom"><br><br><br>
               Signature with stamp<br>
