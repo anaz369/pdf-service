@@ -37,7 +37,7 @@
 
     /* ══ CUSTOMER TABLE ══ */
     .section-title td {
-      font-size: 9px;
+      font-size: 10px;
       border: 0.5px solid #262525;
       background: #eee9e9;
       font-weight: bold;
@@ -48,7 +48,7 @@
       width: 100%; border-collapse: collapse; margin-bottom: 4px;
     }
     .cust-table td {
-      border: 0.5px solid #262525; padding: 1px 2px; font-size: 8px; vertical-align: middle;
+      border: 0.5px solid #262525; padding: 1px 2px; font-size: 10px; vertical-align: middle;
     }
     .cust-table .lbl { width: 10%; font-weight: bold; background: #eee9e9;padding-left:4px; }
     .cust-table .val { padding-left:4px;}
@@ -66,10 +66,10 @@
       border: 0.5px solid #262525;
     }
     .dates-table th {
-      border: 0.5px solid #262525; padding: 2px 2px; font-size: 8px;
+      border: 0.5px solid #262525; padding: 2px 2px; font-size: 11px;
       text-align: center; background: #eee9e9; vertical-align: middle;
     }
-    .dates-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 9px; color: #000; }
+    .dates-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 11px; color: #000; }
     .dates-table td {
       border: 0.5px solid #262525; padding: 2px 2px; font-size: 10px;
       text-align: center; vertical-align: middle;
@@ -80,7 +80,7 @@
       width: 100%; border-collapse: collapse; margin-bottom: 4px;
     }
     .items-table th {
-      border: 0.5px solid #262525; padding: 2px 3px; font-size: 8px;
+      border: 0.5px solid #262525; padding: 2px 3px; font-size: 11px;
       font-weight: bold; text-align: center; vertical-align: middle;
       background: #eee9e9;
     }
@@ -90,7 +90,7 @@
       text-align: center; vertical-align: middle;
     }
     .items-table td.td-desc { text-align: left; padding-left: 6px; }
-    .items-table .col-amt { text-align: right; padding-right: 4px; font-family: 'Courier New', monospace; }
+    .items-table .col-amt { text-align: right; padding-right: 4px; }
 
     /* ══ SUMMARY TABLE ══ */
     .summary-table {
@@ -99,14 +99,14 @@
       border: 0.5px solid #262525;
     }
     .summary-table th {
-      border: 0.5px solid #262525; padding: 2px 2px; font-size: 9px;
+      border: 0.5px solid #262525; padding: 2px 2px; font-size: 11px;
       text-align: center; background: #eee9e9; vertical-align: middle;
     }
-    .summary-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 9px; color: #000; font-weight: normal; }
+    .summary-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 11px; color: #000; font-weight: normal; }
     .summary-table td {
       border: 0.5px solid #262525; padding: 2px 2px; font-size: 10px;
       text-align: center; vertical-align: middle;
-      font-family: 'Courier New', monospace;
+      {{!-- font-family: 'Courier New', monospace; --}}
     }
 
     /* ══ AMOUNT IN WORDS ══ */
@@ -337,68 +337,68 @@
       <td colspan="8">To / <span class="ar">إلى التفاصيل</span></td>
     </tr>
     <tr>
-      <td class="lbl" style="width: 8%;">Name</td>
-      <td class="val" colspan="3" style="width: 42%;font-weight:bold;">{{billing_address.[0].name}}</td>
+      <td class="lbl" style="width: 11%;">Name</td>
+      <td class="val" colspan="3" style="width: 39%;font-weight:bold;">{{billing_address.[0].name}}</td>
       <td class="ar-val" colspan="3" style="width: 42%;font-weight:bold;">{{#if billing_address_lang2.[0].name}}{{billing_address_lang2.[0].name}}{{/if}}</td>
       <td class="ar-lbl" style="width: 8%;">الاسم</td>
     </tr>
     {{#ifFlag datasettings 'd526'}}
   {{!-- d526 = "1" → shows Customer Code column --}}
   <tr>
-    <td class="lbl" style="width: 8%;">Street Name</td>
-    <td class="val" style="width: 17%;">{{billing_address.[0].address_line2}}</td>
+    <td class="lbl" style="width: 11%;">Street Name</td>
+    <td class="val" style="width: 16%;">{{billing_address.[0].address_line2}}</td>
     <td class="lbl-mid" style="width: 8%;">Customer Code</td>
-    <td class="ar-val-text" style="text-align:left; width: 17%;">{{customer_details.[0].profile_code}}</td>
+    <td class="ar-val-text" style="text-align:left; width: 14%;">{{customer_details.[0].profile_code}}</td>
     <td class="ar-val" colspan="3" style="width: 42%;">{{billing_address_lang2.[0].address_line2}}</td>
     <td class="ar-lbl" style="width: 8%;">اسم الشارع</td>
   </tr>
 {{else}}
   {{!-- d526 = "0" → no Customer Code column --}}
   <tr>
-    <td class="lbl" style="width: 8%;">Street Name</td>
-    <td class="val" colspan="3" style="width: 42%;">{{billing_address.[0].address_line2}}</td>
+    <td class="lbl" style="width: 11%;">Street Name</td>
+    <td class="val" colspan="3" style="width: 39%;">{{billing_address.[0].address_line2}}</td>
     <td class="ar-val" colspan="3" style="width: 42%;">{{billing_address_lang2.[0].address_line2}}</td>
     <td class="ar-lbl" style="width: 8%;">اسم الشارع</td>
   </tr>
 {{/ifFlag}}
     <tr>
-      <td class="lbl" style="width: 8%;">Building No</td>
-      <td class="val" style="width: 17%;">{{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}</td>
+      <td class="lbl" style="width: 11%;">Building No</td>
+      <td class="val" style="width: 16%;">{{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}</td>
       <td class="lbl-mid" style="width: 8%;">City</td>
-      <td class="ar-val-text" style="width: 17%;">{{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}{{/if}}</td>
-      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].address_line4}}{{billing_address_lang2.[0].address_line4}}{{/if}}</td>
-      <td class="ar-lbl" style="width: 8%;">مدينة</td>
-      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].address_line1}}{{billing_address_lang2.[0].address_line1}}{{/if}}</td>
+      <td class="ar-val-text" style="width: 14%;">{{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}{{/if}}</td>
+      <td class="ar-val" style="width: 14%;">{{#if billing_address_lang2.[0].address_line4}}{{billing_address_lang2.[0].address_line4}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 11%;">مدينة</td>
+      <td class="ar-val" style="width: 16%;">{{#if billing_address_lang2.[0].address_line1}}{{billing_address_lang2.[0].address_line1}}{{/if}}</td>
       <td class="ar-lbl" style="width: 8%;"> رقم المبنى</td>
     </tr>
     <tr>
-      <td class="lbl" style="width: 8%;">Addl. No</td>
-      <td class="val" style="width: 17%;">{{#if customer_details.[0].additional_no}}{{customer_details.[0].additional_no}}{{/if}}</td>
+      <td class="lbl" style="width: 11%;">Addl. No</td>
+      <td class="val" style="width: 16%;">{{#if customer_details.[0].additional_no}}{{customer_details.[0].additional_no}}{{/if}}</td>
       <td class="lbl-mid" style="width: 8%;">District</td>
-      <td class="ar-val-text" style="width: 17%;">{{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}{{/if}}</td>
-      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].address_line3}}{{billing_address_lang2.[0].address_line3}}{{/if}}</td>
-      <td class="ar-lbl" style="width: 8%;">الحي</td>
-      <td class="ar-val" style="width: 17%;">{{#if customer_details.[0].additional_no_lang2}}{{customer_details.[0].additional_no_lang2}}{{/if}}</td>
+      <td class="ar-val-text" style="width: 14%;">{{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}{{/if}}</td>
+      <td class="ar-val" style="width: 14%;">{{#if billing_address_lang2.[0].address_line3}}{{billing_address_lang2.[0].address_line3}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 11%;">الحي</td>
+      <td class="ar-val" style="width: 16%;">{{#if customer_details.[0].additional_no_lang2}}{{customer_details.[0].additional_no_lang2}}{{/if}}</td>
       <td class="ar-lbl" style="width: 8%;">رقم إضافي</td>
     </tr>
     <tr>
-      <td class="lbl" style="width: 8%;">Postal Code</td>
-      <td class="val" style="width: 17%;">{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}</td>
+      <td class="lbl" style="width: 11%;">Postal Code</td>
+      <td class="val" style="width: 16%;">{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}</td>
       <td class="lbl-mid" style="width: 8%;">Country</td>
-      <td class="ar-val-text" style="width: 17%;">{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}</td>
-      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].address_line5}}{{billing_address_lang2.[0].address_line5}}{{/if}}</td>
-      <td class="ar-lbl" style="width: 8%;">الدولة</td>
-      <td class="ar-val" style="width: 17%;">{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}</td>
+      <td class="ar-val-text" style="width: 14%;">{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}</td>
+      <td class="ar-val" style="width: 14%;">{{#if billing_address_lang2.[0].address_line5}}{{billing_address_lang2.[0].address_line5}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 11%;">الدولة</td>
+      <td class="ar-val" style="width: 16%;">{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}</td>
       <td class="ar-lbl" style="width: 8%;">رمز بريدي</td>
     </tr>
     <tr>
-      <td class="lbl" style="width: 8%;">VAT Number</td>
-      <td class="val" style="width: 17%;">{{#if billing_address.[0].vat}}{{billing_address.[0].vat}}{{/if}}</td>
+      <td class="lbl" style="width: 11%;">VAT Number</td>
+      <td class="val" style="width: 16%;">{{#if billing_address.[0].vat}}{{billing_address.[0].vat}}{{/if}}</td>
       <td class="lbl-mid" style="width: 8%;">CRN</td>
-      <td class="ar-val-text" style="width: 17%;">{{#if customer_details.[0].cr_no}}{{customer_details.[0].cr_no}}{{/if}}</td>
-      <td class="ar-val" style="width: 17%;">{{#if customer_details.[0].cr_no_lang2}}{{customer_details.[0].cr_no_lang2}}{{/if}}</td>
-      <td class="ar-lbl" style="width: 8%;">السجل التجاري</td>
-      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].vat}}{{billing_address_lang2.[0].vat}}{{/if}}</td>
+      <td class="ar-val-text" style="width: 14%;">{{#if customer_details.[0].cr_no}}{{customer_details.[0].cr_no}}{{/if}}</td>
+      <td class="ar-val" style="width: 14%;">{{#if customer_details.[0].cr_no_lang2}}{{customer_details.[0].cr_no_lang2}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 11%;">السجل التجاري</td>
+      <td class="ar-val" style="width: 16%;">{{#if billing_address_lang2.[0].vat}}{{billing_address_lang2.[0].vat}}{{/if}}</td>
       <td class="ar-lbl" style="width: 8%;">الرقم الضريبي</td>
     </tr>
   </table>
