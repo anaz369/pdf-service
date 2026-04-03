@@ -36,13 +36,13 @@
     .inv-info-bar .inv-right { text-align: right; }
 
     /* ══ CUSTOMER TABLE ══ */
-    .section-title { 
+    .section-title td {
       font-size: 9px;
-      border-top:0.5px solid #262525;
-      border-left:0.5px solid #262525;
-      border-right:0.5px solid #262525; 
-      font-weight: bold; 
-      padding: 4px }
+      border: 0.5px solid #262525;
+      background: #eee9e9;
+      font-weight: bold;
+      padding: 2px 4px;
+    }
 
     .cust-table {
       width: 100%; border-collapse: collapse; margin-bottom: 4px;
@@ -123,8 +123,8 @@
     .bottom-table > tbody > tr > td {
       vertical-align: top; border: 0.5px solid #262525;
     }
-    .td-bank { width: 52%; padding: 0; }
-    .td-sign-qr { width: 48%; padding: 0; }
+    .td-bank { padding: 0; }
+    .td-sign-qr { padding: 0; }
 
     /* Bank Details */
     .bank-header {
@@ -140,6 +140,23 @@
     }
     .bank-inner td:first-child { width: 38%; font-weight: bold; font-size: 9px; }
     .bank-inner td:last-child { }
+    .bottom-header {
+      background: #eee9e9; text-align: center; font-weight: bold;
+      font-size: 9px; padding: 2px 3px; border: 0.5px solid #262525;
+    }
+    .bottom-header .ar {
+      display: block; direction: rtl;
+      font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif;
+      font-size: 9px;
+    }
+    .bank-lbl {
+      font-weight: bold; font-size: 8px; padding: 2px 4px;
+      border: 0.5px solid #262525; white-space: nowrap;
+    }
+    .bank-val {
+      font-size: 9px; padding: 2px 4px;
+      border: 0.5px solid #262525;
+    }
 
     /* Signatures + QR */
     .sign-qr-wrap { display: flex; height: 100%; }
@@ -151,7 +168,7 @@
     .sign-col:last-of-type { border-right: none; }
     .sign-title { font-weight: bold; font-size: 9px; margin-bottom: 4px; }
     .sign-title .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 9px; color: #444; }
-    .sign-bottom { font-size: 8px; color: #555; margin-top: auto; padding-top: 10px; }
+    .sign-bottom { font-size: 8px; color: #555; margin-top: auto; padding: 4px 2px; }
     .sign-bottom .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; }
     .qr-col {
       width: 140px; text-align: center; padding: 6px;
@@ -172,7 +189,7 @@
   border-left: 0.5px solid #262525;
   vertical-align: top;
   text-align: center;
-  padding: 3px;
+  padding: 0;
 }
 
 .sign-table td:first-child {
@@ -195,14 +212,14 @@
 }
 
 .qr-inner {
-  display: table-cell;
-  vertical-align: middle;
   text-align: center;
 }
 
 .qr-inner img {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto;
+  display: block;
 }
 /* Titles */
 .sign-title {
@@ -219,7 +236,8 @@
 /* Bottom text */
 .sign-bottom {
   font-size: 8px;
-  margin-top: 10px;
+  margin-top: auto;
+  padding: 4px 2px;
 }
 
 .sign-bottom .ar {
@@ -275,6 +293,15 @@
 .sign-cell {
   text-align: center;
   vertical-align: top;
+  height: 100%;
+  position: relative;
+}
+.sign-cell-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 100px;
 }
 
 /* bottom text (uses .sign-bottom defined above) */
@@ -305,62 +332,64 @@
   </div>
 
   {{!-- ══ CUSTOMER DETAILS ══ --}}
-  <div class="section-title">To / <span class="ar">إلى التفاصيل</span></div>
   <table class="cust-table">
+    <tr class="section-title">
+      <td colspan="8">To / <span class="ar">إلى التفاصيل</span></td>
+    </tr>
     <tr>
-      <td class="lbl">Name</td>
-      <td class="val" colspan="3">{{billing_address.[0].name}}</td>
-      <td class="ar-val" colspan="3">{{#if billing_address_lang2.[0].name}}{{billing_address_lang2.[0].name}}{{/if}}</td>
-      <td class="ar-lbl">الاسم</td>
+      <td class="lbl" style="width: 8%;">Name</td>
+      <td class="val" colspan="3" style="width: 42%;">{{billing_address.[0].name}}</td>
+      <td class="ar-val" colspan="3" style="width: 42%;">{{#if billing_address_lang2.[0].name}}{{billing_address_lang2.[0].name}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;">الاسم</td>
     </tr>
 
     <tr>
-      <td class="lbl">Street Name</td>
-      <td class="val">{{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}</td>
-      <td class="lbl-mid">Customer Code</td>
-      <td class="ar-val-text" style="text-align: left;">{{#if customer_details.[0].profile_code}}{{customer_details.[0].profile_code}}{{/if}}</td>
-      <td class="ar-val" colspan="3">{{#if billing_address_lang2.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}</td>
-      <td class="ar-lbl">اسم الشارع</td>
+      <td class="lbl" style="width: 8%;">Street Name</td>
+      <td class="val" style="width: 17%;">{{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</td>
+      <td class="lbl-mid" style="width: 8%;">Customer Code</td>
+      <td class="ar-val-text" style="text-align: left;width: 17%;">{{#if customer_details.[0].profile_code}}{{customer_details.[0].profile_code}}{{/if}}</td>
+      <td class="ar-val" colspan="3" style="width: 42%;">{{#if billing_address_lang2.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;">اسم الشارع</td>
     </tr>
     <tr>
-      <td class="lbl">Building No</td>
-      <td class="val">{{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</td>
-      <td class="lbl-mid">City</td>
-      <td class="ar-val-text">{{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}{{/if}}</td>
-      <td class="ar-val">{{#if billing_address_lang2.[0].address_line4}}{{billing_address_lang2.[0].address_line4}}{{/if}}</td>
-      <td class="ar-lbl">مدينة</td>
-      <td class="ar-val">{{#if billing_address_lang2.[0].address_line2}}{{billing_address_lang2.[0].address_line2}}{{/if}}</td>
-      <td class="ar-lbl"> رقم المبنى</td>
+      <td class="lbl" style="width: 8%;">Building No</td>
+      <td class="val" style="width: 17%;">{{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}</td>
+      <td class="lbl-mid" style="width: 8%;">City</td>
+      <td class="ar-val-text" style="width: 17%;">{{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}{{/if}}</td>
+      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].address_line4}}{{billing_address_lang2.[0].address_line4}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;">مدينة</td>
+      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].address_line1}}{{billing_address_lang2.[0].address_line1}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;"> رقم المبنى</td>
     </tr>
     <tr>
-      <td class="lbl">Addl. No</td>
-      <td class="val">{{#if customer_details.[0].additional_no}}{{customer_details.[0].additional_no}}{{/if}}</td>
-      <td class="lbl-mid">District</td>
-      <td class="ar-val-text">{{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}{{/if}}</td>
-      <td class="ar-val">{{#if billing_address_lang2.[0].address_line3}}{{billing_address_lang2.[0].address_line3}}{{/if}}</td>
-      <td class="ar-lbl">الحي</td>
-      <td class="ar-val">{{#if customer_details.[0].additional_no_lang2}}{{customer_details.[0].additional_no_lang2}}{{/if}}</td>
-      <td class="ar-lbl">رقم إضافي</td>
+      <td class="lbl" style="width: 8%;">Addl. No</td>
+      <td class="val" style="width: 17%;">{{#if customer_details.[0].additional_no}}{{customer_details.[0].additional_no}}{{/if}}</td>
+      <td class="lbl-mid" style="width: 8%;">District</td>
+      <td class="ar-val-text" style="width: 17%;">{{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}{{/if}}</td>
+      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].address_line3}}{{billing_address_lang2.[0].address_line3}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;">الحي</td>
+      <td class="ar-val" style="width: 17%;">{{#if customer_details.[0].additional_no_lang2}}{{customer_details.[0].additional_no_lang2}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;">رقم إضافي</td>
     </tr>
     <tr>
-      <td class="lbl">Postal Code</td>
-      <td class="val">{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}</td>
-      <td class="lbl-mid">Country</td>
-      <td class="ar-val-text">{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}</td>
-      <td class="ar-val">{{#if billing_address_lang2.[0].address_line5}}{{billing_address_lang2.[0].address_line5}}{{/if}}</td>
-      <td class="ar-lbl">الدولة</td>
-      <td class="ar-val">{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}</td>
-      <td class="ar-lbl">رمز بريدي</td>
+      <td class="lbl" style="width: 8%;">Postal Code</td>
+      <td class="val" style="width: 17%;">{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}</td>
+      <td class="lbl-mid" style="width: 8%;">Country</td>
+      <td class="ar-val-text" style="width: 17%;">{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}</td>
+      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].address_line5}}{{billing_address_lang2.[0].address_line5}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;">الدولة</td>
+      <td class="ar-val" style="width: 17%;">{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;">رمز بريدي</td>
     </tr>
     <tr>
-      <td class="lbl">VAT Number</td>
-      <td class="val">{{#if billing_address.[0].vat}}{{billing_address.[0].vat}}{{/if}}</td>
-      <td class="lbl-mid">CRN</td>
-      <td class="ar-val-text">{{#if customer_details.[0].cr_no}}{{customer_details.[0].cr_no}}{{/if}}</td>
-      <td class="ar-val">{{#if customer_details.[0].cr_no_lang2}}{{customer_details.[0].cr_no_lang2}}{{/if}}</td>
-      <td class="ar-lbl">السجل التجاري</td>
-      <td class="ar-val">{{#if billing_address_lang2.[0].vat}}{{billing_address_lang2.[0].vat}}{{/if}}</td>
-      <td class="ar-lbl">الرقم الضريبي</td>
+      <td class="lbl" style="width: 8%;">VAT Number</td>
+      <td class="val" style="width: 17%;">{{#if billing_address.[0].vat}}{{billing_address.[0].vat}}{{/if}}</td>
+      <td class="lbl-mid" style="width: 8%;">CRN</td>
+      <td class="ar-val-text" style="width: 17%;">{{#if customer_details.[0].cr_no}}{{customer_details.[0].cr_no}}{{/if}}</td>
+      <td class="ar-val" style="width: 17%;">{{#if customer_details.[0].cr_no_lang2}}{{customer_details.[0].cr_no_lang2}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;">السجل التجاري</td>
+      <td class="ar-val" style="width: 17%;">{{#if billing_address_lang2.[0].vat}}{{billing_address_lang2.[0].vat}}{{/if}}</td>
+      <td class="ar-lbl" style="width: 8%;">الرقم الضريبي</td>
     </tr>
   </table>
 
@@ -459,96 +488,61 @@
 
   {{!-- ══ BOTTOM: BANK + SIGNATURES + QR ══ --}}
   <table class="bottom-table">
+    <colgroup>
+      <col style="width:20%;">
+      <col style="width:28%;">
+      <col style="width:18%;">
+      <col style="width:18%;">
+      <col style="width:16%;">
+    </colgroup>
+    {{!-- Header row --}}
     <tr>
-      {{!-- Bank Details --}}
-      <td class="td-bank">
-        <div class="sign-header-full">Bank Details <span class="ar">التفاصيل المصرفية</span></div>
-        <table class="bank-inner">
-          {{#if bankdetails.acc_name}}
-          <tr>
-            <td style="width:45%;">Account Name / <span class="ar">إسم الحساب</span></td>
-            <td style="width:55%;">{{bankdetails.acc_name}}</td>
-          </tr>
-          {{/if}}
-          {{#if bankdetails.name}}
-          <tr>
-            <td>Bank Name / <span class="ar">إسم البنك</span></td>
-            <td>{{bankdetails.name}}</td>
-          </tr>
-          {{/if}}
-          {{#if bankdetails.acc_no}}
-          <tr>
-            <td>Account Number / <span class="ar">رقم حساب</span></td>
-            <td>{{bankdetails.acc_no}}</td>
-          </tr>
-          {{/if}}
-          {{#if bankdetails.iban_no}}
-          <tr>
-            <td>IBAN No / <span class="ar">رقم الآيبان</span></td>
-            <td>{{bankdetails.iban_no}}</td>
-          </tr>
-          {{/if}}
-          {{#if bankdetails.branch_name}}
-          <tr>
-            <td style="border-right:1px solid #ccc;">Branch Name / <span class="ar">إسم الفرع</span></td>
-            <td>{{bankdetails.branch_name}}</td>
-          </tr>
-          {{/if}}
-        </table>
+      <td colspan="2" class="bottom-header">Bank Details <span class="ar">التفاصيل المصرفية</span></td>
+      <td class="bottom-header">Prepared By<br><span class="ar">أعدت بواسطة</span></td>
+      <td class="bottom-header">Received By<br><span class="ar">استلمت من قبل</span></td>
+      {{!-- <td class="bottom-header">QR Code<br><span class="ar">رمز الاستجابة</span></td> --}}
+      <td rowspan="6" style="vertical-align:middle; text-align:center; border:0.5px solid #262525;">
+        <div class="qr-inner">
+          {{{qrDataUri qrCodeBase64}}}
+        </div>
       </td>
-      
-        
-
-      {{!-- Signatures + QR --}}
-      <td class="td-sign-qr">
-        <table class="sign-table">
-          <tr>
-            <!-- Prepared By -->
-            <td class="sign-cell no-padding">
-
-            <div class="sign-header-full">
-              Prepared By<br>
-              <span class="ar">أعدت بواسطة</span>
-            </div>
-
-            {{#if Signature}}
-              <div style="text-align:center;">
-                <img src="{{Signature}}" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;"  onerror="this.style.display='none'"/>
-              </div>
-            {{/if}}
-
-            <div class="sign-bottom">
-              Signature with stamp
-              <span class="ar">التوقيع مع الختم</span>
-            </div>
-
-          </td>
-
-          <td class="sign-cell no-padding">
-
-            <div class="sign-header-full">
-              Received By<br>
-              <span class="ar">استلمت من قبل</span>
-            </div>
-
-
-            <div class="sign-bottom"><br><br><br>
-              Signature with stamp<br>
-              <span class="ar">التوقيع مع الختم</span>
-            </div>
-
-          </td>
-
-            <!-- QR -->
-            <td class="qr-cell">
-              <div class="qr-wrapper">
-                <div class="qr-inner">
-                  {{{qrDataUri qrCodeBase64}}}
-                </div>
-              </div>
-            </td>
-          </tr>
-        </table>
+    </tr>
+    {{!-- Account Name --}}
+    <tr>
+      <td class="bank-lbl">Account Name / <span class="ar">إسم الحساب</span></td>
+      <td class="bank-val">{{bankdetails.acc_name}}</td>
+      <td rowspan="4" style="vertical-align:middle; text-align:center;  border-left:0.5px solid #262525;border-right:0.5px solid #262525;border-top:0.5px solid #262525;border-bottom:none;">
+        {{#if Signature}}
+          <img src="{{Signature}}" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>
+        {{/if}}
+      </td>
+      <td rowspan="4" style="vertical-align:middle; text-align:center;  border-left:0.5px solid #262525;border-right:0.5px solid #262525;border-top:0.5px solid #262525;border-bottom:none;">
+      </td>
+    </tr>
+    {{!-- Bank Name --}}
+    <tr>
+      <td class="bank-lbl">Bank Name / <span class="ar">إسم البنك</span></td>
+      <td class="bank-val">{{bankdetails.name}}</td>
+    </tr>
+    {{!-- Account Number --}}
+    <tr>
+      <td class="bank-lbl">Account Number / <span class="ar">رقم حساب</span></td>
+      <td class="bank-val">{{bankdetails.acc_no}}</td>
+    </tr>
+    {{!-- IBAN --}}
+    <tr>
+      <td class="bank-lbl">IBAN No / <span class="ar">رقم الآيبان</span></td>
+      <td class="bank-val">{{bankdetails.iban_no}}</td>
+    </tr>
+    {{!-- Branch Name --}}
+    <tr>
+      <td class="bank-lbl">Branch Name / <span class="ar">إسم الفرع</span></td>
+      <td class="bank-val">{{bankdetails.branch_name}}</td>
+      <td style="text-align:center; font-size:8px; padding:2px; border-left:0.5px solid #262525;border-right:0.5px solid #262525;border-bottom:0.5px solid #262525;border-top:none;">
+        Signature with stamp<br><span class="ar">التوقيع مع الختم</span>
+      </td>
+      <td style="text-align:center; font-size:8px; padding:2px; border-left:0.5px solid #262525;border-right:0.5px solid #262525;border-bottom:0.5px solid #262525;border-top:none;">
+        Signature with stamp<br><span class="ar">التوقيع مع الختم</span>
       </td>
     </tr>
   </table>
