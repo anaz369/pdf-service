@@ -20,16 +20,22 @@
             position: relative;
             width: 220mm;
             height: 280mm;
-            background-image: url('{{LetterheadImageUrl}}');
-            background-size: 220mm 280mm;
-            background-repeat: no-repeat;
-            background-position: top left;
             page-break-after: always;
             overflow: hidden;
         }
 
         .page:last-child {
             page-break-after: auto;
+        }
+
+        .page-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 220mm;
+            height: 280mm;
+            z-index: 0;
+            display: block;
         }
 
         .f {
@@ -39,6 +45,7 @@
             color: #000;
             line-height: 1;
             white-space: nowrap;
+            z-index: 1;
         }
 
         /* ── Meta fields ───────────────────────── */
@@ -56,6 +63,7 @@
             width: 213.2mm;
             max-height: 158.9mm;
             overflow: hidden;
+            z-index: 1;
         }
 
         .items-table {
@@ -125,6 +133,11 @@
 {{!-- ── PAGE 1 ─────────────────────────────────── --}}
 <div class="page">
 
+    {{!-- Background letterhead image --}}
+    {{#if LetterheadImageUrl}}
+    <img class="page-bg" src="{{LetterheadImageUrl}}" alt="">
+    {{/if}}
+
     {{!-- Meta fields — root scope, no prefix needed --}}
     <div class="f f-inv">{{basicdetails.[0].inv_no}}</div>
     <div class="f f-date">{{basicdetails.[0].inv_date}}</div>
@@ -166,6 +179,11 @@
 --}}
 {{#each extraPages}}
 <div class="page">
+
+    {{!-- Background letterhead image --}}
+    {{#if ../LetterheadImageUrl}}
+    <img class="page-bg" src="{{../LetterheadImageUrl}}" alt="">
+    {{/if}}
 
     {{!-- Meta fields repeat on every page — use ../ to reach root --}}
     <div class="f f-inv">{{../basicdetails.[0].inv_no}}</div>

@@ -148,6 +148,23 @@ if (pdfRequest.Companylogo && String(pdfRequest.Companylogo).startsWith('http'))
   );
 }
 
+// ── Task 7: Letterhead background image → base64 ───────────
+if (pdfRequest.LetterheadImageUrl && String(pdfRequest.LetterheadImageUrl).startsWith('http')) {
+  preprocessingTasks.push(
+    pdfService.getHighQualityImageBytes(pdfRequest.LetterheadImageUrl)
+      .then(imgBuffer => {
+        if (imgBuffer) {
+          pdfRequest.LetterheadImageUrl = `data:image/jpeg;base64,${imgBuffer.toString('base64')}`;
+          console.log('✓ Letterhead image converted to base64');
+        }
+      })
+      .catch(err => {
+        console.error('✗ Letterhead image failed:', err.message);
+        pdfRequest.LetterheadImageUrl = '';
+      })
+  );
+}
+
 
       // ── Task 3: MyInvois QR ──────────────────────────────
       if (pdfRequest.MyInvoisDocument?.myinvois) {
