@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - {{basicdetails.[0].inv_no}}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #fff;
+            padding: 8px;
+        }
+
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+        }
+
+        /* Header Section */
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 4px;
+            border-bottom: 3px solid #e91e63;
+        }
+
+        .invoice-to { flex: 1; }
+
+        .invoice-to h3 {
+            color: #e91e63;
+            font-size: 8px;
+            font-weight: normal;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .invoice-to h2 {
+            color: #e91e63;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .invoice-to p {
+            color: #666;
+            font-size: 9px;
+            line-height: 1.6;
+            margin: 2px 0;
+        }
+
+        .invoice-title-section { text-align: right; }
+
+        .invoice-title-section h1 {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .barcode-section { margin: 10px 0; }
+        .barcode-section img { width: 200px; height: auto; }
+
+        .invoice-meta {
+            background: #e91e63;
+            color: white;
+            padding: 4px 8px;
+            display: inline-block;
+            font-size: 9px;
+            margin-top: 5px;
+        }
+        .invoice-meta span { margin-right: 10px; }
+
+        /* Table Section */
+        .invoice-table { width: 100%; border-collapse: collapse; }
+
+        .invoice-table thead {
+            background: linear-gradient(135deg, #e91e63 0%, #7b1fa2 100%);
+            color: white;
+        }
+
+        .invoice-table thead th {
+            padding: 4px 8px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .invoice-table thead th:last-child { text-align: right; }
+
+        .invoice-table tbody td {
+            padding: 4px 8px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .item-title {
+            color: #e91e63;
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .item-description {
+            color: #666;
+            font-size: 8px;
+            line-height: 1.5;
+        }
+
+        .unit-price, .quantity { font-size: 15px; color: #333; font-weight: 600; }
+        .total { font-size: 15px; color: #333; font-weight: 600; text-align: right; }
+
+        /* Totals Section */
+        .totals-section { padding: 0 40px; }
+
+        .totals-row {
+            display: flex;
+            justify-content: flex-end;
+            padding: 5px 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .totals-row.subtotal { background: #fafafa; }
+
+        .totals-label {
+            text-align: right;
+            margin-right: 80px;
+            font-size: 10px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .totals-value {
+            width: 150px;
+            text-align: right;
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .totals-row.grand-total {
+            background: linear-gradient(135deg, #e91e63 0%, #7b1fa2 100%);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+        }
+
+        .totals-row.grand-total .totals-label,
+        .totals-row.grand-total .totals-value {
+            color: white;
+            font-size: 10px;
+        }
+
+        /* Footer Section */
+        .invoice-footer { padding: 30px 40px 40px 40px; }
+
+        .terms-section { margin-bottom: 30px; }
+        .terms-section h4 { font-size: 10px; color: #333; margin-bottom: 8px; }
+        .terms-section p  { font-size: 8px; color: #666; line-height: 1.6; }
+
+        .thank-you {
+            text-align: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .thank-you p { font-size: 10px; color: #666; margin-bottom: 30px; }
+
+        .signature-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .signature-image { width: 150px; height: auto; max-height: 80px; }
+
+        .signature-details h3 { color: #e91e63; font-size: 10px; margin-bottom: 3px; }
+        .signature-details p  { color: #666; font-size: 9px; }
+    </style>
+</head>
+<body>
+
+<div class="invoice-container">
+
+    {{!-- ══ HEADER ══ --}}
+    <div class="invoice-header">
+
+        {{!-- Invoice To --}}
+        <div class="invoice-to">
+            <h3>Invoice To</h3>
+            <h2>{{billing_address.[0].name}}</h2>
+            {{#if customer_details.[0].name}}
+            <p>{{customer_details.[0].name}}</p>
+            {{/if}}
+            {{#if customer_details.[0].phone}}
+            <p>Ph: {{customer_details.[0].phone}}</p>
+            {{/if}}
+            {{#if customer_details.[0].email}}
+            <p>{{customer_details.[0].email}}</p>
+            {{/if}}
+            {{#if billing_address.[0].address_line1}}
+            <p>
+                {{billing_address.[0].address_line1}}{{#if billing_address.[0].address_line2}}, {{billing_address.[0].address_line2}}{{/if}}{{#if billing_address.[0].address_line3}}, {{billing_address.[0].address_line3}}{{/if}}{{#if billing_address.[0].address_line4}}, {{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_line5}}, {{billing_address.[0].address_line5}}{{/if}}
+            </p>
+            {{/if}}
+        </div>
+
+        {{!-- Invoice Title + QR --}}
+        <div class="invoice-title-section">
+            <h1>INVOICE</h1>
+            <div class="barcode-section">
+                {{{qrDataUri qrCodeBase64}}}
+            </div>
+            <div class="invoice-meta">
+                <span>Invoice #{{basicdetails.[0].inv_no}}</span> | <span>{{basicdetails.[0].inv_date}}</span>
+            </div>
+        </div>
+
+    </div>
+
+    {{!-- ══ ITEMS TABLE ══ --}}
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th style="width:40%;">Item Description</th>
+                <th style="width:20%;">Unit Price</th>
+                <th style="width:15%;">Qty</th>
+                <th style="width:25%;">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each itemdetails}}
+            <tr>
+                <td>
+                    <div class="item-title">{{item_name}}</div>
+                    {{#if name_lang2}}
+                    <div class="item-description" style="direction:rtl;">{{name_lang2}}</div>
+                    {{/if}}
+                    {{#if description}}
+                    <div class="item-description">{{description}}</div>
+                    {{/if}}
+                </td>
+                <td class="unit-price">{{{currencySymbol ../isocode}}} {{formatAmount price ../bcdp}}</td>
+                <td class="quantity">{{formatAmount quantity ../bcdp}}</td>
+                <td class="total">{{{currencySymbol ../isocode}}} {{formatAmount amount ../bcdp}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    {{!-- ══ TOTALS ══ --}}
+    <div class="totals-section">
+
+        <div class="totals-row subtotal">
+            <div class="totals-label">Sub Total:</div>
+            <div class="totals-value">{{{currencySymbol isocode}}} {{formatAmount basicdetails.[0].subtotal bcdp}}</div>
+        </div>
+
+        {{#if basicdetails.[0].vatamt}}
+        <div class="totals-row">
+            <div class="totals-label">Tax VAT 15%</div>
+            <div class="totals-value">{{{currencySymbol isocode}}} {{formatAmount basicdetails.[0].vatamt bcdp}}</div>
+        </div>
+        {{/if}}
+
+        {{#if basicdetails.[0].discount}}
+        <div class="totals-row">
+            <div class="totals-label">Discount</div>
+            <div class="totals-value">{{{currencySymbol isocode}}} {{formatAmount basicdetails.[0].discount bcdp}}</div>
+        </div>
+        {{/if}}
+
+        <div class="totals-row grand-total">
+            <div class="totals-label">Total Due:</div>
+            <div class="totals-value">{{{currencySymbol isocode}}} {{formatAmount basicdetails.[0].grand_total bcdp}}</div>
+        </div>
+
+    </div>
+
+    {{!-- ══ FOOTER ══ --}}
+    <div class="invoice-footer">
+
+        {{!-- Terms --}}
+        {{#if invterms}}
+        <div class="terms-section">
+            <h4>Terms &amp; Condition:</h4>
+            <p>{{{nl2br invterms}}}</p>
+        </div>
+        {{/if}}
+
+        {{!-- Thank you + Signature --}}
+        <div class="thank-you">
+            <p>Thank you for your business</p>
+
+            <div class="signature-section">
+                {{#if Signature}}
+                <img src="{{Signature}}" alt="Signature" class="signature-image"
+                     onerror="this.style.display='none'"/>
+                {{/if}}
+                {{#if Seal}}
+                <img src="{{Seal}}" alt="Seal" class="signature-image"
+                     onerror="this.style.display='none'"/>
+                {{/if}}
+                <div class="signature-details">
+                    <h3>{{branch.[0].name}}</h3>
+                    <p>{{#if basicdetails.[0].salesman_name}}{{basicdetails.[0].salesman_name}}{{/if}}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

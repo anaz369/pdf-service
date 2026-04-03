@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8"/>
-  <title>Tax Invoice - {{basicdetails.[0].inv_no}}</title>
+  <title>Tax Invoice - </title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Arial, sans-serif; font-size: 11px; color: #000; background: #fff; }
@@ -22,15 +22,15 @@
     /* ══ TITLE BAR ══ */
     .title-bar {
       text-align: center;
-      padding: 12px 0 4px 0;
+      padding: 6px 0 2px 0;
     }
-    .title-bar .en { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
-    .title-bar .ar-title { font-size: 18px; font-weight: bold; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; }
+    .title-bar .en { font-size: 18px; font-weight: bold; letter-spacing: 1px; }
+    .title-bar .ar-title { font-size: 16px; font-weight: bold; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; }
 
     /* ══ INVOICE INFO BAR ══ */
     .inv-info-bar {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 6px 0; margin-bottom: 2px; font-size: 11px;
+      padding: 3px 0; margin-bottom: 2px; font-size: 10px;
     }
     .inv-info-bar .inv-left { text-align: left; }
     .inv-info-bar .inv-right { text-align: right; }
@@ -48,16 +48,16 @@
       width: 100%; border-collapse: collapse; margin-bottom: 4px;
     }
     .cust-table td {
-      border: 0.5px solid #262525; padding: 2px; font-size: 9px; vertical-align: middle;
+      border: 0.5px solid #262525; padding: 1px 2px; font-size: 8px; vertical-align: middle;
     }
-    .cust-table .lbl { width: 10%; font-weight: bold; background: #eee9e9; }
-    .cust-table .val { }
-    .cust-table .lbl-mid { width: 10%; font-weight: bold; background: #eee9e9; text-align: left; }
+    .cust-table .lbl { width: 10%; font-weight: bold; background: #eee9e9;padding-left:4px; }
+    .cust-table .val { padding-left:4px;}
+    .cust-table .lbl-mid { width: 10%; font-weight: bold; background: #eee9e9; text-align: left;padding-left:5px;  }
     .ar-val-text{
-      font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; 
+      font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; padding-left:6px;
     }
-    .cust-table .ar-val { width: 8%;direction: rtl; text-align: right; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; }
-    .cust-table .ar-lbl { width: 9%; direction: rtl; text-align: right; font-weight: bold; background: #eee9e9; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; }
+    .cust-table .ar-val { width: 8%;direction: rtl; text-align: right;padding-right:4px; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; }
+    .cust-table .ar-lbl { width: 9%; direction: rtl; text-align: right;padding-right:4px;  font-weight: bold; background: #eee9e9; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; }
 
     /* ══ DATES BAR ══ */
     .dates-table {
@@ -66,12 +66,12 @@
       border: 0.5px solid #262525;
     }
     .dates-table th {
-      border: 0.5px solid #262525; padding: 3px 2px; font-size: 9px;
+      border: 0.5px solid #262525; padding: 2px 2px; font-size: 8px;
       text-align: center; background: #eee9e9; vertical-align: middle;
     }
-    .dates-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 9px; color: #444; }
+    .dates-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 9px; color: #000; }
     .dates-table td {
-      border: 0.5px solid #262525; padding: 4px 2px; font-size: 11px;
+      border: 0.5px solid #262525; padding: 2px 2px; font-size: 10px;
       text-align: center; vertical-align: middle;
     }
 
@@ -80,17 +80,17 @@
       width: 100%; border-collapse: collapse; margin-bottom: 4px;
     }
     .items-table th {
-      border: 0.5px solid #262525; padding: 4px 4px; font-size: 9px;
+      border: 0.5px solid #262525; padding: 2px 3px; font-size: 8px;
       font-weight: bold; text-align: center; vertical-align: middle;
       background: #eee9e9;
     }
-    .items-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 9px; color: #444; font-weight: normal; }
+    .items-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 11px; color: #000; font-weight: normal; }
     .items-table td {
-      border: 0.5px solid #262525; padding: 4px 6px; font-size: 11px;
+      border: 0.5px solid #262525; padding: 2px 4px; font-size: 10px;
       text-align: center; vertical-align: middle;
     }
-    .items-table td.td-desc { text-align: left; padding-left: 8px; }
-    .items-table .col-amt { text-align: right; padding-right: 6px; font-family: 'Courier New', monospace; }
+    .items-table td.td-desc { text-align: left; padding-left: 6px; }
+    .items-table .col-amt { text-align: right; padding-right: 4px; font-family: 'Courier New', monospace; }
 
     /* ══ SUMMARY TABLE ══ */
     .summary-table {
@@ -99,20 +99,20 @@
       border: 0.5px solid #262525;
     }
     .summary-table th {
-      border: 0.5px solid #262525; padding: 3px 3px; font-size: 9px;
+      border: 0.5px solid #262525; padding: 2px 2px; font-size: 9px;
       text-align: center; background: #eee9e9; vertical-align: middle;
     }
-    .summary-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 9px; color: #444; font-weight: normal; }
+    .summary-table th .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 9px; color: #000; font-weight: normal; }
     .summary-table td {
-      border: 0.5px solid #262525; padding: 4px 2px; font-size: 11px;
+      border: 0.5px solid #262525; padding: 2px 2px; font-size: 10px;
       text-align: center; vertical-align: middle;
       font-family: 'Courier New', monospace;
     }
 
     /* ══ AMOUNT IN WORDS ══ */
     .words-bar {
-      text-align: center; font-size: 11px; font-weight: bold;
-      padding: 6px 4px; margin-bottom: 6px;
+      text-align: center; font-size: 10px; font-weight: bold;
+      padding: 3px 4px; margin-bottom: 3px;
       border: 0.5px solid #262525; 
     }
 
@@ -128,14 +128,14 @@
 
     /* Bank Details */
     .bank-header {
-      text-align: center; font-weight: bold; font-size: 11px;
-      padding: 4px 6px; background: #eee9e9;
+      text-align: center; font-weight: bold; font-size: 9px;
+      padding: 2px 4px; background: #eee9e9;
       border-bottom: 0.5px solid #262525;
       text-decoration: underline;
     }
     .bank-inner { width: 100%; border-collapse: collapse; }
     .bank-inner td {
-      border: 1px solid #ccc; padding: 3px 4px; font-size: 11px;
+      border: 1px solid #ccc; padding: 2px 3px; font-size: 9px;
       vertical-align: middle; border-left: none; border-right: 1px solid #ccc;
     }
     .bank-inner td:first-child { width: 38%; font-weight: bold; font-size: 9px; }
@@ -151,13 +151,13 @@
     .sign-col:last-of-type { border-right: none; }
     .sign-title { font-weight: bold; font-size: 9px; margin-bottom: 4px; }
     .sign-title .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; font-size: 9px; color: #444; }
-    .sign-bottom { font-size: 9px; color: #555; margin-top: auto; padding-top: 30px; }
+    .sign-bottom { font-size: 8px; color: #555; margin-top: auto; padding-top: 10px; }
     .sign-bottom .ar-sub { display: block; direction: rtl; font-family: 'Traditional Arabic', 'Simplified Arabic', Arial, sans-serif; }
     .qr-col {
       width: 140px; text-align: center; padding: 6px;
       display: flex; align-items: center; justify-content: center;
     }
-    .qr-col img { width: 120px; height: 120px; }
+    .qr-col img { width: 100px; height: 100px; }
     .seal-img { max-height: 45px; margin: 4px auto; display: block; }
     .sig-img { max-height: 45px; margin: 4px auto; display: block; }
 
@@ -172,7 +172,7 @@
   border-left: 0.5px solid #262525;
   vertical-align: top;
   text-align: center;
-  padding: 6px;
+  padding: 3px;
 }
 
 .sign-table td:first-child {
@@ -183,8 +183,8 @@
   width: 35%;
 }
 
-.q.qr-cell {
-  width: 140px;
+.qr-cell {
+  width: 120px;
   padding: 0;
 }
 
@@ -201,8 +201,8 @@
 }
 
 .qr-inner img {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
 }
 /* Titles */
 .sign-title {
@@ -218,8 +218,8 @@
 
 /* Bottom text */
 .sign-bottom {
-  font-size: 9px;
-  margin-top: 30px;
+  font-size: 8px;
+  margin-top: 10px;
 }
 
 .sign-bottom .ar {
@@ -255,11 +255,11 @@
 
 /* FULL WIDTH HEADER (same as bank header) */
 .sign-header-full {
-  background: #eee9e9; /* same as bank-header */
+  background: #eee9e9;
   text-align: center;
   font-weight: bold;
-  font-size: 11px;
-  padding: 4px 4px;
+  font-size: 9px;
+  padding: 2px 3px;
   border-bottom: 0.5px solid #262525;
 }
 
@@ -277,19 +277,9 @@
   vertical-align: top;
 }
 
-/* bottom text */
-.sign-bottom {
-  font-size: 9px;
-  margin-top: 25px;
-}
+/* bottom text (uses .sign-bottom defined above) */
 
-/* images */
-.seal-img,
-.sig-img {
-  max-height: 45px;
-  margin: 10px auto;
-  display: block;
-}
+
 
   </style>
 </head>
@@ -303,11 +293,11 @@
 <hr>
   {{!-- ══ INVOICE NO + VAT BAR ══ --}}
   <div class="inv-info-bar">
-    <div class="inv-left">
+    <div class="inv-left" style="font-weight:bold;">
       <b>Invoice No /</b> <span class="ar">رقم الفاتورة</span>
       &nbsp;&nbsp;: {{basicdetails.[0].inv_no}}
     </div>
-    <div class="inv-right">
+    <div class="inv-right" style="font-weight:bold;">
       &nbsp;&nbsp; {{#if branch.[0].vat}}{{branch.[0].vat}}{{/if}}
         : <b>VAT Number </b><span class="ar"> / الرقم الضريبي</span>
       
@@ -320,7 +310,7 @@
     <tr>
       <td class="lbl">Name</td>
       <td class="val" colspan="3">{{billing_address.[0].name}}</td>
-      <td class="ar-val" colspan="3">{{#if billing_address.[0].name}}{{billing_address.[0].name}}{{/if}}</td>
+      <td class="ar-val" colspan="3">{{#if billing_address_lang2.[0].name}}{{billing_address_lang2.[0].name}}{{/if}}</td>
       <td class="ar-lbl">الاسم</td>
     </tr>
 
@@ -378,12 +368,12 @@
   <table class="dates-table">
     <thead>
       <tr>
-        <th><span class="ar-sub">تاريخ الفاتورة</span>Invoice Date</th>
-        <th><span class="ar-sub">تاريخ العرض</span>Supply Date</th>
-        <th><span class="ar-sub">رقم طلب الشراء</span>Contract/PO No</th>
-        <th><span class="ar-sub">تاريخ الاستحقاق</span>Due Date</th>
-        <th><span class="ar-sub">فترة الفاتورة</span>Invoice Period</th>
-        <th><span class="ar-sub">رقم المرجع</span>Project / Reference No</th>
+        <th><span class="ar-sub" style="font-weight:bold;">تاريخ الفاتورة</span>Invoice Date</th>
+        <th><span class="ar-sub" style="font-weight:bold;">تاريخ العرض</span>Supply Date</th>
+        <th><span class="ar-sub" style="font-weight:bold;">رقم طلب الشراء</span>Contract/PO No</th>
+        <th><span class="ar-sub" style="font-weight:bold;">تاريخ الاستحقاق</span>Due Date</th>
+        <th><span class="ar-sub" style="font-weight:bold;">فترة الفاتورة</span>Invoice Period</th>
+        <th><span class="ar-sub" style="font-weight:bold;">رقم المرجع</span>Project / Reference No</th>
       </tr>
     </thead>
     <tbody>
@@ -402,14 +392,14 @@
   <table class="items-table">
     <thead>
       <tr>
-        <th style="width:4%;">#<span class="ar-sub">م</span></th>
-        <th style="width:32%;">Description<span class="ar-sub">الوصف</span></th>
-        <th style="width:8%;">Unit<span class="ar-sub">وحدة</span></th>
-        <th style="width:8%;">QTY<span class="ar-sub">الكمية</span></th>
-        <th style="width:10%;">Price<span class="ar-sub">السعر</span></th>
-        <th style="width:12%;">Amount<span class="ar-sub">المبلغ</span></th>
-        <th style="width:12%;">VAT {{basicdetails.[0].vat_perc}}%<span class="ar-sub">الضريبة</span></th>
-        <th style="width:14%;">Amount With Tax<span class="ar-sub">المبلغ مع الضريبة</span></th>
+        <th style="width:4%;font-weight:bold;">#<span class="ar-sub">م</span></th>
+        <th style="width:32%;font-weight:bold;">Description<span class="ar-sub">الوصف</span></th>
+        <th style="width:8%;font-weight:bold;">Unit<span class="ar-sub">وحدة</span></th>
+        <th style="width:8%;font-weight:bold;">QTY<span class="ar-sub">الكمية</span></th>
+        <th style="width:10%;font-weight:bold;">Price<span class="ar-sub">السعر</span></th>
+        <th style="width:12%;font-weight:bold;">Amount<span class="ar-sub">المبلغ</span></th>
+        <th style="width:12%;font-weight:bold;">VAT {{basicdetails.[0].vat_perc}}%<span class="ar-sub">الضريبة</span></th>
+        <th style="width:14%;font-weight:bold;">Amount With Tax<span class="ar-sub">المبلغ مع الضريبة</span></th>
       </tr>
     </thead>
     <tbody>
@@ -440,12 +430,12 @@
   <table class="summary-table">
     <thead>
       <tr>
-        <th><span class="ar-sub">المجموع</span>Sub Total</th>
-        <th><span class="ar-sub">نسبة ضريبة القيمة المضافة</span>{{datasettingstextvalue.d828}}</th>
-        <th><span class="ar-sub">تخفيض</span>Discount</th>
-        <th><span class="ar-sub">المجموع</span>Total</th>
-        <th><span class="ar-sub">المجموع</span>Payment Made</th>
-        <th><span class="ar-sub">الرصيد المستحق</span>Balance Due</th>
+        <th><span class="ar-sub" style="font-weight: bold;">المجموع</span>Sub Total</th>
+        <th><span class="ar-sub" style="font-weight: bold;">نسبة ضريبة القيمة المضافة</span>{{datasettingstextvalue.d828}}</th>
+        <th><span class="ar-sub" style="font-weight: bold;">تخفيض</span>Discount</th>
+        <th><span class="ar-sub" style="font-weight: bold;">المجموع</span>Total</th>
+        <th><span class="ar-sub" style="font-weight: bold;">المجموع</span>Payment Made</th>
+        <th><span class="ar-sub" style="font-weight: bold;">الرصيد المستحق</span>Balance Due</th>
       </tr>
     </thead>
     <tbody>
@@ -522,13 +512,13 @@
             </div>
 
             {{#if Signature}}
-              <div style="text-align:center; padding:5px 0;">
-                <img src="{{Signature}}" style="max-height:60px;" onerror="this.style.display='none'"/>
+              <div style="text-align:center;">
+                <img src="{{Signature}}" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;"  onerror="this.style.display='none'"/>
               </div>
             {{/if}}
 
-            <div class="sign-bottom"><br><br><br>
-              Signature with stamp<br>
+            <div class="sign-bottom">
+              Signature with stamp
               <span class="ar">التوقيع مع الختم</span>
             </div>
 

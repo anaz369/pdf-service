@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase Return</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #000;
+      background: #fff;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 18px 18px 18px 18px;
+    }
+
+    /* ── Title ── */
+    .doc-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      letter-spacing: 0.2px;
+    }
+
+    /* ── Outer border table ── */
+    .main-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .main-table td,
+    .main-table th {
+      border: 1px solid #888;
+      padding: 0;
+    }
+
+    /* ── Doc number / date row ── */
+    .doc-row td {
+      padding: 5px 8px;
+      vertical-align: top;
+    }
+    .doc-label {
+      font-size: 11px;
+      font-weight: 700;
+      display: block;
+    }
+    .doc-label-ar {
+      font-size: 10px;
+      color: #444;
+      display: block;
+      direction: rtl;
+    }
+    .doc-value {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ── Party header row (Seller / Buyer) ── */
+    .party-header td {
+      background: #f0f0f0;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 5px 8px;
+    }
+    .party-header .ar {
+      float: right;
+      direction: rtl;
+      font-weight: 700;
+    }
+
+    /* ── Party detail rows ── */
+    .party-row td {
+      padding: 4px 8px;
+      font-size: 11.5px;
+      vertical-align: top;
+    }
+    .field-label {
+      font-weight: 600;
+      white-space: nowrap;
+      width: 100px;
+      min-width: 100px;
+    }
+    .field-value {
+      min-width: 140px;
+    }
+    .field-label-ar {
+      direction: rtl;
+      text-align: right;
+      font-weight: 600;
+      white-space: nowrap;
+      width: 90px;
+      min-width: 90px;
+    }
+
+    /* ── Items table header ── */
+    .items-head th {
+      background: #e8e8e8;
+      font-weight: 700;
+      font-size: 11.5px;
+      text-align: center;
+      padding: 5px 6px;
+      vertical-align: middle;
+    }
+    .items-head th .ar {
+      display: block;
+      direction: rtl;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #000;
+    }
+    .items-head th.desc-th {
+      text-align: center;
+    }
+
+    /* ── Items rows ── */
+    .item-row td {
+      padding: 4px 6px;
+      font-size: 11.5px;
+      vertical-align: top;
+      border: 1px solid #bbb;
+    }
+    .item-row td.num-cell {
+      text-align: center;
+    }
+    .item-row td.right-cell {
+      text-align: right;
+    }
+    .item-row td.desc-cell {
+      text-align: left;
+    }
+    .item-lang2 {
+      font-size: 10.5px;
+      color: #444;
+    }
+
+    /* ── Totals rows ── */
+    .total-row td {
+      padding: 4px 10px;
+      font-size: 11.5px;
+      border: 1px solid #bbb;
+    }
+    .total-row .total-label-en {
+      font-weight: 500;
+    }
+    .total-row .total-label-ar {
+      direction: rtl;
+      text-align: right;
+      color: #333;
+    }
+    .total-row .total-amt {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    /* divider for doc row */
+    .divider-cell {
+      width: 6px;
+      border-left: 1px solid #888;
+      border-right: 1px solid #888;
+      padding: 0 !important;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  {{!-- ══════════════════════════════════
+       TITLE
+  ══════════════════════════════════ --}}
+  <div class="doc-title">
+    مرتجع مشتريات / Purchase Return
+  </div>
+
+  <table class="main-table">
+
+    {{!-- ══════════════════════════════════
+         DOC NUMBER + DOC ISSUE DATE ROW
+    ══════════════════════════════════ --}}
+    <tr class="doc-row">
+      {{!-- Doc Number label --}}
+      <td style="width:110px;">
+        <span class="doc-label">Doc Number</span>
+        <span class="doc-label-ar">رقم الوثيقة</span>
+      </td>
+      {{!-- Doc Number value --}}
+      <td style="width:200px;">
+        <span class="doc-value">
+          {{#with basicdetails.[0]}}{{inv_no}}{{/with}}
+        </span>
+      </td>
+      {{!-- divider --}}
+      <td class="divider-cell"></td>
+      {{!-- Doc Issue Date label --}}
+      <td style="width:130px;">
+        <span class="doc-label">Doc Issue Date</span>
+        <span class="doc-label-ar">تاريخ إصدار الوثيقة</span>
+      </td>
+      {{!-- Doc Issue Date value --}}
+      <td>
+        <span class="doc-value">
+          {{#with basicdetails.[0]}}{{inv_date}}{{/with}}
+        </span>
+      </td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         SELLER / BUYER HEADER
+    ══════════════════════════════════ --}}
+    <tr class="party-header">
+      <td colspan="2">
+        Seller
+        <span class="ar">المورد</span>
+      </td>
+      <td class="divider-cell"></td>
+      <td colspan="2">
+        Buyer
+        <span class="ar">العميل</span>
+      </td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         NAME ROW
+    ══════════════════════════════════ --}}
+    <tr class="party-row">
+      <td class="field-label">Name</td>
+      <td class="field-value" colspan="1">
+        {{#with branch.[0]}}{{name}}{{/with}}
+      </td>
+      <td class="divider-cell"></td>
+      <td class="field-label">Name</td>
+      <td class="field-value">
+        {{#with billing_address.[0]}}{{name}}{{/with}}
+      </td>
+    </tr>
+    {{!-- AR label row for Name --}}
+    <tr class="party-row" style="background:#fafafa;">
+      <td class="field-label-ar" style="text-align:right;">الاسم</td>
+      <td></td>
+      <td class="divider-cell"></td>
+      <td class="field-label-ar" style="text-align:right;">الاسم</td>
+      <td></td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         BUILDING NO
+    ══════════════════════════════════ --}}
+    <tr class="party-row">
+      <td class="field-label">Building No</td>
+      <td>{{#with branch.[0]}}{{address_line1}}{{/with}}</td>
+      <td class="divider-cell"></td>
+      <td class="field-label">Building No</td>
+      <td>{{#with billing_address.[0]}}{{address_line1}}{{/with}}</td>
+    </tr>
+    <tr class="party-row" style="background:#fafafa;">
+      <td class="field-label-ar" style="text-align:right;">رقم المبنى</td>
+      <td></td>
+      <td class="divider-cell"></td>
+      <td class="field-label-ar" style="text-align:right;">رقم المبنى</td>
+      <td></td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         STREET NAME
+    ══════════════════════════════════ --}}
+    <tr class="party-row">
+      <td class="field-label">Street Name</td>
+      <td>{{#with branch.[0]}}{{address_line2}}{{/with}}</td>
+      <td class="divider-cell"></td>
+      <td class="field-label">Street Name</td>
+      <td>{{#with billing_address.[0]}}{{address_line2}}{{/with}}</td>
+    </tr>
+    <tr class="party-row" style="background:#fafafa;">
+      <td class="field-label-ar" style="text-align:right;">اسم الشارع</td>
+      <td></td>
+      <td class="divider-cell"></td>
+      <td class="field-label-ar" style="text-align:right;">اسم الشارع</td>
+      <td></td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         CITY
+    ══════════════════════════════════ --}}
+    <tr class="party-row">
+      <td class="field-label">City</td>
+      <td>{{#with branch.[0]}}{{address_line4}}{{/with}}</td>
+      <td class="divider-cell"></td>
+      <td class="field-label">City</td>
+      <td>{{#with billing_address.[0]}}{{address_line4}}{{/with}}</td>
+    </tr>
+    <tr class="party-row" style="background:#fafafa;">
+      <td class="field-label-ar" style="text-align:right;">المدينة</td>
+      <td></td>
+      <td class="divider-cell"></td>
+      <td class="field-label-ar" style="text-align:right;">المدينة</td>
+      <td></td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         DISTRICT
+    ══════════════════════════════════ --}}
+    <tr class="party-row">
+      <td class="field-label">District</td>
+      <td>{{#with branch.[0]}}{{address_line3}}{{/with}}</td>
+      <td class="divider-cell"></td>
+      <td class="field-label">District</td>
+      <td>{{#with billing_address.[0]}}{{address_line3}}{{/with}}</td>
+    </tr>
+    <tr class="party-row" style="background:#fafafa;">
+      <td class="field-label-ar" style="text-align:right;">الحي</td>
+      <td></td>
+      <td class="divider-cell"></td>
+      <td class="field-label-ar" style="text-align:right;">الحي</td>
+      <td></td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         POSTAL CODE
+    ══════════════════════════════════ --}}
+    <tr class="party-row">
+      <td class="field-label">Postal Code</td>
+      <td>{{#with branch.[0]}}{{address_code}}{{/with}}</td>
+      <td class="divider-cell"></td>
+      <td class="field-label">Postal Code</td>
+      <td>{{#with billing_address.[0]}}{{address_code}}{{/with}}</td>
+    </tr>
+    <tr class="party-row" style="background:#fafafa;">
+      <td class="field-label-ar" style="text-align:right;">الرمز البريدي</td>
+      <td></td>
+      <td class="divider-cell"></td>
+      <td class="field-label-ar" style="text-align:right;">الرمز البريدي</td>
+      <td></td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         COUNTRY
+    ══════════════════════════════════ --}}
+    <tr class="party-row">
+      <td class="field-label">Country</td>
+      <td>{{#with branch.[0]}}{{address_line5}}{{/with}}</td>
+      <td class="divider-cell"></td>
+      <td class="field-label">Country</td>
+      <td>{{#with billing_address.[0]}}{{address_line5}}{{/with}}</td>
+    </tr>
+    <tr class="party-row" style="background:#fafafa;">
+      <td class="field-label-ar" style="text-align:right;">البلد</td>
+      <td></td>
+      <td class="divider-cell"></td>
+      <td class="field-label-ar" style="text-align:right;">البلد</td>
+      <td></td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         VAT NUMBER
+    ══════════════════════════════════ --}}
+    <tr class="party-row">
+      <td class="field-label">VAT Number</td>
+      <td>{{#with branch.[0]}}{{vat}}{{/with}}</td>
+      <td class="divider-cell"></td>
+      <td class="field-label">VAT Number</td>
+      <td>{{#with billing_address.[0]}}{{vat}}{{/with}}</td>
+    </tr>
+    <tr class="party-row" style="background:#fafafa;">
+      <td class="field-label-ar" style="text-align:right;">الرقم الضريبي</td>
+      <td></td>
+      <td class="divider-cell"></td>
+      <td class="field-label-ar" style="text-align:right;">الرقم الضريبي</td>
+      <td></td>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         ITEMS TABLE HEADER
+    ══════════════════════════════════ --}}
+    <tr class="items-head">
+      <th style="width:36px;">
+        #
+        <span class="ar">الرقم</span>
+      </th>
+      <th class="desc-th" colspan="2">
+        Description
+        <span class="ar">وصف</span>
+      </th>
+      <th style="width:70px;">
+        Quantity
+        <span class="ar">الكمية</span>
+      </th>
+      <th style="width:70px;">
+        Rate
+        <span class="ar">المعدل</span>
+      </th>
+      <th style="width:70px;">
+        Discount
+        <span class="ar">التخفيض</span>
+      </th>
+      <th style="width:80px;">
+        Taxable Amt
+        <span class="ar">المبلغ</span>
+      </th>
+      <th style="width:70px;">
+        Tax Amt
+        <span class="ar">مبلغ الضريبة</span>
+      </th>
+      <th style="width:75px;">
+        Subtotal
+        <span class="ar">المجموع</span>
+      </th>
+    </tr>
+
+    {{!-- ══════════════════════════════════
+         ITEM ROWS
+    ══════════════════════════════════ --}}
+    {{#each itemdetails}}
+    <tr class="item-row">
+      <td class="num-cell">{{inc @index}}</td>
+      <td class="desc-cell" colspan="2">
+        <div>{{item_name}}</div>
+        {{#if name_lang2}}<div class="item-lang2">{{name_lang2}}</div>{{/if}}
+      </td>
+      <td class="right-cell">{{formatAmount quantity 0}}</td>
+      <td class="right-cell">{{formatAmount price ../bcdp}}</td>
+      <td class="right-cell">{{formatAmount disc_amt ../bcdp}}</td>
+      <td class="right-cell">{{formatAmount taxable ../bcdp}}</td>
+      <td class="right-cell">{{formatAmount vat_amt ../bcdp}}</td>
+      <td class="right-cell">{{formatAmount amount ../bcdp}}</td>
+    </tr>
+    {{/each}}
+
+    {{!-- ══════════════════════════════════
+         TOTALS
+    ══════════════════════════════════ --}}
+    {{#with basicdetails.[0]}}
+
+    {{!-- Total Excl. VAT --}}
+    <tr class="total-row">
+      <td colspan="5" style="border:none; padding:0;"></td>
+      <td colspan="2" class="total-label-en" style="padding:4px 10px;">
+        Total (Excluding VAT)
+      </td>
+      <td class="total-label-ar" style="padding:4px 10px;">
+        الإجمالي (غير شاملة ضريبة القيمة المضافة)
+      </td>
+      <td class="total-amt" style="padding:4px 10px;">
+        {{formatAmount subtotal ../bcdp}}
+      </td>
+    </tr>
+
+    {{!-- Discount --}}
+    <tr class="total-row">
+      <td colspan="5" style="border:none; padding:0;"></td>
+      <td colspan="2" class="total-label-en" style="padding:4px 10px;">
+        Discount
+      </td>
+      <td class="total-label-ar" style="padding:4px 10px;">
+        مجموع الخصومات
+      </td>
+      <td class="total-amt" style="padding:4px 10px;">
+        {{formatAmount discount ../bcdp}}
+      </td>
+    </tr>
+
+    {{!-- Total After Discount --}}
+    <tr class="total-row">
+      <td colspan="5" style="border:none; padding:0;"></td>
+      <td colspan="2" class="total-label-en" style="padding:4px 10px;">
+        Total After Discount
+      </td>
+      <td class="total-label-ar" style="padding:4px 10px;">
+        الإجمالي بعد الخصم
+      </td>
+      <td class="total-amt" style="padding:4px 10px;">
+        {{formatAmount subtotal ../bcdp}}
+      </td>
+    </tr>
+
+    {{!-- Total VAT --}}
+    <tr class="total-row">
+      <td colspan="5" style="border:none; padding:0;"></td>
+      <td colspan="2" class="total-label-en" style="padding:4px 10px;">
+        Total VAT
+      </td>
+      <td class="total-label-ar" style="padding:4px 10px;">
+        مجموع ضريبة القيمة المضافة
+      </td>
+      <td class="total-amt" style="padding:4px 10px;">
+        {{formatAmount vatamt ../bcdp}}
+      </td>
+    </tr>
+
+    {{!-- Total Amount --}}
+    <tr class="total-row">
+      <td colspan="5" style="border:none; padding:0;"></td>
+      <td colspan="2" class="total-label-en" style="padding:4px 10px;">
+        <strong>Total Amount</strong>
+      </td>
+      <td class="total-label-ar" style="padding:4px 10px;">
+        <strong>اجمالي المبلغ المستحق</strong>
+      </td>
+      <td class="total-amt" style="padding:4px 10px;">
+        <strong>{{formatAmount grand_total ../bcdp}}</strong>
+      </td>
+    </tr>
+
+    {{!-- Paid --}}
+    <tr class="total-row">
+      <td colspan="5" style="border:none; padding:0;"></td>
+      <td colspan="2" class="total-label-en" style="padding:4px 10px;">
+        Paid
+      </td>
+      <td class="total-label-ar" style="padding:4px 10px;">
+        مدفوع
+      </td>
+      <td class="total-amt" style="padding:4px 10px;">
+        {{formatAmount received ../bcdp}}
+      </td>
+    </tr>
+
+    {{!-- Balance --}}
+    <tr class="total-row">
+      <td colspan="5" style="border:none; padding:0;"></td>
+      <td colspan="2" class="total-label-en" style="padding:4px 10px;">
+        <strong>Balance</strong>
+      </td>
+      <td class="total-label-ar" style="padding:4px 10px;">
+        <strong>الرصيد</strong>
+      </td>
+      <td class="total-amt" style="padding:4px 10px;">
+        <strong>{{formatAmount balance ../bcdp}}</strong>
+      </td>
+    </tr>
+
+    {{/with}}
+
+  </table>
+
+</div>
+</body>
+</html>

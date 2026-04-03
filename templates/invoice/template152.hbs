@@ -1,0 +1,246 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<!-- Forcing initial-scale shouldn't be necessary -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=yes" />
+<title>152</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .invoice_head{
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+.invoice_head span{
+    color: #b72031;
+}
+    table{
+        width: 100%;
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        vertical-align: top;
+    }
+    .table_sample{
+        font-size: 11px;
+    }
+    .table_sample td{
+        padding: 2px 2px;
+        color: #000;
+        font-size: 10px;
+    }
+    .tablee1{
+        border: 1px solid #c6c6c6;
+    }
+    .tablee1 th{
+        padding: 2px;
+        color: #fff;
+        border: 1px solid #344767;
+        border-right: 1px solid #bfbfbf;
+        border-bottom: 0px solid #bfbfbf;
+        background-color: #344767;
+        font-size: 10px;
+    }
+    .tablee1 td{
+        padding: 2px 4px;
+        color: #000;
+        border-right: 1px solid #bfbfbf;
+        font-size: 10px;
+    }
+    .tablee2{
+        border: 1px solid #344767;
+    }
+    .tablee2 th{
+        padding: 2px 4px;
+        color: #fff;
+        background-color: #344767;
+        font-size: 11px;
+    }
+    .tablee2 td{
+        padding: 2px 4px;
+        color: #000;
+        font-size: 10px;
+    }
+    .table_black{
+        border: 1px solid #000;
+    }
+    .table_black td{
+        padding: 2px 4px;
+        color: #000;
+        vertical-align: top;
+        border: 1px solid #000;
+        font-size: 10px;
+    }
+    .qr-wrapper {
+  width: 100%;
+  text-align: center;
+}
+
+.qr-wrapper img {
+  width: 120px;
+  height: 120px;
+  display: block;
+  margin: 0 auto;
+}
+</style>
+</head>
+<body>
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <table class="table_sample">
+                        <tr>
+                            <td><b>Bill To</b> تمت محاسبته عل</td>
+                        </tr>
+                        <tr>
+                            <td>{{billing_address.[0].name}}<br>
+                                {{billing_address.[0].address_line1}}{{#if billing_address.[0].address_line2}} {{billing_address.[0].address_line2}}{{/if}}{{#if billing_address.[0].address_line4}} {{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_line3}} {{billing_address.[0].address_line3}}{{/if}}{{#if billing_address.[0].address_line5}} {{billing_address.[0].address_line5}}{{/if}}</td>
+                        </tr>
+                        {{#if customer_details.[0].VAT_number}}
+                        <tr>
+                            <td>VAT Number : {{customer_details.[0].VAT_number}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if customer_details.[0].cr_no}}
+                        <tr>
+                            <td>CR Number : {{customer_details.[0].cr_no}}</td>
+                        </tr>
+                        {{/if}}
+                    </table>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <table class="table_sample">
+                        
+                        <tr>
+                            <td colspan="3">
+                                <div class="qr-wrapper">
+                                {{{qrDataUri qrCodeBase64}}}
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan="2"><h3 class="mb-0"><b>TAX INVOICE</b></h3></td>
+                            <td><h4 class="mb-0 text-end"><b>فاتورة ضريبية</b></h4></td>
+                        </tr>
+                        <tr>
+                            <td>Invoice Number</td>
+                            <td class="text-center">{{basicdetails.[0].inv_no}}</td>
+                            <td class="text-end">رقم الفاتورة</td>
+                        </tr>
+                        <tr>
+                            <td>Invoice Date</td>
+                            <td class="text-center">{{basicdetails.[0].inv_date}}</td>
+                            <td class="text-end">تاريخ الفاتورة</td>
+                        </tr>
+                        <tr>
+                            <td>P O Number</td>
+                            <td class="text-center">{{basicdetails.[0].order_no}}</td>
+                            <td class="text-end">رقم أمر الشراء</td>
+                        </tr>
+                        <tr>
+                            <td>Reference No</td>
+                            <td class="text-center">{{basicdetails.[0].reference_no}}</td>
+                            <td class="text-end">رقم المرجع</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-lg-12 mt-1">
+                    <table class="tablee1">
+                        <tr>
+                            <th class="text-center" width="7%">Sl No<br>سري</th>
+                            <th class="text-center" width="31%">Item Description<br>وصف السلعة</th>
+                            <th class="text-center" width="8%">Qty<br>الكمية</th>
+                            <th class="text-center" width="8%">UOM<br>قياس</th>
+                            <th class="text-center" width="12%">Unit Rate<br>معدل الوحدة</th>
+                            <th class="text-center" width="12%">Total<br>المجموع</th>
+                            <th class="text-center" width="10%">{{datasettingstextvalue.d828}}<br>الضريبة</th>
+                            <th class="text-center" width="12%">Grand Total<br>المجموع الإجمال</th>
+                        </tr>
+                        {{#each itemdetails}}
+                        <tr>
+                            <td class="text-center">{{addOne @index}}</td>
+                            <td class="text-start">
+                                <div>{{item_name}}</div>
+                                    {{#if name_lang2}}
+                                        <div style="direction:rtl; font-size:9px; color:#555;">
+                                            {{name_lang2}}
+                                        </div>
+                                    {{/if}}
+                                    {{#if description}}
+                                        <div style="font-size:9px; color:#777;">
+                                            {{description}}
+                                        </div>
+                                    {{/if}}
+                            </td>
+                            <td class="text-center">{{formatAmount quantity ../bcdp}}</td>
+                            <td class="text-center">{{unit}}</td>
+                            <td class="text-end">{{formatAmount price ../bcdp}}</td>
+                            <td class="text-end">{{formatAmount taxable ../bcdp}}</td>
+                            <td class="text-end">{{formatAmount vat_amt ../bcdp}}</td>
+                            <td class="text-end">{{formatAmount amount ../bcdp}}</td>
+                        </tr>
+                        {{/each}}
+                    </table>
+                </div>
+                {{#if basicdetails.[0].terms_and_condition}}
+                <div class="col-lg-6 col-md-6 col-sm-6 mt-1" style="font-size: 11px;">
+                    <b>Terms and Conditions : </b>
+                    <div style="margin-top:3px; font-size:10px;">{{basicdetails.[0].terms_and_condition}}</div>
+                </div>
+                {{else}}
+                <div class="col-lg-6 col-md-6 col-sm-6 mt-1" style="font-size: 11px;"></div>
+                {{/if}}
+                <div class="col-lg-6 col-md-6 col-sm-6 mt-1">
+                    <table class="table_black">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td class="text-end">الفرعي المجموع </td>
+                            <td class="text-end">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+                        </tr>
+                        <tr>
+                            <td>Discount</td>
+                            <td class="text-end">تخفيض</td>
+                            <td class="text-end">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{datasettingstextvalue.d828}}</td>
+                            <td class="text-end">ضريبة القيمة المضافة</td>
+                            <td class="text-end">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Amount in {{basicdetails.[0].isocode}}</td>
+                            <td class="text-end">المبلغ الإجمالي</td>
+                            <td class="text-end">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-12 mt-1">
+                    <table class="tablee2">
+                        <tr>
+                            <th>Total Amount in Words </th>
+                            <th class="text-end">المبلغ الإجمالي بالكلمات</th>
+                        </tr>
+                        <tr>
+                            <td>{{bcamountinwords}}</td>
+                            <td class="text-end">{{bcamountinwordsar}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-12 mt-2">
+                    <table class="text-center">
+                        <tr>
+                            <td style="font-size:11px;"><b>Authorized Signature<br>المسؤول المعتمد</b></td>
+                            <td style="font-size:11px;"><b>Received By<br>توقيع المستلم</b></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
