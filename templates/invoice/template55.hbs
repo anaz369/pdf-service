@@ -342,15 +342,23 @@
       <td class="ar-val" colspan="3" style="width: 42%;font-weight:bold;">{{#if billing_address_lang2.[0].name}}{{billing_address_lang2.[0].name}}{{/if}}</td>
       <td class="ar-lbl" style="width: 8%;">الاسم</td>
     </tr>
-
-    <tr>
-      <td class="lbl" style="width: 8%;">Street Name</td>
-      <td class="val" style="width: 17%;">{{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</td>
-      <td class="lbl-mid" style="width: 8%;">Customer Code</td>
-      <td class="ar-val-text" style="text-align: left;width: 17%;">{{#if customer_details.[0].profile_code}}{{customer_details.[0].profile_code}}{{/if}}</td>
-      <td class="ar-val" colspan="3" style="width: 42%;">{{#if billing_address_lang2.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</td>
-      <td class="ar-lbl" style="width: 8%;">اسم الشارع</td>
-    </tr>
+    {{#ifFlag datasettings 'd526'}}
+      <tr>
+        <td class="lbl" style="width: 8%;">Street Name</td>
+        <td class="val" style="width: 17%;">{{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</td>
+        <td class="lbl-mid" style="width: 8%;">Customer Code</td>
+        <td class="ar-val-text" style="text-align: left;width: 17%;">{{#if customer_details.[0].profile_code}}{{customer_details.[0].profile_code}}{{/if}}</td>
+        <td class="ar-val" colspan="3" style="width: 42%;">{{#if billing_address_lang2.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</td>
+        <td class="ar-lbl" style="width: 8%;">اسم الشارع</td>
+      </tr>
+    {{else}}
+      <tr>
+        <td class="lbl" style="width: 8%;">Street Name</td>
+        <td class="val" style="width: 42%;">{{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</td>
+        <td class="ar-val" colspan="3" style="width: 42%;">{{#if billing_address_lang2.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}</td>
+        <td class="ar-lbl" style="width: 8%;">اسم الشارع</td>
+      </tr>
+    {{/ifFlag}}
     <tr>
       <td class="lbl" style="width: 8%;">Building No</td>
       <td class="val" style="width: 17%;">{{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}</td>
