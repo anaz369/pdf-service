@@ -215,9 +215,10 @@ class TemplateService {
 
     // ── Invoice-specific helpers ───────────────────────────
     Handlebars.registerHelper('ifFlag', function(settings, key, options) {
-      const val = settings && settings[key];
-      return (val == '1' || val === 1 || val === true)
-        ? options.fn(this) : options.inverse(this);
+      if (!settings || typeof settings !== 'object') return options.inverse(this);
+      const val = settings[key];
+      const isTrue = val === 1 || val === '1' || val === true || val === 'true';
+      return isTrue ? options.fn(this) : options.inverse(this);
     });
 
     Handlebars.registerHelper('ifZatca', function(settings, options) {
