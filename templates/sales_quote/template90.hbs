@@ -423,8 +423,10 @@
        TERMS & CONDITIONS
   ══════════════════════════════════════ }}
       <div class="terms-section">
+        {{#if basicdetails.[0].terms_and_condition}}
         <div class="terms-title">Terms &amp; Conditions:</div>
-        <div class="terms-text">{{#if basicdetails.[0].terms_and_condition}}{{nl2br basicdetails.[0].terms_and_condition}}{{/if}}</div>
+        <div class="terms-text">{{nl2br basicdetails.[0].terms_and_condition}}</div>
+        {{/if}}
       </div>
 
       {{! ══════════════════════════════════════
