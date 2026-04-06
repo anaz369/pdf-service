@@ -170,8 +170,8 @@ class TemplateService {
     Handlebars.registerHelper('upper',    (str)  => str ? str.toUpperCase() : '');
     Handlebars.registerHelper('default',  (v, d) => v || d);
     Handlebars.registerHelper('json',     (ctx)  => JSON.stringify(ctx, null, 2));
-    // Handlebars.registerHelper('nl2br', (text) => text ? new Handlebars.SafeString(text.replace(/\n/g, '<br/>')) : '');
-    Handlebars.registerHelper('nl2br', (text) => { if (!text) return ''; new Handlebars.SafeString(text.replace(/\r\n|\n|\r/g, '<br/>'));});
+     Handlebars.registerHelper('nl2br', (text) => text ? new Handlebars.SafeString(text.replace(/\n/g, '<br/>')) : '');
+    //Handlebars.registerHelper('nl2br', (text) => { if (!text) return ''; new Handlebars.SafeString(text.replace(/\r\n|\n|\r/g, '<br/>'));});
 
     // ── Comparison helpers ─────────────────────────────────
     Handlebars.registerHelper('eq',  (a, b) => a === b);
