@@ -11,7 +11,6 @@
 
       @page {
         size: A4;
-        margin: 5mm 5mm;
       }
       body {
         font-family: Arial, sans-serif;
@@ -396,12 +395,12 @@
                     style="font-size:9.5px;color:#777;"
                   >{{description}}</div>{{/if}}
               </td>
-              <td>{{formatAmount quantity 2}}</td>
+              <td>{{formatAmount quantity bcdp}}</td>
               <td>{{unit}}</td>
-              <td>{{formatAmount price 2}}</td>
-              <td>{{formatAmount taxable 2}}</td>
-              <td>{{formatAmount tax 2}}</td>
-              <td>{{formatAmount amount 2}}</td>
+              <td>{{formatAmount price bcdp}}</td>
+              <td>{{formatAmount taxable bcdp}}</td>
+              <td>{{formatAmount tax bcdp}}</td>
+              <td>{{formatAmount amount }}</td>
             </tr>
           {{/each}}
           {{! Spacer rows }}
@@ -425,7 +424,7 @@
   ══════════════════════════════════════ }}
       <div class="terms-section">
         <div class="terms-title">Terms &amp; Conditions:</div>
-        <div class="terms-text">{{#if invterms}}{{invterms}}{{/if}}</div>
+        <div class="terms-text">{{#if basicdetails.[0].terms_and_condition}}{{nl2br basicdetails.[0].terms_and_condition}}{{/if}}</div>
       </div>
 
       {{! ══════════════════════════════════════
@@ -445,24 +444,15 @@
         <div class="sum-totals">
           <div class="tot-row">
             <span class="tr-lbl">Total Taxable Amount (Excluding VAT)</span>
-            <span class="tr-amt">{{formatAmount
-                basicdetails.[0].subtotal
-                2
-              }}</span>
+            <span class="tr-amt">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</span>
           </div>
           <div class="tot-row">
             <span class="tr-lbl">VAT</span>
-            <span class="tr-amt">{{formatAmount
-                basicdetails.[0].vatamt
-                2
-              }}</span>
+            <span class="tr-amt">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</span>
           </div>
           <div class="tot-row tr-bold">
             <span class="tr-lbl">Total Amount</span>
-            <span class="tr-amt">{{formatAmount
-                basicdetails.[0].grand_total
-                2
-              }}</span>
+            <span class="tr-amt">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</span>
           </div>
         </div>
 
@@ -485,11 +475,7 @@
         <div class="sig-col">
           <div class="sig-img-wrap">
             {{#if Signature}}
-              <img
-                src="{{Signature}}"
-                alt="Signature"
-                onerror="this.style.display='none'"
-              />
+                <img src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/>
             {{/if}}
           </div>
           <div class="sig-label">Authorised Signatory</div>
@@ -498,8 +484,8 @@
         {{! Company seal + name }}
         <div class="sig-col">
           <div class="sig-img-wrap">
-            {{#if Seal}}
-              <img src="{{Seal}}" alt="Seal"onerror="this.style.display='none'"/>
+           {{#if Seal}}
+                <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>
             {{/if}}
           </div>
           <div class="sig-label">{{compprof.name}}</div>
