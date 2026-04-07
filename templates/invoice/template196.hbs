@@ -53,13 +53,13 @@
       text-align: center;
     }
     .trn-bar .trn-lbl {
-      color: #555;
+      color: #000;
       font-weight:bold;
       font-size: 13px;
     }
     .trn-bar .trn-val {
       font-weight: bold;
-      color: #005689;
+      color: #000;
       font-size: 13px;
       letter-spacing: 0.5px;
     }
@@ -93,7 +93,8 @@
       font-size: 11px;
     }
     .field-lbl {
-      color: #999;
+      color: #683535;
+      {{!-- font-weight: bold; --}}
       min-width: 120px;
       font-size: 11px;
       flex-shrink: 0;
@@ -147,58 +148,26 @@
       padding: 0 0 4px 0;
     }
     .fin-left {
-      flex: 0 0 42%;
-      border-right: none;
+      flex: 0 0 180px;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 6px;
     }
     .qr-wrapper img {
-      width: 85px;
-      height: 85px;
+      width: 110px;
+      height: 110px;
       display: block;
     }
     .fin-right {
       flex: 1;
-      margin-top: 10px;
-      border: 1px solid #ddd;
+      margin-top: 0;
+      border: 1px solid #d9d9d9;
       border-radius: 6px;
       overflow: hidden;
+      background: #fff;
     }
-    .fin-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px 8px;
-      border-bottom: 1px solid #eee;
-      font-size: 11px;
-    }
-    .fin-row:last-child     { border-bottom: none; }
-    .fin-row .f-lbl         { color: #000; }
-    .fin-row .f-lbl.orange  { color: #e07000; }
-    .fin-row .f-lbl.bold    { font-weight: bold; }
-    .fin-row .f-amt         { text-align: right; min-width: 120px; }
-    .fin-row .f-amt.deduct  { color: #c00; }
-    .fin-row .f-amt.add     { color: #000; }
-    .fin-row .f-amt.bold    { font-weight: bold; }
-    .fin-row-dark {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 12px;
-      background: #005689;
-      color: #fff;
-      font-size: 12px;
-      font-weight: bold;
-      border-radius: 0 0 5px 5px;
-    }
-    .fin-row-dark .f-amt {
-      color: #f0a500;
-      text-align: right;
-      font-size: 13px;
-    }
-
+    
     /* ── Amount in words ─────────────────────────────── */
     .words-box {
       border: 1px solid #e8d98a;
@@ -253,7 +222,7 @@
       font-size: 10px;
     }
     .bank-row-item:last-child { border-bottom: none; }
-    .bank-row-item .bk-key   { color: #999; flex-shrink: 0; }
+    .bank-row-item .bk-key   { color: #000000; flex-shrink: 0; }
     .bank-row-item .bk-val   { color: #000; text-align: left; }
     .bank-row-item .bk-val.iban { color: #f0a500; font-weight: bold; }
 
@@ -296,60 +265,71 @@
       letter-spacing: 0.5px;
     }
     .fin-wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-}
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-top:5px;
+    }
+    .fin-words {
+      margin-top: 8px;
+      font-size: 10px;
+      text-align: center;
+    }
+    .fin-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 8px;
+      border-bottom: 1px solid #eee;
+      font-size: 11px;
+    }
+    .fin-row:last-child     { border-bottom: none; }
+    .fin-row .f-lbl         { color: #000; }
+    .fin-row .f-lbl.orange  { color: #e07000; }
+    .fin-row .f-lbl.bold    { font-weight: bold; }
+    .fin-row .f-amt         { text-align: right; min-width: 120px; }
+    .fin-row .f-amt.deduct  { color: #c00; }
+    .fin-row .f-amt.add     { color: #000; }
+    .fin-row .f-amt.bold    { font-weight: bold; }
 
-.fin-left {
-  width: 120px;
-}
+    .fin-row-dark {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 12px;
+      background: #1987c8;
+      color: #fff;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 0 0 5px 5px;
+    }
+    .fin-row-dark .f-amt {
+      color: #f0a500;
+      text-align: right;
+      font-size: 13px;
+    }
 
-.qr-wrapper img {
-  width: 100px;
-  height: 100px;
-}
-
-.fin-right {
-  flex: 1;
-}
-
-.fin-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 120px;
-  border-bottom: 1px solid #ccc;
-  padding: 4px 0;
-  font-size: 11px;
-}
-
-.f-lbl {
-  text-align: left;
-}
-
-.f-ar {
-  text-align: right;
-  direction: rtl;
-}
-
-.f-amt {
-  text-align: right;
-  font-weight: 500;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.fin-row.bold {
-  border-top: 2px solid #000;
-}
-
-.fin-words {
-  margin-top: 8px;
-  font-size: 10px;
-  text-align: center;
-}
+    .words-box {
+      border: 1px solid #e8d98a;
+      background: #fffbe6;
+      margin: 2px 0;
+      border-radius: 6px;
+      padding: 5px 6px;
+    }
+    .words-title {
+      font-size: 9px;
+      font-weight: bold;
+      color: #b8960a;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .words-text {
+      font-size: 11px;
+      font-weight: bold;
+      color: #000;
+    }
   </style>
 </head>
 <body>
@@ -474,7 +454,7 @@
         </td>
         <td>{{formatAmount quantity ../bcdp}}</td>
         <td>{{formatAmount price ../bcdp}}</td>
-        <td class="td-total">{{formatAmount taxable ../bcdp}}</td>
+        <td class="td-total">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
     </tbody>
@@ -493,76 +473,100 @@
   <!-- RIGHT : TOTALS -->
   <div class="fin-right">
 
-    <div class="fin-row">
-      <span class="f-lbl">Total Price</span>
+    {{!-- <div class="fin-row bold">
+      <span class="f-lbl">Total</span>
       <span class="f-ar">السعر الإجمالي</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
+        {{basicdetails.[0].isocode}}
         {{formatAmount basicdetails.[0].subtotal bcdp}}
       </span>
     </div>
 
-    <div class="fin-row">
+    <div class="fin-row orange">
       <span class="f-lbl">Total Discount</span>
       <span class="f-ar">إجمالي الخصم</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
+        {{basicdetails.[0].isocode}}
         {{formatAmount basicdetails.[0].total_discount bcdp}}
       </span>
     </div>
 
     {{#if basicdetails.[0].discount}}
-    <div class="fin-row">
+    <div class="fin-row orange">
       <span class="f-lbl">Discount</span>
       <span class="f-ar">خصم</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
+        {{basicdetails.[0].isocode}}
         {{formatAmount basicdetails.[0].discount bcdp}}
       </span>
     </div>
     {{/if}}
 
-    <div class="fin-row">
-      <span class="f-lbl">VAT</span>
-      <span class="f-ar">ضريبة القيمة المضافة</span>
-      <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
-        {{formatAmount basicdetails.[0].vatamt bcdp}}
-      </span>
-    </div>
-
-    <div class="fin-row">
+    <div class="fin-row orange">
       <span class="f-lbl">Additional Discount</span>
       <span class="f-ar">خصم إضافي</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
+        {{basicdetails.[0].isocode}}
         {{formatAmount basicdetails.[0].additional_discount bcdp}}
       </span>
     </div>
 
     <div class="fin-row bold">
-      <span>Total</span>
-      <span class="f-ar">المبلغ الإجمالي</span>
+      <span class="f-lbl">Total Amount (Excluding VAT)</span>
+      <span class="f-ar">المبلغ الإجمالي بدون ضريبة</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
+        {{basicdetails.[0].isocode}}
         {{formatAmount basicdetails.[0].grand_total bcdp}}
       </span>
     </div>
 
-    <div class="fin-row bold">
-      <span>Balance Due</span>
-      <span class="f-ar">الرصيد الواجب دفعه</span>
+    <div class="fin-row orange">
+      <span class="f-lbl">VAT</span>
+      <span class="f-ar">ضريبة القيمة المضافة</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}} 
-        {{formatAmount basicdetails.[0].balance bcdp}}
+        {{basicdetails.[0].isocode}}
+        {{formatAmount basicdetails.[0].vatamt bcdp}}
       </span>
     </div>
 
-    <div class="fin-words">
-      Total Invoice Amount in words : {{bcamountinwords}}<br>
-      مبلغ إجمالي بالكلمات الفاتورة : {{bcamountinwordsar}}
-    </div>
+    <div class="fin-row-dark">
+      <span class="f-lbl">Total Amount (With VAT)</span>
+      <span class="f-ar">المبلغ الإجمالي شامل الضريبة</span>
+      <span class="f-amt">
+        {{basicdetails.[0].isocode}}
+        {{formatAmount basicdetails.[0].balance bcdp}}
+      </span>
+    </div> --}}
 
+    <div class="fin-row">
+        <span class="f-lbl">Total</span>
+        <span class="f-amt">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</span>
+      </div>
+
+      <div class="fin-row">
+        <span class="f-lbl orange">{{basicdetails.[0].ap}}% Advance Recovery</span>
+        <span class="f-amt deduct">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].aa ccrate) bcdp}}</span>
+      </div>
+
+      <div class="fin-row">
+        <span class="f-lbl orange">{{basicdetails.[0].rp}}% Retention</span>
+        <span class="f-amt deduct">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].ra ccrate) bcdp}}</span>
+      </div>
+
+      <div class="fin-row">
+        <span class="f-lbl bold">Total Amount Claimed (Without 5% VAT)</span>
+        <span class="f-amt bold">{{basicdetails.[0].isocode}} {{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].aa basicdetails.[0].ra)) ccrate) bcdp}}</span>
+      </div>
+
+      <div class="fin-row">
+        <span class="f-lbl">VAT 5%</span>
+        <span class="f-amt add">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</span>
+      </div>
+
+      <div class="fin-row-dark">
+        <span>Total Amount Claimed (With 5% VAT)</span>
+        <span class="f-amt">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</span>
+      </div>
   </div>
 </div>
 {{!-- AMOUNT IN WORDS + INVOICE NOTES — same row --}}
@@ -585,10 +589,10 @@
 </div>
 
   {{!-- TERMS AND CONDITIONS --}}
-  {{#if invterms}}
+  {{#if basicdetails.[0].terms_and_condition}}
   <div class="terms-box">
     <div class="terms-box-title">TERMS AND CONDITIONS</div>
-    <div class="terms-box-text">{{nl2br invterms}}</div>
+    <div class="terms-box-text">{{nl2br basicdetails.[0].terms_and_condition}}</div>
   </div>
   {{/if}}
 
@@ -606,7 +610,7 @@
   {{/if}}
 
   {{!-- PREPARED BY (left) | BANK DETAILS (right) --}}
-  <div style="page-break-before: always; break-before: always;">
+  <div style="page-break-inside: avoid; break-inside: avoid;">
     <div style="display:flex; gap:0; margin-top:5px; border:1px solid #ddd; border-radius:6px; overflow:hidden;">
 
       {{!-- LEFT — Prepared By + Seal + Created User --}}
