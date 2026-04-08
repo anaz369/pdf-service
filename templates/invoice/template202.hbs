@@ -55,12 +55,12 @@
         }
 
         .f-blnk    { top: 54.2mm;  left: 40.4mm;  width: 5mm; }
-        .f-date    { top: 50.9mm;  left: 131.4mm;  width: 60mm; }
-        .f-inv     { top: 50.9mm;  left: 175mm;   width: 46mm; }
-        .f-ccode   { top: 57.1mm;  left: 139.5mm; width: 30mm; }
-        .f-name    { top: 53.9mm;  left: 22.4mm;  width: 105mm; overflow: hidden; text-overflow: ellipsis; }
-        .f-contact { top: 62.3mm;  left: 139.8mm; width: 42mm;  overflow: hidden; text-overflow: ellipsis; }
-        .f-address { top: 63.3mm;  left: 22.4mm; width: 80mm; white-space: normal; line-height: 1.3; }
+        .f-date    { top: 47.9mm;  left: 131.4mm;  width: 60mm; }
+        .f-inv     { top: 47.9mm;  left: 177mm;   width: 46mm; }
+        .f-ccode   { top: 54.1mm;  left: 139.5mm; width: 30mm; }
+        .f-name    { top: 49.9mm;  left: 22.4mm;  width: 105mm; overflow: hidden; text-overflow: ellipsis; }
+        .f-contact { top: 58.3mm;  left: 139.8mm; width: 42mm;  overflow: hidden; text-overflow: ellipsis; }
+        .f-address { top: 54.3mm;  left: 22.4mm; width: 80mm; white-space: normal; line-height: 1.3; }
         /* ── Items table ───────────────────────── */
         .items-wrap {
             position: absolute;
@@ -73,7 +73,7 @@
         }
 
         .items-table {
-            width: 100%;
+            width: 215mm;
             border-collapse: collapse;
             table-layout: fixed;
         }
@@ -96,8 +96,9 @@
             overflow-wrap: break-word;
         }
 
-        .c-code  { width: 9.6mm; }
-        .c-sno   { width: 13mm; text-align: left; }
+        .c-code  { width: 7.6mm; }
+        .c-sno   { width: 8mm; text-align: right; }
+        .c-s   { width: 8mm; text-align: left; }
         .c-desc  { width: 88mm; text-align: left; }
         .c-qty   { width: 11mm; text-align: center; }
         .c-unit  { width: 11mm; text-align: left; }
@@ -106,9 +107,9 @@
         .c-test  { width: 17mm; text-align: right; }
 
         /* ── Footer ────────────────────────────── */
-        .f-words { top: 217.7mm; left: 35.6mm; width: 130mm; font-size: 8pt; overflow: hidden; text-overflow: ellipsis; }
-        .f-total { top: 217.2mm; left: 162mm;  width: 31mm;  text-align: right; padding-right: 2mm; font-weight: bold; }
-        .f-remark { top: 223.2mm; left: 36mm;  width: 31mm;  text-align: right; padding-right: 2mm; }
+        .f-words { top: 220.7mm; left: 35.6mm; width: 130mm; font-size: 8pt; overflow: hidden; text-overflow: ellipsis; }
+        .f-total { top: 220.2mm; left: 162mm;  width: 31mm;  text-align: right; padding-right: 2mm; font-weight: bold; }
+        .f-remark { top: 225.2mm; left: 36mm;  width: 31mm;  text-align: right; padding-right: 2mm; }
         .related-invoices {
   border: 1px solid #ddd;
   border-radius: 6px;
@@ -165,8 +166,9 @@
         <table class="items-table"><tbody>
         {{#each pageItems}}
             <tr>
-                <td class="c-code"></td>
+              
                 <td class="c-sno">{{addOffset @index ../startIndex}}</td>
+                <td class="c-s"></td>
                 {{!-- <td class="c-code">{{item_code}}</td> --}}
                 {{!-- <td class="c-desc">{{item_name}}
                     {{#if name_lang2}}
@@ -177,7 +179,7 @@
                         <small style="color:#555; display:block;">{{description}}</small>
                     {{/neq}}
                     {{/if}}</td> --}}
-                    <td class="c-desc" style="width:100%;">
+                    <td class="c-desc">
     
                         <!-- Row for Names -->
                         <div style="display:flex; justify-content:space-between; align-items:center;">
