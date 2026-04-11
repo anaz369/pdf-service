@@ -353,6 +353,15 @@ class PdfController {
               right: "0px",
             };
             break;
+            case 4:
+            // Sales Order
+            pdfOptions.margin = {
+              top: withUnit(ds.d935, "120px"),
+              bottom: withUnit(ds.d817, "5px"),
+              left: "0px",
+              right: "0px",
+            };
+            break;
           case 1:
           default:
             // Invoice (and fallback)
@@ -368,7 +377,7 @@ class PdfController {
         console.log(
           `✓ Margins for doc_type=${pdfRequest.doc_type}:`,
           pdfOptions.margin,
-          `| raw d783=${ds.d783}, d811=${ds.d811}, d74=${ds.d74}, d75=${ds.d75}`,
+          `| raw d783=${ds.d783}, d811=${ds.d811}, d935=${ds.d935}, d817=${ds.d817}, d74=${ds.d74}, d75=${ds.d75}`,
         );
         // pdfOptions.margin = { top: '120px', bottom: '5px', left: '15px', right: '15px' };
 

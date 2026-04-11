@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sales Order – Sunrise Trading Co.</title>
+  {{!-- <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/> --}}
+  <style>
+       @page {
+        size: A4;
+      }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f4f4f0;
+      color: #1a1a2e;
+    }
+
+    .so-card {
+      background: #ffffff;
+      border: 1px solid #e0ddd5;
+      border-radius: 14px;
+      overflow: hidden;
+      max-width: 1100px;
+      margin: 0 auto;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+    }
+
+    /* ── HEADER ── */
+    .so-header {
+      background: #1a1a2e;
+      color: #ffffff;
+      padding: 2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+
+    .so-brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+    }
+
+    .so-brand span { color: #e9c46a; }
+
+    .so-tagline {
+      font-size: 11px;
+      opacity: 0.55;
+      margin-top: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .so-address {
+      font-size: 11px;
+      opacity: 0.55;
+      margin-top: 8px;
+      line-height: 1.7;
+    }
+
+    .so-doc-meta { text-align: right; }
+
+    .so-doc-label {
+      font-size: 10px;
+      opacity: 0.5;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    .so-doc-no {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      color: #e9c46a;
+      letter-spacing: 1px;
+    }
+
+    .so-doc-dates {
+      font-size: 11px;
+      opacity: 0.6;
+      margin-top: 8px;
+      line-height: 1.9;
+    }
+
+    /* ── BODY ── */
+    .so-body { padding: 2rem 2.5rem; }
+
+    .so-section-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #888;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    .so-divider {
+      border: none;
+      border-top: 0.5px solid #e0ddd5;
+      margin: 1.5rem 0;
+    }
+
+    /* ── PARTIES ── */
+    .so-parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .so-party-box {
+      background: #f9f8f5;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      border-left: 3px solid #e9c46a;
+    }
+
+    .so-party-name {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #1a1a2e;
+    }
+
+    .so-party-detail {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    /* ── ITEMS TABLE ── */
+    .so-table-wrap { overflow-x: auto; }
+
+    table.so-items {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    table.so-items thead tr {
+      background: #1a1a2e;
+      color: #ffffff;
+    }
+
+    table.so-items thead th {
+      padding: 10px 10px;
+      text-align: left;
+      font-weight: 500;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      white-space: nowrap;
+    }
+
+    table.so-items thead th:not(:first-child):not(:nth-child(3)) {
+      text-align: right;
+    }
+
+    table.so-items tbody tr {
+      border-bottom: 0.5px solid #ececec;
+    }
+
+    table.so-items tbody tr:hover {
+      background: #fafaf7;
+    }
+
+    table.so-items td {
+      padding: 10px 10px;
+      vertical-align: middle;
+      color: #1a1a2e;
+    }
+
+    table.so-items td:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .so-badge {
+      display: inline-block;
+      font-size: 9px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: #e9c46a22;
+      color: #9a7c0a;
+      margin-left: 4px;
+    }
+
+    /* ── TOTALS ── */
+    .so-totals {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+
+    .so-totals-box { width: 360px; }
+
+    .so-total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: 12px;
+      border-bottom: 0.5px solid #ececec;
+    }
+
+    .so-total-row:last-child { border-bottom: none; }
+    .so-total-row .lbl { color: #888; }
+
+    .so-grand-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 13px;
+      background: #1a1a2e;
+      color: #ffffff;
+      border-radius: 10px;
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .so-grand-row .amt {
+      color: #e9c46a;
+      font-family: 'DM Serif Display', serif;
+      font-size: 14px;
+    }
+
+    .so-gst-note {
+      font-size: 11px;
+      color: #999;
+      margin-top: 6px;
+      text-align: right;
+      font-style: italic;
+    }
+
+    /* ── FOOTER ── */
+    .so-footer-row {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 0.5px solid #e0ddd5;
+      align-items: flex-start;
+    }
+
+    .so-footer-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .so-note-box {
+      background: #f9f8f5;
+      border-left: 3px solid #e0ddd5;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #666;
+      line-height: 2;
+      flex: 2;
+    }
+
+    .so-sign-area {
+      flex: 1;
+      text-align: center;
+    }
+
+    .so-stamp {
+      width: 72px;
+      height: 72px;
+      border: 2px dashed #e9c46a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: #e9c46a;
+      text-align: center;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      line-height: 1.5;
+      margin: 0.75rem auto;
+    }
+
+    .so-sign-line {
+      border-top: 0.5px solid #ccc;
+      margin-top: 2.5rem;
+      padding-top: 6px;
+      font-size: 11px;
+      color: #999;
+      text-align: center;
+    }
+
+    /* ── BOTTOM BAR ── */
+    .so-bottom-bar {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 0.5px solid #e0ddd5;
+      font-size: 11px;
+      color: #aaa;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: #fff; padding: 0; }
+      .so-card { box-shadow: none; border: none; max-width: 100%; }
+      .no-print { display: none !important; }
+    }
+
+    /* ── PRINT BUTTON ── */
+    .print-btn {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .print-btn button {
+      background: #1a1a2e;
+      color: #e9c46a;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s;
+    }
+
+    .print-btn button:hover { opacity: 0.85; }
+  </style>
+</head>
+<body>
+  <div class="so-card">
+
+    {{!-- ── HEADER ── --}}
+    {{!-- <div class="so-header">
+      <div>
+        <div class="so-brand">{{compprof.name}}</div>
+        <div class="so-tagline">Sales Order</div>
+        <div class="so-address">
+          {{#if compprof.address}}{{compprof.address}}<br>{{/if}}
+          {{#if compprof.phone}}Phone: {{compprof.phone}}<br>{{/if}}
+          {{#if compprof.email}}Email: {{compprof.email}}<br>{{/if}}
+          {{#if compprof.website}}Web: {{compprof.website}}<br>{{/if}}
+          {{#if compprof.gstin}}VAT / GSTIN: {{compprof.gstin}}{{/if}}
+        </div>
+      </div>
+      <div class="so-doc-meta">
+        <div class="so-doc-label">Order No.</div>
+        <div class="so-doc-no">{{basicdetails.[0].inv_no}}</div>
+        <div class="so-doc-dates">
+          Order Date: {{basicdetails.[0].inv_date}}<br>
+          Due Date: {{basicdetails.[0].due_date}}
+        </div>
+      </div>
+    </div> --}}
+
+    {{!-- ── BODY ── --}}
+    <div class="so-body">
+
+      <h1 style="text-align:center; font-family:arial; font-size:24px; color:#1a1a2e; margin:0 0 12px 0; letter-spacing:1px; text-transform:uppercase;">Sales Order</h1>
+
+      {{!-- PARTIES --}}
+      <div class="so-parties">
+        <div>
+          <div class="so-section-title">Bill To</div>
+          <div class="so-party-box">
+            <div class="so-party-name">{{billing_address.[0].name}}</div>
+            <div class="so-party-detail">
+              GSTIN: {{billing_address.[0].gstin}}<br>
+              {{joinAddress billing_address.[0]}}<br>
+              {{billing_address.[0].state}}
+              {{#if customer_details.[0].contact_no1}}Contact: {{customer_details.[0].contact_no1}}{{/if}}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="so-section-title">Ship To</div>
+          <div class="so-party-box">
+            <div class="so-party-name">{{shipping_address.[0].name}}</div>
+            <div class="so-party-detail">
+                GSTIN: {{shipping_address.[0].gstin}}<br>
+                {{joinAddress shipping_address.[0]}}<br>
+                {{shipping_address.[0].state}}
+                {{#if customer_details.[0].contact_no1}}Contact: {{customer_details.[0].contact_no1}}{{/if}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="so-divider"/>
+
+      {{!-- ITEMS --}}
+      <div class="so-section-title">Order Items</div>
+      <div class="so-table-wrap">
+        <table class="so-items">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th style="text-align:left;">Product / Service</th>
+              <th>Unit</th>
+              <th>Qty</th>
+              <th>Price</th>
+              {{#if (gt basicdetails.[0].disc_amt 0)}}
+              <th>Disc</th>
+              {{/if}}
+              <th>Taxable</th>
+              {{!-- {{#if (gt basicdetails.[0].vatamt 0)}}
+              <th>VAT</th>
+              {{/if}} --}}
+              {{#if (gt basicdetails.[0].igst 0)}}
+              <th>IGST</th>
+              {{/if}}
+              {{#if (gt basicdetails.[0].sgst 0)}}
+              <th>SGST</th>
+              {{/if}}
+              {{#if (gt basicdetails.[0].cgst 0)}}
+              <th>CGST</th>
+              {{/if}}
+              {{#if (gt basicdetails.[0].cess 0)}}
+              <th>CESS</th>
+              {{/if}}
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each itemdetails}}
+            <tr>
+              <td>{{addOne @index}}</td>
+              <td>
+                {{item_name}}
+                {{#if name_lang2}}<div style="font-size:10px; color:#888;">{{name_lang2}}</div>{{/if}}
+                {{#if description}}<div style="font-size:10px; color:#999;">{{description}}</div>{{/if}}
+              </td>
+              <td>{{unit}}</td>
+              <td>{{formatAmount quantity ../bcdp}}</td>
+              <td>{{formatAmount price ../bcdp}}</td>
+              {{#if (gt @root.basicdetails.[0].disc_amt 0)}}
+              <td>{{formatAmount disc_amt ../bcdp}}</td>
+              {{/if}}
+              <td>{{formatAmount taxable ../bcdp}}</td>
+              {{!-- {{#if (gt @root.basicdetails.[0].vatamt 0)}}
+              <td>{{formatAmount tax ../bcdp}}</td>
+              {{/if}} --}}
+              {{#if (gt @root.basicdetails.[0].igst 0)}}
+              <td>{{formatAmount igst_amt ../bcdp}}</td>
+              {{/if}}
+              {{#if (gt @root.basicdetails.[0].sgst 0)}}
+              <td>{{formatAmount sgst_amt ../bcdp}}</td>
+              {{/if}}
+              {{#if (gt @root.basicdetails.[0].cgst 0)}}
+              <td>{{formatAmount cgst_amt ../bcdp}}</td>
+              {{/if}}
+              {{#if (gt @root.basicdetails.[0].cess 0)}}
+              <td>{{formatAmount cess_amt ../bcdp}}</td>
+              {{/if}}
+              <td>{{formatAmount amount ../bcdp}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+
+      {{!-- TOTALS --}}
+      <div class="so-totals">
+        <div class="so-totals-box">
+          <div class="so-total-row">
+            <span class="lbl">Sub Total</span>
+            <span>{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].subtotal bcdp}}</span>
+          </div>
+          {{#if (gt basicdetails.[0].discount 0)}}
+          <div class="so-total-row">
+            <span class="lbl">Discount</span>
+            <span>- {{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].discount bcdp}}</span>
+          </div>
+          {{/if}}
+          {{!-- {{#if (gt basicdetails.[0].vatamt 0)}}
+          <div class="so-total-row">
+            <span class="lbl">VAT</span>
+            <span>{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].vatamt bcdp}}</span>
+          </div>
+          {{/if}} --}}
+          {{#if (gt basicdetails.[0].cgst 0)}}
+          <div class="so-total-row">
+            <span class="lbl">CGST</span>
+            <span>{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].cgst bcdp}}</span>
+          </div>
+          {{/if}}
+          {{#if (gt basicdetails.[0].sgst 0)}}
+          <div class="so-total-row">
+            <span class="lbl">SGST</span>
+            <span>{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].sgst bcdp}}</span>
+          </div>
+          {{/if}}
+          {{#if (gt basicdetails.[0].igst 0)}}
+          <div class="so-total-row">
+            <span class="lbl">IGST</span>
+            <span>{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].igst bcdp}}</span>
+          </div>
+          {{/if}}
+          {{#if (gt basicdetails.[0].cess 0)}}
+          <div class="so-total-row">
+            <span class="lbl">CESS</span>
+            <span>{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].cess bcdp}}</span>
+          </div>
+          {{/if}}
+          {{#if (gt basicdetails.[0].round_off 0)}}
+          <div class="so-total-row">
+            <span class="lbl">Round Off</span>
+            <span>{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].round_off bcdp}}</span>
+          </div>
+          {{/if}}
+          {{#if basicdetails.[0].received}}
+          <div class="so-total-row">
+            <span class="lbl">Received</span>
+            <span>{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].received bcdp}}</span>
+          </div>
+          {{/if}}
+          <div class="so-grand-row">
+            <span>Grand Total</span>
+            <span class="amt">{{basicdetails.[0].isocode}} {{formatAmount basicdetails.[0].grand_total bcdp}}</span>
+          </div>
+          {{#if bcamountinwords}}
+          <div class="so-gst-note">{{bcamountinwords}}</div>
+          {{/if}}
+        </div>
+      </div>
+
+      {{!-- <hr class="so-divider"/> --}}
+
+      {{!-- FOOTER --}}
+      {{!-- <div class="so-footer-row">
+        <div style="flex:2;">
+          <div class="so-footer-label">Terms &amp; Conditions</div>
+          <div class="so-note-box">
+            {{#if invterms}}
+              {{{nl2br invterms}}}
+            {{else}}
+              1. Payment due as per agreed terms.<br>
+              2. Goods once sold will not be taken back without prior approval.<br>
+              3. All disputes subject to local jurisdiction only.
+            {{/if}}
+          </div>
+        </div> --}}
+        {{!-- <div class="so-sign-area">
+          <div class="so-footer-label">Company Seal &amp; Signature</div>
+          {{#if Seal}}
+            <img src="{{Seal}}" alt="Seal" style="width:72px; height:72px; object-fit:contain; margin:0.75rem auto; display:block;"/>
+          {{else}}
+            <div class="so-stamp">COMPANY<br>SEAL</div>
+          {{/if}}
+          {{#if Signature}}
+            <img src="{{Signature}}" alt="Signature" style="max-width:120px; max-height:40px; margin:0 auto; display:block;"/>
+          {{/if}}
+          <div class="so-sign-line">Authorised Signatory</div>
+        </div> --}}
+     </div>
+
+      {{!-- BOTTOM BAR --}}
+      {{!-- <div class="so-bottom-bar">
+        <span>Customer: {{customer_details.[0].name}}{{#if customer_details.[0].profile_code}} ({{customer_details.[0].profile_code}}){{/if}}</span>
+        <span>Currency: {{basicdetails.[0].currency}} ({{basicdetails.[0].isocode}})</span>
+      </div> --}}
+
+    {{!-- </div> --}}
+  </div>
+
+</body>
+</html>

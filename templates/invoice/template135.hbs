@@ -1,0 +1,306 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=yes" />
+<title>135</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    table{
+        width: 100%;
+        font-family: Tahoma, sans-serif;
+        font-size: 12px;
+        vertical-align: top;
+    }
+    .tablee{
+        border: 1px solid #c0c0c0;
+        font-size: 11px;
+    }
+    .tablee th{
+        padding: 5px 8px;
+        color: #000;
+        font-weight: bold;
+        background-color: #cccccc;
+        border: 1px solid #c0c0c0;
+    }
+    .tablee td{
+        padding: 5px 8px;
+        color: #000;
+        border: 1px solid #c0c0c0;
+        vertical-align: top;
+        line-height: 16px;
+    }
+     .tablee1{
+        border: 1px solid #c0c0c0;
+        font-size: 11px;
+    }
+
+    .tablee1 td{
+        padding: 5px 8px;
+        color: #000;
+        vertical-align: top;
+        background-color: #fff;
+        line-height: 16px;
+        border: 1px solid #c0c0c0;
+    }
+    .tablee1 th{
+        padding: 5px 8px;
+        color: #000;
+        font-weight: bold;
+        border: 1px solid #c0c0c0;
+        vertical-align: top;
+    }
+    .table_b{
+        border-top: 1px solid #000;
+    }
+    .invoice_head {
+        font-weight: 700;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    .invoice_head span {
+        color: #b72031;
+    }
+    .table_black{
+        border: 1px solid #c0c0c0;
+    }
+    .table_black th{
+        padding: 6px 8px;
+        color: #000;
+        background-color: #cccccc;
+        font-size: 11px;
+    }
+    .table_black td{
+        padding: 6px 8px;
+        color: #000;
+        vertical-align: top;
+    }
+    .bt_1 {
+    border-top: 1px solid #c0c0c0;
+}
+    .br_1 {
+    border-right: 1px solid #c0c0c0;
+}
+    .lih-20{
+        line-height: 20px !important;
+    }
+</style>
+</head>
+<body>
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="text-center invoice_head"><span>INVOICE</span> -  فاتورة  </h1>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-7 mt-3">
+                    <table class="tablee1">
+                        <tr>
+                            <th>Customer Name</th>
+                            <td>{{billing_address.[0].name}}</td>
+                            <td class="text-end">{{billing_address_lang2.[0].name}}</td>
+                            <th class="text-end">الإ سم</th>
+                        </tr>
+                        <tr>
+                            <th>Address</th>
+                            <td>
+                                 {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}<br>{{/if}}
+                                 {{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}<br>{{/if}}
+                                 {{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}<br>{{/if}}
+                                 {{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}<br>{{/if}}
+                                 {{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}<br>{{/if}}
+                                 {{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}
+                            </td>
+                            <td class="text-end">
+                                 {{#if billing_address_lang2.[0].address_line1}}{{billing_address_lang2.[0].address_line1}}<br>{{/if}}
+                                 {{#if billing_address_lang2.[0].address_line2}}{{billing_address_lang2.[0].address_line2}}<br>{{/if}}
+                                 {{#if billing_address_lang2.[0].address_line3}}{{billing_address_lang2.[0].address_line3}}<br>{{/if}}
+                                 {{#if billing_address_lang2.[0].address_line4}}{{billing_address_lang2.[0].address_line4}}<br>{{/if}}
+                                 {{#if billing_address_lang2.[0].address_line5}}{{billing_address_lang2.[0].address_line5}}<br>{{/if}}
+                                 {{#if billing_address_lang2.[0].address_code}}{{billing_address_lang2.[0].address_code}}{{/if}}
+                            </td>
+                            <th class="text-end">العنوان</th>
+                        </tr>
+                        <tr>
+                            <th>Vendor Number</th>
+                            <td>{{customer_details.[0].profile_code}}</td>
+                            <td class="text-end"></td>
+                            <th class="text-end">رقم البائع</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 mt-3">
+                    <table class="tablee">
+                        <tr>
+                            <th>Invoice No</th>
+                            <td class="text-center">{{basicdetails.[0].inv_no}}</td>
+                            <th class="text-end">رقم الفاتورة</th>
+                        </tr>
+                        <tr>
+                            <th>Invoice Date</th>
+                            <td class="text-center">{{basicdetails.[0].inv_date}}</td>
+                            <th class="text-end">تاريخ الفاتورة</th>
+                        </tr>
+                        <tr>
+                            <th>Branch</th>
+                            <td class="text-center">{{basicdetails.[0].branchname}}</td>
+                            <th class="text-end">الفروع</th>
+                        </tr>
+                        <tr>
+                            <th>PO No</th>
+                            <td class="text-center">{{basicdetails.[0].reference_no}}</td>
+                            <th class="text-end">رقم الطلب الشراء</th>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-lg-12 mt-2">
+                    <table class="tablee1">
+                        <thead>
+                            <tr>
+                                <th class="text-center">م<br>S.N</th>
+                                <th class="text-center">الوصف<br>Description</th>
+                                <th class="text-center">الباركود<br>Barcode</th>
+                                <th class="text-center">الكمية<br>QTY</th>
+                                <th class="text-center">الوحدة<br>Unit</th>
+                                <th class="text-center">سعر الوحدة<br>U.Rate</th>
+                                <th class="text-center">القيمة الإجمالية<br>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each itemdetails}}
+                            <tr>
+                                <td class="text-center">{{addOne @index}}</td>
+                                <td class="text-start">{{item_name}}{{#if name_lang2}}<br>{{name_lang2}}{{/if}}{{#if description}}<br>{{description}}{{/if}}</td>
+                                <td class="text-center">{{barcode}}</td>
+                                <td class="text-center">{{formatAmount quantity ../bcdp}}</td>
+                                <td class="text-center">{{unit}}</td>
+                                <td class="text-end">{{formatAmount price ../bcdp}}</td>
+                                <td class="text-end">{{formatAmount amount ../bcdp}}</td>
+                            </tr>
+                            {{/each}}
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-12 mt-0">
+                    <table class="table_black">
+                        <tr>
+                            <th colspan="3" class="bl_1">Bank Account Details</th>
+                            <td rowspan="6" class="p-0 bl_1">
+                                <table class="tablee">
+                                    <tr>
+                                        <td class="lih-20">Total Amount <br> لإجمالي المبلغ </td>
+                                        <td class="text-end">{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
+                                    </tr>
+                                    {{#if (gt basicdetails.[0].discount 0)}}
+                                    <tr>
+                                        <td class="lih-20">Discount<br>الخصم</td>
+                                        <td class="text-end">{{formatAmount basicdetails.[0].discount bcdp}}</td>
+                                    </tr>
+                                    {{/if}}
+                                    {{#if (gt basicdetails.[0].vatamt 0)}}
+                                    <tr>
+                                        <td class="lih-20">VAT {{#if datasettingstextvalue.d828}}({{datasettingstextvalue.d828}}){{/if}}<br>ضريبة القيمة المضافة</td>
+                                        <td class="text-end">{{formatAmount basicdetails.[0].vatamt bcdp}}</td>
+                                    </tr>
+                                    {{/if}}
+                                    {{#if (gt basicdetails.[0].igst 0)}}
+                                    <tr>
+                                        <td class="lih-20">IGST</td>
+                                        <td class="text-end">{{formatAmount basicdetails.[0].igst bcdp}}</td>
+                                    </tr>
+                                    {{/if}}
+                                    {{#if (gt basicdetails.[0].sgst 0)}}
+                                    <tr>
+                                        <td class="lih-20">SGST</td>
+                                        <td class="text-end">{{formatAmount basicdetails.[0].sgst bcdp}}</td>
+                                    </tr>
+                                    {{/if}}
+                                    {{#if (gt basicdetails.[0].cgst 0)}}
+                                    <tr>
+                                        <td class="lih-20">CGST</td>
+                                        <td class="text-end">{{formatAmount basicdetails.[0].cgst bcdp}}</td>
+                                    </tr>
+                                    {{/if}}
+                                    {{#if (gt basicdetails.[0].cess 0)}}
+                                    <tr>
+                                        <td class="lih-20">CESS</td>
+                                        <td class="text-end">{{formatAmount basicdetails.[0].cess bcdp}}</td>
+                                    </tr>
+                                    {{/if}}
+                                    <tr>
+                                        <td class="lih-20"><b>Grand Total<br>المبلغ الإجمالي</b></td>
+                                        <td class="text-end"><b>{{formatAmount basicdetails.[0].grand_total bcdp}}</b></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        {{#if bankdetails.name}}
+                        <tr>
+                            <td>Bank Name</td>
+                            <td>:</td>
+                            <td>{{bankdetails.name}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if bankdetails.acc_name}}
+                        <tr>
+                            <td>Account Name</td>
+                            <td>:</td>
+                            <td>{{bankdetails.acc_name}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if bankdetails.acc_no}}
+                        <tr>
+                            <td>Account Number</td>
+                            <td>:</td>
+                            <td>{{bankdetails.acc_no}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if bankdetails.iban_no}}
+                        <tr>
+                            <td> IBAN No</td>
+                            <td>:</td>
+                            <td>{{bankdetails.iban_no}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if bankdetails.swift_no}}
+                        <tr>
+                            <td>SWIFT No</td>
+                            <td>:</td>
+                            <td>{{bankdetails.swift_no}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if bcamountinwords}}
+                        <tr>
+                            <td colspan="3" class="br_1 bt_1">{{bcamountinwords}}</td>
+                            <td colspan="2" class="bt_1"></td>
+                        </tr>
+                        {{/if}}
+                    </table>
+                </div>
+                <div class="col-lg-12 mt-3">
+                    <table class="text-center">
+                        <tr>
+                            <td>
+                                Authorized Signatury / التوقيع
+                                {{#if Signature}}<br><img src="{{Signature}}" alt="Signature" style="max-height:40px; max-width:80px; margin-top:4px;"/>{{/if}}
+                                <br><br><br>_____________________
+                            </td>
+                            <td>
+                                Authorized Stamp/ الختم
+                                {{#if Seal}}<br><img src="{{Seal}}" alt="Seal" style="max-height:60px; max-width:60px; margin-top:4px;"/>{{/if}}
+                                <br><br><br>_____________________
+                            </td>
+                            <td>Received by/ المتلقي  <br><br><br><br><br>  <br>_____________________</td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -4,7 +4,8 @@ const DOC_TYPES = {
   1: { folder: 'invoice',     label: 'Invoice' },
   2: { folder: 'sales_quote', label: 'Sales Quote' },
   3: { folder: 'proforma',    label: 'Proforma Invoice' },
-  4: { folder: 'purchase',    label: 'Purchase Order' },
+  4: { folder: 'salesorder',  label: 'Sales Order' },
+  5: { folder: 'purchase',    label: 'Purchase Order' },
 };
 
 const DEFAULT_DOC_TYPE = 1;

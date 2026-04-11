@@ -1,0 +1,311 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=yes" />
+<title>129</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .head{
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 15px;
+        color: #fff;
+        background-color: #6663ab;
+        font-family: Arial, sans-serif;
+        line-height: 28px;
+    }
+
+    table{
+        width: 100%;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        vertical-align: top;
+    }
+    .tablee{
+        border: 0px solid #fff;
+        font-size: 11px;
+    }
+    .tablee th{
+        padding: 5px 8px;
+        color: #000;
+        border: 2px solid #000;
+    }
+    .tablee td{
+        padding: 5px 8px;
+        color: #000;
+        border: 2px solid #000;
+        vertical-align: top;
+    }
+    .tablee1{
+        border: 1px solid #fff;
+        font-size: 12px;
+    }
+    .tablee1 th{
+        padding: 5px 8px;
+        color: #fff;
+        border: 1px solid #000;
+        background-color: #6663ab;
+    }
+    .tablee1 td{
+        padding: 5px 8px;
+        color: #000;
+        border-right: 1px solid #000;
+        vertical-align: top;
+    }
+    .tablee2{
+        border: 1px solid #fff;
+        font-size: 12px;
+    }
+    .tablee2 td{
+        padding: 5px 8px;
+        color: #000;
+        border: 1px solid #000;
+        vertical-align: top;
+        font-weight: bold;
+    }
+    .tablee3{
+        font-size: 12px;
+    }
+    .tablee3 th{
+        padding: 5px 8px;
+        color: #fff;
+        border: 1px solid #000;
+        vertical-align: top;
+        font-weight: bold;
+        background-color: #c00000;
+    }
+    .tablee3 td{
+        padding: 5px 8px;
+        color: #000;
+        vertical-align: top;
+    }
+    .w10{width: 10px;}
+    .box_p p{
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    .border-top{
+        border-top-color: #000 !important;
+    }
+    .border-start{
+        border-left-color: #000 !important;
+    }
+
+</style>
+</head>
+<body>
+    <div class="section">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-4 col-md-4 col-sm-4 mt-3">
+                    <table class="tablee">
+                        <tr>
+                            <th>
+                                Bill and Ship To
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>{{billing_address.[0].name}}</p>
+                                <p>{{joinAddress billing_address.[0]}}</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 mt-3">
+                    <div class="text-center">
+                        <h5 class="head">INVOICE</h5>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 mt-3">
+                    <table class="tablee">
+                        <tr>
+                            <td>Ref INV#</td>
+                            <td class="text-end">{{basicdetails.[0].inv_no}}</td>
+                        </tr>
+                        <tr>
+                            <td>Ref PO#</td>
+                            <td class="text-end">{{basicdetails.[0].reference_no}}</td>
+                        </tr>
+                        <tr>
+                            <td>Date</td>
+                            <td class="text-end">{{basicdetails.[0].inv_date}}</td>
+                        </tr>
+                    </table>
+                    <table class="tablee mt-2">
+                        <tr>
+                            <td>Attn</td>
+                            <td class="text-end">{{basicdetails.[0].contact_name}}</td>
+                        </tr>
+                        <tr>
+                            <td>Payment Terms</td>
+                            <td class="text-end">{{basicdetails.[0].payment_terms}}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-lg-12 mt-3">
+
+                    <table class="tablee1">
+                        <tr>
+                            <th class="text-center border-start">Sl No</th>
+                            <th class="text-center">Part No</th>
+                            <th class="text-center">Part Description</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-center">Unit Rate({{basicdetails.[0].isocode}})</th>
+                            <th class="text-center">Sub({{basicdetails.[0].isocode}})</th>
+                        </tr>
+                        {{#each itemdetails}}
+                        <tr>
+                            <td class="text-center border-start">{{addOne @index}}</td>
+                            <td class="text-start">{{item_code}}</td>
+                            <td class="text-start">{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
+                            <td class="text-center">{{formatAmount quantity ../bcdp}}</td>
+                            <td class="text-end">{{formatAmount price ../bcdp}}</td>
+                            <td class="text-end">{{formatAmount taxable ../bcdp}}</td>
+                        </tr>
+                        {{/each}}
+
+                        <tr>
+                            <td colspan="3" class="border-top"></td>
+                            <th colspan="2">Sub Total ({{basicdetails.[0].isocode}})</th>
+                            <th class="text-end">{{formatAmount basicdetails.[0].subtotal bcdp}}</th>
+                        </tr>
+                        {{#if (gt basicdetails.[0].discount 0)}}
+                        <tr>
+                            <td colspan="3" style="border:none;"></td>
+                            <th colspan="2">Discount ({{basicdetails.[0].isocode}})</th>
+                            <th class="text-end">- {{formatAmount basicdetails.[0].discount bcdp}}</th>
+                        </tr>
+                        {{/if}}
+                        {{#if (gt basicdetails.[0].vatamt 0)}}
+                        <tr>
+                            <td colspan="3" style="border:none;"></td>
+                            <th colspan="2">VAT ({{basicdetails.[0].isocode}})</th>
+                            <th class="text-end">{{formatAmount basicdetails.[0].vatamt bcdp}}</th>
+                        </tr>
+                        {{/if}}
+                        {{#if (gt basicdetails.[0].igst 0)}}
+                        <tr>
+                            <td colspan="3" style="border:none;"></td>
+                            <th colspan="2">IGST ({{basicdetails.[0].isocode}})</th>
+                            <th class="text-end">{{formatAmount basicdetails.[0].igst bcdp}}</th>
+                        </tr>
+                        {{/if}}
+                        {{#if (gt basicdetails.[0].sgst 0)}}
+                        <tr>
+                            <td colspan="3" style="border:none;"></td>
+                            <th colspan="2">SGST ({{basicdetails.[0].isocode}})</th>
+                            <th class="text-end">{{formatAmount basicdetails.[0].sgst bcdp}}</th>
+                        </tr>
+                        {{/if}}
+                        {{#if (gt basicdetails.[0].cgst 0)}}
+                        <tr>
+                            <td colspan="3" style="border:none;"></td>
+                            <th colspan="2">CGST ({{basicdetails.[0].isocode}})</th>
+                            <th class="text-end">{{formatAmount basicdetails.[0].cgst bcdp}}</th>
+                        </tr>
+                        {{/if}}
+                        {{#if (gt basicdetails.[0].cess 0)}}
+                        <tr>
+                            <td colspan="3" style="border:none;"></td>
+                            <th colspan="2">CESS ({{basicdetails.[0].isocode}})</th>
+                            <th class="text-end">{{formatAmount basicdetails.[0].cess bcdp}}</th>
+                        </tr>
+                        {{/if}}
+                        <tr>
+                            <td colspan="3" style="border:none;"></td>
+                            <th colspan="2">Grand Total ({{basicdetails.[0].isocode}})</th>
+                            <th class="text-end">{{formatAmount basicdetails.[0].grand_total bcdp}}</th>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <div class="col-lg-12 mt-4 box_p">
+                    {{#if bcamountinwords}}
+                    <p><b>Amount in Words :<span class="text-info"> {{bcamountinwords}}</span></b></p>
+                    {{/if}}
+                    <p><b>Check To Be Written For :<span class="text-info"> {{branch.[0].name}}</span></b></p>
+                </div>
+                <div class="col-lg-12 mt-4">
+                    {{#if bankdetails}}
+                    <table class="tablee3 mb-3">
+                        <tr>
+                            <td colspan="3"><b class="text-decoration-underline">BANK DETAILS:</b></td>
+                        </tr>
+                        {{#if bankdetails.acc_name}}
+                        <tr>
+                            <td class="w-25">Account Name</td>
+                            <td class="w10">:</td>
+                            <td>{{bankdetails.acc_name}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if bankdetails.acc_no}}
+                        <tr>
+                            <td>Account No</td>
+                            <td>:</td>
+                            <td>{{bankdetails.acc_no}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if bankdetails.iban_no}}
+                        <tr>
+                            <td>IBAN No</td>
+                            <td>:</td>
+                            <td>{{bankdetails.iban_no}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if bankdetails.branch_name}}
+                        <tr>
+                            <td>Branch Name</td>
+                            <td>:</td>
+                            <td>{{bankdetails.branch_name}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if bankdetails.swift_no}}
+                        <tr>
+                            <td>SWIFT Code</td>
+                            <td>:</td>
+                            <td>{{bankdetails.swift_no}}</td>
+                        </tr>
+                        {{/if}}
+                    </table>
+                    {{/if}}
+                </div>
+
+                <div class="col-lg-12 mt-4 box_p">
+                    {{#if invterms}}
+                    <p><b>TERMS & CONDITIONS:</b></p>
+                    <p>{{{nl2br invterms}}}</p>
+                    {{/if}}
+                    <p class="mt-4">We hope our offer is in line with your requirements and awaiting your favorable reply in this regard</p>
+                </div>
+                <div class="col-lg-12 mt-1">
+                    <table class="text-center">
+                        <tr>
+                            <th>Received By</th>
+                            <th>For {{branch.[0].name}}</th>
+                        </tr>
+                        <tr>
+                            <td style="height: 100px;">
+                                Name & Signature
+                            </td>
+                            <td>
+                                {{#if Seal}}<img src="{{Seal}}" alt="Seal" style="max-height:60px; max-width:60px; display:block; margin:0 auto 4px;"/>{{/if}}
+                                {{#if Signature}}<img src="{{Signature}}" alt="Signature" style="max-height:40px; max-width:80px; display:block; margin:0 auto 4px;"/>{{/if}}
+                                Name & Signature
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
