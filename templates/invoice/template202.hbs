@@ -107,7 +107,7 @@
         .c-test  { width: 17mm; text-align: right; }
 
         /* ── Footer ────────────────────────────── */
-        .f-words { top: 225.7mm; left: 35.6mm; width: 130mm; font-size: 8pt; overflow: hidden; text-overflow: ellipsis; }
+        .f-words { top: 225.7mm; left: 30.6mm; width: 130mm; font-size: 8pt; overflow: hidden; text-overflow: ellipsis; }
         .f-total { top: 225.7mm; left: 162mm;  width: 31mm;  text-align: right; padding-right: 2mm; font-weight: bold; }
         .f-remark { top: 231.2mm; left: 36mm;  width: 31mm;  text-align: right; padding-right: 2mm; }
         .related-invoices {
@@ -242,35 +242,66 @@
     {{#if ../LetterheadImageUrl}}
     <img class="page-bg" src="{{../LetterheadImageUrl}}" alt="">
     {{/if}}
+    
 
     {{!-- Meta fields repeat on every page — use ../ to reach root --}}
-    <div class="f f-inv">{{../basicdetails.[0].inv_no}}</div>
+    {{!-- <div class="f f-inv">{{../basicdetails.[0].inv_no}}</div>
     <div class="f f-date">{{../basicdetails.[0].inv_date}}</div>
     <div class="f f-ccode">{{../basicdetails.[0].salesman_name}}</div>
     <div class="f f-name">{{../billing_address.[0].name}}</div>
-    <div class="f f-contact">{{../customer_details.[0].contact_no1}}</div>
+    <div class="f f-contact">{{../customer_details.[0].contact_no1}}</div> --}}
+
+     <div class="f-div-full">
+        {{!-- Meta fields — root scope, no prefix needed --}}
+        <div class="f f-blnk"></div>
+        <div class="f f-date">{{../basicdetails.[0].inv_date}}</div>
+        <div class="f f-inv">{{../basicdetails.[0].inv_no}}</div>
+        <div class="f f-ccode">{{../basicdetails.[0].salesman_name}}</div>
+        <div class="f f-name">{{../billing_address.[0].name}}</div>
+        <div class="f f-address">{{joinAddress ../billing_address.[0]}}</div>
+        <div class="f f-contact">{{../basicdetails.[0].salesman_no}}</div>
+    </div>
 
     <div class="items-wrap">
-        <table class="items-table"><tbody>
+        <table class="items-table">
+                <tbody>
         {{#each this.pageItems}}
             <tr>
                 <td class="c-sno">{{addOffset @index ../startIndex}}</td>
-                <td class="c-code">{{item_code}}</td>
-                <td class="c-desc">{{item_name}}</td>
-                <td class="c-qty">{{quantity}}</td>
+                <td class="c-s"></td>
+                <td class="c-desc">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                            
+                        <!-- English (Left) -->
+                        <span style="text-align:left;">
+                            {{item_name}}
+                        </span>
+
+                        <!-- Lang2 (Right - RTL) -->
+                        {{#if name_lang2}}
+                            <span class="rtl" style="font-size:9px; direction:rtl; text-align:right;">
+                                {{name_lang2}}
+                            </span>
+                        {{/if}}
+
+                    </div>
+                </td>
+                <td class="c-qty">{{formatAmount quantity ../bcdp}}</td>
                 <td class="c-unit">{{unit}}</td>
-                <td class="c-price">{{price}}</td>
-                <td class="c-amt">{{amount}}</td>
+                <td class="c-price">{{formatAmount price ../bcdp}}</td>
+                <td class="c-amt">{{formatAmount amount ../bcdp}}</td>
+                <td class="c-test"></td>
             </tr>
         {{/each}}
-        </tbody></table>
+        </tbody>
+        </table>
     </div>
 
     {{!-- Footer only on last page — two levels deep here (each extraPages > each pageItems) --}}
     {{#if this.isLastPage}}
-    <div class="f f-words">{{../bcamountinwords}}</div>
-    <div class="f f-total">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</div>
-    <div class="f f-remark">{{basicdetails.[0].terms_and_condition}}</div>
+        <div class="f f-words">{{../bcamountinwords}}</div>
+        <div class="f f-total">{{formatAmount (divide ../basicdetails.[0].grand_total ../ccrate) ../bcdp}}</div>
+        <div class="f f-remark">{{../basicdetails.[0].terms_and_condition}}</div>
     {{/if}}
 
 </div>
