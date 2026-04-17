@@ -363,7 +363,7 @@ class TemplateService {
   }
 
   // ── RAHATH PAGINATION ─────────────────────────────────────
-  prepareRahathData(data, maxRowsPerPage = 18) {
+  prepareRahathData(data, maxRowsPerPage = 22) {
     const items = data.itemdetails || [];
     const pages = [];
 
