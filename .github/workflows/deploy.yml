@@ -61,9 +61,9 @@ jobs:
             -u "${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}" \
             "https://${{ secrets.CPANEL_HOST }}:2083/execute/NodeJS/restart_app" \
             --data-urlencode "app_name=puppeteer-pdf" \
-            -k)
+            -k) || true
           echo "HTTP Status: $HTTP_STATUS"
-          cat /tmp/cpanel_response.txt
+          cat /tmp/cpanel_response.txt || true
           if [ "$HTTP_STATUS" == "200" ]; then
             echo "✅ App restarted successfully"
           else
