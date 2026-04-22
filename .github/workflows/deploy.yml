@@ -22,9 +22,10 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /puppeteer-pdf/
           local-dir: ./
-          protocol: ftp          
-          port: 21               
-          security: loose        
+          protocol: ftp
+          port: 21
+          security: loose
+          passive: true
           exclude: |
             **/.git*
             **/.git*/**
@@ -45,3 +46,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /puppeteer-pdf/tmp/
           local-dir: tmp/
+          protocol: ftp
+          port: 21
+          security: loose
+          passive: true
