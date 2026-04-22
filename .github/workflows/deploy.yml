@@ -14,39 +14,34 @@ jobs:
       - name: 🚚 Checkout code
         uses: actions/checkout@v4
 
-      - name: 📂 Upload files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /puppeteer-pdf/
-          local-dir: ./
-          protocol: ftp
-          port: 21
-          security: loose
-          passive: true
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.env
-            **/tmp/**
+      - name: 📦 Install lftp
+        run: sudo apt-get install -y lftp
 
-      - name: 🔄 Trigger app restart
+      - name: 📂 Upload files via lftp
         run: |
-          mkdir -p tmp
-          date > tmp/restart.txt
+          lftp -c "
+          set ftp:ssl-allow false;
+          set ftp:passive-mode true;
+          set net:timeout 30;
+          set net:max-retries 3;
+          open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};
+          mirror --reverse --verbose --ignore-time \
+            --exclude-glob .git \
+            --exclude-glob .gitignore \
+            --exclude-glob node_modules/ \
+            --exclude-glob .env \
+            --exclude-glob tmp/ \
+            . /puppeteer-pdf/;
+          bye
+          "
 
-      - name: 📂 Upload restart.txt
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /puppeteer-pdf/tmp/
-          local-dir: tmp/
-          protocol: ftp
-          port: 21
-          security: loose
-          passive: true
+      - name: 🔄 Trigger app restart via lftp
+        run: |
+          date > restart.txt
+          lftp -c "
+          set ftp:ssl-allow false;
+          set ftp:passive-mode true;
+          open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};
+          put restart.txt -o /puppeteer-pdf/tmp/restart.txt;
+          bye
+          "
