@@ -13,31 +13,51 @@ jobs:
     steps:
       - name: 🚚 Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # fetch last 2 commits to detect changes
 
       - name: 📦 Install lftp
         run: sudo apt-get install -y lftp
 
-      - name: 📂 Upload only changed files via lftp
+      - name: 🔍 Get changed files
+        id: changed
         run: |
-          lftp -c "
-          set ftp:ssl-allow false;
-          set ftp:passive-mode true;
-          set net:timeout 30;
-          set net:max-retries 3;
-          set mirror:use-pget-n 5;
-          open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};
-          mirror --reverse --verbose --only-newer \
-            --exclude-glob .git/ \
-            --exclude-glob .gitignore \
-            --exclude-glob node_modules/ \
-            --exclude-glob .env \
-            --exclude-glob tmp/ \
-            --exclude-glob .github/ \
-            . /puppeteer-pdf/;
-          bye
-          "
+          # Get list of changed files in last commit
+          git diff --name-only HEAD~1 HEAD > changed_files.txt
+          echo "Changed files:"
+          cat changed_files.txt
 
-      - name: 🔄 Trigger app restart via lftp
+      - name: 📂 Upload only changed files
+        run: |
+          # Read changed files and upload each one
+          while IFS= read -r file; do
+            # Skip excluded paths
+            if [[ "$file" == node_modules/* ]] || \
+               [[ "$file" == .git* ]] || \
+               [[ "$file" == .env ]] || \
+               [[ "$file" == tmp/* ]] || \
+               [[ "$file" == .github/* ]]; then
+              echo "Skipping: $file"
+              continue
+            fi
+
+            # Only upload if file exists (not deleted)
+            if [ -f "$file" ]; then
+              echo "Uploading: $file"
+              dir=$(dirname "$file")
+              lftp -c "
+              set ftp:ssl-allow false;
+              set ftp:passive-mode true;
+              set net:timeout 30;
+              open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};
+              mkdir -p /puppeteer-pdf/$dir;
+              put $file -o /puppeteer-pdf/$file;
+              bye
+              "
+            fi
+          done < changed_files.txt
+
+      - name: 🔄 Trigger app restart
         run: |
           date > restart.txt
           lftp -c "
