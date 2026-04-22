@@ -7,8 +7,7 @@ const pdfService = require("../services/pdfService");
 
 // AWS Lambda API endpoint
 // const LAMBDA_PDF_API = 'https://49ov366dtf.execute-api.us-east-1.amazonaws.com/default/puppeteer-pdf-generator';
-const LAMBDA_PDF_API =
-  "https://hcpuerxkuc.execute-api.ap-south-1.amazonaws.com/default/puppeteer-pdf-generator";
+const LAMBDA_PDF_API = "https://hcpuerxkuc.execute-api.ap-south-1.amazonaws.com/default/puppeteer-pdf-generator";
 
 class PdfController {
   /**
