@@ -293,17 +293,16 @@
       margin-top: 10px;
       border-top: 1px solid #000;
       padding-top: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
+      width:100%;
     }
     .company-footer .footer-left {
       font-size: 8px;
       line-height: 1.5;
     }
     .qr-wrapper img {
-      width: 80px;
-      height: 80px;
+      width: 120px;
+      height: 120px;
+      text-align:right;
     }
   </style>
 </head>
@@ -366,7 +365,7 @@
 
 <tr>
     <td class="label">Tel / Fax :</td>
-    <td class="">{{customer_details.[0].contact_no1}} /</td>
+    <td class="">{{customer_details.[0].contact_no1}}</td>
     <td class="label vl">HBL No:</td>
     <td>{{basicdetails.[0].hbl_no}}</td>
 </tr>
@@ -378,25 +377,26 @@
   <td class="">{{basicdetails.[0].mbl_no}}</td>
 </tr>
 
-<tr>
+{{!-- <tr>
   <td class="label bt"></td>
   <td class="bt"></td>
   <td class="label vl bt">Carrier :</td>
   <td class="bt"></td>
-</tr>
+</tr> --}}
 
 <!-- SHIPPING -->
 <tr>
-  <td class="label">POL</td>
-  <td class="">{{basicdetails.[0].port_of_loading}}</td>
-  <td class="label vl">Vessel Name :</td>
-  <td class="">{{basicdetails.[0].vessel_name}}</td>
+  <td class="label bt">POL</td>
+  <td class="bt">{{basicdetails.[0].port_of_loading}}</td>
+  <td class="label vl bt">Vessel Name :</td>
+  <td class="bt">{{basicdetails.[0].vessel_name}}</td>
 </tr>
 
 <tr>
   <td class="label">POD</td>
   <td>{{basicdetails.[0].port_of_delivery}}</td>
-  <td class="label vl">Voyage No :</td>
+  {{!-- <td class="label vl">Voyage No :</td> --}}
+  <td class="label vl"></td>
   <td></td>
 </tr>
 
@@ -410,7 +410,7 @@
 <!-- SHIPPER ADDRESS -->
 <tr>
   <td class="label" rowspan="2">Address :</td>
-  <td class="" rowspan="2">
+  <td class="">
     {{basicdetails.[0].shipper_address}}
   </td>
   <td class="label vl">ETA:</td>
@@ -418,12 +418,15 @@
 </tr>
 
 <tr>
-  <td class="label vl bt">Pcs &amp; Vol./Weight :</td>
-  <td class="bt">
-    {{!-- {{basicdetails.[0].packages}} --}}
-    {{#if basicdetails.[0].no_pcs}} {{basicdetails.[0].no_pcs}} {{/if}}
-    {{#if basicdetails.[0].gross_weight}} / {{basicdetails.[0].gross_weight}} {{/if}}
-  </td>
+    <td class="">
+        {{basicdetails.[0].shipper_country}}
+    </td>
+    <td class="label vl bt">Pcs &amp; Vol./Weight :</td>
+    <td class="bt">
+        {{!-- {{basicdetails.[0].packages}} --}}
+        {{#if basicdetails.[0].no_pcs}} {{basicdetails.[0].no_pcs}} {{/if}}
+        {{#if basicdetails.[0].gross_weight}} / {{basicdetails.[0].gross_weight}} {{/if}}
+    </td>
 </tr>
 
 <tr>
@@ -550,50 +553,55 @@
     </div>
 
   {{!-- ══ PREPARED BY / FINANCE MANAGER ══ --}}
-  <div class="sig-wrap">
-    <div class="sig-col">
-      <div class="sig-label">Prepared By.:</div>
-      {{#if Seal}}
-      <div style="margin-top: 5px;">
-        <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '50'}}px; max-width:{{default datasettings.d458 '80'}}px;" onerror="this.style.display='none'"/>
-      </div>
-      {{/if}}
-      {{#if basicdetails.[0].created_user}}
-      <div class="sig-name">{{basicdetails.[0].created_user}}</div>
-      {{/if}}
-    </div>
-    <div class="sig-col" style="text-align: center;">
-      <div class="sig-label">Finance Manager.:</div>
-      {{#if Signature}}
-      <div style="margin-top: 5px;">
-        <img src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d459 '50'}}px; max-width:{{default datasettings.d459 '80'}}px;" onerror="this.style.display='none'"/>
-      </div>
-      {{/if}}
-    </div>
-  </div>
+  {{!-- ══ SIGNATURE ROW ══ --}}
+<table width="100%" style="margin-top:20px; font-size:10px;">
+  <tr>
+    
+    <!-- LEFT SIDE -->
+    <td width="15%">
+      <b>Prepared By  :</b>
+    </td>
 
-  {{!-- ══ TERMS ══ --}}
-  {{#if invterms}}
-  <div class="terms-section">
-    <div class="terms-title">Terms:</div>
-    <div>{{{nl2br invterms}}}</div>
-  </div>
-  {{/if}}
+    <td width="35%">
+      <span style="margin-left:5px;">
+        {{basicdetails.[0].created_user}}
+      </span>
+      
+      <!-- line only under value -->
+      <div style="border-bottom:1px solid #000; width:60%; margin-top:3px;"></div>
+    </td>
 
-  {{!-- ══ COMPANY FOOTER WITH QR ══ --}}
-  <div class="company-footer">
-    <div class="footer-left">
-      {{branch.[0].name}}
-      {{#if branch.[0].address_line1}}, {{branch.[0].address_line1}}{{/if}}
-      {{#if branch.[0].address_line2}}, {{branch.[0].address_line2}}{{/if}}
-      {{#if branch.[0].address_line3}}<br>{{branch.[0].address_line3}}{{/if}}
-      {{#if branch.[0].address_line4}}, {{branch.[0].address_line4}}{{/if}}
-      {{#if branch.[0].address_line5}}, {{branch.[0].address_line5}}{{/if}}
-    </div>
-    <div class="qr-wrapper">
+    <!-- RIGHT SIDE -->
+    <td width="20%" align="right">
+      <b>Finance Manager  :</b>
+      
+      <!-- empty line for signature -->
+    </td>
+    <td width="35%" align="right">
+    </td>
+
+  </tr>
+</table>
+
+
+{{!-- ══ TERMS ══ --}}
+{{#if invterms}}
+<div style="margin-top:10px; font-size:9px;">
+  <b>Terms:</b><br>
+  {{{nl2br basicdetails.[0].terms_and_condition}}}
+</div>
+{{/if}}
+
+
+{{!-- ══ QR (BOTTOM RIGHT) ══ --}}
+<table width="100%" style="margin-top:15px;">
+  <tr>
+    <td width="70%"></td>
+    <td class="qr-wrapper" width="30%" align="right">
       {{{qrDataUri qrCodeBase64}}}
-    </div>
-  </div>
+    </td>
+  </tr>
+</table>
 
 </div>
 </body>
