@@ -372,7 +372,7 @@
 
 <tr>
   <td class="label bt">Attn :</td>
-  <td class="bt"></td>
+  <td class="bt">{{basicdetails.[0].attention}}</td>
   <td class="label vl">MBL No:</td>
   <td class="">{{basicdetails.[0].mbl_no}}</td>
 </tr>
@@ -424,8 +424,8 @@
     <td class="label vl bt">Pcs &amp; Vol./Weight :</td>
     <td class="bt">
         {{!-- {{basicdetails.[0].packages}} --}}
-        {{#if basicdetails.[0].no_pcs}} {{basicdetails.[0].no_pcs}} {{/if}}
-        {{#if basicdetails.[0].gross_weight}} / {{basicdetails.[0].gross_weight}} {{/if}}
+        {{#if basicdetails.[0].no_pcs}} {{basicdetails.[0].no_pcs}} Pcs {{/if}}
+        {{#if basicdetails.[0].gross_weight}} / {{basicdetails.[0].gross_weight}} {{basicdetails.[0].weight_unit}} {{/if}}
     </td>
 </tr>
 
@@ -433,7 +433,7 @@
   <td class="label">Tel / Fax :</td>
   <td class=""></td>
   <td class="label vl">Order Ref # :</td>
-  <td class="">{{basicdetails.[0].order_no}}</td>
+  <td class="">{{basicdetails.[0].job_reference}}</td>
 </tr>
 
 <!-- FULL WIDTH -->
@@ -444,7 +444,7 @@
 
 <tr>
   <td class="label bt">No. Of Containers :</td>
-  <td colspan="3" class="bt"></td>
+  <td colspan="3" class="bt">{{basicdetails.[0].container_no}}</td>
 </tr>
 
 <tr>
@@ -476,12 +476,13 @@
         <td class="td-desc">
           {{addOne @index}}. {{item_name}}
           {{#if name_lang2}}<br><span style="direction:rtl; font-size:9px;">{{name_lang2}}</span>{{/if}}
+          {{#if description}}<br><span style="direction:rtl; font-size:9px;">{{description}}</span>{{/if}}
         </td>
         <td></td>
         <td>{{formatAmount quantity ../bcdp}}</td>
         <td class="td-right">{{formatAmount price ../bcdp}}</td>
         <td class="td-right">{{formatAmount taxable ../bcdp}}</td>
-        <td class="td-right">{{#if ../ccrate}}{{../ccrate}}{{else}}1.00000000{{/if}}</td>
+        <td class="td-right">{{#if ../ccrate}}{{../ccrate}}{{/if}}</td>
         <td class="td-right">{{formatAmount taxable ../bcdp}}</td>
         <td>{{vat_perc}}%</td>
         <td class="td-right">{{formatAmount vat_amt ../bcdp}}</td>
