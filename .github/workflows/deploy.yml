@@ -16,9 +16,6 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: 📦 Install lftp
-        run: sudo apt-get install -y lftp
-
       - name: 🔍 Get changed files
         id: changed
         run: |
@@ -28,8 +25,6 @@ jobs:
 
       - name: 📂 Upload only changed files
         run: |
-          # Build lftp commands for all changed files in one session
-          LFTP_CMDS=""
           while IFS= read -r file; do
             if [[ "$file" == node_modules/* ]] || \
                [[ "$file" == .git* ]] || \
@@ -41,28 +36,20 @@ jobs:
             fi
 
             if [ -f "$file" ]; then
-              echo "Queuing: $file"
-              dir=$(dirname "$file")
-              LFTP_CMDS+="mkdir -fp /puppeteer-pdf/$dir; put $file -o /puppeteer-pdf/$file;"$'\n'
+              echo "Uploading: $file"
+              curl -T "$file" \
+                --ftp-pasv \
+                --ftp-create-dirs \
+                --connect-timeout 30 \
+                --max-time 60 \
+                --retry 3 \
+                --retry-delay 5 \
+                --silent --show-error \
+                "ftp://${{ secrets.FTP_SERVER }}/puppeteer-pdf/$file" \
+                -u "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
+              echo "Done: $file"
             fi
           done < changed_files.txt
-
-          if [ -z "$LFTP_CMDS" ]; then
-            echo "No files to upload."
-            exit 0
-          fi
-
-          echo "Uploading all files in one session..."
-          lftp -c "
-          set ftp:ssl-allow false;
-          set ftp:passive-mode true;
-          set net:timeout 30;
-          set net:max-retries 5;
-          set net:reconnect-interval-base 5;
-          open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};
-          $LFTP_CMDS
-          bye
-          "
 
       - name: 🔄 Restart app via cPanel API
         run: |
