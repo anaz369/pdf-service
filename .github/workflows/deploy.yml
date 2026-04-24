@@ -47,7 +47,7 @@ jobs:
               set net:timeout 15;
               set net:max-retries 2;
               open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};
-              mkdir -p /puppeteer-pdf/$dir;
+              mkdir -fp /puppeteer-pdf/$dir;
               put $file -o /puppeteer-pdf/$file;
               bye
               "
