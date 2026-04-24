@@ -28,6 +28,8 @@ jobs:
 
       - name: 📂 Upload only changed files
         run: |
+          # Build lftp commands for all changed files in one session
+          LFTP_CMDS=""
           while IFS= read -r file; do
             if [[ "$file" == node_modules/* ]] || \
                [[ "$file" == .git* ]] || \
@@ -39,20 +41,28 @@ jobs:
             fi
 
             if [ -f "$file" ]; then
-              echo "Uploading: $file"
+              echo "Queuing: $file"
               dir=$(dirname "$file")
-              lftp -c "
-              set ftp:ssl-allow false;
-              set ftp:passive-mode true;
-              set net:timeout 15;
-              set net:max-retries 2;
-              open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};
-              mkdir -fp /puppeteer-pdf/$dir;
-              put $file -o /puppeteer-pdf/$file;
-              bye
-              "
+              LFTP_CMDS+="mkdir -fp /puppeteer-pdf/$dir; put $file -o /puppeteer-pdf/$file;"$'\n'
             fi
           done < changed_files.txt
+
+          if [ -z "$LFTP_CMDS" ]; then
+            echo "No files to upload."
+            exit 0
+          fi
+
+          echo "Uploading all files in one session..."
+          lftp -c "
+          set ftp:ssl-allow false;
+          set ftp:passive-mode true;
+          set net:timeout 30;
+          set net:max-retries 5;
+          set net:reconnect-interval-base 5;
+          open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};
+          $LFTP_CMDS
+          bye
+          "
 
       - name: 🔄 Restart app via cPanel API
         run: |
