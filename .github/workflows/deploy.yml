@@ -51,18 +51,16 @@ jobs:
             fi
           done < changed_files.txt
 
-      - name: 🔄 Restart app via cPanel API
+      - name: 🧼 Prepare restart trigger
         run: |
-          echo "Restarting Node.js app via cPanel API..."
-          HTTP_STATUS=$(curl -s -o /tmp/cpanel_response.txt -w "%{http_code}" \
-            -H "Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
-            "https://${{ secrets.CPANEL_HOST }}:2083/execute/NodeJS/restart_app?app_name=puppeteer-pdf" \
-            -k)
-          echo "HTTP Status: $HTTP_STATUS"
-          cat /tmp/cpanel_response.txt
-          if [ "$HTTP_STATUS" == "200" ]; then
-            echo "✅ App restarted successfully"
-          else
-            echo "❌ Restart failed with HTTP $HTTP_STATUS"
-            exit 1
-          fi
+          mkdir -p tmp
+          date > tmp/restart.txt
+
+      - name: 🔄 Restart app via FTP trigger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /puppeteer-pdf/tmp/
+          local-dir: tmp/
