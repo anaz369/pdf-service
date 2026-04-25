@@ -458,12 +458,12 @@
   <table class="billing-table">
     <thead>
       <tr>
-        <th style="width:28%;">Billing</th>
+        <th style="width:29%;">Billing</th>
         <th style="width:5%;">Cur</th>
         <th style="width:5%;">Qty</th>
         <th style="width:8%;">Rate</th>
         <th style="width:10%;">FC Amount</th>
-        <th style="width:9%;">Ex Rate</th>
+        <th style="width:8%;">Ex Rate</th>
         <th style="width:10%;">Amount<br>SAR</th>
         <th style="width:5%;">VAT<br>%</th>
         <th style="width:10%;">VAT<br>Amount</th>
@@ -478,11 +478,11 @@
           {{#if name_lang2}}<br><span style="direction:rtl; font-size:9px;">{{name_lang2}}</span>{{/if}}
           {{#if description}}<br><span style="direction:rtl; font-size:9px;">{{description}}</span>{{/if}}
         </td>
-        <td></td>
+        <td>{{currency}}</td>
         <td>{{formatAmount quantity ../bcdp}}</td>
         <td class="td-right">{{formatAmount price ../bcdp}}</td>
         <td class="td-right">{{formatAmount taxable ../bcdp}}</td>
-        <td class="td-right">{{#if ../ccrate}}{{../ccrate}}{{/if}}</td>
+        <td class="td-center">{{#if ../ccrate}}{{../ccrate}}{{/if}}</td>
         <td class="td-right">{{formatAmount taxable ../bcdp}}</td>
         <td>{{vat_perc}}%</td>
         <td class="td-right">{{formatAmount vat_amt ../bcdp}}</td>
