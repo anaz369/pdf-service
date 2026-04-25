@@ -178,7 +178,7 @@
       {{/if}}
       <div class="field-row">
         <span class="field-lbl">ATTN :</span>
-        <span class="field-val">{{#if basicdetails.[0].attn}}{{basicdetails.[0].attn}}{{/if}}</span>
+        <span class="field-val"></span>
       </div>
       <div class="field-row">
         <span class="field-lbl">PHONE NO</span>
@@ -190,7 +190,7 @@
     <div class="header-right">
       <div class="field-row">
         <span class="field-lbl">PORT NAME</span>
-        <span class="field-val">{{#if basicdetails.[0].port_of_delivery}}{{basicdetails.[0].port_of_delivery}}{{/if}}</span>
+        <span class="field-val"></span>
       </div>
       <div class="field-row">
         <span class="field-lbl">INVOICE NO</span>
@@ -202,19 +202,19 @@
       </div>
       <div class="field-row">
         <span class="field-lbl">PO NO</span>
-        <span class="field-val">{{#if basicdetails.[0].order_no}}{{basicdetails.[0].order_no}}{{/if}}</span>
+        <span class="field-val"></span>
       </div>
       <div class="field-row">
         <span class="field-lbl">DUE DATE</span>
-        <span class="field-val">{{#if basicdetails.[0].due_date}}{{basicdetails.[0].due_date}}{{/if}}</span>
+        <span class="field-val">{{#if MyInvoisDocument.doc_details.due_date}}{{MyInvoisDocument.doc_details.due_date}}{{/if}}</span>
       </div>
       <div class="field-row">
         <span class="field-lbl">PAYMENT TERM</span>
-        <span class="field-val">{{#if basicdetails.[0].payment_terms}}{{basicdetails.[0].payment_terms}}{{/if}}</span>
+        <span class="field-val"></span>
       </div>
       <div class="field-row">
         <span class="field-lbl">CURRENCY</span>
-        <span class="field-val">{{default MyInvoisDocument.doc_details.currency_code 'MYR'}}</span>
+        <span class="field-val">{{MyInvoisDocument.doc_details.currency_code}}</span>
       </div>
     </div>
 
@@ -225,27 +225,27 @@
     <div class="ship-col">
       <div class="field-row">
         <span class="field-lbl">VESSEL NAME :</span>
-        <span class="field-val">{{#if basicdetails.[0].vessel_name}}{{basicdetails.[0].vessel_name}}{{/if}}</span>
+        <span class="field-val"></span>
       </div>
       <div class="field-row">
         <span class="field-lbl">VOY NO :</span>
-        <span class="field-val">{{#if basicdetails.[0].voyage_no}}{{basicdetails.[0].voyage_no}}{{/if}}</span>
+        <span class="field-val"></span>
       </div>
     </div>
     <div class="ship-col">
       <div class="field-row">
         <span class="field-lbl">ARRIVED :</span>
-        <span class="field-val">{{#if basicdetails.[0].eta_date}}{{basicdetails.[0].eta_date}}{{/if}}</span>
+        <span class="field-val"></span>
       </div>
       <div class="field-row">
         <span class="field-lbl">ACTIVITY :</span>
-        <span class="field-val">{{#if basicdetails.[0].activity}}{{basicdetails.[0].activity}}{{/if}}</span>
+        <span class="field-val"></span>
       </div>
     </div>
     <div class="ship-col">
       <div class="field-row">
         <span class="field-lbl">SAILED</span>
-        <span class="field-val">{{#if basicdetails.[0].etd_date}}{{basicdetails.[0].etd_date}}{{/if}}</span>
+        <span class="field-val"></span>
       </div>
     </div>
   </div>
