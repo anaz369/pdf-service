@@ -38,7 +38,7 @@
 
 /* CELLS */
 .invoice-table td {
-  padding: 4px 6px;
+  padding: 2px 6px;
   vertical-align: top;
 }
 
@@ -494,7 +494,7 @@
           {{#if name_lang2}}<br><span style="direction:rtl; font-size:9px;">{{name_lang2}}</span>{{/if}}
           {{#if description}}<br><span style="direction:rtl; font-size:9px;">{{description}}</span>{{/if}}
         </td>
-        <td>{{currency}}</td>
+        <td>{{isocode}}</td>
         <td>{{formatAmount quantity ../bcdp}}</td>
         <td class="td-right">{{formatAmount price ../bcdp}}</td>
         <td class="td-right">{{formatAmount taxable ../bcdp}}</td>
@@ -579,9 +579,9 @@
               {{#if bankdetails.name}}
               <tr><td style="padding:1px 0;"><b>Bank Name</b></td><td style="padding:1px 4px;">:</td><td style="padding:1px 0;">{{bankdetails.name}}</td></tr>
               {{/if}}
-              {{#if bankdetails.branch_name}}
+              {{!-- {{#if bankdetails.branch_name}}
               <tr><td style="padding:1px 0;"><b>Branch</b></td><td style="padding:1px 4px;">:</td><td style="padding:1px 0;">{{bankdetails.branch_name}}</td></tr>
-              {{/if}}
+              {{/if}} --}}
               {{#if bankdetails.swift_no}}
               <tr><td style="padding:1px 0;"><b>SWIFT</b></td><td style="padding:1px 4px;">:</td><td style="padding:1px 0;">{{bankdetails.swift_no}}</td></tr>
               {{/if}}
