@@ -3,7 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
-const pdfController = require('./controllers/pdfController');
+const pdfController    = require('./controllers/pdfController');
+const reportController = require('./controllers/reportController');
 
 const app = express();
 
@@ -60,9 +61,13 @@ app.post('/api/pdf/razor-view-pdf', (req, res) =>
 );
 
 // Browser pool cleanup
-app.post('/api/pdf/cleanup-browser-pool', (req, res) => 
+app.post('/api/pdf/cleanup-browser-pool', (req, res) =>
   pdfController.cleanupBrowserPool(req, res)
 );
+
+// ── Report routes ─────────────────────────────────────────
+app.get('/api/report/test', (req, res) => reportController.test(req, res));
+app.post('/api/report/generate-pdf', (req, res) => reportController.generateReportPdf(req, res));
 
 // ============================================
 // ERROR HANDLING
@@ -77,7 +82,9 @@ app.use((req, res) => {
       'GET /',
       'GET /api/pdf/test',
       'POST /api/pdf/razor-view-pdf',
-      'POST /api/pdf/cleanup-browser-pool'
+      'POST /api/pdf/cleanup-browser-pool',
+      'GET /api/report/test',
+      'POST /api/report/generate-pdf',
     ]
   });
 });

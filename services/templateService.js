@@ -337,6 +337,40 @@ class TemplateService {
     }
   }
 
+  // ── RENDER REPORT ─────────────────────────────────────────
+  // Reads from /reports/<templateName>.hbs (separate from /templates/)
+  async renderReportToString(templateName, data) {
+    try {
+      const cacheKey = `reports/${templateName}`;
+
+      if (!this.compiledTemplates.has(cacheKey)) {
+        const templatePath = path.join(
+          __dirname, '..', 'reports', `${templateName}.hbs`
+        );
+        console.log(`Loading report template: ${templatePath}`);
+        const source = await fs.readFile(templatePath, 'utf-8');
+        this.compiledTemplates.set(cacheKey, Handlebars.compile(source));
+      }
+
+      let html = this.compiledTemplates.get(cacheKey)(data);
+
+      if (bootstrapCss && html.includes('cdn.jsdelivr.net')) {
+        html = html.replace(
+          /<link[^<]*bootstrap[^<]*>/gi,
+          `<style>${bootstrapCss}</style>`
+        );
+        console.log('[Bootstrap] ✓ Injected into report template:', templateName);
+      }
+
+      console.log(`Report template rendered: ${cacheKey} (${html.length} chars)`);
+      return html;
+
+    } catch (error) {
+      console.error(`Error rendering report template ${templateName}:`, error);
+      throw new Error(`Report template rendering failed: ${error.message}`);
+    }
+  }
+
   // ── CACHE ─────────────────────────────────────────────────
   clearCache() {
     this.compiledTemplates.clear();
