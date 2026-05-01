@@ -86,12 +86,12 @@
       font-weight: bold;
       padding: 4px 4px;
       text-align: center;
-      border: 1px solid #000;
+      border: 0.5px solid #000;
     }
     .items-table td {
       padding: 3px 4px;
       font-size: 10px;
-      border: 1px solid #000;
+      border: 0.5px solid #000;
       text-align: center;
       vertical-align: middle;
     }
@@ -105,10 +105,10 @@
       margin-top: 0;
     }
     .footer-left {
-      flex: 0 0 48%;
+      flex: 0 0 50%;
     }
     .footer-right {
-      flex: 0 0 50%;
+      flex: 0 0 45.2%;
     }
 
     .totals-table {
@@ -255,11 +255,11 @@
     <thead>
       <tr>
         <th style="width:5%;">NO</th>
-        <th style="width:35%;">DESCRIPTION</th>
-        <th style="width:15%;">TOTAL IN MYR</th>
+        <th style="width:50%;">DESCRIPTION</th>
+        <th style="width:12%;">TOTAL IN MYR</th>
         <th style="width:10%;">SST</th>
-        <th style="width:15%;">DISCOUNT</th>
-        <th style="width:20%;">TOTAL IN USD</th>
+        <th style="width:10%;">DISCOUNT</th>
+        <th style="width:13%;">TOTAL IN USD</th>
       </tr>
     </thead>
     <tbody>
@@ -267,12 +267,13 @@
       <tr>
         <td>{{inc @index}}</td>
         <td class="td-desc">
-          {{default item_name description}}
+            {{item_name}}
+            {{#if description}}<br><span style="direction:rtl; font-size:9px;">{{description}}</span>{{/if}}
         </td>
         <td class="td-right">{{formatCurrency taxable}}</td>
         <td class="td-right">{{formatCurrency vat_amt}}</td>
         <td class="td-right">{{formatCurrency disc_amt}}</td>
-        <td class="td-right">{{formatCurrency amount}}</td>
+        <td class="td-right">{{formatCurrency total_price}}</td>
       </tr>
       {{/each}}
     </tbody>
@@ -291,29 +292,33 @@
     <div class="footer-right">
       <table class="totals-table">
         <tr>
-          <td class="t-lbl">SUB TOTAL</td>
-          <td class="t-val">{{default MyInvoisDocument.doc_details.currency_code 'MYR'}} {{formatCurrency MyInvoisDocument.document.total}}</td>
-          <td class="t-val">{{#if MyInvoisDocument.doc_details.exchange_rate}}USD {{formatCurrency (divide MyInvoisDocument.document.total MyInvoisDocument.doc_details.exchange_rate)}}{{/if}}</td>
+          <td class="t-lbl" style="width: 6.7%;border-top:none;text-align:center;" rowspan="2">SUB TOTAL</td>
+          <td class="t-val" style="width: 23%;border-top:none;text-align:center;">{{default MyInvoisDocument.doc_details.currency_code}}</td>
+          <td class="t-val" style="width: 14.8%;border-top:none;text-align:center;">USD</td>
         </tr>
         <tr>
-          <td class="t-lbl">SST</td>
+          <td class="t-val" style="width: 23%;border-top:none;">{{formatCurrency MyInvoisDocument.document.total}}</td>
+          <td class="t-val" style="width: 14.8%;border-top:none;">{{formatCurrency (divide MyInvoisDocument.document.total MyInvoisDocument.doc_details.exchange_rate)}}</td>
+        </tr>
+        <tr>
+          <td class="t-lbl" style="text-align:center;">SST</td>
           <td class="t-val">{{formatCurrency MyInvoisDocument.document.vat}}</td>
           <td class="t-val">{{#if MyInvoisDocument.doc_details.exchange_rate}}{{formatCurrency (divide MyInvoisDocument.document.vat MyInvoisDocument.doc_details.exchange_rate)}}{{/if}}</td>
         </tr>
         <tr>
-          <td class="t-lbl">DISCOUNT</td>
+          <td class="t-lbl" style="text-align:center;">DISCOUNT</td>
           <td class="t-val">{{#if MyInvoisDocument.document.dld}}{{formatCurrency MyInvoisDocument.document.dld}}{{/if}}</td>
           <td class="t-val">{{#if MyInvoisDocument.doc_details.exchange_rate}}{{#if MyInvoisDocument.document.dld}}{{formatCurrency (divide MyInvoisDocument.document.dld MyInvoisDocument.doc_details.exchange_rate)}}{{/if}}{{/if}}</td>
         </tr>
         <tr>
-          <td class="t-lbl">ADVANCE</td>
+          <td class="t-lbl" style="text-align:center;">ADVANCE</td>
           <td class="t-val">{{#if basicdetails.[0].aa}}{{formatAmount basicdetails.[0].aa bcdp}}{{/if}}</td>
           <td class="t-val"></td>
         </tr>
         <tr>
-          <td class="t-lbl" style="font-weight: bold;">TOTAL AMOUNT</td>
-          <td class="t-val" style="font-weight: bold;">{{default MyInvoisDocument.doc_details.currency_code 'MYR'}} {{formatCurrency MyInvoisDocument.document.grand_total}}</td>
-          <td class="t-val" style="font-weight: bold;">{{#if MyInvoisDocument.doc_details.exchange_rate}}USD {{formatCurrency (divide MyInvoisDocument.document.grand_total MyInvoisDocument.doc_details.exchange_rate)}}{{/if}}</td>
+          <td class="t-lbl" style="font-weight: bold;text-align:center;">TOTAL AMOUNT</td>
+          <td class="t-val" style="font-weight: bold;">{{formatCurrency MyInvoisDocument.document.grand_total}}</td>
+          <td class="t-val" style="font-weight: bold;">{{formatCurrency (divide MyInvoisDocument.document.grand_total MyInvoisDocument.doc_details.exchange_rate)}}</td>
         </tr>
       </table>
     </div>
@@ -337,7 +342,7 @@
 
     {{!-- RIGHT — For Company + Signature --}}
     <div class="sig-col">
-      <div style="font-weight: bold; font-size: 11px; margin-top: 10px;">FOR {{upper MyInvoisDocument.supplier.name}}</div>
+      <div style="font-weight: bold; font-size: 11px; margin-top: 10px;">FOR {{MyInvoisDocument.supplier.name}}</div>
 
       {{#if Seal}}
       <div style="margin-top: 8px;">
