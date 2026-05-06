@@ -575,20 +575,8 @@ hr {
                                 <th class="text-center"><span class="arab">القيمه الاجمالي</span><br>Total Amount</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <thead>
-                                <tr style="background-color: #26323e;color: #fff;">
-                                    <th class="text-center"><span class="arab">م</span><br>S.N</th>
-                                    <th class="text-center"><span class="arab">رمز العنصر</span><br>Itemcode</th>
-                                    <th class="text-center"><span class="arab">الوصف</span><br>Description</th>
-                                    <th class="text-center"><span class="arab">الكمية</span><br>QTY</th>
-                                    <th class="text-center"><span class="arab">الوحدة</span><br>Unit</th>
-                                    <th class="text-center"><span class="arab">سعر الوحدة</span><br>U.Rate</th>
-                                    <th class="text-center"><span class="arab">القيمه الاجمالي</span><br>Total Amount</th>
-                                </tr>
-                            </thead>
                             <tbody>
-                                        <?php foreach ($itemdetails as $index => $item): ?>
+                                    <?php foreach ($itemdetails as $index => $item): ?>
                                         <tr>
                                             <td class="text-center"><?= $index + 1 ?></td>
 
@@ -614,7 +602,7 @@ hr {
                                                 <?= formatAmount($item['amount'], $bcdp) ?>
                                             </td>
                                         </tr>
-                                        <?php endforeach; ?>
+                                    <?php endforeach; ?>
                                     </tbody>
                     </table>
                 </div>

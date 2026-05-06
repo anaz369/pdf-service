@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Order Confirmation - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    {{!-- @page { size: A4; margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; } --}}
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+    }
+
+    .page {
+      margin: 0 auto;
+      padding: 20px 30px;
+    }
+
+    /* ── Title ──────────────────────────────────── */
+    .title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      {{!-- text-decoration: underline; --}}
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+    }
+
+    .title-line {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin-bottom: 12px;
+    }
+
+    /* ── Header info ───────────────────────────── */
+    .header-wrap {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .header-left {
+      flex: 0 0 48%;
+    }
+
+    .header-right {
+      flex: 0 0 50%;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 2px;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .field-lbl {
+      min-width: 160px;
+      flex-shrink: 0;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .field-colon {
+      min-width: 15px;
+      text-align: center;
+    }
+
+    .field-val {
+      font-size: 11px;
+    }
+
+    /* ── Items table ───────────────────────────── */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .items-table th {
+      background: #b8d4f0;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 6px 5px;
+      text-align: center;
+      border: 1px solid #000;
+    }
+
+    .items-table td {
+      padding: 3px 7px;
+      font-size: 11px;
+      border: 1px solid #000;
+      vertical-align: middle;
+    }
+
+    .items-table td.td-center { text-align: center; }
+    .items-table td.td-right { text-align: right; }
+    .items-table td.td-left { text-align: left; }
+
+    /* ── Summary rows ──────────────────────────── */
+    .summary-row {
+      border: 1px solid #000;
+    }
+
+    .summary-row td {
+      padding: 3px 7px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    /* ── Amount in words ───────────────────────── */
+    .amount-words {
+      font-size: 11px;
+      color: #1a73e8;
+      font-weight: bold;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    /* ── Bank details ──────────────────────────── */
+    .bank-title {
+      font-size: 10px;
+      font-weight: bold;
+      text-decoration: underline;
+      margin-bottom: 8px;
+    }
+
+    .bank-table {
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-bottom: 15px;
+    }
+
+    .bank-table td {
+      padding: 2px 0;
+    }
+
+    .bank-table .bk-lbl {
+      {{!-- font-weight: bold; --}}
+      min-width: 100px;
+    }
+
+    .bank-table .bk-colon {
+      min-width: 15px;
+      text-align: center;
+    }
+
+    /* ── Terms ──────────────────────────────────── */
+    .terms-text {
+      font-size: 11px;
+      color: #1a73e8;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  {{!-- ══ TITLE ══ --}}
+  <div class="title" style="color:#719fef;">ORDER CONFIRMATION</div>
+  <hr class="title-line"/>
+
+  {{!-- ══ HEADER ══ --}}
+  <div class="header-wrap">
+
+    {{!-- LEFT — Order Confirmed To --}}
+    <div class="header-left">
+      <div class="field-row">
+        <span class="field-lbl" style="font-weight:bold;">ORDER CONFIRMED TO</span>
+        <span class="field-colon"></span>
+        <span class="field-val"></span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">PERSON</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{billing_address.[0].name}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">DESIGNATION</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{#if customer_details.[0].designation}}{{customer_details.[0].designation}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">EMAIL</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{#if customer_details.[0].email}}{{customer_details.[0].email}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">CONTACT</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{#if customer_details.[0].contact_no1}}{{customer_details.[0].contact_no1}}{{/if}}</span>
+      </div>
+    </div>
+
+    {{!-- RIGHT — Reference details --}}
+    <div class="header-right">
+      <div class="field-row">
+        <span class="field-lbl">OUR QUOTATION REFERENCE NO</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{basicdetails.[0].inv_no}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">CUSTOMER RFQ</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{#if basicdetails.[0].customer_rfq}}{{basicdetails.[0].customer_rfq}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">VESSEL NAME</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{#if basicdetails.[0].vessel_name}}{{basicdetails.[0].vessel_name}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">DATE</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{basicdetails.[0].inv_date}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">PERSON</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{#if basicdetails.[0].salesman_name}}{{basicdetails.[0].salesman_name}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">CONTACT</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{#if basicdetails.[0].salesman_no}}{{basicdetails.[0].salesman_no}}{{/if}}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">EMAIL</span>
+        <span class="field-colon">:</span>
+        <span class="field-val"></span>
+      </div>
+      <div class="field-row">
+        <span class="field-lbl">PORT</span>
+        <span class="field-colon">:</span>
+        <span class="field-val">{{#if basicdetails.[0].port_of_loading}}{{basicdetails.[0].port_of_loading}}{{/if}}</span>
+      </div>
+    </div>
+
+  </div>
+
+  {{!-- ══ ITEMS TABLE ══ --}}
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:5%;">S.No</th>
+        {{#hasVat itemdetails}}
+        <th style="width:34%;">DESCRIPTION</th>
+        {{else}}
+        <th style="width:44%;">DESCRIPTION</th>
+        {{/hasVat}}
+        <th style="width:8%;">UNIT</th>
+        <th style="width:6%;">QTY</th>
+        <th style="width:12%;">UNIT PRICE</th>
+        {{#hasVat itemdetails}}
+        <th style="width:10%;">VAT</th>
+        {{/hasVat}}
+        <th style="width:10%;">DISCOUNT</th>
+        <th style="width:14%;">TOTAL PRICE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="td-center">{{addOne @index}}</td>
+        <td class="td-left">{{item_name}}
+            {{#if name_lang2}}<br><span style="font-size:10px;">{{name_lang2}}</span>{{/if}}
+            {{#if description}}<br><span style="font-size:10px; color:#555;">{{description}}</span>{{/if}}
+        </td>
+        <td class="td-center">{{unit}}</td>
+        <td class="td-center">{{formatAmount quantity ../bcdp}}</td>
+        <td class="td-right"><span style="font-size:12px;">{{{currencySymbol isocode}}}</span>{{formatAmount price ../bcdp}}</td>
+        {{!-- VAT COLUMN --}}
+        {{#hasVat ../itemdetails}}
+        <td class="td-right"><span style="font-size:12px;">{{{currencySymbol isocode}}}</span>{{formatAmount vat_amt ../bcdp}}</td>
+        {{/hasVat}}
+        <td class="td-right"><span style="font-size:12px;">{{{currencySymbol isocode}}}</span>{{#if disc_amt}}{{formatAmount disc_amt ../bcdp}}{{/if}}</td>
+        <td class="td-right"><span style="font-size:12px;">{{{currencySymbol isocode}}}</span>{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+
+      {{!-- Discount Amount row --}}
+      {{#if basicdetails.[0].discount}}
+      <tr class="summary-row">
+        <td colspan="{{#hasVat itemdetails}}7{{else}}6{{/hasVat}}" style="text-align:right; border-left:none; border-bottom:none;color:#719fef;">DISCOUNT AMOUNT</td>
+        <td class="td-right" style="color:#719fef;"><span style="font-size:14px;">{{{currencySymbol isocode}}}</span>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+      </tr>
+      {{/if}}
+
+      {{!-- Total Price row --}}
+      <tr class="summary-row">
+        <td colspan="{{#hasVat itemdetails}}7{{else}}6{{/hasVat}}" style="text-align:right; border-left:none;color:#719fef;">TOTAL PRICE IN {{basicdetails.[0].isocode}}</td>
+        <td class="td-right" style="color:#719fef;"><span style="font-size:13px;">{{{currencySymbol isocode}}}</span>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {{!-- ══ AMOUNT IN WORDS ══ --}}
+  <div class="amount-words">TOTAL BUDGETORY QUOTATION: {{bcamountinwords}}</div>
+
+  {{!-- ══ BANK DETAILS ══ --}}
+  {{!-- {{#if bankdetails}} --}}
+  <div class="bank-title" style="color:#719fef;">Bank Details:</div>
+  <table class="bank-table">
+    {{!-- {{#if bankdetails.acc_name}} --}}
+    <tr>
+      <td class="bk-lbl">A/C Name</td>
+      <td class="bk-colon">:</td>
+      <td>{{bankdetails.acc_name}}</td>
+    </tr>
+    {{!-- {{/if}}
+    {{#if bankdetails.acc_no}} --}}
+    <tr>
+      <td class="bk-lbl">A/C NO</td>
+      <td class="bk-colon">:</td>
+      <td>{{bankdetails.acc_no}}</td>
+    </tr>
+    {{!-- {{/if}}
+    {{#if bankdetails.iban_no}} --}}
+    <tr>
+      <td class="bk-lbl">IBAN</td>
+      <td class="bk-colon">:</td>
+      <td>{{bankdetails.iban_no}}</td>
+    </tr>
+    {{!-- {{/if}}
+    {{#if bankdetails.swift_no}} --}}
+    <tr>
+      <td class="bk-lbl">BIC/SWIFT</td>
+      <td class="bk-colon">:</td>
+      <td>{{bankdetails.swift_no}}</td>
+    </tr>
+    {{!-- {{/if}} --}}
+  </table>
+  {{!-- {{/if}} --}}
+
+  {{!-- ══ TERMS ══ --}}
+  <div class="terms-text">Should you require any additional information, please do not hesitate to contact our Operational Unit. We require a Purchase Order to start the following project, and mobilization time of 24 hours needs to be provided.</div>
+</div>
+</body>
+</html>

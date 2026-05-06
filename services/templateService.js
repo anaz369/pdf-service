@@ -281,6 +281,11 @@ class TemplateService {
       );
     });
 
+    Handlebars.registerHelper('hasVat', function(items, options) {
+      const hasVat = (items || []).some(i => parseFloat(i.vat_amt) > 0);
+      return hasVat ? options.fn(this) : options.inverse(this);
+    });
+
   }
 
   // ── DATA PREPARATION ──────────────────────────────────────
