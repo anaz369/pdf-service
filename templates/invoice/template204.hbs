@@ -328,9 +328,9 @@
     </table>
 
     {{!-- Payment terms --}}
-    {{#if invterms}}
+    {{#if basicdetails.[0].payment_terms}}
     <div class="payment-terms">
-      <span class="pt-label"><u>PAYMENT TERMS:</u></span> <br>{{{nl2br invterms}}}
+      <span class="pt-label"><u>PAYMENT TERMS:</u></span> <br>{{{nl2br basicdetails.[0].payment_terms}}}
     </div>
     {{/if}}
 
