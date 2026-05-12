@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Quotation - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+    }
+
+    {{!-- .page {
+      width: 750px;
+      margin: 0 auto;
+      padding: 0;
+      position: relative;
+      min-height: 1000px;
+    } --}}
+
+    /* ── Top red bar ───────────────────────────── */
+    .top-bar {
+      height: 8px;
+      background: #e74c4c;
+    }
+
+    /* ── Left vertical text ────────────────────── */
+    .left-vertical {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 35px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-left: 10px;
+    }
+
+    .left-vertical .vert-text {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 28px;
+      font-weight: bold;
+      color: #e74c4c;
+      white-space: nowrap;
+      letter-spacing: 1px;
+      opacity: 0.25;
+    }
+
+    /* ── Content area (right of vertical text) ── */
+    .content {
+      margin-left: 40px;
+      padding: 15px 20px 20px 10px;
+    }
+
+    /* ── Title ──────────────────────────────────── */
+    .title {
+      text-align: center;
+      font-size: 17px;
+      font-weight: bold;
+      color: #e74c4c;
+      text-decoration: underline;
+      margin-bottom: 12px;
+    }
+
+    /* ── Header section ────────────────────────── */
+    .header-wrap {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .header-left {
+      flex: 0 0 50%;
+    }
+
+    .header-right {
+      flex: 0 0 45%;
+      text-align: left;
+    }
+
+    .inv-ref {
+      font-size: 13px;
+      color: #e74c4c;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .inv-date {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .to-label {
+      font-size: 13px;
+      color: #e74c4c;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .company-name {
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .company-address {
+      font-size: 11px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    /* ── Red separator ─────────────────────────── */
+    .red-line {
+      border: none;
+      border-top: 1px solid #e74c4c;
+      margin: 5px 0;
+    }
+
+    /* ── Info row ───────────────────────────────── */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .info-row .info-item {
+      color: #5794b2;
+    }
+
+    .info-center {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Items table ───────────────────────────── */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0;
+    }
+
+    .items-table th {
+      background: #e74c4c;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 6px 5px;
+      text-align: center;
+      border: 0.1px solid #434343;
+    }
+
+    .items-table td {
+      padding: 4px 6px;
+      font-size: 11px;
+      border: 0.1px solid #434343;
+      vertical-align: middle;
+    }
+
+    .items-table td.td-center { text-align: center; }
+    .items-table td.td-right { text-align: right; }
+    .items-table td.td-left { text-align: left; padding-left: 10px; }
+
+    .items-table tbody tr:nth-child(even) {
+      background: #fff;
+    }
+
+    .items-table tbody tr:nth-child(odd) {
+      background: #fff;
+    }
+
+    /* ── Summary rows ──────────────────────────── */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .summary-table td {
+      padding: 4px 6px;
+      font-size: 11px;
+      border: 0.1px solid #434343;
+    }
+
+    .summary-table .s-lbl {
+      text-align: right;
+      font-weight: bold;
+      color: #5794b2;
+    }
+
+    .summary-table .s-val {
+      text-align: right;
+      width: 80px;
+      font-weight: bold;
+    }
+
+    .summary-table tr.total-row td {
+      font-weight: bold;
+    }
+
+    /* ── Payment terms ─────────────────────────── */
+    .payment-terms {
+      margin-top: 10px;
+      font-size: 11px;
+    }
+
+    .payment-terms .pt-label {
+      font-weight: bold;
+    }
+    .terms-condition{
+        margin-top: 10px;
+        font-size: 11px;
+    }
+    .terms-condition .pt-label {
+      font-weight: bold;
+    }
+    /* ── Footer / Sign ─────────────────────────── */
+    .footer-section {
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .thanks {
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .signer-name {
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .signer-title {
+      font-size: 11px;
+      color: #333;
+    }
+
+    /* ── Bottom thank-you note ─────────────────── */
+    .bottom-thanks {
+      text-align: center;
+      font-style: italic;
+      font-weight: bold;
+      color: #e74c4c;
+      font-size: 14px;
+      margin-top: 25px;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  {{!-- ══ LEFT VERTICAL TEXT ══ --}}
+  <div class="left-vertical">
+    <div class="vert-text">Quotation {{basicdetails.[0].inv_no}}</div>
+  </div>
+
+  {{!-- ══ CONTENT ══ --}}
+  <div class="content">
+
+    {{!-- Title --}}
+    <div class="title">QUOTATION</div>
+
+    {{!-- Header --}}
+    <div class="header-wrap">
+      <div class="header-left">
+        <div class="inv-ref"><u style="color:#5794b2;">QUOTATION</u> <u style="color:#e74c4c;"><span style="color:#e74c4c;">{{basicdetails.[0].inv_no}}</span></u></div>
+        <div class="inv-date"><span style="color: #e74c4c;"><b>Date</b></span> {{basicdetails.[0].inv_date}}</div>
+      </div>
+      <div class="header-right">
+        <div class="to-label">To</div>
+        <div class="company-name">M/S {{billing_address.[0].name}}</div>
+        <div class="company-address">
+          {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{/if}}{{#if billing_address.[0].address_line2}}, {{billing_address.[0].address_line2}}{{/if}}{{#if billing_address.[0].address_line3}}, {{billing_address.[0].address_line3}}{{/if}}{{#if billing_address.[0].address_line4}}, {{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_line5}}, {{billing_address.[0].address_line5}}{{/if}}
+        </div>
+      </div>
+    </div>
+
+    {{!-- Red separator --}}
+    <hr class="red-line"/>
+
+    {{!-- Info row --}}
+    <div class="info-row" style="width: 100%;">
+      <span class="info-item" style="color: #5794b2;width: 33.33%;">Customer ID: <span style="color: #e74c4c;">{{customer_details.[0].profile_code}}</span></span>
+      <span class="info-item" style="width: 33.33%;color: #e74c4c;">Project: <span style="color: #5794b2;">{{#if basicdetails.[0].project_name}}{{basicdetails.[0].project_name}}{{/if}}</span></span>
+      <span class="info-item" style="width: 33.33%;"></span>
+    </div>
+
+    {{!-- Items table --}}
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width:5%;">ITEM</th>
+          <th style="width:53%;">DESCRIPTION</th>
+          <th style="width:10%;">QTY</th>
+          <th style="width:12%;">UNIT RATE</th>
+          <th style="width:15%;">AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each itemdetails}}
+        <tr>
+          <td class="td-center">{{addOne @index}}.</td>
+          <td class="td-left">
+            <b>{{item_name}}</b>
+            {{#if name_lang2}}<br><span style="font-size:10px;">{{name_lang2}}</span>{{/if}}
+            {{#if description}}<br><span style="font-size:10px; color:#555;">{{description}}</span>{{/if}}
+          </td>
+          <td class="td-center">{{formatAmount quantity ../bcdp}}</td>
+          <td class="td-right">{{formatAmount price ../bcdp}}</td>
+          <td class="td-right">{{formatAmount amount ../bcdp}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    {{!-- Summary rows --}}
+    <table class="summary-table" style="width: 100%;">
+
+      <tr style="border-top:none;">
+        <td class="s-lbl" style="width:80%;border-top:none;">SUBTOTAL IN {{basicdetails.[0].base_country_isocode}}</td>
+        <td class="s-val" style="width:15%;border-top:none;">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      </tr>
+      {{#if basicdetails.[0].discount}}
+      <tr>
+        <td class="s-lbl">DISCOUNT IN {{basicdetails.[0].base_country_isocode}}</td>
+        <td class="s-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+      </tr>
+      {{/if}}
+      <tr class="total-row"> 
+        <td class="s-lbl" style="color:#e74c4c;">TOTAL INVOICE AMOUNT IN {{basicdetails.[0].base_country_isocode}}</td>
+        <td class="s-val" style="color:#e74c4c;">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+    </table>
+
+    {{!-- Payment terms --}}
+    {{!-- {{#if basicdetails.[0].payment_terms}} --}}
+    <div class="payment-terms">
+      <span class="pt-label" style="color:#e74c4c;"><u>PAYMENT TERMS:</u></span> <br>{{{nl2br basicdetails.[0].payment_terms}}}
+    </div>
+    {{!-- {{/if}} --}}
+
+    {{!-- terms and condition --}}
+    {{!-- {{#if basicdetails.[0].payment_terms}} --}}
+    <div class="terms-condition">
+      <span class="pt-label" style="color:#e74c4c;"><u>TERMS AND CONDITIONS:</u></span> <br>{{nl2br basicdetails.[0].terms_and_condition}}
+    </div>
+    {{!-- {{/if}} --}}
+
+    {{!-- Footer --}}
+    <div class="footer-section">
+      <div class="thanks">Thanks & Regards,</div>
+
+      {{#if Signature}}
+      <img src="{{Signature}}" alt="Signature" style="max-height:50px; max-width:120px; display:block; margin-bottom:5px;" onerror="this.style.display='none'"/>
+      {{/if}}
+
+      <div class="signer-name">{{#if basicdetails.[0].salesman_name}}{{basicdetails.[0].salesman_name}}{{/if}}</div>
+      <div class="signer-title">{{basicdetails.[0].branchname}}</div>
+    </div>
+
+    {{!-- Bottom thank-you note --}}
+    <div class="bottom-thanks">Thank You for Your Business!</div>
+
+  </div>
+
+</div>
+</body>
+</html>
