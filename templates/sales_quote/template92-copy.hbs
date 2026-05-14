@@ -157,36 +157,20 @@
     .sign-off {
       margin-top: 22px;
       font-size: 11px;
-      font-weight: bold;
-    }
-
-    .sign-images {
-      margin-top: 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-    .sign-images .sig-img {
-      max-height: 70px;
-      max-width: 140px;
-      display: block;
-      object-fit: contain;
     }
 
     /* ── Bottom block (sender info) ────────────── */
     .sender-block {
-      margin-top: 10px;
+      margin-top: 70px;
       font-size: 11px;
       line-height: 1.5;
     }
     .sender-block .sender-name {
       margin-bottom: 2px;
-      {{!-- padding-left: 8px; --}}
     }
-    {{!-- .sender-block .sender-email {
+    .sender-block .sender-email {
       padding-left: 8px;
-    } --}}
+    }
   </style>
 </head>
 <body>
@@ -220,17 +204,16 @@
   </div>
 
   {{!-- ══ ITEMS TABLE ══ --}}
-  {{!-- ══ ITEMS TABLES ══ --}}
-  {{!-- ══ ITEMS TABLES ══ --}}
   <table class="items-table">
     <thead>
       <tr>
         <th style="width:4%;">#</th>
         <th style="width:11%;">Item Code</th>
-        <th style="width:38%;">Description &amp; Specifications</th>
+        <th style="width:30%;">Description &amp; Specifications</th>
         <th style="width:7%;">Unit</th>
         <th style="width:6%;">Qty</th>
         <th style="width:11%;">Unit Rate</th>
+        <th style="width:8%;">Disc</th>
         <th style="width:10%;">VAT %</th>
         <th style="width:13%;">Amount</th>
       </tr>
@@ -250,6 +233,7 @@
         <td>{{unit}}</td>
         <td>{{formatAmount quantity ../bcdp}}</td>
         <td class="td-right">{{formatAmount price ../bcdp}}</td>
+        <td class="td-right">{{formatAmount disc_amt ../bcdp}}</td>
         <td class="td-right">{{formatAmount tax ../bcdp}}</td>
         <td class="td-right">{{formatAmount amount ../bcdp}}</td>
       </tr>
@@ -258,11 +242,10 @@
   </table>
 
   {{!-- ══ SUMMARY TABLE ══ --}}
-   {{!-- ══ SUMMARY TABLE ══ --}}
   <table class="summary-table">
     <tr>
       <th style="width:33.33%;">Sub Total</th>
-      <th style="width:33.33%;">VAT %</th>
+      <th style="width:33.33%;">VAT {{#if basicdetails.[0].vat_perc}}{{basicdetails.[0].vat_perc}}%{{else}}15%{{/if}}</th>
       <th style="width:33.34%;">Total Amount</th>
     </tr>
     <tr>
@@ -271,7 +254,7 @@
       <td class="total-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
     </tr>
     <tr class="tot-words">
-      <td colspan="3"><span class="tw-lbl">Total In Words  :  </span>{{bcamountinwords}}</td>
+      <td colspan="3"><span class="tw-lbl">Total In Words:</span>{{bcamountinwords}}</td>
     </tr>
   </table>
 
@@ -281,28 +264,19 @@
   </div>
 
   {{!-- ══ TERMS &amp; CONDITIONS ══ --}}
-    {{#if invterms}}
-    <div class="terms-block">
-        <div class="terms-title">Terms &amp; Conditions :</div>
-        <div class="terms-text">{{{nl2br invterms}}}</div>
-    </div>
+  <div class="terms-block">
+    <div class="terms-title">Terms &amp; Conditions</div>
+    {{#if basicdetails.[0].terms_and_condition}}
+    <div class="terms-text">{{{nl2br basicdetails.[0].terms_and_condition}}}</div>
     {{/if}}
+  </div>
 
   {{!-- ══ SIGN OFF ══ --}}
   <div class="sign-off">Many Thanks &amp; Regards</div>
-  <div class="sign-images">
-    {{#if Seal}}
-      <img src="{{Seal}}" class="sig-img" alt="Seal" onerror="this.style.display='none'"/>
-    {{/if}}
-    {{#if Signature}}
-      </br><img src="{{Signature}}" class="sig-img" alt="Signature" onerror="this.style.display='none'"/>
-    {{/if}}
-  </div>
 
   {{!-- ══ SENDER BLOCK ══ --}}
   <div class="sender-block">
     <div class="sender-name">{{#if basicdetails.[0].salesman_name}}{{basicdetails.[0].salesman_name}}{{/if}}</div>
-    {{#if basicdetails.[0].salesman_no}}<div class="sender-phone">{{basicdetails.[0].salesman_no}}</div>{{/if}}
     {{#if compprof.email}}<div class="sender-email">{{compprof.email}}</div>{{/if}}
   </div>
 
