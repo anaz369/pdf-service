@@ -503,7 +503,12 @@ class PdfController {
           ""
         ).trim();
 
-        pdfDoc.setTitle(`Invoice - ${invNo_m}`);
+        if(doc_type == 2){
+          pdfDoc.setTitle(`QUOTATION - ${invNo_m}`);
+
+        }else{
+          pdfDoc.setTitle(`INVOICE - ${invNo_m}`);
+        }
         pdfDoc.setAuthor(companyName_m);
         pdfDoc.setSubject(`Invoice ${invNo_m} dated ${invDate_m}`);
         pdfDoc.setKeywords(["invoice", invNo_m, customerName_m, companyName_m]);
