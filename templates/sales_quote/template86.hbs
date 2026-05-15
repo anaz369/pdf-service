@@ -213,9 +213,9 @@
         </tr>
         <tr>
             <td class="label">RFQ:</td>
-            <td></td>
+            <td>{{basicdetails.[0].rfq}}</td>
             <td class="label">REFERENCE NO</td>
-            <td></td>
+            <td>{{basicdetails.[0].reference_no}}</td>
         </tr>
     </table>
 
@@ -250,7 +250,7 @@
         {{#each itemdetails}}
             <tr>
             <td class="center">{{addOne @index}}</td>
-            <td class="center"></td>
+            <td class="center">{{remark}}</td>
             <td class="td-left">
                 {{item_name}}
                 {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
@@ -265,12 +265,12 @@
         <tr>
             <td></td>
             <td colspan="5" class="bold center">Total Discount in {{basicdetails.[0].base_country_isocode}}</td>
-            <td class="right">0.00</td>
+            <td class="right">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
         </tr>
         <tr>
             <td></td>
             <td colspan="5" class="bold center">Total amount in {{basicdetails.[0].base_country_isocode}}</td>
-            <td class="right">230.00</td>
+            <td class="right"> {{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
         </tr>
     </table>
 
