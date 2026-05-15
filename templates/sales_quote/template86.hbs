@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+<style>
+ 
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0 8mm;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        color: #222;
+        background: #fff;
+        line-height: 1.35;
+    }
+
+    .page {
+        width: 100%;
+        max-width: 210mm;
+        margin: 0 auto;
+        padding: 8mm;
+    }
+
+    /* Heading */
+    .title {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #35496d;
+        margin: 0 0 8px 0;
+        text-transform: uppercase;
+    }
+
+    /* Common Table Style */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    td, th {
+        border: 1px solid #333;
+        padding: 5px 6px;
+        vertical-align: top;
+    }
+
+    th {
+        font-weight: normal;
+        text-align: center;
+    }
+
+    .label {
+        font-weight: bold;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    {{!-- .info-table td {
+        height: 28px;
+    } --}}
+
+    /* Intro Text */
+    .intro {
+        margin: 6px 0 0 4px;
+        font-size: 12px;
+    }
+
+    .intro p {
+        margin: 1px 0;
+    }
+
+    /* Pricing Title */
+    .section-title {
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: underline;
+        margin: 8px 0 2px 4px;
+        font-size: 13px;
+    }
+
+    /* Pricing Table */
+    .pricing-table {
+        margin-top: 2px;
+    }
+
+    .pricing-table th,
+    .pricing-table td {
+        padding: 4px 6px;
+        font-size: 11px;
+    }
+
+    .pricing-table th {
+        white-space: nowrap;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .amount-words {
+        border-left: 1px solid #333;
+        border-right: 1px solid #333;
+        padding: 5px 6px;
+        font-size: 11px;
+    }
+
+    .bank-row {
+        border-left: 1px solid #333;
+        border-right: 1px solid #333;
+        border-bottom: 1px solid #333;
+        border-top: none;
+        padding: 2px 2px;
+        font-size: 11px;
+        display: flex;
+        flex-wrap: wrap;
+    
+    }
+
+    .bank-item {
+        display: flex;
+        align-items: center;
+        gap:1px;
+        min-width: 220px;
+    }
+
+    .bank-item .bank-label {
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    /* General Terms */
+    .terms-title {
+        margin: 8px 0 4px 4px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: underline;
+        font-size: 11px;
+    }
+
+    .terms-content {
+        margin: 0 0 8px 4px;
+        font-size: 11px;
+    }
+
+    /* Closing */
+    .closing {
+        margin: 10px 0 0 4px;
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    /* Signature */
+    .signature {
+        margin-left: 4px;
+        font-size: 13px;
+        line-height: 1.35;
+    }
+
+    .signature .best-regards {
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    
+</style>
+</head>
+<body>
+<div class="page">
+
+    <!-- Title -->
+    <h1 class="title">QUOTATION</h1>
+
+    <!-- Company Information -->
+    <table class="info-table">
+        <colgroup>
+            <col style="width:15%">
+            <col style="width:50%">
+            <col style="width:15%">
+            <col style="width:20%">
+        </colgroup>
+        <tr>
+            <td class="label">COMPANY NAME:</td>
+            <td>{{billing_address.[0].[name]}}</td>
+            <td class="label">DATE</td>
+            <td>{{basicdetails.[0].inv_date}}</td>
+        </tr>
+        <tr>
+            <td class="label">PHONE:</td>
+            <td>{{customer_details.[0].[contact_no1]}}</td>
+            <td class="label">QUOTATION NO</td>
+            <td>{{basicdetails.[0].inv_no}}</td>
+        </tr>
+        <tr>
+            <td class="label">ATTENTION:</td>
+            <td>{{basicdetails.[0].attention}}</td>
+            <td class="label">PR</td>
+            <td>{{basicdetails.[0].subj}}</td>
+        </tr>
+        <tr>
+            <td class="label">RFQ:</td>
+            <td></td>
+            <td class="label">REFERENCE NO</td>
+            <td></td>
+        </tr>
+    </table>
+
+    <!-- Intro -->
+    <div class="intro">
+        <p>Dear Sir,</p>
+        <p>We are pleased to submit our offer as the following details:-</p>
+    </div>
+
+    <!-- Pricing -->
+    <div class="section-title">PRICING:</div>
+
+    <table class="pricing-table">
+        <colgroup>
+            <col style="width:5%">
+            <col style="width:11%">
+            <col style="width:34%">
+            <col style="width:13%">
+            <col style="width:13%">
+            <col style="width:11%">
+            <col style="width:13%">
+        </colgroup>
+        <tr>
+            <th>Sr.No</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Discount</th>
+            <th>Total Price ({{basicdetails.[0].base_country_isocode}})</th>
+        </tr>
+        {{#each itemdetails}}
+            <tr>
+            <td class="center">{{addOne @index}}</td>
+            <td class="center"></td>
+            <td class="td-left">
+                {{item_name}}
+                {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+                {{#if description}}<div>{{description}}</div>{{/if}}
+            </td>
+            <td class="center">{{formatAmount quantity ../bcdp}}</td>
+            <td class="right">{{formatAmount price ../bcdp}}</td>
+            <td class="right">{{formatAmount disc_amt ../bcdp}}</td>
+            <td class="right">{{formatAmount amount ../bcdp}}</td>
+            </tr>
+        {{/each}}
+        <tr>
+            <td></td>
+            <td colspan="5" class="bold center">Total Discount in {{basicdetails.[0].base_country_isocode}}</td>
+            <td class="right">0.00</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="5" class="bold center">Total amount in {{basicdetails.[0].base_country_isocode}}</td>
+            <td class="right">230.00</td>
+        </tr>
+    </table>
+
+    <!-- Amount in Words -->
+    <div class="amount-words">
+        Amount in Words - {{bcamountinwords}}
+    </div>
+
+    <!-- Bank Details -->
+    <div class="bank-row">
+        <div class="bank-item">
+            <span class="bank-label">Bank Name</span>
+            <span>:</span>
+            <span>{{bankdetails.name}}</span>
+        </div>
+
+        <div class="bank-item">
+            <span class="bank-label">Bank Account</span>
+            <span>:</span>
+            <span>{{bankdetails.acc_no}}</span>
+        </div>
+
+        <div class="bank-item">
+            <span class="bank-label">IBAN No</span>
+            <span>:</span>
+            <span>{{bankdetails.iban_no}}</span>
+        </div>
+    </div>
+
+    <!-- General Terms -->
+    <div class="terms-title">GENERAL TERMS:</div>
+    <div class="terms-content">
+        fgh
+    </div>
+
+    <!-- Closing -->
+    <div class="closing">
+        We hope that you are satisfied with this quotation and we look forward to receive your valued order.Any further information or clarification, do not hesitate to contact us.<br>
+        Thanking you,
+    </div>
+
+    <!-- Stamp -->
+    <div class="stamp">{{#if Seal}}
+                <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>
+            {{/if}}</div>
+
+    <!-- Signature -->
+    <div class="signature">
+        <div class="best-regards">Best regards</div>
+        <div>Sidra</div>
+        <div>77749249</div>
+        <div>sakautomaticdoors@gmail.com</div>
+    </div>
+
+</div>
+</body>
+</html>
