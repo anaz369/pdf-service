@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0 8mm;
+        padding: 0;
+        background: #ffffff;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10px;
+        color: #222;
+        line-height: 1.35;
+    }
+
+    .page {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    td, th {
+        border: 1px solid #bfbfbf;
+        padding: 3px 2px;
+        vertical-align: top;
+        word-wrap: break-word;
+    }
+
+    .center { text-align: center; }
+    .right  { text-align: right; }
+    .bold   { font-weight: bold; }
+
+    /* Header */
+    .title {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: #0070ff;
+        margin-bottom: 10px;
+    }
+
+    /* Top Summary Table */
+    .summary-table td {
+        height: 38px;
+        vertical-align: middle;
+    }
+
+    .summary-label {
+        text-align: center;
+        font-size: 9px;
+        background: #e9ecef;
+    }
+
+
+    .summary-value {
+        text-align: center;
+        font-size: 10px;
+        white-space: nowrap;
+        background: #e9ecef;
+    }
+
+    .arabic {
+        direction: rtl;
+        text-align: center;
+        font-size: 10px;
+    }
+
+    /* Two Column Section */
+    .section-row {
+        width: 100%;
+        margin-top: 10px;
+        overflow: hidden;
+    }
+
+    .column {
+        width: 49%;
+        float: left;
+    }
+
+    .column.right-column {
+        float: right;
+    }
+
+    .section-header {
+        background: #e9ecef;
+        font-weight: bold;
+        height: 30px;
+        vertical-align: middle;
+    }
+
+    .section-header td {
+        vertical-align: middle;
+    }
+
+    .label-en {
+        width: 15%;
+        white-space: nowrap;
+    }
+
+    .value-cell {
+        width: 47%;
+    }
+
+    .label-ar {
+        width: 35%;
+        direction: rtl;
+        text-align: right;
+    }
+
+    /* Item Table */
+    .items-table {
+        margin-top: 10px;
+    }
+
+    .items-table th {
+        background: #e9ecef;
+        font-weight: normal;
+        text-align: center;
+        vertical-align: middle;
+        padding: 3px 2px;
+    }
+
+    .items-table .en {
+        display: block;
+        font-size: 9px;
+    }
+
+    .items-table .ar {
+        display: block;
+        direction: rtl;
+        font-size: 9px;
+        margin-top: 1px;
+    }
+
+    /* Bottom Section */
+    .bottom-section {
+        margin-top: 10px;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .terms-box {
+        width: 45%;
+        float: left;
+        border: 1px solid #b6b6b6;
+        min-height: 185px;
+    }
+
+    .terms-header {
+        font-weight: bold;
+        padding: 3px 2px;
+        border-bottom: 1px solid #b6b6b6;
+    }
+
+    .terms-content {
+        padding: 6px;
+        min-height: 155px;
+    }
+
+    .totals-box {
+        width: 53%;
+        float: right;
+    }
+
+    .totals-table td {
+        height: 26px;
+        vertical-align: middle;
+    }
+
+    .totals-label-en {
+        width: 40%;
+    }
+
+    .totals-label-ar {
+        width: 40%;
+        direction: rtl;
+        text-align: right;
+    }
+
+    .totals-value {
+        width: 20%;
+        text-align: right;
+        white-space: nowrap;
+        font-weight: bold;
+    }
+
+    .currency {
+        font-weight: bold;
+        margin-right: 3px;
+    }
+
+    .clearfix {
+        clear: both;
+    }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+    <!-- Title -->
+    <div class="title">SALES QUOTE / تسعير المبيعات</div>
+
+    <!-- Summary -->
+    <table class="summary-table">
+        <colgroup>
+            <col style="width:20%">
+            <col style="width:10%">
+            <col style="width:25%">
+            <col style="width:12%">
+            <col style="width:18%">
+            <col style="width:15%">
+        </colgroup>
+        <tr>
+            <td class="summary-label">
+                Sales Quote Number<br>
+                <div class="arabic">رقم عرض أسعار المبيعات</div>
+            </td>
+            <td class="summary-value">SQ0109789</td>
+
+            <td class="summary-label">
+                Sales Quote issue date<br>
+                <div class="arabic">تاريخ إصدار عرض أسعار المبيعات</div>
+            </td>
+            <td class="summary-value">05-May-2026</td>
+
+            <td class="summary-label">
+                Sales Quote due date<br>
+                <div class="arabic">تاريخ استحقاق قياس المبيعات</div>
+            </td>
+            <td class="summary-value">05-May-2026</td>
+        </tr>
+    </table>
+
+    <!-- Seller & Buyer -->
+    <div class="section-row">
+
+        <!-- Seller -->
+        <div class="column">
+            <table>
+                <tr class="section-header">
+                    <td style="width:18%;">Seller</td>
+                    <td style="width:47%;"></td>
+                    <td style="width:35%;" class="label-ar">المورد</td>
+                </tr>
+                <tr>
+                    <td class="label-en">Name</td>
+                    <td class="value-cell">HANNA COMPANY</td>
+                    <td class="label-ar">الاسم</td>
+                </tr>
+                <tr><td class="label-en">Building No.</td><td class="value-cell">4521</td><td class="label-ar">رقم المبنى</td></tr>
+                <tr><td class="label-en">Street Name</td><td class="value-cell">King Abdu Aziz Road</td><td class="label-ar">رمز بريدي</td></tr>
+                <tr><td class="label-en">District</td><td class="value-cell">Dammam</td><td class="label-ar">الحي</td></tr>
+                <tr><td class="label-en">City</td><td class="value-cell">Al Khobar</td><td class="label-ar">المدينة</td></tr>
+                <tr><td class="label-en">Country</td><td class="value-cell">Saudi Arabia</td><td class="label-ar">البلد</td></tr>
+                <tr><td class="label-en">Postal Code</td><td class="value-cell">9878</td><td class="label-ar">رمز بريدي</td></tr>
+                <tr><td class="label-en">VAT Number</td><td class="value-cell">30008687268326822</td><td class="label-ar">رقم تسجيل ضريبة القيمة</td></tr>
+            </table>
+        </div>
+
+        <!-- Buyer -->
+        <div class="column right-column">
+            <table>
+                <tr class="section-header">
+                    <td colspan="2">Buyer</td>
+                    <td class="label-ar">العميل</td>
+                </tr>
+                <tr><td class="label-en">Name</td><td class="value-cell">Akshaya</td><td class="label-ar">الاسم</td></tr>
+                <tr><td class="label-en">Building No.</td><td class="value-cell">Top Glove Tower</td><td class="label-ar">رقم المبنى</td></tr>
+                <tr><td class="label-en">Street Name</td><td class="value-cell">No. 1, Jalan USJ 25/1</td><td class="label-ar">رمز بريدي</td></tr>
+                <tr><td class="label-en">District</td><td class="value-cell">add 3</td><td class="label-ar">الحي</td></tr>
+                <tr><td class="label-en">City</td><td class="value-cell">Subang Jaya</td><td class="label-ar">المدينة</td></tr>
+                <tr><td class="label-en">Country</td><td class="value-cell">Saudi Arabia</td><td class="label-ar">البلد</td></tr>
+                <tr><td class="label-en">Postal Code</td><td class="value-cell">47650</td><td class="label-ar">رمز بريدي</td></tr>
+                <tr><td class="label-en">VAT Number</td><td class="value-cell">1234567</td><td class="label-ar">رقم تسجيل ضريبة القيمة</td></tr>
+            </table>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+
+    <!-- Items -->
+    <table class="items-table">
+        <colgroup>
+            <col style="width:3%">
+            <col style="width:31%">
+            <col style="width:9%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:15%">
+            <col style="width:11%">
+            <col style="width:11%">
+        </colgroup>
+        <tr>
+            <th><span class="en">#</span></th>
+            <th><span class="en">Description</span><span class="ar">وصف</span></th>
+            <th><span class="en">Quantity</span><span class="ar">كمية</span></th>
+            <th><span class="en">UOM</span><span class="ar">وحدة القياس</span></th>
+            <th><span class="en">Make/Origin</span><span class="ar">صنعه/أصل</span></th>
+            <th><span class="en">Delivery</span><span class="ar">توصيل</span></th>
+            <th><span class="en">Unit Price</span><span class="ar">سعر الوحدة</span></th>
+            <th><span class="en">Total Price</span><span class="ar">السعر الإجمالي</span></th>
+        </tr>
+        <tr>
+            <td class="center">1</td>
+            <td>PRODUCT JA</td>
+            <td class="center">1</td>
+            <td class="center">CMS</td>
+            <td class="center"></td>
+            <td class="center">DELIVERY</td>
+            <td class="right"><span class="currency">﷼</span> 200.00</td>
+            <td class="right"><span class="currency">﷼</span> 230.00</td>
+        </tr>
+    </table>
+
+    <!-- Bottom Section -->
+    <div class="bottom-section">
+
+        <!-- Terms -->
+        <div class="terms-box">
+            <div class="terms-header">
+                Terms And Conditions / والأحكام والشروط
+            </div>
+            <div class="terms-content">
+                fgh
+            </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="totals-box">
+            <table class="totals-table">
+                <tr>
+                    <td class="totals-label-en">Total (Excluding VAT)</td>
+                    <td class="totals-label-ar">الإجمالي (باستثناء ضريبة القيمة المضافة)</td>
+                    <td class="totals-value"><span class="currency">﷼</span> 200.00</td>
+                </tr>
+                <tr>
+                    <td class="totals-label-en">Discount</td>
+                    <td class="totals-label-ar">تخفيض</td>
+                    <td class="totals-value"><span class="currency">﷼</span> 0.00</td>
+                </tr>
+                <tr>
+                    <td class="totals-label-en">
+                        Total Taxable Amount<br>(Excluding VAT)
+                    </td>
+                    <td class="totals-label-ar">
+                        إجمالي المبلغ الخاضع للضريبة (باستثناء ضريبة القيمة المضافة)
+                    </td>
+                    <td class="totals-value"><span class="currency">﷼</span> 200.00</td>
+                </tr>
+                <tr>
+                    <td class="totals-label-en">Total VAT</td>
+                    <td class="totals-label-ar">مجموع ضريبة القيمة المضافة</td>
+                    <td class="totals-value"><span class="currency">﷼</span> 30.00</td>
+                </tr>
+                <tr>
+                    <td class="totals-label-en">Total Amount</td>
+                    <td class="totals-label-ar">في المبلغ إجمالا</td>
+                    <td class="totals-value"><span class="currency">﷼</span> 230.00</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+</body>
+</html>

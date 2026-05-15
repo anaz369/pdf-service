@@ -1,366 +1,575 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <title>Final Invoice - {{MyInvoisDocument.document.inv_no}}</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INVOICE- {{basicdetails.[0].inv_no}}</title>
+<style>
+  /* ─── RESET ─── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: Arial, sans-serif;
-      font-size: 11px;
-      color: #000;
-      background: #fff;
-    }
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 11.5px;
+    color: #1a1a1a;
+    {{!-- background: #d8d8d8; --}}
+    line-height: 1.4;
+  }
 
-    .page {
-      width: 750px;
-      margin: 0 auto;
-      padding: 15px 30px;
-    }
+  /* ─── PALETTE ─── */
+  :root {
+    --navy:        #1e2d3d;
+    --navy-mid:    #253547;
+    --teal-label:  #3a7ca5;
+    --border:      #d0d8e4;
+    --row-alt:     #f4f7fb;
+    --total-bg:    #1e2d3d;
+    --subtotal-bg: #eaf0f8;
+    --white:       #ffffff;
+    --text:        #1a1a1a;
+    --text-light:  #555;
+  }
 
-    /* ── Title ──────────────────────────────────── */
-    .invoice-title {
-      text-align: center;
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      text-decoration: underline;
-    }
+  /* ─── PAGE ─── */
+  .page {
+    background: var(--white);
+    margin: 0mm 10mm;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
 
-    /* ── Header layout ─────────────────────────── */
-    .header-wrap {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    .header-left {
-      flex: 0 0 55%;
-    }
-    .header-right {
-      flex: 0 0 42%;
-    }
 
-    /* ── Field rows ────────────────────────────── */
-    .field-row {
-      display: flex;
-      align-items: baseline;
-      margin-bottom: 2px;
-      font-size: 11px;
-      line-height: 1.6;
-    }
-    .field-lbl {
-      font-weight: bold;
-      min-width: 140px;
-      flex-shrink: 0;
-      font-size: 11px;
-    }
-    .field-val {
-      font-size: 11px;
-      color: #000;
-    }
+  /* ══════════════════════════════
+     HEADER BAR
+  ══════════════════════════════ */
+  .header-bar {
+    background: var(--navy);
+    padding: 0;
+    min-height: 70px;
+  }
 
-    /* ── Shipping row ──────────────────────────── */
-    .shipping-wrap {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      margin-top: 8px;
-    }
-    .shipping-wrap .ship-col {
-      flex: 1;
-    }
-    .shipping-wrap .field-lbl {
-      min-width: 120px;
-    }
+  /* Title block (right) */
+  .header-title-block {
+    padding: 12px 22px;
+  }
 
-    /* ── Items table ───────────────────────────── */
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-    }
-    .items-table th {
-      background: #fff;
-      font-size: 10px;
-      font-weight: bold;
-      padding: 4px 4px;
-      text-align: center;
-      border: 0.5px solid #000;
-    }
-    .items-table td {
-      padding: 3px 4px;
-      font-size: 10px;
-      border: 0.5px solid #000;
-      text-align: center;
-      vertical-align: middle;
-    }
-    .items-table td.td-desc { text-align: left; }
-    .items-table td.td-right { text-align: right; }
+  .header-title-block .title-en {
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 1px;
+    line-height: 1.1;
+    text-align: center;
+  }
 
-    /* ── Footer totals ─────────────────────────── */
-    .footer-wrap {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0;
-    }
-    .footer-left {
-      flex: 0 0 50%;
-    }
-    .footer-right {
-      flex: 0 0 45.2%;
-    }
+  .header-title-block .title-ar {
+    font-size: 15px;
+    font-weight: 700;
+    color: #a8c4e0;
+    direction: rtl;
+    line-height: 1.2;
+    text-align: center;
+  }
 
-    .totals-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 10px;
-    }
-    .totals-table td {
-      padding: 3px 5px;
-      border: 1px solid #000;
-      font-size: 10px;
-    }
-    .totals-table td.t-lbl {
-      font-weight: bold;
-      text-align: right;
-    }
-    .totals-table td.t-val {
-      text-align: right;
-    }
+  /* ══════════════════════════════
+     INFO SECTION  (Seller / Invoice / Buyer)
+  ══════════════════════════════ */
+  .info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
 
-    /* ── Bank + Signature ──────────────────────── */
-    .bank-sig-wrap {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-    }
-    .bank-col {
-      flex: 0 0 48%;
-      font-size: 10px;
-      line-height: 1.6;
-    }
-    .sig-col {
-      flex: 0 0 48%;
-      text-align: center;
-    }
-    .sig-line {
-      border-top: 1px solid #000;
-      margin-top: 40px;
-      padding-top: 4px;
-      font-weight: bold;
-      font-size: 11px;
-      text-align: center;
-    }
-  </style>
+  /* Top row: seller + invoice side by side */
+  .info-top-row {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Left column: seller */
+  .info-left {
+    flex: 1;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Right column: invoice details */
+  .info-right {
+    width: 240px;
+    flex-shrink: 0;
+  }
+
+  /* Bottom row: buyer full width */
+  .info-bottom {
+    width: 100%;
+  }
+
+  .info-block {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .info-block:last-child { border-bottom: none; }
+
+  .info-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 7px;
+  }
+
+  .info-block-header .label-en {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  .info-block-header .label-ar {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal-label);
+    direction: rtl;
+  }
+
+  .seller-name-en {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 1px;
+  }
+
+  .seller-name-ar {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--navy);
+    direction: rtl;
+    margin-bottom: 4px;
+  }
+
+  .info-line {
+    font-size: 11px;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  /* Buyer name */
+  .buyer-name-en {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+
+  /* Invoice details rows */
+  .inv-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 11.5px;
+    padding: 2.5px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .inv-detail-row:last-child { border-bottom: none; }
+
+  .inv-detail-row .key { color: var(--text-light); font-size: 11px; }
+  .inv-detail-row .val { font-weight: 700; color: var(--navy); }
+  .inv-detail-row.highlight .val { font-size: 13px; color: var(--navy); }
+
+  /* ══════════════════════════════
+     ITEMS TABLE
+  ══════════════════════════════ */
+  .items-section {
+    padding: 4px 4px 0;
+  }
+
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  .items-table thead tr {
+    border-bottom: 2px solid var(--navy);
+  }
+
+  .items-table th {
+    padding: 4px 4px;
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--navy);
+    background: var(--white);
+    white-space: nowrap;
+  }
+
+  .items-table th .ar {
+    display: block;
+    font-size: 10px;
+    color: var(--teal-label);
+    font-weight: 600;
+  }
+
+  .items-table th.right, .items-table td.right { text-align: right; }
+  .items-table th.center, .items-table td.center { text-align: center; }
+
+  .items-table tbody tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .items-table tbody tr:last-child { border-bottom: 2px solid var(--border); }
+
+  .items-table td {
+    padding: 4px 4px;
+    vertical-align: top;
+    color: var(--text);
+  }
+
+  .item-desc-en { font-weight: 600; font-size: 11px; color: var(--navy); }
+  .item-desc-ar { font-size: 10.5px; color: #555; }
+  .item-desc-sub { font-size: 10px; color: #777; }
+
+  /* ══════════════════════════════
+     TOTALS + QR SECTION
+  ══════════════════════════════ */
+  .totals-qr-section {
+    display: flex;
+    align-items: flex-start;
+    margin: 8px 16px 6px;
+    gap: 14px;
+  }
+
+  /* QR / E-Invoice block */
+  .qr-block {
+    width: 120px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .qr-box {
+    width: 110px;
+    height: 110px;
+    border: 1px solid #c8d0dc;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .qr-box img { width: 100%; height: 100%; display: block; object-fit: contain; }
+
+  .qr-badge {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.4;
+    letter-spacing: 0.4px;
+  }
+
+  .qr-scan-label {
+    font-size: 10px;
+    color: var(--text);
+    font-weight: 600;
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  /* Totals table block */
+  .totals-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .totals-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .totals-table td {
+    padding: 4px 8px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border);
+    font-size: 11.5px;
+  }
+
+  .totals-table tr:last-child td { border-bottom: none; }
+
+  .totals-table .t-label-en {
+    color: var(--navy);
+    font-weight: 600;
+    width: 60%;
+    font-size: 11.5px;
+  }
+  .totals-table .t-label-en .ar {
+    color: var(--teal-label);
+    direction: rtl;
+    font-weight: 500;
+    {{!-- margin-left: 4px; --}}
+  }
+  .totals-table .t-value {
+    font-weight: 700;
+    text-align: right;
+    width: 40%;
+    white-space: nowrap;
+    color: var(--navy);
+    font-size: 11.5px;
+    line-height: 1.3;
+  }
+  .totals-table .t-value .iso {
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  /* Grand total row */
+  .totals-table .row-grand td {
+    background: var(--navy);
+    color: #fff !important;
+    font-weight: 800;
+    font-size: 10px;
+    border-bottom: none;
+    padding: 6px 8px;
+  }
+  .totals-table .row-grand .t-label-en .ar { color: #a8c4e0 !important; }
+  .totals-table .row-grand .t-value .iso { color: #cfd9e6; }
+
+  .amount-words {
+    padding: 6px 12px;
+    font-size: 10.5px;
+    color: var(--text-light);
+    border-top: 1px solid var(--border);
+    background: var(--row-alt);
+    margin: 0 16px 6px;
+  }
+  .amount-words .aw-label { font-weight: 700; color: var(--navy); margin-right: 4px; }
+  .amount-words .aw-ar { direction: rtl; text-align: right; }
+
+  /* ══════════════════════════════
+     FOOTER NOTE
+  ══════════════════════════════ */
+  .footer-note {
+
+    align-items: center;
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--text-light);
+    font-style: italic;
+  }
+
+  .footer-note .scan-label { color: var(--text); font-weight: 600; font-style: normal; }
+</style>
 </head>
 <body>
+
 <div class="page">
 
-  {{!-- ══ TITLE ══ --}}
-  <div class="invoice-title">FINAL INVOICE</div>
-
-  {{!-- ══ HEADER: Invoice To (left) | Details (right) ══ --}}
-  <div class="header-wrap">
-
-    {{!-- LEFT — Invoice To (Buyer) --}}
-    <div class="header-left">
-      <div class="field-row">
-        <span class="field-lbl">INVOICE TO</span>
-      </div>
-      <div class="field-row">
-        <span class="field-val" style="font-weight: bold;">{{MyInvoisDocument.buyer.name}}</span>
-      </div>
-      {{#if MyInvoisDocument.buyer.address_formatted}}
-      <div class="field-row">
-        <span class="field-val">{{{nl2br MyInvoisDocument.buyer.address_formatted}}}</span>
-      </div>
-      {{/if}}
-      <div class="field-row">
-        <span class="field-lbl">ATTN :</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">PHONE NO</span>
-        <span class="field-val">; {{#if MyInvoisDocument.buyer.contact_no}}{{MyInvoisDocument.buyer.contact_no}}{{/if}}</span>
-      </div>
-    </div>
-
-    {{!-- RIGHT — Invoice Details --}}
-    <div class="header-right">
-      <div class="field-row">
-        <span class="field-lbl">PORT NAME</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">INVOICE NO</span>
-        <span class="field-val">{{MyInvoisDocument.document.inv_no}}</span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">INVOICE DATE</span>
-        <span class="field-val">{{formatDate MyInvoisDocument.myinvois.issuance_date}}</span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">PO NO</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">DUE DATE</span>
-        <span class="field-val">{{#if MyInvoisDocument.doc_details.due_date}}{{MyInvoisDocument.doc_details.due_date}}{{/if}}</span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">PAYMENT TERM</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">CURRENCY</span>
-        <span class="field-val">{{MyInvoisDocument.doc_details.currency_code}}</span>
-      </div>
+  {{!-- ══ HEADER BAR ══ --}}
+  <div class="header-bar">
+    {{!-- Title right --}}
+    <div class="header-title-block">
+      <div class="title-en">TAX INVOICE</div>
+      <div class="title-ar">فاتورة ضريبية</div>
     </div>
 
   </div>
+  {{!-- /HEADER BAR --}}
 
-  {{!-- ══ SHIPPING DETAILS ══ --}}
-  <div class="shipping-wrap">
-    <div class="ship-col">
-      <div class="field-row">
-        <span class="field-lbl">VESSEL NAME :</span>
-        <span class="field-val"></span>
+  {{!-- ══ INFO SECTION ══ --}}
+  <div class="info-section">
+
+    {{!-- Top row: Seller (left) + Invoice (right) --}}
+    <div class="info-top-row">
+
+      {{!-- Left: Seller Details --}}
+      <div class="info-left">
+        <div class="info-block">
+          <div class="info-block-header">
+            <span class="label-en">SELLER DETAILS</span>
+            <span class="label-ar">بيانات المورد</span>
+          </div>
+          <div class="seller-name-en">{{branch.[0].name}}</div>
+          {{#if branch_lang2.[0].name}}<div class="info-line">{{branch_lang2.[0].name}}</div>{{/if}}
+          {{#if branch.[0].cr_no}}<div class="info-line">CR No: {{branch.[0].cr_no}}</div>{{/if}}
+          {{#if branch.[0].vat}}<div class="info-line">VAT No: {{branch.[0].vat}}</div>{{/if}}
+          <div class="info-line">
+            {{#if branch.[0].address_line1}}{{branch.[0].address_line1}}{{/if}}{{#if branch.[0].address_line2}}, {{branch.[0].address_line2}}{{/if}}
+          </div>
+          <div class="info-line">
+            {{#if branch.[0].address_line3}}{{branch.[0].address_line3}}{{/if}}{{#if branch.[0].address_line4}}, {{branch.[0].address_line4}}{{/if}}{{#if branch.[0].address_line5}}, {{branch.[0].address_line5}}{{/if}}
+          </div>
+        </div>
+      </div>{{!-- /info-left --}}
+
+      {{!-- Right: Invoice Details --}}
+      <div class="info-right">
+        <div class="info-block" style="height:100%">
+          <div class="info-block-header">
+            <span class="label-en">INVOICE DETAILS</span>
+            <span class="label-ar">بيانات الفاتورة</span>
+          </div>
+
+          <div class="inv-detail-row highlight">
+            <span class="key">Invoice #</span>
+            <span class="val">{{basicdetails.[0].inv_no}}</span>
+          </div>
+          {{#if basicdetails.[0].inv_date}}
+          <div class="inv-detail-row">
+            <span class="key">Date</span>
+            <span class="val">{{basicdetails.[0].inv_date}}</span>
+          </div>
+          {{/if}}
+          {{#if basicdetails.[0].sup_date}}
+          <div class="inv-detail-row">
+            <span class="key">Supply Date</span>
+            <span class="val">{{basicdetails.[0].sup_date}}</span>
+          </div>
+          {{/if}}
+          {{#if basicdetails.[0].order_no}}
+          <div class="inv-detail-row">
+            <span class="key">PO Ref</span>
+            <span class="val">{{basicdetails.[0].order_no}}</span>
+          </div>
+          {{/if}}
+
+        </div>
+      </div>{{!-- /info-right --}}
+
+    </div>{{!-- /info-top-row --}}
+
+    {{!-- Bottom row: Buyer Details (full width) --}}
+    <div class="info-bottom">
+      <div class="info-block">
+        <div class="info-block-header">
+          <span class="label-en">BUYER DETAILS</span>
+          <span class="label-ar">بيانات العميل</span>
+        </div>
+        <div class="buyer-name-en">{{billing_address.[0].name}}</div>
+        {{#if billing_address.[0].vat}}<div class="info-line">VAT No: {{billing_address.[0].vat}}</div>{{/if}}
+        <div class="info-line">
+          {{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_line5}}, {{billing_address.[0].address_line5}}{{/if}}
+        </div>
       </div>
-      <div class="field-row">
-        <span class="field-lbl">VOY NO :</span>
-        <span class="field-val"></span>
-      </div>
-    </div>
-    <div class="ship-col">
-      <div class="field-row">
-        <span class="field-lbl">ARRIVED :</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">ACTIVITY :</span>
-        <span class="field-val"></span>
-      </div>
-    </div>
-    <div class="ship-col">
-      <div class="field-row">
-        <span class="field-lbl">SAILED</span>
-        <span class="field-val"></span>
-      </div>
-    </div>
+    </div>{{!-- /info-bottom --}}
+
   </div>
+  {{!-- /INFO SECTION --}}
 
   {{!-- ══ ITEMS TABLE ══ --}}
-  <table class="items-table">
-    <thead>
-      <tr>
-        <th style="width:5%;">NO</th>
-        <th style="width:50%;">DESCRIPTION</th>
-        <th style="width:12%;">TOTAL IN MYR</th>
-        <th style="width:10%;">SST</th>
-        <th style="width:10%;">DISCOUNT</th>
-        <th style="width:13%;">TOTAL IN USD</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each MyInvoisDocument.items}}
-      <tr>
-        <td>{{inc @index}}</td>
-        <td class="td-desc">
-            {{item_name}}
-            {{#if description}}<br><span style="direction:rtl; font-size:9px;">{{description}}</span>{{/if}}
-        </td>
-        <td class="td-right">{{formatCurrency taxable}}</td>
-        <td class="td-right">{{formatCurrency vat_amt}}</td>
-        <td class="td-right">{{formatCurrency disc_amt}}</td>
-        <td class="td-right">{{formatCurrency total_price}}</td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <div class="items-section">
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width:50%">
+            Item Description
+            <span class="ar">الوصف</span>
+          </th>
+          <th class="center" style="width:10%">
+            Qty
+            <span class="ar">الكمية</span>
+          </th>
+          <th class="right" style="width:12%">
+            Price
+            <span class="ar">السعر</span>
+          </th>
+          <th class="right" style="width:10%">
+            VAT
+            <span class="ar">الضريبة</span>
+          </th>
+          <th class="right" style="width:18%">
+            Total
+            <span class="ar">المجموع</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each itemdetails}}
+        <tr>
+          <td>
+            <div class="item-desc-en">{{item_name}}</div>
+            {{#if name_lang2}}<div class="item-desc-ar">{{name_lang2}}</div>{{/if}}
+            {{#if description}}
+                <div class="item-desc-sub">{{description}}</div>
+            {{/if}}
+          </td>
+          <td class="center">{{formatAmount quantity ../bcdp}}{{#if unit}} {{unit}}{{/if}}</td>
+          <td class="right">{{formatAmount price ../bcdp}}</td>
+          <td class="right">{{vat_perc}}%</td>
+          <td class="right">{{formatAmount amount ../bcdp}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{!-- /ITEMS TABLE --}}
 
-  {{!-- ══ FOOTER: Words + Totals ══ --}}
-  <div class="footer-wrap">
+  {{!-- ══ TOTALS + QR ══ --}}
+  <div class="totals-qr-section">
 
-    {{!-- LEFT — In Words --}}
-    <div class="footer-left">
-      <div style="font-weight: bold; font-size: 11px; margin-top: 4px;">IN WORDS:</div>
-      <div style="font-size: 10px; margin-top: 2px;">{{bcamountinwords}}</div>
+    {{!-- QR / ZATCA block --}}
+    <div class="qr-block">
+      <div class="qr-box">
+          {{{qrDataUri qrCodeBase64}}}
+      </div>
+      <div class="qr-scan-label"></div>
     </div>
 
-    {{!-- RIGHT — Totals --}}
-    <div class="footer-right">
+    {{!-- Totals --}}
+    <div class="totals-block">
       <table class="totals-table">
         <tr>
-          <td class="t-lbl" style="width: 6.7%;border-top:none;text-align:center;" rowspan="2">SUB TOTAL</td>
-          <td class="t-val" style="width: 23%;border-top:none;text-align:center;">{{default MyInvoisDocument.doc_details.currency_code}}</td>
-          <td class="t-val" style="width: 14.8%;border-top:none;text-align:center;">USD</td>
+          <td class="t-label-en" style="width: 60%;">Total (Excl. VAT) / <span class="ar">المجموع غير شامل الضريبة</span></td>
+          <td class="t-value" style="width: 40%;">{{formatAmount basicdetails.[0].subtotal bcdp}} <span class="iso">{{basicdetails.[0].currency_isocode}}</span></td>
         </tr>
+
+        {{#if basicdetails.[0].discount}}
         <tr>
-          <td class="t-val" style="width: 23%;border-top:none;">{{formatCurrency MyInvoisDocument.document.total}}</td>
-          <td class="t-val" style="width: 14.8%;border-top:none;">{{formatCurrency (divide MyInvoisDocument.document.total MyInvoisDocument.doc_details.exchange_rate)}}</td>
+          <td class="t-label-en">Discount / <span class="ar">الخصم</span></td>
+          <td class="t-value">{{formatAmount basicdetails.[0].discount bcdp}} <span class="iso">{{basicdetails.[0].currency_isocode}}</span></td>
         </tr>
+        {{/if}}
+
         <tr>
-          <td class="t-lbl" style="text-align:center;">SST</td>
-          <td class="t-val">{{formatCurrency MyInvoisDocument.document.vat}}</td>
-          <td class="t-val">{{#if MyInvoisDocument.doc_details.exchange_rate}}{{formatCurrency (divide MyInvoisDocument.document.vat MyInvoisDocument.doc_details.exchange_rate)}}{{/if}}</td>
+          <td class="t-label-en">{{#if datasettingstextvalue.d828}}{{datasettingstextvalue.d828}}{{else}}Total VAT{{/if}} / <span class="ar">مجموع ضريبة القيمة المضافة</span></td>
+          <td class="t-value">{{formatAmount basicdetails.[0].vatamt bcdp}} <span class="iso">{{basicdetails.[0].currency_isocode}}</span></td>
         </tr>
-        <tr>
-          <td class="t-lbl" style="text-align:center;">DISCOUNT</td>
-          <td class="t-val">{{#if MyInvoisDocument.document.dld}}{{formatCurrency MyInvoisDocument.document.dld}}{{/if}}</td>
-          <td class="t-val">{{#if MyInvoisDocument.doc_details.exchange_rate}}{{#if MyInvoisDocument.document.dld}}{{formatCurrency (divide MyInvoisDocument.document.dld MyInvoisDocument.doc_details.exchange_rate)}}{{/if}}{{/if}}</td>
-        </tr>
-        <tr>
-          <td class="t-lbl" style="text-align:center;">ADVANCE</td>
-          <td class="t-val">{{#if basicdetails.[0].aa}}{{formatAmount basicdetails.[0].aa bcdp}}{{/if}}</td>
-          <td class="t-val"></td>
-        </tr>
-        <tr>
-          <td class="t-lbl" style="font-weight: bold;text-align:center;">TOTAL AMOUNT</td>
-          <td class="t-val" style="font-weight: bold;">{{formatCurrency MyInvoisDocument.document.grand_total}}</td>
-          <td class="t-val" style="font-weight: bold;">{{formatCurrency (divide MyInvoisDocument.document.grand_total MyInvoisDocument.doc_details.exchange_rate)}}</td>
+
+        <tr class="row-grand">
+          <td class="t-label-en">Total Amount Due / <span class="ar">إجمالي المبلغ المستحق</span></td>
+          <td class="t-value">{{formatAmount basicdetails.[0].grand_total bcdp}} <span class="iso">{{basicdetails.[0].currency_isocode}}</span></td>
         </tr>
       </table>
     </div>
 
   </div>
+  {{!-- /TOTALS + QR --}}
 
-  {{!-- ══ BANK DETAILS + SIGNATURE ══ --}}
-  <div class="bank-sig-wrap">
+  {{#if bcamountinwords}}
+  <div class="amount-words">
+    <span class="aw-label">Amount in words:</span>
+    <span>{{bcamountinwords}}</span>
+    {{#if bcamountinwordsar}}
+      <div class="aw-ar">{{bcamountinwordsar}}</div>
+    {{/if}}
+  </div>
+  {{/if}}
 
-    {{!-- LEFT — Bank Details --}}
-    <div class="bank-col">
-      <div style="font-weight: bold; margin-bottom: 4px;">BANK ACCOUNT DETAILS</div>
-      {{#if bankdetails.acc_name}}<div>{{bankdetails.acc_name}}</div>{{/if}}
-      {{#if bankdetails.acc_no}}<div>{{bankdetails.acc_no}}</div>{{/if}}
-      {{#if bankdetails.iban_no}}<div>{{bankdetails.iban_no}}</div>{{/if}}
-      {{#if bankdetails.swift_no}}<div>{{bankdetails.swift_no}}</div>{{/if}}
-
-      {{#if bankdetails.name}}<div style="margin-top: 8px;">{{bankdetails.name}}</div>{{/if}}
-      {{#if bankdetails.branch_name}}<div>{{bankdetails.branch_name}}</div>{{/if}}
-    </div>
-
-    {{!-- RIGHT — For Company + Signature --}}
-    <div class="sig-col">
-      <div style="font-weight: bold; font-size: 11px; margin-top: 10px;">FOR {{MyInvoisDocument.supplier.name}}</div>
-
-      {{#if Seal}}
-      <div style="margin-top: 8px;">
-        <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '50'}}px; max-width:{{default datasettings.d458 '80'}}px;" onerror="this.style.display='none'"/>
-      </div>
-      {{/if}}
-
-      {{#if Signature}}
-      <div style="margin-top: 5px;">
-        <img src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d459 '50'}}px; max-width:{{default datasettings.d459 '80'}}px;" onerror="this.style.display='none'"/>
-      </div>
-      {{/if}}
-
-      <div class="sig-line">AUTHORISED SIGNATURE</div>
-    </div>
-
+  {{!-- ══ FOOTER NOTE ══ --}}
+  <div class="footer-note">
+    <span style="width: 100%;text-align:center;">Electronic Invoice - Valid without Signature and Stamp</span>
   </div>
 
-</div>
+</div>{{!-- /page --}}
+
 </body>
 </html>
