@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{report_title}}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    {{#if WatermarkCss}}
+    {{{WatermarkCss}}}
+    {{/if}}
+
+    .report-wrapper { padding: 20px 28px; }
+
+    /* ── Company Header ─────────────────────────────── */
+    .rpt-top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #1a1a2e;
+      padding-bottom: 12px;
+      margin-bottom: 0;
+    }
+    .rpt-top-header .logo-box img {
+      max-height: 55px;
+      max-width: 150px;
+      object-fit: contain;
+    }
+    .rpt-top-header .company-box {
+      text-align: right;
+    }
+    .rpt-top-header .company-box h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 2px;
+      color: #1a1a2e;
+    }
+    .rpt-top-header .company-box p {
+      margin: 0;
+      font-size: 10px;
+      color: #666;
+    }
+
+    /* ── Info bar ───────────────────────────────────── */
+    .info-bar {
+      background: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+      padding: 10px 0;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 40px;
+    }
+    .info-bar .info-item .label {
+      font-size: 9px;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .info-bar .info-item .value {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    /* ── Section title ──────────────────────────────── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1a1a2e;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      margin: 0 0 8px;
+    }
+
+    /* ── VAT Table ──────────────────────────────────── */
+    .vat-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 22px;
+    }
+    .vat-table thead tr {
+      background: #f0f2f5;
+    }
+    .vat-table thead th {
+      font-size: 9px;
+      font-weight: 600;
+      color: #6c757d;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 7px 10px;
+      border-top: 1px solid #dee2e6;
+      border-bottom: 1px solid #dee2e6;
+      white-space: nowrap;
+    }
+    .vat-table thead th.text-end { text-align: right; }
+
+    .vat-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+    .vat-table tbody td { padding: 9px 10px; vertical-align: top; font-size: 11px; }
+
+    .box-num   { width: 52px; text-align: right; color: #6c757d; font-size: 11px; font-weight: 600; padding-top: 11px !important; }
+    .box-title { color: #0d6efd; font-size: 12px; font-weight: 500; margin-bottom: 3px; }
+    .box-desc  { color: #6c757d; font-size: 9px; line-height: 1.5; }
+    .num-col   { width: 120px; text-align: right; white-space: nowrap; padding-top: 11px !important; }
+
+    .total-row { background: #f8f9fa !important; }
+    .total-row td { font-weight: 600; }
+    .total-row .box-title { color: #1a1a2e; }
+
+    /* ── Net VAT table ──────────────────────────────── */
+    .net-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+    .net-table thead tr { background: #f0f2f5; }
+    .net-table thead th {
+      font-size: 9px;
+      font-weight: 600;
+      color: #6c757d;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 7px 10px;
+      border-top: 1px solid #dee2e6;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .net-table thead th.text-end { text-align: right; }
+    .net-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+    .net-table tbody td { padding: 9px 10px; vertical-align: top; font-size: 11px; }
+
+    /* ── Footer ─────────────────────────────────────── */
+    .report-footer {
+      margin-top: 20px;
+      font-size: 9px;
+      color: #aaa;
+      text-align: right;
+      border-top: 1px solid #ddd;
+      padding-top: 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="report-wrapper">
+
+  {{!-- ── Top Header ── --}}
+  <div class="rpt-top-header">
+    <div class="logo-box">
+      {{#if Companylogo}}
+        <img src="{{Companylogo}}" alt="Logo" />
+      {{else}}
+        <span style="font-size:16px;font-weight:700;color:#1a1a2e;">{{company_name}}</span>
+      {{/if}}
+    </div>
+    <div class="company-box">
+      {{#if Companylogo}}
+        <h3>{{company_name}}</h3>
+      {{/if}}
+      <p style="font-size:13px;font-weight:600;color:#0d6efd;margin-bottom:2px;">{{report_title}}</p>
+      <p>{{date_from}} — {{date_to}}</p>
+    </div>
+  </div>
+
+  {{!-- ── Info Bar ── --}}
+  <div class="info-bar">
+    <div class="info-item">
+      <div class="label">Tax Period</div>
+      <div class="value">{{date_from}} to {{date_to}}</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Payment Due On</div>
+      <div class="value">{{payment_due}}</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Tax Basis</div>
+      <div class="value">Accrual</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Generated</div>
+      <div class="value">{{generated_at}}</div>
+    </div>
+  </div>
+
+  {{!-- ════════ VAT ON SALES ════════ --}}
+  <p class="section-title">VAT on Sales</p>
+  <table class="vat-table">
+    <thead>
+      <tr>
+        <th class="text-end" style="width:52px;">BOX#</th>
+        <th>DESCRIPTION</th>
+        <th class="text-end" style="width:120px;">AMOUNT (SAR)</th>
+        <th class="text-end" style="width:120px;">ADJUSTMENTS (SAR)</th>
+        <th class="text-end" style="width:120px;">VAT AMOUNT (SAR)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {{!-- Box 1 --}}
+      <tr>
+        <td class="box-num">1</td>
+        <td>
+          <div class="box-title">Standard rated domestic sales (15%)</div>
+          <div class="box-desc">Total value of 15% standard rated goods and services (exclusive of VAT) sold in the KSA in the current reporting period, and the VAT collected on their sale or adjustments to similar sales made in the previous reporting periods.</div>
+        </td>
+        <td class="num-col">{{formatAmount box1_amount}}</td>
+        <td class="num-col">{{formatAmount box1_adj}}</td>
+        <td class="num-col">{{formatAmount box1_vat}}</td>
+      </tr>
+
+      {{!-- Box 2 --}}
+      <tr>
+        <td class="box-num">2</td>
+        <td>
+          <div class="box-title">Private Healthcare / Private Education / First house sales to citizens</div>
+          <div class="box-desc">Total value of all private healthcare or education services sold to citizens in the KSA, or adjustments to similar sales made in the previous reporting periods.</div>
+        </td>
+        <td class="num-col">0.00</td>
+        <td class="num-col">0.00</td>
+        <td class="num-col"></td>
+      </tr>
+
+      {{!-- Box 3 --}}
+      <tr>
+        <td class="box-num">3</td>
+        <td>
+          <div class="box-title">Zero rated domestic sales</div>
+          <div class="box-desc">Total value of all zero-rated goods and services sold within the KSA, or adjustments to similar sales made in the previous reporting periods.</div>
+        </td>
+        <td class="num-col">{{formatAmount box3_amount}}</td>
+        <td class="num-col">{{formatAmount box3_adj}}</td>
+        <td class="num-col"></td>
+      </tr>
+
+      {{!-- Box 4 --}}
+      <tr>
+        <td class="box-num">4</td>
+        <td>
+          <div class="box-title">Exports</div>
+          <div class="box-desc">Total value of all goods and services exported from the KSA, or adjustments to similar sales made in the previous reporting periods.</div>
+        </td>
+        <td class="num-col">{{formatAmount box4_amount}}</td>
+        <td class="num-col">{{formatAmount box4_adj}}</td>
+        <td class="num-col"></td>
+      </tr>
+
+      {{!-- Box 5 --}}
+      <tr>
+        <td class="box-num">5</td>
+        <td>
+          <div class="box-title">Exempt sales</div>
+          <div class="box-desc">Total amount of all exempted goods and services sold in the KSA, or adjustments to similar sales made in the previous reporting periods.</div>
+        </td>
+        <td class="num-col">{{formatAmount box5_amount}}</td>
+        <td class="num-col">{{formatAmount box5_adj}}</td>
+        <td class="num-col"></td>
+      </tr>
+
+      {{!-- Optional: Other Incomes (type=1 or type=2) --}}
+      {{#if include_income}}
+      <tr>
+        <td class="box-num" style="color:#555;"></td>
+        <td><div class="box-title">Other Incomes</div></td>
+        <td class="num-col">{{formatAmount income_taxable}}</td>
+        <td class="num-col">0.00</td>
+        <td class="num-col">{{formatAmount income_vat}}</td>
+      </tr>
+      {{/if}}
+
+      {{!-- Optional: Other VAT Output (type=2) --}}
+      {{#if include_type2}}
+      <tr>
+        <td class="box-num" style="color:#555;"></td>
+        <td><div class="box-title">Other VAT Output</div></td>
+        <td class="num-col">—</td>
+        <td class="num-col">0.00</td>
+        <td class="num-col">{{formatAmount credit_amt}}</td>
+      </tr>
+      {{/if}}
+
+      {{!-- Box 6: Total Sales --}}
+      <tr class="total-row">
+        <td class="box-num">6</td>
+        <td>
+          <div class="box-title">Total Sales</div>
+          <div class="box-desc">Aggregate amount of goods and services (exclusive of VAT) supplied, and the VAT collected on their sale or adjustments to similar sales made in the previous reporting periods.</div>
+        </td>
+        <td class="num-col">{{formatAmount box6_amount}}</td>
+        <td class="num-col">{{formatAmount box6_adj}}</td>
+        <td class="num-col">{{formatAmount box6_vat}}</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  {{!-- ════════ VAT ON PURCHASES ════════ --}}
+  <p class="section-title">VAT on Purchases</p>
+  <table class="vat-table">
+    <thead>
+      <tr>
+        <th class="text-end" style="width:52px;">BOX#</th>
+        <th>DESCRIPTION</th>
+        <th class="text-end" style="width:120px;">AMOUNT (SAR)</th>
+        <th class="text-end" style="width:120px;">ADJUSTMENTS (SAR)</th>
+        <th class="text-end" style="width:120px;">VAT AMOUNT (SAR)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {{!-- Box 7 --}}
+      <tr>
+        <td class="box-num">7</td>
+        <td>
+          <div class="box-title">Standard rated domestic purchases (15%)</div>
+          <div class="box-desc">Total amount of 15% standard rated goods and services purchased (exclusive of VAT) in the KSA, and the VAT collected on their purchase or adjustments to similar purchases made in the previous reporting periods.</div>
+        </td>
+        <td class="num-col">{{formatAmount box7_amount}}</td>
+        <td class="num-col">{{formatAmount box7_adj}}</td>
+        <td class="num-col">{{formatAmount box7_vat}}</td>
+      </tr>
+
+      {{!-- Box 8 --}}
+      <tr>
+        <td class="box-num">8</td>
+        <td>
+          <div class="box-title">Imports subject to VAT paid at customs (15%)</div>
+          <div class="box-desc">Total amount of goods subjected to 15% VAT (exclusive of VAT) paid at customs that were purchased and imported, and VAT collected on their purchase or adjustments to similar purchases made in the previous reporting periods.</div>
+        </td>
+        <td class="num-col">{{formatAmount box8_amount}}</td>
+        <td class="num-col">{{formatAmount box8_adj}}</td>
+        <td class="num-col">{{formatAmount box8_vat}}</td>
+      </tr>
+
+      {{!-- Box 9 --}}
+      <tr>
+        <td class="box-num">9</td>
+        <td>
+          <div class="box-title">Imports subject to VAT accounted for through reverse charge mechanism (15%)</div>
+          <div class="box-desc">Total amount of services (exclusive of VAT) that were purchased and imported and have been subject to the reverse charge mechanism applied.</div>
+        </td>
+        <td class="num-col">{{formatAmount box9_amount}}</td>
+        <td class="num-col">{{formatAmount box9_adj}}</td>
+        <td class="num-col">{{formatAmount box9_vat}}</td>
+      </tr>
+
+      {{!-- Box 10 --}}
+      <tr>
+        <td class="box-num">10</td>
+        <td>
+          <div class="box-title">Zero rated domestic purchases</div>
+          <div class="box-desc">Total value of all zero-rated goods and services purchased within the KSA.</div>
+        </td>
+        <td class="num-col">{{formatAmount box10_amount}}</td>
+        <td class="num-col">{{formatAmount box10_adj}}</td>
+        <td class="num-col"></td>
+      </tr>
+
+      {{!-- Box 11 --}}
+      <tr>
+        <td class="box-num">11</td>
+        <td>
+          <div class="box-title">Exempt purchases</div>
+          <div class="box-desc">Total value of all goods and services that are exempted from VAT and purchased in the KSA, or adjustments to similar purchases made in the previous reporting periods.</div>
+        </td>
+        <td class="num-col">{{formatAmount box11_amount}}</td>
+        <td class="num-col">{{formatAmount box11_adj}}</td>
+        <td class="num-col"></td>
+      </tr>
+
+      {{!-- Optional: Other Expenses (type=1) --}}
+      {{#if include_income}}
+      <tr>
+        <td class="box-num" style="color:#555;"></td>
+        <td><div class="box-title" style="color:#1a1a2e;">Other Expenses</div></td>
+        <td class="num-col">{{formatAmount expense_taxable}}</td>
+        <td class="num-col">0.00</td>
+        <td class="num-col">{{formatAmount expense_vat}}</td>
+      </tr>
+      {{/if}}
+
+      {{!-- Optional: Other Expenses JE (type=2) --}}
+      {{#if include_type2}}
+      <tr>
+        <td class="box-num" style="color:#555;"></td>
+        <td><div class="box-title" style="color:#1a1a2e;">Other Expenses (Journal Entry – Other than Expense Entry)</div></td>
+        <td class="num-col">{{formatAmount otherthan_taxable}}</td>
+        <td class="num-col">0.00</td>
+        <td class="num-col">{{formatAmount otherthan_vat}}</td>
+      </tr>
+      {{/if}}
+
+      {{!-- Box 12: Total Purchases --}}
+      <tr class="total-row">
+        <td class="box-num">12</td>
+        <td>
+          <div class="box-title">Total purchases</div>
+          <div class="box-desc">Aggregated amount of all goods and services (exclusive of VAT) purchased.</div>
+        </td>
+        <td class="num-col">{{formatAmount box12_amount}}</td>
+        <td class="num-col">{{formatAmount box12_adj}}</td>
+        <td class="num-col">{{formatAmount box12_vat}}</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  {{!-- ════════ NET VAT DUE ════════ --}}
+  <p class="section-title">Net VAT Due</p>
+  <table class="net-table">
+    <thead>
+      <tr>
+        <th class="text-end" style="width:52px;">BOX#</th>
+        <th>DESCRIPTION</th>
+        <th class="text-end" style="width:120px;">VAT AMOUNT (SAR)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="box-num">13</td>
+        <td>
+          <div style="font-size:12px;">Total VAT due for current period</div>
+          <div class="box-desc">Net VAT calculated from the total VAT collected on sales and recoverable VAT paid on purchases.</div>
+        </td>
+        <td class="num-col">{{formatAmount box13_vat}}</td>
+      </tr>
+
+      <tr>
+        <td class="box-num">14</td>
+        <td>
+          <div style="font-size:12px;">Corrections from previous period (between SAR -15,000 and SAR 15,000)</div>
+          <div class="box-desc">If corrections to the previous return has a VAT liability adjustment less than SAR 5,000 or greater than SAR -5,000, specify the VAT adjustment in this field.</div>
+        </td>
+        <td class="num-col">0.00</td>
+      </tr>
+
+      <tr>
+        <td class="box-num">15</td>
+        <td>
+          <div style="font-size:12px;">VAT credit carried forward from previous period(s)</div>
+          <div class="box-desc">Total amount of credit in your VAT account from the previous return that has not been used to offset any subsequent liabilities or has not been refunded.</div>
+        </td>
+        <td class="num-col">0.00</td>
+      </tr>
+
+      <tr class="total-row">
+        <td class="box-num">16</td>
+        <td>
+          <div class="box-title" style="color:#1a1a2e;">Net VAT due (or claim)</div>
+          <div class="box-desc">Total amount of VAT liability or credit for the current return.</div>
+        </td>
+        <td class="num-col">{{formatAmount box16_vat}}</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  {{!-- ── Footer ── --}}
+  <div class="report-footer">
+    Printed on {{generated_at}} &nbsp;|&nbsp; Ethicfin - Smart Accounting Solutions
+  </div>
+
+</div>
+</body>
+</html>
