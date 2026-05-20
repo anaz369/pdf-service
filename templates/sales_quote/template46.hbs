@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.4;
+    margin: 0 6mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Title bar ─────────────────────────────── */
+  .title-bar {
+    width: 100%;
+    border: 1px solid #1a3a6c;
+    padding: 6px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a3a6c;
+    margin-bottom: 5px;
+  }
+
+  /* ── Header Info Table ─────────────────────── */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #1a3a6c;
+    border-top: none;
+  }
+  .info-table td {
+    border: 1px solid #1a3a6c;
+    padding: 6px 6px;
+    vertical-align: middle;
+    font-size: 11px;
+  }
+  .info-table .lbl {
+    background: #eaeaea;
+    color: #1a3a6c;
+    font-weight: bold;
+    width: 14%;
+  }
+  .info-table .val {
+    width: 36%;
+  }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #1a3a6c;
+    margin-top: 14px;
+  }
+  .items-table th, .items-table td {
+    border: 1px solid #1a3a6c;
+    padding: 4px 4px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .items-table th {
+    text-align: center;
+    font-weight: bold;
+    color: #000;
+    background: #ffffff;
+    padding: 4px 4px;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Totals rows ───────────────────────────── */
+  .tot-row td {
+    border: 1px solid #1a3a6c;
+    padding: 4px 4px;
+    font-size: 11px;
+    font-weight: bold;
+  }
+  .tot-row .t-lbl {
+    text-align: right;
+    color: #1a3a6c;
+  }
+  .tot-row .t-val {
+    text-align: right;
+    color: #000;
+  }
+  .tot-row .blank {
+    border-left: none;
+    border-bottom: none;
+    border-top: none;
+  }
+
+  /* ── Terms / Footer ────────────────────────── */
+  .terms-body {
+    margin-top: 14px;
+    font-size: 11px;
+    white-space: pre-wrap;
+  }
+  .thanks {
+    margin-top: 22px;
+    color: #888;
+    font-size: 14px;
+  }
+  .signer {
+    margin-top: 10px;
+    font-size: 11px;
+  }
+  .mobile {
+    margin-top: 10px;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="title-bar">QUOTATION</div>
+
+  <!-- Header Info Table -->
+  <table class="info-table">
+    <tr>
+      <td class="lbl">ATTENTION</td>
+      <td class="val">{{basicdetails.[0].attention}}</td>
+      <td class="lbl">QTN</td>
+      <td class="val">{{basicdetails.[0].inv_no}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">COMPANY</td>
+      <td class="val">{{billing_address.[0].name}}</td>
+      <td class="lbl">REV</td>
+      <td class="val">{{basicdetails.[0].revision}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">RFQ NO</td>
+      <td class="val">{{basicdetails.[0].rfq}}</td>
+      <td class="lbl">DATE</td>
+      <td class="val">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">SUBJECT</td>
+      <td colspan="3">{{basicdetails.[0].subj}}</td>
+    </tr>
+  </table>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:5%">
+      <col style="width:11%">
+      <col style="width:25%">
+      <col style="width:10%">
+      <col style="width:7%">
+      <col style="width:8%">
+      <col style="width:16%">
+      <col style="width:18%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Sl</th>
+        <th>Part No</th>
+        <th>Description</th>
+        <th>Lead Time</th>
+        <th>QTY</th>
+        <th>UoM</th>
+        <th>Unit Price</th>
+        <th>Amount({{basicdetails.[0].base_country_isocode}})</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">{{item_code}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div style="direction:rtl;">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div style="">{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{lead_time}}</td>
+        <td class="center">{{formatAmount quantity ../bcdp}}</td>
+        <td class="center">{{unit}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr class="tot-row">
+        <td colspan="7" class="t-lbl">SubTotal</td>
+        <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-row">
+        <td colspan="7" class="t-lbl">Discount</td>
+        <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-row">
+        <td colspan="7" class="t-lbl">Vat 10%</td>
+        <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-row">
+        <td colspan="7" class="t-lbl">Total Amount with Vat</td>
+        <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Terms -->
+  {{#if basicdetails.[0].terms_and_condition}}
+  <div class="terms-body">{{nl2br basicdetails.[0].terms_and_condition}}</div>
+  {{/if}}
+
+  <!-- Closing -->
+  <div class="thanks">Thanks &amp; Regads</div>
+  <div class="signer">{{basicdetails.[0].employeename}}</div>
+  <div class="mobile">Mobile : {{basicdetails.[0].employeecontactno}}</div>
+
+</div>
+
+</body>
+</html>

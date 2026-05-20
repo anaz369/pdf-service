@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.4;
+    margin: 0 6mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 4px 0 14px;
+  }
+
+  /* ── Header Info Table ─────────────────────── */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #bfbfbf;
+  }
+  .info-table td {
+    border: 1px solid #bfbfbf;
+    padding: 4px 4px;
+    vertical-align: top;
+    font-size: 11px;
+  }
+  .info-table .lbl {
+    background: #f2f2f2;
+    font-weight: bold;
+    width: 12%;
+  }
+  .info-table .val { width: 38%; }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+    margin-top: 16px;
+  }
+  .items-table th, .items-table td {
+    border: 1px solid #000;
+    padding: 5px 4px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .items-table th {
+    text-align: center;
+    font-weight: bold;
+    background: #ffffff;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Totals (right-aligned mini table) ──────── */
+  .totals-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 6px;
+  }
+  .totals-table td {
+    padding: 5px 5px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .totals-table .t-lbl {
+    border: 1px solid #000;
+    font-weight: bold;
+    text-align: left;
+  }
+  .totals-table .t-val {
+    border: 1px solid #000;
+    font-weight: bold;
+    text-align: right;
+  }
+  .totals-table .t-blank { border: none; }
+  .totals-table .t-foot {
+    border: 1px solid #000;
+    border-top: none;
+    font-weight: bold;
+    text-align: right;
+  }
+
+  /* ── Terms ─────────────────────────────────── */
+  .terms-wrap { margin-top: 18px; }
+  .terms-title {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 4px;
+  }
+  .terms-body { white-space: pre-wrap; }
+
+  /* ── Bank section ──────────────────────────── */
+  .bank-wrap { margin-top: 18px; }
+  .bank-title {
+    text-decoration: underline;
+    margin-bottom: 4px;
+  }
+  .bank-row {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .bank-row .k {
+    display: inline-block;
+    width: 130px;
+  }
+
+  /* ── Footer admin ──────────────────────────── */
+  .signer {
+    margin-top: 18px;
+    font-weight: bold;
+    font-size: 11px;
+  }
+ 
+  .mob {
+    margin-top: 5px;
+    font-size: 11px;
+  }
+  .pageNumber::before {
+  content: counter(page);
+}
+
+.totalPages::before {
+  content: counter(pages);
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">QUOTATION</div>
+
+  <!-- Header Info Table -->
+  <table class="info-table">
+    <tr>
+      <td class="lbl">Company</td>
+      <td class="val">{{billing_address.[0].name}}</td>
+      <td class="lbl">Date</td>
+      <td class="val">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Address</td>
+      <td class="val">
+        {{billing_address.[0].address_line1}}{{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}
+        {{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}{{/if}}{{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_code}}{{billing_address.[0].address_code}}{{/if}}
+      </td>
+      <td class="lbl">Mob No.</td>
+      <td class="val">{{customer_details.[0].contact_no1}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Attention</td>
+      <td class="val">{{basicdetails.[0].attention}}</td>
+      <td class="lbl">Tel No.</td>
+      <td class="val">{{customer_details.[0].contactno}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Your Ref</td>
+      <td class="val">{{basicdetails.[0].reference_no}}</td>
+      <td class="lbl">Our Ref</td>
+      <td class="val">{{basicdetails.[0].inv_no}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Subject</td>
+      <td class="val">{{basicdetails.[0].subj}}</td>
+      <td class="lbl">Pages</td>
+      <td class="val"><span class="pageNumber"></span>/<span class="totalPages"></span></td>
+    </tr>
+  </table>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:7%">
+      <col style="width:38%">
+      <col style="width:10%">
+      <col style="width:10%">
+      <col style="width:17%">
+      <col style="width:18%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>UOM</th>
+        <th>QTY</th>
+        <th>Unit Rate</th>
+        <th>Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div style="direction:rtl;">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div style="direction:rtl;">{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{unit}}</td>
+        <td class="center">{{formatAmount quantity ../bcdp}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Totals (right side) -->
+  <table class="totals-table">
+    <colgroup>
+      <col style="width:45%">
+      <col style="width:37%">
+      <col style="width:18%">
+    </colgroup>
+    <tr>
+      <td class="t-blank"></td>
+      <td class="t-lbl">Total Taxable Amount(Excluding VAT)</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-blank"></td>
+      <td class="t-lbl">VAT</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-blank"></td>
+      <td class="t-lbl">Discount</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-blank"></td>
+      <td class="t-lbl">Total Amount</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-blank"></td>
+      <td colspan="2" class="t-foot">{{compprof.name}}</td>
+    </tr>
+  </table>
+
+  <!-- Terms -->
+  <div class="terms-wrap">
+    <div class="terms-title">TERMS &amp; CONDITIONS:</div>
+    <div class="terms-body">{{nl2br basicdetails.[0].terms_and_condition}}</div>
+  </div>
+
+  <!-- Bank Account Details -->
+  <div class="bank-wrap">
+    <div class="bank-title">Bank Account Details</div>
+    <div class="bank-row"><span class="k">BENEFICIARY NAME</span>: {{bankdetails.acc_name}}</div>
+    <div class="bank-row"><span class="k">BANK NAME</span>: {{bankdetails.bank_name}}</div>
+    <div class="bank-row"><span class="k">BANK ADDRESS</span>: {{bankdetails.branch_name}}</div>
+    <div class="bank-row"><span class="k">A/C NO</span>: {{bankdetails.account_no}}</div>
+    <div class="bank-row"><span class="k">IBAN</span>: {{bankdetails.iban_no}}</div>
+    <div class="bank-row"><span class="k">BIC/SWIFT</span>: {{bankdetails.swift_no}}</div>
+  </div>
+
+  <!-- Footer admin -->
+  <div class="signer">{{basicdetails.[0].employeename}}</div>
+  <div class="mob">Mob:{{basicdetails.[0].employeecontactno}}</div>
+
+</div>
+
+</body>
+</html>

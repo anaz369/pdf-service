@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Invoice - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      font-size: 11px;
+      color: #333;
+      background: #fff;
+    }
+
+    .page {
+      width: 750px;
+      margin: 0 auto;
+      padding: 15px 20px;
+      background: #fff;
+    }
+
+    /* ── Top decorative bar ─────────────────────── */
+    .top-bar {
+      height: 6px;
+      background: linear-gradient(90deg, #e91e63 0%, #9c27b0 50%, #e91e63 100%);
+      margin-bottom: 0;
+    }
+
+    /* ── Header ────────────────────────────────── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 15px 0;
+      border-bottom: 2px solid #e91e63;
+    }
+
+    .header-left {
+      flex: 1;
+    }
+
+    .invoice-to-label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+
+    .invoice-to-label .inv-tag {
+      background: linear-gradient(90deg, #e91e63, #9c27b0);
+      color: #fff;
+      font-size: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+
+      letter-spacing: 1px;
+      padding: 2px 6px;
+    }
+
+    .invoice-to-label .to-text {
+      font-size: 9px;
+      color: #e91e63;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .client-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #e91e63;
+      margin-bottom: 1px;
+    }
+
+    .client-subtitle {
+      font-size: 10px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .client-info {
+      font-size: 9px;
+      color: #888;
+      line-height: 1.8;
+    }
+
+    .client-info .info-lbl {
+      color: #888;
+      min-width: 25px;
+      display: inline-block;
+    }
+
+    .header-right {
+      text-align: right;
+    }
+
+    .invoice-label {
+      font-size: 32px;
+      font-weight: 900;
+      color: #333;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+
+    .invoice-date-box {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: bold;
+      overflow: hidden;
+    }
+
+    .invoice-date-box .date-lbl {
+      padding: 5px 5px;
+      background: linear-gradient(90deg, #d8a8b8, #ebaff5);
+      color: #fff;
+    }
+
+    .invoice-date-box .date-val {
+      padding: 5px 12px;
+      color: #333;
+     // border: 1px solid #e91e63;
+      border-left: none;
+    }
+
+    /* ── Items table ───────────────────────────── */
+    .items-section {
+      margin-top: 15px;
+    }
+
+    .items-header {
+      display: flex;
+      background: linear-gradient(90deg, #df7598, #9c27b0);
+      color: #fff;
+      padding: 12px 12px;
+      font-weight: bold;
+      font-size: 11px;
+    }
+    .items-header .col-desc { flex: 2; }
+    .items-header .col-price { flex: 0.8; text-align: right; }
+    .items-header .col-qty { flex: 0.5; text-align: center; }
+    .items-header .col-total { flex: 0.8; text-align: right; }
+
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+      background: #f5eef8;
+    }
+    .item-row:nth-child(even) {
+      background: #f3f4f6;
+    }
+    .item-row:last-child {
+      border-bottom: none;
+      position: relative;
+    }
+    .item-row:last-child::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      border-bottom-style: solid;
+      border-bottom-color: #e91e63;
+      border-bottom-width: 0.8px;
+      border-image: linear-gradient(to right, #e91e63 0%, #e91e63 100%) 1;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 60%);
+      height: 5px;
+      background: linear-gradient(to right, transparent, #e91e63);
+    }
+
+    .item-row .col-desc { flex: 2; }
+    .item-row .col-price { flex: 0.8; text-align: right; font-size: 12px; font-weight: 600; }
+    .item-row .col-qty { flex: 0.5; text-align: center; font-size: 12px; font-weight: 600; }
+    .item-row .col-total { flex: 0.8; text-align: right; font-size: 12px; font-weight: 600; }
+
+    .item-name {
+      font-size: 13px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 3px;
+    }
+
+    .item-desc {
+      font-size: 9px;
+      color: #999;
+      line-height: 1.4;
+    }
+
+    /* ── Bottom section (terms + totals side by side) ── */
+    .bottom-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 12px;
+    }
+
+    .bottom-left {
+      flex: 0 0 45%;
+    }
+
+    .bottom-right {
+      flex: 0 0 35%;
+    }
+
+    /* Totals */
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      font-size: 11px;
+    }
+
+    .totals-row .t-lbl {
+      color: #555;
+      font-weight: 600;
+      text-align: right;
+      flex: 1;
+      padding-right: 15px;
+    }
+
+    .totals-row .t-val {
+      font-weight: 600;
+      color: #333;
+      text-align: right;
+      min-width: 100px;
+    }
+
+    .totals-row.total-due {
+      background: linear-gradient(90deg, #e91e63, #9c27b0);
+      margin-top: 5px;
+      padding: 8px 0;
+      border-radius: 3px;
+    }
+
+    .totals-row.total-due .t-lbl {
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .totals-row.total-due .t-val {
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    /* Terms */
+    .terms-title {
+      font-size: 10px;
+      font-weight: bold;
+      color: #e91e63;
+      margin-bottom: 4px;
+      text-decoration: underline;
+    }
+
+    .terms-text {
+      font-size: 9px;
+      color: #999;
+      line-height: 1.6;
+    }
+
+    /* ── Footer ────────────────────────────────── */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 25px;
+      padding-top: 12px;
+      border-top: 2px solid #eee;
+    }
+
+    .footer-thanks {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .footer-sig {
+      text-align: center;
+    }
+
+    .footer-sig .sig-img {
+      max-height: 40px;
+      max-width: 80px;
+      display: block;
+      margin: 0 auto 4px;
+    }
+
+    .footer-sig .sig-name {
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .footer-sig .sig-title {
+      font-size: 9px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  {{!-- ══ TOP BAR ══ --}}
+  <div class="top-bar"></div>
+
+  {{!-- ══ HEADER ══ --}}
+  <div class="header">
+
+    {{!-- LEFT — Invoice To --}}
+    <div class="header-left">
+      <div class="invoice-to-label">
+        <span class="inv-tag">INVOICE TO</span>
+        {{!-- <span class="inv-tag">TO</span> --}}
+      </div>
+      <div class="client-name">{{billing_address.[0].name}}</div>
+      {{!-- {{#if customer_details.[0].name}}<div class="client-subtitle">{{customer_details.[0].name}}</div>{{/if}} --}}
+      <div class="client-info">
+        {{#if customer_details.[0].contact_no1}}<span class="info-lbl">Ph</span>: {{customer_details.[0].contact_no1}}<br>{{/if}}
+        {{#if customer_details.[0].email}}<span class="info-lbl">Em</span>: {{customer_details.[0].email}}<br>{{/if}}
+        {{#if billing_address.[0].address_line1}}<span class="info-lbl">Ad</span>: {{billing_address.[0].address_line1}}{{#if billing_address.[0].address_line2}}, {{billing_address.[0].address_line2}}{{/if}}{{#if billing_address.[0].address_line3}}, {{billing_address.[0].address_line3}}{{/if}}{{#if billing_address.[0].address_line4}}, {{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_line5}}, {{billing_address.[0].address_line5}}{{/if}}{{/if}}
+      </div>
+    </div>
+
+    {{!-- RIGHT — Invoice title + barcode + date --}}
+    <div class="header-right">
+      <div class="invoice-label" style="font-family: Arial, sans-serif;">INVOICE</div>
+      <div style="font-size: 14px; color: #333; letter-spacing: 2px; margin-bottom: 8px;">{{basicdetails.[0].inv_no}}</div>
+      <div class="invoice-date-box">
+        <span class="date-lbl">Invoice Date</span>
+        <span class="date-val">{{basicdetails.[0].inv_date}}</span>
+      </div>
+    </div>
+
+  </div>
+
+  {{!-- ══ ITEMS ══ --}}
+  <div class="items-section">
+
+    {{!-- Header row --}}
+    <div class="items-header">
+      <div class="col-desc">Item Description</div>
+      <div class="col-price">Unit Price</div>
+      <div class="col-qty">Qnt</div>
+      <div class="col-total">Total</div>
+    </div>
+
+    {{!-- Item rows --}}
+    {{#each itemdetails}}
+    <div class="item-row">
+      <div class="col-desc">
+        <div class="item-name">{{item_name}}</div>
+        {{#if name_lang2}}<div class="item-desc" style="">{{name_lang2}}</div>{{/if}}
+        {{#if description}}<div class="item-desc">{{description}}</div>{{/if}}
+      </div>
+      <div class="col-price">{{{currencySymbol ../isocode}}}{{formatAmount price ../bcdp}}</div>
+      <div class="col-qty">{{formatAmount quantity ../bcdp}}</div>
+      <div class="col-total">{{{currencySymbol ../isocode}}}{{formatAmount amount ../bcdp}}</div>
+    </div>
+    {{/each}}
+
+  </div>
+
+  {{!-- ══ TOTALS (right-aligned) ══ --}}
+  <div class="bottom-section">
+    <div class="bottom-right" style="margin-left: auto;">
+      <div class="totals-row">
+        <span class="t-lbl">SUB TOTAL:</span>
+        <span class="t-val">{{{currencySymbol isocode}}}{{formatAmount basicdetails.[0].subtotal bcdp}}</span>
+      </div>
+
+      {{#if basicdetails.[0].vatamt}}
+      <div class="totals-row">
+        <span class="t-lbl">Tax VAT {{basicdetails.[0].vat_perc}}%:</span>
+        <span class="t-val">{{{currencySymbol isocode}}}{{formatAmount basicdetails.[0].vatamt bcdp}}</span>
+      </div>
+      {{/if}}
+
+      {{#if basicdetails.[0].discount}}
+      <div class="totals-row">
+        <span class="t-lbl">DISCOUNT:</span>
+        <span class="t-val">{{{currencySymbol isocode}}}{{formatAmount basicdetails.[0].discount bcdp}}</span>
+      </div>
+      {{/if}}
+
+      <div class="totals-row total-due">
+        <span class="t-lbl">TOTAL DUE:</span>
+        <span class="t-val">{{{currencySymbol isocode}}}{{formatAmount basicdetails.[0].grand_total bcdp}}</span>
+      </div>
+    </div>
+  </div>
+
+  {{!-- ══ TERMS (left-aligned, below totals) ══ --}}
+  {{#if invterms}}
+  <div style="display: flex; margin-top: 10px;">
+    <div style="flex: 0 0 50%;">
+      <div class="terms-title">Terms &amp; Condition :</div>
+      <div class="terms-text">{{{nl2br invterms}}}</div>
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- ══ FOOTER ══ --}}
+  <div class="footer">
+    <div class="footer-thanks">Thank you for your business</div>
+    <div class="footer-sig">
+      {{#if Signature}}
+      <img src="{{Signature}}" alt="Signature" class="sig-img" onerror="this.style.display='none'"/>
+      {{/if}}
+      {{!-- {{#if Seal}}
+      <img src="{{Seal}}" alt="Seal" class="sig-img" onerror="this.style.display='none'"/>
+      {{/if}} --}}
+      <div class="sig-name">{{#if basicdetails.[0].salesman_name}}{{basicdetails.[0].salesman_name}}{{/if}}</div>
+      <div class="sig-title">{{branch.[0].name}}</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

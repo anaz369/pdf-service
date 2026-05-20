@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    margin: 0mm 4mm;
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.4;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 800;
+    color: #000;
+    {{!-- margin: 4px 0 5px; --}}
+  }
+  .main-title .ar {
+    font-family: "Arial", "Tahoma", sans-serif;
+    direction: rtl;
+    unicode-bidi: embed;
+    margin-left: 6px;
+  }
+
+  /* ── Header Info Table ─────────────────────── */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+  }
+  .info-table td {
+    border: 1px solid #000;
+    padding: 6px 5px;
+    vertical-align: middle;
+    font-size: 11px;
+  }
+  .info-table .lbl {
+    width: 18%;
+    font-weight: normal;
+    background: #f2f2f2;
+  }
+  .info-table .val {
+    width: 32%;
+  }
+
+  /* ── Greeting / Intro ──────────────────────── */
+  .greeting {
+    margin-top: 12px;
+    margin-bottom: 8px;
+  }
+  .intro {
+    margin-bottom: 10px;
+  }
+
+  /* ── Section heading bar ───────────────────── */
+  .section-bar {
+    width: 100%;
+    border: 1px solid #000;
+    background: #f2f2f2;
+    text-align: center;
+    padding: 6px 3px;
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+    border-top: none;
+  }
+  .items-table th {
+    background: #f2f2f2;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px 4px;
+    font-size: 11px;
+    border: 1px solid #000;
+  }
+  .items-table td {
+    border: 1px solid #000;
+    padding: 5px 5px;
+    vertical-align: top;
+    font-size: 11px;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Footer note ───────────────────────────── */
+  .foot-note {
+    margin-top: 12px;
+    font-size: 11px;
+    white-space: pre-wrap;
+  }
+
+  /* ── Stamp & Signature ─────────────────────── */
+  .stamp-sig {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .stamp-sig img {
+    display: block;
+    max-height: 90px;
+    object-fit: contain;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">Quotation <span class="ar">اقتباس</span></div>
+
+  <!-- Header Info Table -->
+  <table class="info-table">
+    <tr>
+      <td class="lbl">Client Name</td>
+      <td class="val">{{billing_address.[0].name}}</td>
+      <td class="lbl">Date of Quotation</td>
+      <td class="val">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Represented To</td>
+      <td class="val">{{basicdetails.[0].contactname}}</td>
+      <td class="lbl">Quotation No</td>
+      <td class="val">{{basicdetails.[0].inv_no}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Position</td>
+      <td class="val"></td>
+      <td class="lbl">Project Location</td>
+      <td class="val"></td>
+    </tr>
+    <tr>
+      <td class="lbl">Contact Details</td>
+      <td class="val">{{customer_details.[0].contactno}}</td>
+      <td class="lbl">Subject</td>
+      <td class="val">{{basicdetails.[0].subj}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Email</td>
+      <td class="val">{{basicdetails.[0].contactemail}}</td>
+      <td class="lbl">Proposal By</td>
+      <td class="val">{{basicdetails.[0].employeename}}</td>
+    </tr>
+  </table>
+
+  <!-- Greeting / Intro -->
+  <div class="greeting">Dear Sir,</div>
+  <div class="intro">With a great delight, we are submitting our competitive quotation and thanking for choosing us for your services.</div>
+
+  <!-- Section Heading -->
+  <div class="section-bar">Quotation Details</div>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:8%">
+      <col style="width:37%">
+      <col style="width:10%">
+      <col style="width:15%">
+      <col style="width:15%">
+      <col style="width:15%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>SL No</th>
+        <th>Description</th>
+        <th>Unit</th>
+        <th>Unit Details</th>
+        <th>Unit {{basicdetails.[0].base_country_isocode}}</th>
+        <th>Total {{basicdetails.[0].base_country_isocode}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div style="direction:rtl;">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div style="direction:rtl;">{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{formatAmount quantity ../bcdp}}</td>
+        <td class="center">{{unit}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Footer note / Terms -->
+  {{#if basicdetails.[0].terms_and_condition}}
+  <div class="foot-note">{{nl2br basicdetails.[0].terms_and_condition}}</div>
+  {{/if}}
+
+  <!-- Stamp & Signature -->
+  {{#if seal}}
+  <div class="stamp-sig">
+    <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>
+    {{#if signature}}
+    <img src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/>
+    {{/if}}
+  </div>
+  {{else}}
+    {{#if signature}}<br>
+    <div class="stamp-sig">
+      <img src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/>
+    </div>
+    {{/if}}
+  {{/if}}
+
+</div>
+
+</body>
+</html>

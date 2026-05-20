@@ -791,7 +791,7 @@
           {{#if (eq datasettings.d282 "1")}}
             <tr>
               <td class="lbl-en">Balance Due ({{basicdetails.[0].base_country_isocode}})</td>
-              <td class="val"></td>
+              <td class="val">{{formatAmount (divide basicdetails.[0].customerbalance ccrate) bcdp}}</td>
               <td class="lbl-ar">الإجمالي المبلغ المستحق (ريال سعودى)</td>
             </tr>
           {{/if}}
@@ -799,7 +799,7 @@
           {{#if (eq datasettings.d291 "1")}}
             <tr>
               <td class="lbl-en">Balance Due ({{basicdetails.[0].base_country_isocode}})</td>
-              <td class="val"></td>
+              <td class="val">{{formatAmount (divide basicdetails.[0].balance ccrate) bcdp}}</td>
               <td class="lbl-ar">الإجمالي المبلغ المستحق (ريال سعودى)</td>
             </tr>
           {{/if}}

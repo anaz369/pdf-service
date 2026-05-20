@@ -89,6 +89,10 @@
         width: 49%;
         float: left;
     }
+    .column td {
+        width: 100%;
+    }
+
 
     .column.right-column {
         float: right;
@@ -97,8 +101,9 @@
     .section-header {
         background: #e9ecef;
         font-weight: bold;
-        height: 30px;
+        padding: 4px;
         vertical-align: middle;
+        width: 100%;
     }
 
     .section-header td {
@@ -106,18 +111,22 @@
     }
 
     .label-en {
-        width: 15%;
+        width: 21%;
+        padding-left:5px;
         white-space: nowrap;
+        background: #e9ecef;
     }
 
     .value-cell {
-        width: 47%;
+        width: 58%;
+        padding-left:5px;
     }
 
     .label-ar {
-        width: 35%;
+        width: 21%;
         direction: rtl;
         text-align: right;
+        padding-right:5px;
     }
 
     /* Item Table */
@@ -149,14 +158,17 @@
     .bottom-section {
         margin-top: 10px;
         width: 100%;
-        overflow: hidden;
+        display: flex;
+        align-items: stretch;
+        gap: 1%;
     }
 
     .terms-box {
         width: 45%;
-        float: left;
+        flex-shrink: 0;
         border: 1px solid #b6b6b6;
-        min-height: 185px;
+        display: flex;
+        flex-direction: column;
     }
 
     .terms-header {
@@ -167,17 +179,22 @@
 
     .terms-content {
         padding: 6px;
-        min-height: 155px;
+        flex: 1;
     }
 
     .totals-box {
-        width: 53%;
-        float: right;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .totals-box .totals-table {
+        height: 100%;
     }
 
     .totals-table td {
-        height: 26px;
         vertical-align: middle;
+        font-size: 9px;
     }
 
     .totals-label-en {
@@ -195,11 +212,12 @@
         text-align: right;
         white-space: nowrap;
         font-weight: bold;
+        padding-right: 5px;
     }
 
     .currency {
         font-weight: bold;
-        margin-right: 3px;
+        font-size:13px ;
     }
 
     .clearfix {
@@ -229,19 +247,19 @@
                 Sales Quote Number<br>
                 <div class="arabic">رقم عرض أسعار المبيعات</div>
             </td>
-            <td class="summary-value">SQ0109789</td>
+            <td class="summary-value">{{basicdetails.[0].inv_no}}</td>
 
             <td class="summary-label">
                 Sales Quote issue date<br>
                 <div class="arabic">تاريخ إصدار عرض أسعار المبيعات</div>
             </td>
-            <td class="summary-value">05-May-2026</td>
+            <td class="summary-value">{{basicdetails.[0].inv_date}}</td>
 
             <td class="summary-label">
                 Sales Quote due date<br>
                 <div class="arabic">تاريخ استحقاق قياس المبيعات</div>
             </td>
-            <td class="summary-value">05-May-2026</td>
+            <td class="summary-value">{{basicdetails.[0].due_date}}</td>
         </tr>
     </table>
 
@@ -252,22 +270,22 @@
         <div class="column">
             <table>
                 <tr class="section-header">
-                    <td style="width:18%;">Seller</td>
-                    <td style="width:47%;"></td>
-                    <td style="width:35%;" class="label-ar">المورد</td>
+                    <td style="width: 21%;border-right:none;">Seller</td>
+                    <td style="width: 58%;border-left:none;border-right:none;"></td>
+                    <td  style="width: 21%;border-left:none;"class="label-ar">المورد</td>
                 </tr>
                 <tr>
                     <td class="label-en">Name</td>
-                    <td class="value-cell">HANNA COMPANY</td>
+                    <td class="value-cell">{{compprof.name}}</td>
                     <td class="label-ar">الاسم</td>
                 </tr>
-                <tr><td class="label-en">Building No.</td><td class="value-cell">4521</td><td class="label-ar">رقم المبنى</td></tr>
-                <tr><td class="label-en">Street Name</td><td class="value-cell">King Abdu Aziz Road</td><td class="label-ar">رمز بريدي</td></tr>
-                <tr><td class="label-en">District</td><td class="value-cell">Dammam</td><td class="label-ar">الحي</td></tr>
-                <tr><td class="label-en">City</td><td class="value-cell">Al Khobar</td><td class="label-ar">المدينة</td></tr>
-                <tr><td class="label-en">Country</td><td class="value-cell">Saudi Arabia</td><td class="label-ar">البلد</td></tr>
-                <tr><td class="label-en">Postal Code</td><td class="value-cell">9878</td><td class="label-ar">رمز بريدي</td></tr>
-                <tr><td class="label-en">VAT Number</td><td class="value-cell">30008687268326822</td><td class="label-ar">رقم تسجيل ضريبة القيمة</td></tr>
+                <tr><td class="label-en">Building No.</td><td class="value-cell"></td><td class="label-ar">رقم المبنى</td></tr>
+                <tr><td class="label-en">Street Name</td><td class="value-cell"></td><td class="label-ar">اسم الشارع</td></tr>
+                <tr><td class="label-en">District</td><td class="value-cell"></td><td class="label-ar">الحي</td></tr>
+                <tr><td class="label-en">City</td><td class="value-cell"></td><td class="label-ar">المدينة</td></tr>
+                <tr><td class="label-en">Country</td><td class="value-cell"></td><td class="label-ar">البلد</td></tr>
+                <tr><td class="label-en">Postal Code</td><td class="value-cell"></td><td class="label-ar">رمز بريدي</td></tr>
+                <tr><td class="label-en">VAT Number</td><td class="value-cell"></td><td class="label-ar">رقم ضريبة القيمة</td></tr>
             </table>
         </div>
 
@@ -275,17 +293,22 @@
         <div class="column right-column">
             <table>
                 <tr class="section-header">
-                    <td colspan="2">Buyer</td>
-                    <td class="label-ar">العميل</td>
+                    <td style="width: 21%;border-right:none;">Buyer</td>
+                    <td style="width: 58%;border-left:none;border-right:none;"></td>
+                    <td  style="width: 21%;border-left:none;"class="label-ar">العميل</td>
                 </tr>
-                <tr><td class="label-en">Name</td><td class="value-cell">Akshaya</td><td class="label-ar">الاسم</td></tr>
-                <tr><td class="label-en">Building No.</td><td class="value-cell">Top Glove Tower</td><td class="label-ar">رقم المبنى</td></tr>
-                <tr><td class="label-en">Street Name</td><td class="value-cell">No. 1, Jalan USJ 25/1</td><td class="label-ar">رمز بريدي</td></tr>
-                <tr><td class="label-en">District</td><td class="value-cell">add 3</td><td class="label-ar">الحي</td></tr>
-                <tr><td class="label-en">City</td><td class="value-cell">Subang Jaya</td><td class="label-ar">المدينة</td></tr>
-                <tr><td class="label-en">Country</td><td class="value-cell">Saudi Arabia</td><td class="label-ar">البلد</td></tr>
-                <tr><td class="label-en">Postal Code</td><td class="value-cell">47650</td><td class="label-ar">رمز بريدي</td></tr>
-                <tr><td class="label-en">VAT Number</td><td class="value-cell">1234567</td><td class="label-ar">رقم تسجيل ضريبة القيمة</td></tr>
+                <tr>
+                    <td class="label-en">Name</td>
+                    <td class="value-cell">{{billing_address.[0].name}}</td>
+                    <td class="label-ar">الاسم</td>
+                </tr>
+                <tr><td class="label-en">Building No.</td><td class="value-cell">{{billing_address.[0].address_line1}}</td><td class="label-ar">رقم المبنى</td></tr>
+                <tr><td class="label-en">Street Name</td><td class="value-cell">{{billing_address.[0].address_line2}}</td><td class="label-ar">اسم الشارع</td></tr>
+                <tr><td class="label-en">District</td><td class="value-cell">{{billing_address.[0].address_line4}}</td><td class="label-ar">الحي</td></tr>
+                <tr><td class="label-en">City</td><td class="value-cell">{{billing_address.[0].address_line3}}</td><td class="label-ar">المدينة</td></tr>
+                <tr><td class="label-en">Country</td><td class="value-cell">{{billing_address.[0].address_line5}}</td><td class="label-ar">البلد</td></tr>
+                <tr><td class="label-en">Postal Code</td><td class="value-cell">{{billing_address.[0].address_code}}</td><td class="label-ar">رمز بريدي</td></tr>
+                <tr><td class="label-en">VAT Number</td><td class="value-cell">{{billing_address.[0].vat}}</td><td class="label-ar">رقم ضريبة القيمة</td></tr>
             </table>
         </div>
 
@@ -314,16 +337,20 @@
             <th><span class="en">Unit Price</span><span class="ar">سعر الوحدة</span></th>
             <th><span class="en">Total Price</span><span class="ar">السعر الإجمالي</span></th>
         </tr>
+        {{#each itemdetails}}
         <tr>
-            <td class="center">1</td>
-            <td>PRODUCT JA</td>
-            <td class="center">1</td>
-            <td class="center">CMS</td>
+            <td class="center">{{addOne @index}}</td>
+            <td>
+                {{item_name}}
+            </td>
+            <td class="center">{{formatAmount quantity ../bcdp}}</td>
+            <td class="center">{{unit}}</td>
             <td class="center"></td>
-            <td class="center">DELIVERY</td>
-            <td class="right"><span class="currency">﷼</span> 200.00</td>
-            <td class="right"><span class="currency">﷼</span> 230.00</td>
+            <td class="center">{{remark}}</td>
+            <td class="right"><span class="currency">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount price ../bcdp}}</td>
+            <td class="right"><span class="currency">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount amount ../bcdp}}</td>
         </tr>
+        {{/each}}
     </table>
 
     <!-- Bottom Section -->
@@ -335,7 +362,7 @@
                 Terms And Conditions / والأحكام والشروط
             </div>
             <div class="terms-content">
-                fgh
+                {{nl2br basicdetails.[0].terms_and_condition}}
             </div>
         </div>
 
@@ -343,14 +370,14 @@
         <div class="totals-box">
             <table class="totals-table">
                 <tr>
-                    <td class="totals-label-en">Total (Excluding VAT)</td>
-                    <td class="totals-label-ar">الإجمالي (باستثناء ضريبة القيمة المضافة)</td>
-                    <td class="totals-value"><span class="currency">﷼</span> 200.00</td>
+                    <td class="totals-label-en">SubTotal </td>
+                    <td class="totals-label-ar">المجموع الفرعي</td>
+                    <td class="totals-value"><span class="currency">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
                 </tr>
                 <tr>
                     <td class="totals-label-en">Discount</td>
                     <td class="totals-label-ar">تخفيض</td>
-                    <td class="totals-value"><span class="currency">﷼</span> 0.00</td>
+                    <td class="totals-value"><span class="currency">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
                 </tr>
                 <tr>
                     <td class="totals-label-en">
@@ -359,17 +386,17 @@
                     <td class="totals-label-ar">
                         إجمالي المبلغ الخاضع للضريبة (باستثناء ضريبة القيمة المضافة)
                     </td>
-                    <td class="totals-value"><span class="currency">﷼</span> 200.00</td>
+                    <td class="totals-value"><span class="currency">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide (subtract basicdetails.[0].subtotal basicdetails.[0].discount) ccrate) bcdp}}</td>
                 </tr>
                 <tr>
                     <td class="totals-label-en">Total VAT</td>
                     <td class="totals-label-ar">مجموع ضريبة القيمة المضافة</td>
-                    <td class="totals-value"><span class="currency">﷼</span> 30.00</td>
+                    <td class="totals-value"><span class="currency">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
                 </tr>
                 <tr>
                     <td class="totals-label-en">Total Amount</td>
-                    <td class="totals-label-ar">في المبلغ إجمالا</td>
-                    <td class="totals-value"><span class="currency">﷼</span> 230.00</td>
+                    <td class="totals-label-ar">المبلغ الإجمالي</td>
+                    <td class="totals-value"><span class="currency">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
                 </tr>
             </table>
         </div>

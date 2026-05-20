@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    margin: 0 10mm;
+    padding: 0;
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.4;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a3a5c;
+    letter-spacing: 2px;
+    margin: 8px 0 12px;
+  }
+
+  /* ── Header Box (To + Quotation details) ───── */
+  .header-box {
+    width: 100%;
+    border: 1px solid #000;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .header-box > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 4px 10px;
+    vertical-align: top;
+  }
+  .header-box .lbl {
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .info-table td {
+    padding: 2px 0;
+    vertical-align: top;
+    border: none;
+    font-size: 11px;
+  }
+  .info-table .k {
+    width: 95px;
+    font-weight: bold;
+    white-space: nowrap;
+    padding-right: 4px;
+  }
+  .info-table .k1 {
+    width: 95px;
+    white-space: nowrap;
+    padding-right: 4px;
+  }
+  .info-table .sep {
+    width: 8px;
+    white-space: nowrap;
+  }
+  .info-table .v {
+    word-wrap: break-word;
+  }
+  .info-table .k-inline {
+    font-weight: bold;
+    padding-left: 20px;
+    white-space: nowrap;
+  }
+
+  /* ── Attention / Subject ───────────────────── */
+  .att-sub {
+    margin-top: 14px;
+    margin-bottom: 8px;
+  }
+  .att-sub-row {
+    display: flex;
+    margin-bottom: 4px;
+  }
+  .att-sub-row .lbl {
+    font-weight: bold;
+    width: 80px;
+  }
+  .att-sub-row .sep { width: 12px; }
+
+  hr.divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin-top: 6px;
+    {{!-- margin-left: 10px;
+    margin-right: 10px; --}}
+  }
+  hr.divider1 {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin-top: 2px;
+    {{!-- margin-left: 10px;
+    margin-right: 10px; --}}
+  }
+
+  .greeting { font-weight: bold; margin-bottom: 6px;margin-top: 4px; }
+  .intro    { margin-bottom: 10px; }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 0;
+  }
+  .items-table th {
+    background: #d3d3d3;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px 4px;
+    font-size: 12px;
+    border: 1px solid #000;
+  }
+  .items-table td {
+    border: 1px solid #000;
+    padding: 4px 3px;
+    vertical-align: top;
+    font-size: 11px;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+
+  .nothing-row td {
+    text-align: center;
+    font-weight: normal;
+    font-style: normal;
+    padding: 4px;
+  }
+
+  /* ── Totals rows (full-width inside items table) ─── */
+  .totals-row td {
+    background-color: #cce5f7;
+    border: 1px solid #000;
+    padding: 5px 4px;
+    font-size: 11px;
+  }
+  .totals-row .t-label {
+    text-align: right;
+    font-weight: normal;
+  }
+  .totals-row .t-value {
+    text-align: right;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .totals-row.grand .t-label,
+  .totals-row.grand .t-value {
+    font-weight: bold;
+  }
+
+  /* ── Amount in words ───────────────────────── */
+  .aiw {
+    background: #e8f0f8;
+    border: 1px solid #000;
+    border-top: none;
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+  .aiw .lbl { font-weight: bold; }
+
+  /* ── Terms ─────────────────────────────────── */
+  .terms-wrap { margin-top: 16px; }
+  .terms-title { font-weight: bold; margin-bottom: 4px; }
+  .terms-body { white-space: pre-wrap; }
+
+  /* ── Stamp & Signature ─────────────────────── */
+  .stamp-sig {
+    margin-top: 12px;
+    display: flex;
+    gap: 30px;
+    align-items: flex-end;
+  }
+  .stamp-sig img {
+    max-height: 90px;
+    object-fit: contain;
+  }
+
+  /* ── Footer ────────────────────────────────── */
+  .footer-box {
+    margin-top: 14px;
+    border: 1px solid #000;
+    padding: 4px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">QUOTATION</div>
+
+  <!-- Header Box -->
+  <table class="header-box">
+    <colgroup>
+      <col style="width:55%">
+      <col style="width:45%">
+    </colgroup>
+    <tr>
+      <!-- LEFT: To / Customer ID / CR # -->
+      <td>
+        <table class="info-table">
+          <tr>
+            <td class="k">To</td>
+            <td class="sep">:</td>
+            <td class="v"><strong>{{billing_address.[0].name}}</strong></td>
+          </tr>
+          <tr>
+            <td class="k"></td>
+            <td class="sep"></td>
+            <td class="v">
+              {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{#if billing_address.[0].address_line2}}, {{billing_address.[0].address_line2}}{{/if}}{{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td class="k"></td>
+            <td class="sep"></td>
+            <td class="v">
+              {{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_line3}}, {{billing_address.[0].address_line3}}{{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td class="k"></td>
+            <td class="sep"></td>
+            <td class="v">
+              {{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}{{#if billing_address.[0].address_code}}, {{billing_address.[0].address_code}}{{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td class="k">Customer ID</td>
+            <td class="sep">:</td>
+            <td class="v">{{customer_details.[0].profile_code}}</td>
+          </tr>
+          <tr>
+            <td class="k">CR #</td>
+            <td class="sep">:</td>
+            <td class="v">
+              {{customer_details.[0].cr_no}}
+              <span class="k-inline">VAT Reg No :</span> {{billing_address.[0].vat}}
+            </td>
+          </tr>
+        </table>
+      </td>
+
+      <!-- RIGHT: Quotation No / Date / RFQ / Ref / Due Date / VAT Reg -->
+      <td>
+        <table class="info-table">
+          <tr>
+            <td class="k">Quotation No</td>
+            <td class="sep">:</td>
+            <td class="v"><strong>{{basicdetails.[0].inv_no}}</strong></td>
+          </tr>
+          <tr>
+            <td class="k">Date</td>
+            <td class="sep">:</td>
+            <td class="v"><strong>{{basicdetails.[0].inv_date}}</strong></td>
+          </tr>
+          <tr>
+            <td class="k1">RFQ No</td>
+            <td class="sep">:</td>
+            <td class="v">{{basicdetails.[0].rfq}}</td>
+          </tr>
+          <tr>
+            <td class="k1">Ref No</td>
+            <td class="sep">:</td>
+            <td class="v">{{basicdetails.[0].reference_no}}</td>
+          </tr>
+          <tr>
+            <td class="k1">Due Date</td>
+            <td class="sep">:</td>
+            <td class="v">{{basicdetails.[0].due_date}}</td>
+          </tr>
+          <tr>
+            <td class="k1">VAT Reg. No</td>
+            <td class="sep">:</td>
+            <td class="v">{{compprof.vat}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Attention / Subject -->
+  <div class="att-sub">
+    <div class="att-sub-row">
+      <span class="lbl">Attention</span><span class="sep">:</span>
+      <span>{{basicdetails.[0].attention}}</span>
+    </div>
+    <div class="att-sub-row">
+      <span class="lbl">Subject</span><span class="sep">:</span>
+      <span>{{basicdetails.[0].subj}}</span>
+    </div>
+  </div>
+
+  <hr class="divider"><hr class="divider1">
+
+  <div class="greeting">Dear Sir,</div>
+  <div class="intro">We are hereby submitting our commercial for the above mentioned jobs as follows;</div>
+
+  <!-- Items Table -->
+  {{#hasVat itemdetails}}
+
+<!-- ================= WITH VAT COLUMN ================= -->
+<table class="items-table">
+    <colgroup>
+        <col style="width:5%">
+        <col style="width:35%">
+        <col style="width:9%">
+        <col style="width:10%">
+        <col style="width:14%">
+        <col style="width:13%">
+        <col style="width:14%">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Description &amp; Specifications</th>
+            <th>UOM</th>
+            <th>Quantity</th>
+            <th>Unit Rate <span style="font-size:16px;">({{currencySymbol basicdetails.[0].isocode}})</span></th>
+            <th>Tax Amt <span style="font-size:16px;">({{currencySymbol basicdetails.[0].isocode}})</span></th>
+            <th>Amount <span style="font-size:16px;">({{currencySymbol basicdetails.[0].isocode}})</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each itemdetails}}
+        <tr>
+            <td class="center">{{addOne @index}}</td>
+            <td>
+                {{item_name}}
+                {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+            </td>
+            <td class="center">{{unit}}</td>
+            <td class="right">{{formatAmount quantity ../bcdp}}</td>
+            <td class="right">{{formatAmount price ../bcdp}}</td>
+            <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
+            <td class="right">{{formatAmount amount ../bcdp}}</td>
+        </tr>
+        {{/each}}
+
+        <tr class="nothing-row">
+            <td colspan="7">**** Nothing Follows *****</td>
+        </tr>
+
+        <tr class="totals-row">
+            <td colspan="6" class="t-label" style="border-right:none;">Total Amount (Excl. VAT) &nbsp;:</td>
+            <td class="t-value" style="border-left:none;">
+                <span style="font-weight:bold;font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>
+                {{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}
+            </td>
+        </tr>
+
+        <tr class="totals-row">
+            <td colspan="6" class="t-label" style="border-right:none;">VAT Amount &nbsp;:</td>
+            <td class="t-value" style="border-left:none;">
+                <span style="font-weight:bold;font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>
+                {{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}
+            </td>
+        </tr>
+
+        <tr class="totals-row grand">
+            <td colspan="6" class="t-label" style="border-right:none;">Grand Total &nbsp;:</td>
+            <td class="t-value" style="border-left:none;">
+                <span style="font-weight:bold;font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>
+                {{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{{else}}
+
+<!-- ================= WITHOUT VAT COLUMN ================= -->
+<table class="items-table">
+    <colgroup>
+        <col style="width:5%">
+        <col style="width:48%">
+        <col style="width:9%">
+        <col style="width:10%">
+        <col style="width:14%">
+        <col style="width:14%">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Description &amp; Specifications</th>
+            <th>UOM</th>
+            <th>Quantity</th>
+            <th>Unit Rate <span style="font-size:16px;">({{currencySymbol basicdetails.[0].isocode}})</span></th>
+            <th>Amount <span style="font-size:16px;">({{currencySymbol basicdetails.[0].isocode}})</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each itemdetails}}
+        <tr>
+            <td class="center">{{addOne @index}}</td>
+            <td>
+                {{item_name}}
+                {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+            </td>
+            <td class="center">{{unit}}</td>
+            <td class="right">{{formatAmount quantity ../bcdp}}</td>
+            <td class="right">{{formatAmount price ../bcdp}}</td>
+            <td class="right">{{formatAmount amount ../bcdp}}</td>
+        </tr>
+        {{/each}}
+
+        <tr class="nothing-row">
+            <td colspan="6">**** Nothing Follows *****</td>
+        </tr>
+
+        <tr class="totals-row">
+            <td colspan="5" class="t-label" style="border-right:none;">Total Amount &nbsp;:</td>
+            <td class="t-value" style="border-left:none;">
+                <span style="font-weight:bold;font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>
+                {{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}
+            </td>
+        </tr>
+
+        <tr class="totals-row grand">
+            <td colspan="5" class="t-label" style="border-right:none;">Grand Total &nbsp;:</td>
+            <td class="t-value" style="border-left:none;">
+                <span style="font-weight:bold;font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>
+                {{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{{/hasVat}}
+
+  <!-- Amount in Words -->
+  <div class="aiw">
+    <span class="lbl">Amount in Words:</span> {{bcamountinwords}} Only
+  </div>
+
+  <!-- Payment Terms -->
+  {{#if basicdetails.[0].payment_terms}}
+  <div class="terms-wrap">
+    <div class="terms-title">Note :</div>
+    <div class="terms-body">{{{nl2br basicdetails.[0].payment_terms}}}</div>
+  </div>
+  {{/if}}
+
+  <!-- Terms -->
+  <div class="terms-wrap">
+    <div class="terms-title">Terms and Conditions ;</div>
+    <div class="terms-body">{{nl2br basicdetails.[0].terms_and_condition}}</div>
+  </div>
+
+  <!-- Stamp & Signature -->
+  <div class="stamp-sig">
+    {{#if seal}}<img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>{{/if}}
+    {{#if signature}}<img src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/>{{/if}}
+  </div>
+
+{{#if datasettingstextvalue.d353}}
+  <!-- Footer -->
+  <div class="footer-box">{{datasettingstextvalue.d353}}</div>
+{{/if}}
+</div>
+
+</body>
+</html>

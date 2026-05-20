@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.4;
+    margin: 0 6mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #1a3a6c;
+    margin: 8px 0 14px;
+  }
+
+  /* ── Header Box ────────────────────────────── */
+  .header-box {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #bfbfbf;
+  }
+  .header-box > tbody > tr > td {
+    border: 1px solid #bfbfbf;
+    padding: 8px 10px;
+    vertical-align: top;
+    font-size: 11px;
+  }
+
+  .info-list { width: 100%; border-collapse: collapse; }
+  .info-list td {
+    padding: 2px 0;
+    vertical-align: top;
+    font-size: 11px;
+    border: none;
+  }
+  .info-list .k {
+    width: 10%;
+    font-weight: bold;
+    white-space: nowrap;
+    padding-right: 8px;
+  }
+
+  /* ── Attention / Subject ───────────────────── */
+  .att-sub {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .att-sub div {
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #bfbfbf;
+  }
+  .items-table th, .items-table td {
+    border: 1px solid #bfbfbf;
+    padding: 8px 6px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .items-table th {
+    background: #1a3a6c;
+    color: #e6b800;
+    text-align: center;
+    font-weight: bold;
+    font-size: 11px;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Terms ─────────────────────────────────── */
+  .terms-wrap { margin-top: 16px; }
+  .terms-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .terms-body { white-space: pre-wrap; }
+
+  /* ── Footer (Thanks / Approved By) ─────────── */
+  .footer-row {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 18px;
+  }
+  .footer-row td {
+    vertical-align: top;
+    padding: 0;
+    font-size: 11px;
+    border: none;
+  }
+  .footer-row .right { text-align: right; }
+  .footer-row .nm {
+    margin-top: 16px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">QUOTATION</div>
+
+  <!-- Header Box -->
+  <table class="header-box">
+    <colgroup>
+      <col style="width:55%">
+      <col style="width:45%">
+    </colgroup>
+    <tr>
+      <td>
+        <table class="info-list">
+          <tr>
+            <td class="k">To</td>
+            <td><strong>{{billing_address.[0].name}}</strong></td>
+          </tr>
+          <tr>
+            <td class="k"></td>
+            <td>
+              {{billing_address.[0].address_line1}}{{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}{{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td class="k"></td>
+            <td>
+              {{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}{{/if}}{{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}{{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td class="k"></td>
+            <td>VAT: {{billing_address.[0].vat}}</td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="info-list">
+          <tr>
+            <td class="k">Quotation No</td>
+            <td>{{basicdetails.[0].inv_no}}</td>
+          </tr>
+          <tr>
+            <td class="k">Date</td>
+            <td>{{basicdetails.[0].inv_date}}</td>
+          </tr>
+          <tr>
+            <td class="k">Cus Ref No</td>
+            <td>{{basicdetails.[0].reference_no}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Attention / Subject -->
+  <div class="att-sub">
+    <div><u>Attention:</u>  <span>{{basicdetails.[0].attention}}</span></div>
+    <div><u>Subject:</u>  <span>{{basicdetails.[0].subj}}</span></div>
+  </div>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:7%">
+      <col style="width:28%">
+      <col style="width:8%">
+      <col style="width:7%">
+      <col style="width:11%">
+      <col style="width:13%">
+      <col style="width:13%">
+      <col style="width:13%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>SL. No</th>
+        <th>DESCRIPTION</th>
+        <th>UOM</th>
+        <th>Qty</th>
+        <th>RATE</th>
+        <th>MOB CHARGES</th>
+        <th>DEMOB CHARGES</th>
+        <th>REMARK</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div style="direction:rtl;">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div style="direction:rtl;">{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{unit}}</td>
+        <td class="center">{{formatAmount quantity ../bcdp}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount mob_charges 0}}</td>
+        <td class="right">{{formatAmount demob_charges 0}}</td>
+        <td class="left">{{remark}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Terms -->
+  <div class="terms-wrap">
+    <div class="terms-title">Terms &amp; Conditions</div>
+    <div class="terms-body">{{nl2br basicdetails.[0].terms_and_condition}}</div>
+  </div>
+
+  <!-- Footer -->
+  <table class="footer-row">
+    <colgroup>
+      <col style="width:50%">
+      <col style="width:50%">
+    </colgroup>
+    <tr>
+      <td>
+        <div>Thanks &amp; Regards,</div>
+        <div class="nm">{{basicdetails.[0].employeename}}</div>
+      </td>
+      <td class="right">
+        <div>Approved By</div>
+        <div class="nm">{{basicdetails.[0].employeename}}</div>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

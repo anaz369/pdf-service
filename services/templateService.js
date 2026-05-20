@@ -214,6 +214,17 @@ class TemplateService {
       val !== null && val !== undefined && val !== '' && val !== '0' && val !== 0
     );
 
+    Handlebars.registerHelper('pageDisplay', function(pageNumber, totalPages) {
+      // If values are passed manually, use them
+      if (pageNumber !== undefined && totalPages !== undefined) {
+        return `${pageNumber}/${totalPages}`;
+      }
+
+      // Automatic page numbering inside body using CSS counters
+      return new Handlebars.SafeString(
+        '<span class="page-counter"></span>/<span class="page-total"></span>'
+      );
+    });
     // ── Invoice-specific helpers ───────────────────────────
     Handlebars.registerHelper('ifFlag', function(settings, key, options) {
       if (!settings || typeof settings !== 'object') return options.inverse(this);
