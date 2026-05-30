@@ -1,9 +1,9 @@
 'use strict';
 
-const { PDFDocument }       = require('pdf-lib');
-const templateService       = require('../services/templateService');
-const pdfService            = require('../services/pdfService');
-const { callLambda }        = require('../services/lambdaService');
+const { PDFDocument } = require('pdf-lib');
+const templateService = require('../services/templateService');
+const pdfService = require('../services/pdfService');
+const { callLambda } = require('../services/lambdaService');
 const { getReportTypeInfo } = require('../config/reportTypes');
 
 class ReportController {
@@ -28,15 +28,16 @@ class ReportController {
         return res.status(400).json({ error: 'Request body is required' });
       }
 
+      console.log('report_dataaaaaaa', report);
       // PHP sends strings — parse to int
       report.report_type = parseInt(report.report_type, 10) || 1;
-      report.template_no = parseInt(report.template_no,  10) || 1;
+      report.template_no = parseInt(report.template_no, 10) || 1;
 
       // report_type  →  { name, label }
       // Template file = name + template_no  →  e.g. project_report1.hbs
       const reportTypeInfo = getReportTypeInfo(report.report_type);
-      const templateFile   = `${reportTypeInfo.name}${report.template_no}`;
-      const reportTitle    = report.report_title || reportTypeInfo.label;
+      const templateFile = `${reportTypeInfo.name}${report.template_no}`;
+      const reportTitle = report.report_title || reportTypeInfo.label;
 
       console.log('\n=== Report PDF Generation Started ===');
       console.log(`Type: ${report.report_type} (${reportTypeInfo.label}) | Template: ${templateFile}`);
@@ -104,7 +105,7 @@ class ReportController {
       let htmlContent;
 
       // Inject resolved meta so templates can use {{report_title}}, {{report_type_label}}
-      report.report_title      = reportTitle;
+      report.report_title = reportTitle;
       report.report_type_label = reportTypeInfo.label;
 
       try {
@@ -124,7 +125,7 @@ class ReportController {
       // PHASE 3: PDF OPTIONS
       // ============================================
       const orientation = (report.orientation || 'portrait').toLowerCase();
-      const paperSize   = report.paper_size || 'A4';
+      const paperSize = report.paper_size || 'A4';
 
       const pdfOptions = {
         printBackground: true,
@@ -141,10 +142,10 @@ class ReportController {
       if (useHeaderFooter) {
         pdfOptions.displayHeaderFooter = true;
         pdfOptions.margin = {
-          top:    report.margin_top    || '120px',
+          top: report.margin_top || '120px',
           bottom: report.margin_bottom || '60px',
-          left:   '0px',
-          right:  '0px',
+          left: '0px',
+          right: '0px',
         };
 
         const hfTasks = [];
@@ -204,8 +205,8 @@ class ReportController {
 
       // ── Inject PDF metadata ──────────────────────────────
       try {
-        const pdfDoc  = await PDFDocument.load(pdfBuffer);
-        const title   = reportTitle;
+        const pdfDoc = await PDFDocument.load(pdfBuffer);
+        const title = reportTitle;
         const company = String(report.company_name || '').trim();
 
         pdfDoc.setTitle(title);
@@ -231,7 +232,7 @@ class ReportController {
       // ============================================
       const safeTitle = reportTitle.replace(/[ /]/g, '_');
       const timestamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0];
-      const fileName  = `Report_${safeTitle}_${timestamp}.pdf`;
+      const fileName = `Report_${safeTitle}_${timestamp}.pdf`;
 
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
@@ -250,6 +251,7 @@ class ReportController {
       });
     }
   }
+
 }
 
 module.exports = new ReportController();

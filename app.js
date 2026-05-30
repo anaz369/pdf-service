@@ -68,7 +68,6 @@ app.post('/api/pdf/cleanup-browser-pool', (req, res) =>
 // ── Report routes ─────────────────────────────────────────
 app.get('/api/report/test', (req, res) => reportController.test(req, res));
 app.post('/api/report/generate-pdf', (req, res) => reportController.generateReportPdf(req, res));
-
 // ============================================
 // ERROR HANDLING
 // ============================================
