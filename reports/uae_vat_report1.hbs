@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{report_title}}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    {{#if WatermarkCss}}
+    {{{WatermarkCss}}}
+    {{/if}}
+
+    .report-wrapper { padding: 20px 28px; }
+
+    /* ── Company Header ─────────────────────────────── */
+    .rpt-top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #1a1a2e;
+      padding-bottom: 12px;
+      margin-bottom: 0;
+    }
+    .rpt-top-header .logo-box img {
+      max-height: 55px;
+      max-width: 150px;
+      object-fit: contain;
+    }
+    .rpt-top-header .company-box { text-align: right; }
+    .rpt-top-header .company-box h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 2px;
+      color: #1a1a2e;
+    }
+    .rpt-top-header .company-box p { margin: 0; font-size: 10px; color: #666; }
+
+    /* ── Info bar ───────────────────────────────────── */
+    .info-bar {
+      background: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+      padding: 10px 0;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 40px;
+    }
+    .info-bar .info-item .label {
+      font-size: 9px;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .info-bar .info-item .value {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    /* ── Section divider + title ────────────────────── */
+    .vat-section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, #006400 0%, #e0f5e0 100%);
+      border-radius: 2px;
+      margin-bottom: 0;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #344767;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      margin: 10px 0 8px;
+    }
+
+    /* ── VAT Table ──────────────────────────────────── */
+    .vat-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 6px;
+    }
+    .vat-table thead tr { background: #f0f2f5; }
+    .vat-table thead th {
+      font-size: 9px;
+      font-weight: 700;
+      color: #7b809a;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 7px 10px;
+      border-top: 1px solid #dee2e6;
+      border-bottom: 1px solid #dee2e6;
+      white-space: nowrap;
+    }
+    .vat-table thead th.text-end { text-align: right; }
+    .vat-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+    .vat-table tbody td {
+      padding: 7px 10px;
+      vertical-align: middle;
+      font-size: 11px;
+      color: #344767;
+    }
+
+    .box-col    { width: 60px; text-align: center; }
+    .desc-col   { width: 44%; }
+    .amt-col    { width: 16%; text-align: right; }
+
+    /* Box badge */
+    .box-badge {
+      display: inline-block;
+      min-width: 32px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-align: center;
+      background: #e8f4fd;
+      color: #1a73e8;
+      letter-spacing: 0.2px;
+    }
+    .box-badge-em {
+      display: inline-block;
+      min-width: 32px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      text-align: center;
+      background: #f0f7ff;
+      color: #1a56db;
+    }
+
+    /* Row types */
+    .row-emirate td {
+      background: #fafbfc;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      font-size: 10px;
+    }
+    .row-emirate td:first-child { padding-left: 30px; }
+
+    .row-total td {
+      background: #f8f9fa;
+      font-weight: 700;
+      border-top: 2px solid #dee2e6 !important;
+    }
+
+    .row-net-positive td { color: #d9534f; font-weight: 700; }
+    .row-net-zero td     { color: #5cb85c; font-weight: 700; }
+    .row-net-base td     { font-weight: 600; color: #344767; }
+
+    /* Net VAT table */
+    .net-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+    .net-table thead tr { background: #f0f2f5; }
+    .net-table thead th {
+      font-size: 9px;
+      font-weight: 700;
+      color: #7b809a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 7px 10px;
+      border-top: 1px solid #dee2e6;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .net-table thead th.text-end { text-align: right; }
+    .net-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+    .net-table tbody td { padding: 7px 10px; vertical-align: middle; font-size: 11px; color: #344767; }
+
+    .small-desc {
+      display: block;
+      font-size: 9px;
+      color: #7b809a;
+      line-height: 1.5;
+      margin-top: 2px;
+      font-weight: 400;
+    }
+
+    .text-end   { text-align: right; }
+    .text-muted { color: #7b809a !important; }
+
+    /* Footer */
+    .report-footer {
+      margin-top: 20px;
+      font-size: 9px;
+      color: #aaa;
+      text-align: right;
+      border-top: 1px solid #ddd;
+      padding-top: 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="report-wrapper">
+
+  {{!-- ── Company Header ──────────────────────────────── --}}
+  <div class="rpt-top-header">
+    <div class="logo-box">
+      {{#if Companylogo}}
+        <img src="{{Companylogo}}" alt="Logo" />
+      {{else}}
+        <span style="font-size:16px;font-weight:700;color:#1a1a2e;">{{company_name}}</span>
+      {{/if}}
+    </div>
+    <div class="company-box">
+      {{#if Companylogo}}<h3>{{company_name}}</h3>{{/if}}
+      <p style="font-size:13px;font-weight:600;color:#006400;margin-bottom:2px;">{{report_title}}</p>
+      <p>{{date_from}} &mdash; {{date_to}}</p>
+      <p>Value Added Tax &mdash; United Arab Emirates &nbsp;|&nbsp; Standard Rate: <strong>5%</strong></p>
+    </div>
+  </div>
+
+  {{!-- ── Info Bar ───────────────────────────────────────── --}}
+  <div class="info-bar">
+    <div class="info-item">
+      <div class="label">Tax Period</div>
+      <div class="value">{{date_from}} to {{date_to}}</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Branch</div>
+      <div class="value">{{orgname}}</div>
+    </div>
+    <div class="info-item">
+      <div class="label">VAT Rate</div>
+      <div class="value">5%</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Generated</div>
+      <div class="value">{{generated_at}}</div>
+    </div>
+  </div>
+
+  {{!-- ══════════════════════════════════════════════════════
+       SECTION A — VAT on Sales and all other Outputs
+  ══════════════════════════════════════════════════════ --}}
+  <div class="vat-section-divider"></div>
+  <p class="section-title">VAT on Sales and all other Outputs</p>
+
+  <table class="vat-table">
+    <thead>
+      <tr>
+        <th class="box-col">BOX</th>
+        <th class="desc-col">DESCRIPTION</th>
+        <th class="text-end amt-col">TAXABLE AMOUNT (AED)</th>
+        <th class="text-end amt-col">TAX AMOUNT (AED)</th>
+        <th class="text-end amt-col">ADJUSTMENTS (AED)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {{!-- BOX 1 header row --}}
+      <tr>
+        <td class="box-col"><span class="box-badge">1</span></td>
+        <td>
+          Standard rated supplies
+          <span class="small-desc">Standard rated goods &amp; services sold (excl. VAT), including VAT collected and adjustments from previous periods.</span>
+        </td>
+        <td class="text-end text-muted">&mdash;</td>
+        <td class="text-end text-muted">&mdash;</td>
+        <td class="text-end text-muted">&mdash;</td>
+      </tr>
+
+      {{!-- BOX 1 per-emirate sub-rows --}}
+      {{#each box1_items}}
+      <tr class="row-emirate">
+        <td class="box-col"><span class="box-badge-em">{{label}}</span></td>
+        <td>Standard rated supplies in {{emirate}}</td>
+        <td class="text-end">{{formatAmount taxable 2}}</td>
+        <td class="text-end">{{formatAmount tax 2}}</td>
+        <td class="text-end">{{formatAmount adj 2}}</td>
+      </tr>
+      {{/each}}
+
+      {{!-- BOX 2 --}}
+      <tr>
+        <td class="box-col"><span class="box-badge">2</span></td>
+        <td>
+          Tax Refunds provided to Tourists under the Tax Refunds for Tourists Scheme
+          <span class="small-desc">Tax refunds to tourists via the official UAE scheme (retailers only). Always negative to reduce output tax.</span>
+        </td>
+        <td class="text-end">{{formatAmount box2.taxable 2}}</td>
+        <td class="text-end">{{formatAmount box2.tax 2}}</td>
+        <td class="text-end text-muted">&mdash;</td>
+      </tr>
+
+      {{!-- BOX 3 --}}
+      <tr>
+        <td class="box-col"><span class="box-badge">3</span></td>
+        <td>
+          Supplies subject to the reverse charge provisions
+          <span class="small-desc">Purchased services with reverse charge applied (excl. VAT), related VAT collected, and goods not declared at UAE customs.</span>
+        </td>
+        <td class="text-end">{{formatAmount box3.taxable 2}}</td>
+        <td class="text-end">{{formatAmount box3.tax 2}}</td>
+        <td class="text-end">{{formatAmount box3.adj 2}}</td>
+      </tr>
+
+      {{!-- BOX 4 --}}
+      <tr>
+        <td class="box-col"><span class="box-badge">4</span></td>
+        <td>
+          Zero rated supplies
+          <span class="small-desc">Total zero-rated goods and services sold in the current period.</span>
+        </td>
+        <td class="text-end">{{formatAmount box4.taxable 2}}</td>
+        <td class="text-end text-muted">&mdash;</td>
+        <td class="text-end text-muted">&mdash;</td>
+      </tr>
+
+      {{!-- BOX 5 --}}
+      <tr>
+        <td class="box-col"><span class="box-badge">5</span></td>
+        <td>
+          Exempt supplies
+          <span class="small-desc">Total exempted goods and services sold in the UAE in the current period.</span>
+        </td>
+        <td class="text-end">{{formatAmount box5.taxable 2}}</td>
+        <td class="text-end text-muted">&mdash;</td>
+        <td class="text-end text-muted">&mdash;</td>
+      </tr>
+
+      {{!-- BOX 6 --}}
+      <tr>
+        <td class="box-col"><span class="box-badge">6</span></td>
+        <td>
+          Goods imported into the UAE
+          <span class="small-desc">Goods imported into the UAE (excl. VAT) with output VAT declared at customs. Auto-populated via your Customs Registration Number linked to TRN.</span>
+        </td>
+        <td class="text-end">{{formatAmount box6.taxable 2}}</td>
+        <td class="text-end">{{formatAmount box6.tax 2}}</td>
+        <td class="text-end text-muted">&mdash;</td>
+      </tr>
+
+      {{!-- BOX 7 --}}
+      <tr>
+        <td class="box-col"><span class="box-badge">7</span></td>
+        <td>
+          Adjustments and additions to goods imported into the UAE
+          <span class="small-desc">Adjustments to Box 6 for any VAT discrepancy.</span>
+        </td>
+        <td class="text-end">{{formatAmount box7.taxable 2}}</td>
+        <td class="text-end">{{formatAmount box7.tax 2}}</td>
+        <td class="text-end text-muted">&mdash;</td>
+      </tr>
+
+      {{!-- BOX 8 TOTALS --}}
+      <tr class="row-total">
+        <td class="box-col"><span class="box-badge">8</span></td>
+        <td>Totals</td>
+        <td class="text-end text-muted">&mdash;</td>
+        <td class="text-end">{{formatAmount A1 2}}</td>
+        <td class="text-end">{{formatAmount A2 2}}</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  {{!-- ══════════════════════════════════════════════════════
+       SECTION B — VAT on Expenses and all other Inputs
+  ══════════════════════════════════════════════════════ --}}
+  <div class="vat-section-divider" style="margin-top:16px;"></div>
+  <p class="section-title">VAT on Expenses and all other Inputs</p>
+
+  <table class="vat-table">
+    <thead>
+      <tr>
+        <th class="box-col">BOX</th>
+        <th class="desc-col">DESCRIPTION</th>
+        <th class="text-end amt-col">TAXABLE AMOUNT (AED)</th>
+        <th class="text-end amt-col">TAX AMOUNT (AED)</th>
+        <th class="text-end amt-col">ADJUSTMENTS (AED)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {{!-- BOX 9 --}}
+      <tr>
+        <td class="box-col"><span class="box-badge">9</span></td>
+        <td>
+          Standard rated expenses
+          <span class="small-desc">Standard rated purchases (excl. VAT) in the UAE, recoverable VAT, and adjustments from previous periods.</span>
+        </td>
+        <td class="text-end">{{formatAmount box9.taxable 2}}</td>
+        <td class="text-end">{{formatAmount box9.tax 2}}</td>
+        <td class="text-end">{{formatAmount box9.adj 2}}</td>
+      </tr>
+
+      {{!-- BOX 10 --}}
+      <tr>
+        <td class="box-col"><span class="box-badge">10</span></td>
+        <td>
+          Supplies subject to the reverse charge provisions
+          <span class="small-desc">Reverse-charged supplies from Boxes 3, 6 &amp; 7 (excl. VAT) with recoverable VAT on those supplies.</span>
+        </td>
+        <td class="text-end">{{formatAmount box10.taxable 2}}</td>
+        <td class="text-end">{{formatAmount box10.tax 2}}</td>
+        <td class="text-end">{{formatAmount box10.adj 2}}</td>
+      </tr>
+
+      {{!-- BOX 11 TOTALS --}}
+      <tr class="row-total">
+        <td class="box-col"><span class="box-badge">11</span></td>
+        <td>
+          Totals
+          <span class="small-desc">Auto-populated total of Box 9 and Box 10.</span>
+        </td>
+        <td class="text-end text-muted">&mdash;</td>
+        <td class="text-end">{{formatAmount A3 2}}</td>
+        <td class="text-end">{{formatAmount A4 2}}</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  {{!-- ══════════════════════════════════════════════════════
+       SECTION C — Net VAT Due
+  ══════════════════════════════════════════════════════ --}}
+  <div class="vat-section-divider" style="margin-top:16px;"></div>
+  <p class="section-title">Net VAT Due</p>
+
+  <table class="net-table">
+    <thead>
+      <tr>
+        <th style="width:70%">DESCRIPTION</th>
+        <th class="text-end" style="width:30%;">TAX AMOUNT (AED)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {{!-- BOX 12 — A5 = A1 - A2 --}}
+      <tr class="row-net-base">
+        <td>
+          12. Total value of due tax for the period
+          <span class="small-desc">A5 = A1 &minus; A2 &nbsp;&mdash;&nbsp; Sum of VAT and adjustments columns from the outputs section.</span>
+        </td>
+        <td class="text-end">{{formatAmount A5 2}}</td>
+      </tr>
+
+      {{!-- BOX 13 — A6 = A3 - A4 --}}
+      <tr class="row-net-base">
+        <td>
+          13. Total value of recoverable tax for the period
+          <span class="small-desc">A6 = A3 &minus; A4 &nbsp;&mdash;&nbsp; Sum of VAT and adjustments columns from the inputs section.</span>
+        </td>
+        <td class="text-end">{{formatAmount A6 2}}</td>
+      </tr>
+
+      {{!-- BOX 14 — A7 = A5 - A6 --}}
+      {{#if is_vat_payable}}
+      <tr class="row-net-positive row-total">
+        <td>
+          14. Net VAT Payable
+          <span class="small-desc" style="color:#c53030;font-weight:500;">A7 = A5 &minus; A6 &nbsp;&mdash;&nbsp; Amount payable to UAE Federal Tax Authority</span>
+        </td>
+        <td class="text-end" style="font-size:14px;">{{formatAmount A7 2}}</td>
+      </tr>
+      {{else}}
+      <tr class="row-net-zero row-total">
+        <td>
+          14. Net VAT Reclaimable
+          <span class="small-desc" style="color:#276749;font-weight:500;">A7 = A5 &minus; A6 &nbsp;&mdash;&nbsp; Amount reclaimable from UAE Federal Tax Authority</span>
+        </td>
+        <td class="text-end" style="font-size:14px;color:#276749;">({{formatAmount A7_abs 2}})</td>
+      </tr>
+      {{/if}}
+
+    </tbody>
+  </table>
+
+  {{!-- ── Footer ───────────────────────────────────────────── --}}
+  <div class="report-footer">
+    Generated: {{generated_at}} &nbsp;|&nbsp; Period: {{date_from}} to {{date_to}} &nbsp;&mdash;&nbsp; Ethicfin - Smart Accounting Solutions
+  </div>
+
+</div>
+</body>
+</html>

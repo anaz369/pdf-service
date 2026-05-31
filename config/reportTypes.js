@@ -10,6 +10,8 @@ const REPORT_TYPES = {
   3: { name: 'products_report',  label: 'Products Report'  },
   4: { name: 'customers_report', label: 'Customers Report' },
   10: { name: 'vat_report', label: 'Vat Report' },
+  11: { name: 'oman_vat_report', label: 'Oman Vat Report' },
+  12: { name: 'uae_vat_report',  label: 'UAE VAT Return'  },
 };
 
 const DEFAULT_REPORT_TYPE = 1;
