@@ -9,6 +9,7 @@ const REPORT_TYPES = {
   2: { name: 'sales_report',     label: 'Sales Report'     },
   3: { name: 'products_report',  label: 'Products Report'  },
   4: { name: 'customers_report', label: 'Customers Report' },
+  5: { name: 'ledger_report', label: 'Ledger Report' },
   10: { name: 'vat_report', label: 'Vat Report' },
 };
 

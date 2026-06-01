@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Account Grouping Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #0f1923;
+      --ink-light:  #4a5568;
+      --accent:     #1a4f6e;
+      --accent-2:   #c8963e;
+      --rule:       #d4dde8;
+      --bg:         #ffffff;
+      --row-alt:    #f7f9fc;
+      --section-bg: #f4f7fb;
+      --neg:        #c0392b;
+      --zero:       #b0bec5;
+      --group-bg:   #e8f0f7;
+    }
+
+    @media print {
+      @page { size: A4; margin: 12mm 14mm; }
+      body  { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; padding: 0; }
+      .no-print { display: none; }
+      .sheet { box-shadow: none; border-radius: 0; }
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #e8edf4;
+      color: var(--ink);
+      padding: 40px 20px 60px;
+    }
+
+    .sheet {
+      background: var(--bg);
+      max-width: 780px;
+      margin: 0 auto;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 4px 40px rgba(0,0,0,.12);
+    }
+
+    .doc-header {
+      padding: 26px 36px 22px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .doc-header::after {
+      content: ''; position: absolute; right: -40px; bottom: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      border: 38px solid rgba(255,255,255,.05);
+    }
+    .doc-header::before {
+      content: ''; position: absolute; right: 70px; bottom: -20px;
+      width: 110px; height: 110px; border-radius: 50%;
+      border: 22px solid rgba(200,150,62,.16);
+    }
+    .header-left { position: relative; z-index: 1; }
+    .doc-label { font-size: 10.5px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: rgba(32, 30, 30, 0.5); margin-bottom: 7px; }
+    .doc-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: #333; line-height: 1.1; }
+    .accent-bar { width: 40px; height: 3px; margin-top: 12px; border-radius: 2px; background: var(--accent-2); }
+    .header-right { position: relative; z-index: 1; text-align: right; }
+    .report-date { font-size: 11.5px; color: rgba(46, 42, 42, 0.9); font-weight: 500; background: rgba(49, 47, 47, 0.12); padding: 5px 14px; border-radius: 20px; display: inline-block; }
+
+    .meta-bar {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid var(--rule);
+    }
+    .meta-cell {
+      padding: 13px 36px;
+      display: flex; align-items: baseline; gap: 10px;
+    }
+    .meta-cell:first-child { border-right: 1px solid var(--rule); }
+    .meta-key { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-light); flex-shrink: 0; }
+    .meta-val { font-size: 13px; font-weight: 600; }
+
+    .body { padding: 22px 36px 36px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      background: var(--accent);
+      color: #fff; font-size: 10.5px; font-weight: 600;
+      letter-spacing: .6px; text-transform: uppercase;
+      padding: 10px 14px; text-align: right;
+      border-right: 1px solid rgba(255,255,255,.1); white-space: nowrap;
+    }
+    thead th:first-child { text-align: left; border-radius: 4px 0 0 0; }
+    thead th:last-child  { border-right: none; border-radius: 0 4px 0 0; }
+
+    tr.lvl1 td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--rule);
+      border-top: 2px solid var(--accent);
+      text-align: right;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+    tr.lvl1 td:first-child { text-align: left; }
+
+    tr.lvl2 td {
+      padding: 8px 14px;
+      border-bottom: 1px solid #edf0f4;
+      text-align: right;
+      font-size: 12.5px;
+      font-weight: 400;
+      color: var(--ink-light);
+      font-variant-numeric: tabular-nums;
+      background: #fff;
+    }
+    tr.lvl2 td:first-child { text-align: left; padding-left: 30px; }
+
+    td.zero { color: var(--zero); }
+    td.neg  { color: var(--neg); font-weight: 600; }
+    td.pos  { color: #1a7a3c; font-weight: 600; }
+
+    tr.grand-total td {
+      padding: 11px 14px;
+      border-top: 2px solid var(--accent);
+      border-bottom: 2px solid var(--accent);
+      text-align: right;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      background: var(--group-bg);
+    }
+    tr.grand-total td:first-child { text-align: left; }
+
+    .no-data {
+      text-align: center;
+      padding: 40px 14px;
+      color: var(--zero);
+      font-size: 13px;
+    }
+
+    .footer {
+      padding: 14px 36px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--rule);
+    }
+    .footer-note  { font-size: 10.5px; color: #9aa5b1; }
+    .footer-brand { font-size: 10.5px; font-weight: 600; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; }
+
+    .print-btn {
+      display: block; width: fit-content; margin: 22px auto 0;
+      padding: 10px 28px; color: #333;
+      border: 1px solid var(--rule); background: #fff;
+      border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer;
+    }
+    .print-btn:hover { background: var(--section-bg); }
+  </style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="header-left">
+      <div class="doc-label">Accounting</div>
+      <div class="doc-title">Account Grouping Report</div>
+      <div class="accent-bar"></div>
+    </div>
+    <div class="header-right">
+      <span class="report-date">{{generatedAt}}</span>
+    </div>
+  </div>
+
+  <!-- META BAR -->
+  <div class="meta-bar">
+    <div class="meta-cell">
+      <span class="meta-key">Branch</span>
+      <span class="meta-val">{{branchName}}</span>
+    </div>
+    <div class="meta-cell">
+      <span class="meta-key">Period</span>
+      <span class="meta-val">{{from}} – {{to}}</span>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+    <table>
+      <thead>
+        <tr>
+          <th>Group / Account</th>
+          <th>Debit</th>
+          <th>Credit</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {{#if reportData.length}}
+
+          {{#each reportData}}
+
+            <!-- Group Row -->
+            <tr class="lvl1">
+              <td>{{this.group_name}}</td>
+              <td>{{this.total_debit_fmt}}</td>
+              <td>{{this.total_credit_fmt}}</td>
+              <td class="{{this.balance_class}}">{{this.total_balance_fmt}}</td>
+            </tr>
+
+            <!-- Account Rows -->
+            {{#each this.accounts}}
+            <tr class="lvl2">
+              <td>{{this.account_name}}</td>
+              <td class="{{this.debit_class}}">{{this.debit_fmt}}</td>
+              <td class="{{this.credit_class}}">{{this.credit_fmt}}</td>
+              <td class="{{this.balance_class}}">{{this.balance_fmt}}</td>
+            </tr>
+            {{/each}}
+
+          {{/each}}
+
+          <!-- Grand Totals Row -->
+          {{#if totals}}
+          <tr class="grand-total">
+            <td>Grand Total</td>
+            <td>{{totals.grand_total_debit_fmt}}</td>
+            <td>{{totals.grand_total_credit_fmt}}</td>
+            <td class="{{totals.balance_class}}">{{totals.grand_net_balance_fmt}}</td>
+          </tr>
+          {{/if}}
+
+        {{else}}
+          <tr>
+            <td colspan="4" class="no-data">No records found for this period.</td>
+          </tr>
+        {{/if}}
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-note">Generated: {{generatedAt}} &nbsp;·&nbsp; Branch: {{branchName}}</span>
+    <span class="footer-brand">Ethicfin</span>
+  </div>
+
+</div>
+
+<button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
+
+</body>
+</html>
