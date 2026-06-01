@@ -7,6 +7,7 @@ const LAMBDA_PDF_API =
 
 /**
  * Send HTML + Puppeteer options to AWS Lambda and return a PDF buffer.
+ * Send HTML + Puppeteer options to AWS Lambda and return a PDF buffer.
  *
  * @param {string} html      - Rendered HTML string
  * @param {object} options   - Puppeteer PDF options (format, margin, etc.)
