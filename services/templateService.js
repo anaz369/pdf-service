@@ -1,9 +1,9 @@
 'use strict';
 
-const Handlebars    = require('handlebars');
-const fs            = require('fs').promises;
-const fsSync        = require('fs');
-const path          = require('path');
+const Handlebars = require('handlebars');
+const fs = require('fs').promises;
+const fsSync = require('fs');
+const path = require('path');
 const qrCodeService = require('./qrCodeService');
 
 // ── Currency symbols ───────────────────────────────────────
@@ -39,7 +39,7 @@ function findSvgPath(filename) {
 
 function loadCurrencySvg(filename, fallbackText) {
   const svgPath = findSvgPath(filename);
-  const result  = { inline: '', dataUri: '' };
+  const result = { inline: '', dataUri: '' };
 
   if (!svgPath) {
     console.warn(`⚠ ${filename} not found. Falling back to text: ${fallbackText}`);
@@ -127,7 +127,7 @@ class TemplateService {
         fsSync.readdirSync(partialsDir)
           .filter(f => f.endsWith('.hbs'))
           .forEach(file => {
-            const name   = file.replace('.hbs', '');
+            const name = file.replace('.hbs', '');
             const source = fsSync.readFileSync(path.join(partialsDir, file), 'utf-8');
             Handlebars.registerPartial(name, source);
             console.log(`Partial registered: ${name}`);
@@ -142,7 +142,7 @@ class TemplateService {
   registerHelpers() {
 
     // ── Date / Currency formatting ─────────────────────────
-    Handlebars.registerHelper('formatDate', function(dateStr) {
+    Handlebars.registerHelper('formatDate', function (dateStr) {
       if (!dateStr) return '----';
       try {
         const d = new Date(dateStr);
@@ -152,13 +152,13 @@ class TemplateService {
       } catch { return dateStr; }
     });
 
-    Handlebars.registerHelper('formatCurrency', function(value) {
+    Handlebars.registerHelper('formatCurrency', function (value) {
       if (typeof value !== 'number') value = parseFloat(value) || 0;
       return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     });
 
-    Handlebars.registerHelper('formatAmount', function(value, decimals) {
-      const dp  = (typeof decimals === 'number') ? decimals : 2;
+    Handlebars.registerHelper('formatAmount', function (value, decimals) {
+      const dp = (typeof decimals === 'number') ? decimals : 2;
       const num = parseFloat(String(value || '0').replace(/,/g, '')) || 0;
       return num.toLocaleString('en-US', {
         minimumFractionDigits: dp,
@@ -167,26 +167,26 @@ class TemplateService {
     });
 
     // ── String helpers ─────────────────────────────────────
-    Handlebars.registerHelper('upper',    (str)  => str ? str.toUpperCase() : '');
-    Handlebars.registerHelper('default',  (v, d) => v || d);
-    Handlebars.registerHelper('json',     (ctx)  => JSON.stringify(ctx, null, 2));
-     Handlebars.registerHelper('nl2br', (text) => text ? new Handlebars.SafeString(text.replace(/\n/g, '<br/>')) : '');
+    Handlebars.registerHelper('upper', (str) => str ? str.toUpperCase() : '');
+    Handlebars.registerHelper('default', (v, d) => v || d);
+    Handlebars.registerHelper('json', (ctx) => JSON.stringify(ctx, null, 2));
+    Handlebars.registerHelper('nl2br', (text) => text ? new Handlebars.SafeString(text.replace(/\n/g, '<br/>')) : '');
     //Handlebars.registerHelper('nl2br', (text) => { if (!text) return ''; new Handlebars.SafeString(text.replace(/\r\n|\n|\r/g, '<br/>'));});
 
     // ── Comparison helpers ─────────────────────────────────
-    Handlebars.registerHelper('eq',  (a, b) => a === b);
+    Handlebars.registerHelper('eq', (a, b) => a === b);
     Handlebars.registerHelper('neq', (a, b) => a !== b);
-    Handlebars.registerHelper('gt',  (a, b) =>
+    Handlebars.registerHelper('gt', (a, b) =>
       (parseFloat(String(a || 0).replace(/,/g, '')) || 0) >
       (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
     );
-    Handlebars.registerHelper('lt',  (a, b) =>
+    Handlebars.registerHelper('lt', (a, b) =>
       (parseFloat(String(a || 0).replace(/,/g, '')) || 0) <
       (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
     );
 
     // ── Math helpers — all strip commas before parsing ─────
-    Handlebars.registerHelper('add',      (a, b) =>
+    Handlebars.registerHelper('add', (a, b) =>
       (parseFloat(String(a || 0).replace(/,/g, '')) || 0) +
       (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
     );
@@ -198,23 +198,23 @@ class TemplateService {
       (parseFloat(String(a || 0).replace(/,/g, '')) || 0) *
       (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
     );
-    Handlebars.registerHelper('divide',   (a, b) =>
+    Handlebars.registerHelper('divide', (a, b) =>
       (parseFloat(String(a || 0).replace(/,/g, '')) || 0) /
       (parseFloat(String(b || 1).replace(/,/g, '')) || 1)
     );
 
     // ── Array / misc helpers ───────────────────────────────
-    Handlebars.registerHelper('length',    (arr) => arr ? arr.length : 0);
-    Handlebars.registerHelper('inc',       (val) => parseInt(val) + 1);
-    Handlebars.registerHelper('addOne',    (val) => parseInt(val, 10) + 1);
+    Handlebars.registerHelper('length', (arr) => arr ? arr.length : 0);
+    Handlebars.registerHelper('inc', (val) => parseInt(val) + 1);
+    Handlebars.registerHelper('addOne', (val) => parseInt(val, 10) + 1);
     Handlebars.registerHelper('addOffset', (index, offset) =>
       parseInt(index, 10) + parseInt(offset, 10) + 1
     );
-    Handlebars.registerHelper('notEmpty',  (val) =>
+    Handlebars.registerHelper('notEmpty', (val) =>
       val !== null && val !== undefined && val !== '' && val !== '0' && val !== 0
     );
 
-    Handlebars.registerHelper('pageDisplay', function(pageNumber, totalPages) {
+    Handlebars.registerHelper('pageDisplay', function (pageNumber, totalPages) {
       // If values are passed manually, use them
       if (pageNumber !== undefined && totalPages !== undefined) {
         return `${pageNumber}/${totalPages}`;
@@ -226,19 +226,19 @@ class TemplateService {
       );
     });
     // ── Invoice-specific helpers ───────────────────────────
-    Handlebars.registerHelper('ifFlag', function(settings, key, options) {
+    Handlebars.registerHelper('ifFlag', function (settings, key, options) {
       if (!settings || typeof settings !== 'object') return options.inverse(this);
       const val = settings[key];
       const isTrue = val === 1 || val === '1' || val === true || val === 'true';
       return isTrue ? options.fn(this) : options.inverse(this);
     });
 
-    Handlebars.registerHelper('ifZatca', function(settings, options) {
+    Handlebars.registerHelper('ifZatca', function (settings, options) {
       return (settings && (settings.d51 == '154' || settings.d51 === 154))
         ? options.fn(this) : options.inverse(this);
     });
 
-    Handlebars.registerHelper('joinAddress', function(addr, separator) {
+    Handlebars.registerHelper('joinAddress', function (addr, separator) {
       const sep = (typeof separator === 'string') ? separator : ', ';
       if (!addr || typeof addr !== 'object') return '';
       return [
@@ -248,7 +248,7 @@ class TemplateService {
     });
 
     // ── Currency symbol helpers ────────────────────────────
-    Handlebars.registerHelper('currencySymbol', function(isocode) {
+    Handlebars.registerHelper('currencySymbol', function (isocode) {
       const iso = (isocode || 'SAR').toUpperCase().trim();
 
       if (SVG_CURRENCY_MAP[iso]) {
@@ -261,8 +261,8 @@ class TemplateService {
       );
     });
 
-    Handlebars.registerHelper('currencyImg', function(isocode, size) {
-      const iso    = (isocode || 'SAR').toUpperCase().trim();
+    Handlebars.registerHelper('currencyImg', function (isocode, size) {
+      const iso = (isocode || 'SAR').toUpperCase().trim();
       const height = (typeof size === 'string') ? size : '8px';
 
       if (SVG_CURRENCY_MAP[iso]) {
@@ -280,7 +280,7 @@ class TemplateService {
       );
     });
 
-    Handlebars.registerHelper('qrDataUri', function(qrCodeBase64) {
+    Handlebars.registerHelper('qrDataUri', function (qrCodeBase64) {
       if (qrCodeBase64 && String(qrCodeBase64).length > 20) {
         return new Handlebars.SafeString(
           `<img src="data:image/png;base64,${qrCodeBase64}" ` +
@@ -292,21 +292,35 @@ class TemplateService {
       );
     });
 
-    Handlebars.registerHelper('hasVat', function(items, options) {
+    Handlebars.registerHelper('hasVat', function (items, options) {
       const hasVat = (items || []).some(i => parseFloat(i.vat_amt) > 0);
       return hasVat ? options.fn(this) : options.inverse(this);
     });
+
+    // ✅ ADDED: Register Handlebars helpers (lines 2-14)
+    Handlebars.registerHelper('if_gt', function (a, b, options) {
+      return parseFloat(a) > parseFloat(b) ? options.fn(this) : options.inverse(this);
+    });
+
+    Handlebars.registerHelper('unless_gt', function (a, b, options) {
+      return parseFloat(a) <= parseFloat(b) ? options.fn(this) : options.inverse(this);
+    });
+
+    Handlebars.registerHelper('formatNumber', function (val) {
+      return parseFloat(val || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+    // ✅ END OF ADDED LINES
 
   }
 
   // ── DATA PREPARATION ──────────────────────────────────────
   prepareTemplateData(data) {
     const basic = (data.basicdetails && data.basicdetails[0]) || {};
-    const iso   = (basic.isocode || 'SAR').toUpperCase().trim();
+    const iso = (basic.isocode || 'SAR').toUpperCase().trim();
 
     data.isocode = iso;
-    data.isSAR   = iso === 'SAR';
-    data.isAED   = iso === 'AED';
+    data.isSAR = iso === 'SAR';
+    data.isAED = iso === 'AED';
 
     data.ccrate = parseFloat(
       String(data.ccrate || basic.ccrate || 1).replace(/,/g, '')
@@ -401,7 +415,7 @@ class TemplateService {
       const files = await fs.readdir(templatesDir);
       for (const file of files.filter(f => f.endsWith('.hbs'))) {
         const name = file.replace('.hbs', '');
-        const src  = await fs.readFile(path.join(templatesDir, file), 'utf-8');
+        const src = await fs.readFile(path.join(templatesDir, file), 'utf-8');
         this.compiledTemplates.set(name, Handlebars.compile(src));
         console.log(`Precompiled: ${name}`);
       }
@@ -423,12 +437,12 @@ class TemplateService {
 
     if (pages.length === 0) pages.push({ items: [], startIndex: 0 });
 
-    data.pageItems  = pages[0].items;
+    data.pageItems = pages[0].items;
     data.startIndex = pages[0].startIndex;
     data.isLastPage = pages.length === 1;
 
     data.extraPages = pages.slice(1).map((page, idx) => ({
-      pageItems:  page.items,
+      pageItems: page.items,
       startIndex: page.startIndex,
       isLastPage: idx === pages.length - 2
     }));
