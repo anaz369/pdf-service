@@ -3,6 +3,12 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      full_sync:
+        description: 'Full sync — re-upload ALL files to server'
+        required: false
+        default: 'false'
+        type: boolean
 
 name: 🚀 Deploy PDF Service
 
@@ -16,25 +22,30 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: 🔍 Get changed files
+      - name: 🔍 Get changed files (normal push)
+        if: ${{ github.event.inputs.full_sync != 'true' }}
         id: changed
         run: |
           git diff --name-only HEAD~1 HEAD > changed_files.txt
           echo "Changed files:"
           cat changed_files.txt
 
-      - name: 📂 Upload only changed files
+      - name: 🗂️ Get ALL files (full sync)
+        if: ${{ github.event.inputs.full_sync == 'true' }}
+        run: |
+          find . -type f \
+            ! -path './node_modules/*' \
+            ! -path './.git/*' \
+            ! -path './.github/*' \
+            ! -path './tmp/*' \
+            ! -name '.env' \
+            | sed 's|^\./||' > changed_files.txt
+          echo "Full sync — files to upload:"
+          wc -l changed_files.txt
+
+      - name: 📂 Upload files
         run: |
           while IFS= read -r file; do
-            if [[ "$file" == node_modules/* ]] || \
-               [[ "$file" == .git* ]] || \
-               [[ "$file" == .env ]] || \
-               [[ "$file" == tmp/* ]] || \
-               [[ "$file" == .github/* ]]; then
-              echo "Skipping: $file"
-              continue
-            fi
-
             if [ -f "$file" ]; then
               echo "Uploading: $file"
               curl -T "$file" \
