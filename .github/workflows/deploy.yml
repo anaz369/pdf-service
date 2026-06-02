@@ -13,26 +13,43 @@ jobs:
     steps:
       - name: 🚚 Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
-      - name: 📦 Install lftp
-        run: sudo apt-get install -y lftp
-
-      - name: 📂 Mirror repo to server
+      - name: 🔍 Get changed files
+        id: changed
         run: |
-          lftp -c "
-            set ftp:ssl-allow no;
-            set net:timeout 30;
-            set net:max-retries 3;
-            set net:reconnect-interval-base 5;
-            open ftp://${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}@${{ secrets.FTP_SERVER }};
-            mirror --reverse --delete --verbose \
-              --exclude-glob node_modules/ \
-              --exclude-glob .git/ \
-              --exclude-glob .github/ \
-              --exclude-glob .env \
-              --exclude-glob tmp/ \
-              . /puppeteer-pdf/;
-          "
+          git diff --name-only HEAD~1 HEAD > changed_files.txt
+          echo "Changed files:"
+          cat changed_files.txt
+
+      - name: 📂 Upload only changed files
+        run: |
+          while IFS= read -r file; do
+            if [[ "$file" == node_modules/* ]] || \
+               [[ "$file" == .git* ]] || \
+               [[ "$file" == .env ]] || \
+               [[ "$file" == tmp/* ]] || \
+               [[ "$file" == .github/* ]]; then
+              echo "Skipping: $file"
+              continue
+            fi
+
+            if [ -f "$file" ]; then
+              echo "Uploading: $file"
+              curl -T "$file" \
+                --ftp-pasv \
+                --ftp-create-dirs \
+                --connect-timeout 30 \
+                --max-time 60 \
+                --retry 3 \
+                --retry-delay 5 \
+                --silent --show-error \
+                "ftp://${{ secrets.FTP_SERVER }}/puppeteer-pdf/$file" \
+                -u "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
+              echo "Done: $file"
+            fi
+          done < changed_files.txt
 
       - name: 🔄 Restart app via FTP trigger
         run: |
