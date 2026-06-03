@@ -55,9 +55,10 @@ jobs:
           date > restart.txt
           {
             echo "set ftp:passive-mode true;"
-            echo "set ssl:verify-certificate no;"
-            echo "set net:timeout 30;"
-            echo "set net:max-retries 3;"
+            echo "set ftp:ssl-allow no;"
+            echo "set ftp:keepalive-interval 60;"
+            echo "set net:timeout 60;"
+            echo "set net:max-retries 5;"
             echo "open -u $FTP_USERNAME,$FTP_PASSWORD ftp://$FTP_SERVER;"
 
             while IFS= read -r file; do
