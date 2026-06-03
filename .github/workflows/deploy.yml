@@ -3,6 +3,12 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      full_sync:
+        description: 'Full sync — re-upload ALL files to server'
+        required: false
+        default: 'false'
+        type: boolean
 
 name: 🚀 Deploy PDF Service
 
@@ -16,32 +22,74 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: 📂 Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /puppeteer-pdf/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.env
-            **/tmp/**
+      - name: 📦 Install lftp
+        run: sudo apt-get install -y lftp
+
+      - name: 🔍 Get changed files (normal push)
+        if: ${{ github.event.inputs.full_sync != 'true' }}
+        run: |
+          git diff --name-only HEAD~1 HEAD > changed_files.txt
+          echo "Changed files:"
+          cat changed_files.txt
+
+      - name: 🗂️ Get ALL files (full sync)
+        if: ${{ github.event.inputs.full_sync == 'true' }}
+        run: |
+          find . -type f \
+            ! -path './node_modules/*' \
+            ! -path './.git/*' \
+            ! -path './.github/*' \
+            ! -path './tmp/*' \
+            ! -name '.env' \
+            | sed 's|^\./||' > changed_files.txt
+          echo "Full sync — files to upload:"
+          wc -l changed_files.txt
+
+      - name: 📂 Upload files
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          while IFS= read -r file; do
+            if [[ "$file" == node_modules/* ]] || \
+               [[ "$file" == .git* ]] || \
+               [[ "$file" == .env ]] || \
+               [[ "$file" == tmp/* ]] || \
+               [[ "$file" == .github/* ]]; then
+              echo "Skipping: $file"
+              continue
+            fi
+
+            if [ -f "$file" ]; then
+              echo "Uploading: $file"
+              dir=$(dirname "$file")
+              lftp -e "
+                set ftp:passive-mode true;
+                set net:timeout 30;
+                set net:max-retries 3;
+                open -u $FTP_USERNAME,$FTP_PASSWORD ftp://$FTP_SERVER;
+                mkdir -fp /puppeteer-pdf/$dir;
+                put $file -o /puppeteer-pdf/$file;
+                bye
+              "
+              echo "Done: $file"
+            fi
+          done < changed_files.txt
 
       - name: 🔄 Restart app via FTP trigger
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
           date > restart.txt
-          curl -T restart.txt \
-            --ftp-pasv \
-            --ftp-create-dirs \
-            --connect-timeout 30 \
-            --max-time 60 \
-            --retry 3 \
-            --retry-delay 5 \
-            --silent --show-error \
-            "ftp://${{ secrets.FTP_SERVER }}/puppeteer-pdf/tmp/restart.txt" \
-            -u "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
+          lftp -e "
+            set ftp:passive-mode true;
+            set net:timeout 30;
+            set net:max-retries 3;
+            open -u $FTP_USERNAME,$FTP_PASSWORD ftp://$FTP_SERVER;
+            put restart.txt -o /puppeteer-pdf/tmp/restart.txt;
+            bye
+          "
           echo "✅ Restart triggered"
