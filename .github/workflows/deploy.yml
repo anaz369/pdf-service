@@ -54,6 +54,7 @@ jobs:
           # Build a single lftp script so only ONE FTP connection is opened
           {
             echo "set ftp:passive-mode true;"
+            echo "set ssl:verify-certificate no;"
             echo "set net:timeout 30;"
             echo "set net:max-retries 3;"
             echo "open -u $FTP_USERNAME,$FTP_PASSWORD ftp://$FTP_SERVER;"
@@ -89,6 +90,7 @@ jobs:
           date > restart.txt
           lftp -e "
             set ftp:passive-mode true;
+            set ssl:verify-certificate no;
             set net:timeout 30;
             set net:max-retries 3;
             open -u $FTP_USERNAME,$FTP_PASSWORD ftp://$FTP_SERVER;
