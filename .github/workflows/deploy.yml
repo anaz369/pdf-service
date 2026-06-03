@@ -51,31 +51,34 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          while IFS= read -r file; do
-            if [[ "$file" == node_modules/* ]] || \
-               [[ "$file" == .git* ]] || \
-               [[ "$file" == .env ]] || \
-               [[ "$file" == tmp/* ]] || \
-               [[ "$file" == .github/* ]]; then
-              echo "Skipping: $file"
-              continue
-            fi
+          # Build a single lftp script so only ONE FTP connection is opened
+          {
+            echo "set ftp:passive-mode true;"
+            echo "set net:timeout 30;"
+            echo "set net:max-retries 3;"
+            echo "open -u $FTP_USERNAME,$FTP_PASSWORD ftp://$FTP_SERVER;"
 
-            if [ -f "$file" ]; then
-              echo "Uploading: $file"
-              dir=$(dirname "$file")
-              lftp -e "
-                set ftp:passive-mode true;
-                set net:timeout 30;
-                set net:max-retries 3;
-                open -u $FTP_USERNAME,$FTP_PASSWORD ftp://$FTP_SERVER;
-                mkdir -fp /puppeteer-pdf/$dir;
-                put $file -o /puppeteer-pdf/$file;
-                bye
-              "
-              echo "Done: $file"
-            fi
-          done < changed_files.txt
+            while IFS= read -r file; do
+              if [[ "$file" == node_modules/* ]] || \
+                 [[ "$file" == .git* ]] || \
+                 [[ "$file" == .env ]] || \
+                 [[ "$file" == tmp/* ]] || \
+                 [[ "$file" == .github/* ]]; then
+                continue
+              fi
+
+              if [ -f "$file" ]; then
+                echo "Uploading: $file"
+                dir=$(dirname "$file")
+                echo "mkdir -fp /puppeteer-pdf/$dir;"
+                echo "put $file -o /puppeteer-pdf/$file;"
+              fi
+            done < changed_files.txt
+
+            echo "bye"
+          } > upload.lftp
+
+          lftp -f upload.lftp
 
       - name: 🔄 Restart app via FTP trigger
         env:
