@@ -45,13 +45,14 @@ jobs:
           echo "Full sync — files to upload:"
           wc -l changed_files.txt
 
-      - name: 📂 Upload files
+      - name: 📂 Upload files & trigger restart
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          # Build a single lftp script so only ONE FTP connection is opened
+          # Build a single lftp script — ONE connection for uploads + restart
+          date > restart.txt
           {
             echo "set ftp:passive-mode true;"
             echo "set ssl:verify-certificate no;"
@@ -76,25 +77,12 @@ jobs:
               fi
             done < changed_files.txt
 
+            # Trigger app restart in the same session
+            echo "mkdir -fp /puppeteer-pdf/tmp;"
+            echo "put restart.txt -o /puppeteer-pdf/tmp/restart.txt;"
+
             echo "bye"
           } > upload.lftp
 
           lftp -f upload.lftp
-
-      - name: 🔄 Restart app via FTP trigger
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          date > restart.txt
-          lftp -e "
-            set ftp:passive-mode true;
-            set ssl:verify-certificate no;
-            set net:timeout 30;
-            set net:max-retries 3;
-            open -u $FTP_USERNAME,$FTP_PASSWORD ftp://$FTP_SERVER;
-            put restart.txt -o /puppeteer-pdf/tmp/restart.txt;
-            bye
-          "
           echo "✅ Restart triggered"
