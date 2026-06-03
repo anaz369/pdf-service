@@ -46,6 +46,15 @@ jobs:
       - name: 📂 Upload files
         run: |
           while IFS= read -r file; do
+            if [[ "$file" == node_modules/* ]] || \
+               [[ "$file" == .git* ]] || \
+               [[ "$file" == .env ]] || \
+               [[ "$file" == tmp/* ]] || \
+               [[ "$file" == .github/* ]]; then
+              echo "Skipping: $file"
+              continue
+            fi
+
             if [ -f "$file" ]; then
               echo "Uploading: $file"
               curl -T "$file" \
@@ -55,6 +64,7 @@ jobs:
                 --max-time 60 \
                 --retry 3 \
                 --retry-delay 5 \
+                --fail \
                 --silent --show-error \
                 "ftp://${{ secrets.FTP_SERVER }}/puppeteer-pdf/$file" \
                 -u "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
@@ -72,6 +82,7 @@ jobs:
             --max-time 60 \
             --retry 3 \
             --retry-delay 5 \
+            --fail \
             --silent --show-error \
             "ftp://${{ secrets.FTP_SERVER }}/puppeteer-pdf/tmp/restart.txt" \
             -u "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
