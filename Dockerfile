@@ -7,6 +7,7 @@ WORKDIR /app
 
 # Copy package files first (layer caching — only re-runs npm install if package.json changes)
 COPY package*.json ./
+ENV PUPPETEER_SKIP_DOWNLOAD=true
 RUN npm install --omit=dev
 
 # Copy app source
