@@ -1,0 +1,17 @@
+services:
+  pdf-service:
+    build: .
+    container_name: pdf-service
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - puppeteer-service
+
+  puppeteer-service:
+    build: ./puppeteer-service
+    container_name: puppeteer-service
+    restart: always
+    # Port 3001 is internal only — not exposed outside Docker network

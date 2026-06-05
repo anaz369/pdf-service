@@ -3,85 +3,25 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      full_sync:
-        description: 'Full sync — re-upload ALL files to server'
-        required: false
-        default: 'false'
-        type: boolean
 
 name: 🚀 Deploy PDF Service
 
 jobs:
   deploy:
-    name: 🎉 Deploy to cPanel
+    name: 🎉 Deploy to EC2
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Checkout code
         uses: actions/checkout@v4
+
+      - name: 🔑 Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          fetch-depth: 2
-
-      - name: 📦 Install lftp
-        run: sudo apt-get install -y lftp
-
-      - name: 🔍 Get changed files (normal push)
-        if: ${{ github.event.inputs.full_sync != 'true' }}
-        run: |
-          git diff --name-only HEAD~1 HEAD > changed_files.txt
-          echo "Changed files:"
-          cat changed_files.txt
-
-      - name: 🗂️ Get ALL files (full sync)
-        if: ${{ github.event.inputs.full_sync == 'true' }}
-        run: |
-          find . -type f \
-            ! -path './node_modules/*' \
-            ! -path './.git/*' \
-            ! -path './.github/*' \
-            ! -path './tmp/*' \
-            ! -name '.env' \
-            | sed 's|^\./||' > changed_files.txt
-          echo "Full sync — files to upload:"
-          wc -l changed_files.txt
-
-      - name: 📂 Upload files
-        run: |
-          {
-            echo "set ftp:ssl-allow false;"
-            echo "set ftp:passive-mode true;"
-            echo "open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};"
-
-            while IFS= read -r file; do
-              if [[ "$file" == node_modules/* ]] || \
-                 [[ "$file" == .git* ]] || \
-                 [[ "$file" == .env ]] || \
-                 [[ "$file" == tmp/* ]] || \
-                 [[ "$file" == .github/* ]]; then
-                continue
-              fi
-
-              if [ -f "$file" ]; then
-                echo "Uploading: $file"
-                dir=$(dirname "$file")
-                echo "mkdir -fp /puppeteer-pdf/$dir;"
-                echo "put $file -o /puppeteer-pdf/$file;"
-              fi
-            done < changed_files.txt
-
-            echo "bye"
-          } > upload.lftp
-
-          lftp -f upload.lftp
-
-      - name: 🔄 Trigger app restart
-        run: |
-          date > restart.txt
-          lftp -c "
-          set ftp:ssl-allow false;
-          set ftp:passive-mode true;
-          open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://${{ secrets.FTP_SERVER }};
-          put restart.txt -o /puppeteer-pdf/tmp/restart.txt;
-          bye
-          "
-          echo "✅ Restart triggered"
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /var/www/pdf-service
+            git pull origin main
+            docker compose up --build -d
+            echo "✅ Deployed successfully"
