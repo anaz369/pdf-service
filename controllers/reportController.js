@@ -3,7 +3,7 @@
 const { PDFDocument } = require('pdf-lib');
 const templateService = require('../services/templateService');
 const pdfService = require('../services/pdfService');
-const { callLambda } = require('../services/lambdaService');
+const { generatePdf } = require('../services/lambdaService');
 const { getReportTypeInfo } = require('../config/reportTypes');
 
 class ReportController {
@@ -183,27 +183,27 @@ class ReportController {
       console.log(`✓ PDF options configured in ${Date.now() - renderTime}ms`);
 
       // ============================================
-      // PHASE 4: CALL LAMBDA
+      // PHASE 4: GENERATE PDF
       // ============================================
-      console.log('Calling AWS Lambda...');
+      console.log('Calling Puppeteer service...');
       let pdfBuffer;
 
       try {
-        pdfBuffer = await callLambda(htmlContent, pdfOptions);
-        console.log(`✓ Lambda done. PDF size: ${pdfBuffer.length} bytes`);
+        pdfBuffer = await generatePdf(htmlContent, pdfOptions);
+        console.log(`✓ PDF generated. Size: ${pdfBuffer.length} bytes`);
       } catch (err) {
-        console.error('✗ Lambda failed:', err.message);
+        console.error('✗ PDF generation failed:', err.message);
 
         if (err.response) {
           return res.status(500).json({
-            error: 'Lambda PDF generation failed',
+            error: 'PDF generation failed',
             details: err.response.data,
             statusCode: err.response.status,
           });
         }
 
         return res.status(500).json({
-          error: 'Failed to call Lambda',
+          error: 'Failed to generate PDF',
           details: err.message,
         });
       }
@@ -243,7 +243,7 @@ class ReportController {
       res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
       res.setHeader('X-PDF-Generation-Time', totalTime.toString());
       res.setHeader('X-PDF-Size', pdfBuffer.length.toString());
-      res.setHeader('X-PDF-Generator', 'AWS-Lambda');
+      res.setHeader('X-PDF-Generator', 'Puppeteer');
 
       res.send(pdfBuffer);
 

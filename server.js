@@ -11,7 +11,7 @@ async function startServer() {
   try {
     console.log('='.repeat(50));
     console.log('PDF Generation Service Starting...');
-    console.log('PDF Mode: AWS Lambda');
+    console.log('PDF Mode: Puppeteer Service');
     console.log('='.repeat(50));
 
     // Start Express server
@@ -20,7 +20,7 @@ async function startServer() {
       console.log(`✓ Server running on port ${PORT}`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`✓ URL: http://localhost:${PORT}`);
-      console.log(`✓ PDF Generator: AWS Lambda`);
+      console.log(`✓ PDF Generator: Puppeteer Service`);
       console.log('='.repeat(50) + '\n');
 
       console.log('Available endpoints:');

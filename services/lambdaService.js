@@ -12,7 +12,7 @@ const PUPPETEER_SERVICE_URL =
  * @param {object} options   - Puppeteer PDF options (format, margin, etc.)
  * @returns {Promise<Buffer>}
  */
-async function callLambda(html, options) {
+async function generatePdf(html, options) {
   const response = await axios.post(
     `${PUPPETEER_SERVICE_URL}/generate`,
     { html, options },
@@ -26,4 +26,4 @@ async function callLambda(html, options) {
   return Buffer.from(response.data);
 }
 
-module.exports = { callLambda };
+module.exports = { generatePdf };

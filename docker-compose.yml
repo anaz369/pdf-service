@@ -14,4 +14,5 @@ services:
     build: ./puppeteer-service
     container_name: puppeteer-service
     restart: always
-    # Port 3001 is internal only — not exposed outside Docker network
+    ports:
+      - "3001:3001"

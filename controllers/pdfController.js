@@ -1,13 +1,9 @@
-const axios = require("axios");
 const { PDFDocument } = require("pdf-lib");
 const templateService = require("../services/templateService");
 const { getDocTypeInfo } = require("../config/docTypes");
 const qrCodeService = require("../services/qrCodeService");
 const pdfService = require("../services/pdfService");
-
-// AWS Lambda API endpoint
-// const LAMBDA_PDF_API = 'https://49ov366dtf.execute-api.us-east-1.amazonaws.com/default/puppeteer-pdf-generator';
-const LAMBDA_PDF_API = "https://hcpuerxkuc.execute-api.ap-south-1.amazonaws.com/default/puppeteer-pdf-generator";
+const { generatePdf } = require("../services/lambdaService");
 
 class PdfController {
   /**
@@ -21,7 +17,7 @@ class PdfController {
         environment: process.platform,
         runtime: process.version,
         nodeEnv: process.env.NODE_ENV,
-        lambdaEndpoint: LAMBDA_PDF_API,
+        puppeteerServiceUrl: process.env.PUPPETEER_SERVICE_URL || 'http://puppeteer-service:3001',
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
@@ -30,7 +26,7 @@ class PdfController {
   }
 
   /**
-   * Generate PDF using AWS Lambda
+   * Generate PDF via Puppeteer service
    */
   async generatePdfWithRazorView(req, res) {
     const startTime = Date.now();
@@ -51,7 +47,7 @@ class PdfController {
       const docTypeInfo = getDocTypeInfo(pdfRequest.doc_type);
       const docTypeFolder = docTypeInfo.folder;
 
-      console.log("\n=== PDF Generation Started (Lambda Mode) ===");
+      console.log("\n=== PDF Generation Started ===");
       console.log(
         `Template No: ${pdfRequest.template_no}, Doc Type: ${pdfRequest.doc_type} (${docTypeInfo.label})`,
       );
@@ -433,49 +429,35 @@ class PdfController {
       console.log(`✓ PDF options configured in ${optionsTime - renderTime}ms`);
 
       // ============================================
-      // PHASE 4: CALL AWS LAMBDA TO GENERATE PDF
+      // PHASE 4: GENERATE PDF VIA PUPPETEER SERVICE
       // ============================================
-      console.log("Calling AWS Lambda to generate PDF...");
+      console.log("Calling Puppeteer service to generate PDF...");
 
       let pdfBuffer;
 
       try {
-        const lambdaResponse = await axios.post(
-          LAMBDA_PDF_API,
-          {
-            html: htmlContent,
-            options: pdfOptions,
-          },
-          {
-            responseType: "arraybuffer",
-            timeout: 60000,
-            maxContentLength: Infinity,
-            maxBodyLength: Infinity,
-          },
-        );
+        pdfBuffer = await generatePdf(htmlContent, pdfOptions);
 
-        pdfBuffer = Buffer.from(lambdaResponse.data);
-
-        const lambdaTime = Date.now();
+        const puppeteerTime = Date.now();
         console.log(
-          `✓ Lambda PDF generation completed in ${lambdaTime - optionsTime}ms`,
+          `✓ PDF generation completed in ${puppeteerTime - optionsTime}ms`,
         );
         console.log(`✓ PDF size: ${pdfBuffer.length} bytes`);
-      } catch (lambdaError) {
-        console.error("✗ Lambda PDF generation failed:", lambdaError.message);
+      } catch (pdfError) {
+        console.error("✗ PDF generation failed:", pdfError.message);
 
-        if (lambdaError.response) {
-          console.error("Lambda error response:", lambdaError.response.data);
+        if (pdfError.response) {
+          console.error("Puppeteer error response:", pdfError.response.data);
           return res.status(500).json({
-            error: "Lambda PDF generation failed",
-            details: lambdaError.response.data,
-            statusCode: lambdaError.response.status,
+            error: "PDF generation failed",
+            details: pdfError.response.data,
+            statusCode: pdfError.response.status,
           });
         }
 
         return res.status(500).json({
-          error: "Failed to call Lambda",
-          details: lambdaError.message,
+          error: "Failed to generate PDF",
+          details: pdfError.message,
         });
       }
 
@@ -532,7 +514,7 @@ class PdfController {
       const totalTime = endTime - startTime;
 
       console.log(`✓ Total processing time: ${totalTime}ms`);
-      console.log("=== PDF Generation Completed (Lambda Mode) ===\n");
+      console.log("=== PDF Generation Completed ===\n");
 
       // ============================================
       // PHASE 5: FILENAME & SEND RESPONSE
@@ -571,7 +553,7 @@ class PdfController {
         "X-PDF-Document-Type",
         pdfRequest.MyInvoisDocument?.document_info?.type_display || "Invoice",
       );
-      res.setHeader("X-PDF-Generator", "AWS-Lambda");
+      res.setHeader("X-PDF-Generator", "Puppeteer");
 
       res.send(pdfBuffer);
     } catch (error) {

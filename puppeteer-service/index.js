@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 const express = require('express');
 const puppeteer = require('puppeteer-core');
 
@@ -51,7 +52,7 @@ async function launchBrowser() {
   try {
     cachedBrowser = await puppeteer.launch({
       headless: 'new',
-      executablePath: '/usr/bin/chromium',
+      executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium',
       args: CHROME_ARGS,
       ignoreHTTPSErrors: true,
       timeout: 60000,

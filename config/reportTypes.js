@@ -3,7 +3,6 @@
 // Maps report_type (int sent from PHP) → template name prefix + label
 // Template file resolved as: reports/{name}{template_no}.hbs
 // e.g. report_type=1, template_no=2  →  reports/project_report2.hbs
-
 // e.g. report_type=1, template_no=2  →  reports/project_report2.hbs
 
 const REPORT_TYPES = {
