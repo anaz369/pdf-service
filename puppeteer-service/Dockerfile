@@ -20,9 +20,6 @@ RUN npm install --omit=dev
 
 COPY index.js ./
 
-RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
-USER appuser
-
 EXPOSE 3001
 
 CMD ["node", "index.js"]
