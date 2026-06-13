@@ -30,6 +30,8 @@ const CHROME_ARGS = [
   '--disable-web-security',
   '--disable-features=IsolateOrigins,site-per-process',
   '--font-render-hinting=none',
+  '--disable-crash-reporter',
+  '--no-first-run',
 ];
 
 function withTimeout(promise, ms, label) {
