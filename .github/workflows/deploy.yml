@@ -23,6 +23,7 @@ jobs:
           script: |
             git config --global --add safe.directory /var/www/pdf-service
             cd /var/www/pdf-service
+            git stash
             git pull origin main
             sudo docker compose up --build -d
             echo "✅ Deployed successfully"
