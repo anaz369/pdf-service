@@ -1,18 +1,9 @@
 "use strict";
-
-<<<<<<< HEAD
 const Handlebars = require("handlebars");
 const fs = require("fs").promises;
 const fsSync = require("fs");
 const path = require("path");
 const qrCodeService = require("./qrCodeService");
-=======
-const Handlebars = require('handlebars');
-const fs = require('fs').promises;
-const fsSync = require('fs');
-const path = require('path');
-const qrCodeService = require('./qrCodeService');
->>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
 
 // ── Currency symbols ───────────────────────────────────────
 const CURRENCY_SYMBOLS = {
