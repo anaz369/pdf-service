@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUOTATION - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.4;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+
+  /* ── Title ─────────────────────────────────── */
+  .title-wrap {
+    text-align: center;
+    position: relative;
+    padding: 6px 0 14px;
+  }
+  .main-title {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    background: #fff;
+    padding: 0 5px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 22px;
+    font-weight: bold;
+    color: #2a4d7b;
+  }
+
+  /* ── Top info box ──────────────────────────── */
+  .top-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+  }
+  .top-table > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 0;
+    vertical-align: top;
+    font-size: 11px;
+  }
+
+  .cust-cell {
+    padding: 0;
+  }
+  .cust-name-block {
+    padding: 6px 10px;
+  }
+  .cust-name { font-weight: bold; }
+  .cust-name2 { font-weight: bold; }
+  .cust-vat-block {
+    padding: 6px 10px;
+  }
+  .cust-vat-block1 {
+      padding: 2px 10px;
+    }
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .ref-table th,
+  .ref-table td {
+    padding: 6px 8px;
+    font-size: 11px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+  }
+  .ref-table th { font-weight: normal; }
+  .ref-table td { font-weight: bold; }
+  .ref-table .v-sep { border-right: 1px solid #ccc; }
+
+  .top-table .left-cell { width: 40%; }
+  .top-table .right-cell { width: 60%; padding: 0; vertical-align: top; }
+
+  /* ── Items table ──────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+    border-top: none;
+  }
+  .items-table th,
+  .items-table td {
+    font-size: 11px;
+    vertical-align: top;
+    padding: 6px 6px;
+  }
+  .items-table th {
+    text-align: center;
+    font-weight: bold;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+  .items-table td {
+    border: 1px solid #ccc;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Terms block ───────────────────────────── */
+  .terms-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    border-top: none;
+  }
+  .terms-table td {
+    border: 1px solid #000;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  .terms-label { }
+  .terms-text { }
+
+  /* ── Bottom section ───────────────────────── */
+  .bottom-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border-top: none;
+  }
+  .bottom-table > tbody > tr > td {
+    padding: 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+
+  .words-cell { padding: 8px 10px; }
+  .words-label { margin-bottom: 2px; }
+  .words-value { font-weight: bold; margin-bottom: 6px; }
+
+  .totals-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .totals-table td {
+    border: none;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  .totals-table .t-lbl { text-align: right; border-bottom: 1px solid #ccc;}
+  .totals-table .t-val { text-align: right; width: 22%; border-bottom: 1px solid #ccc;}
+  .totals-table .total-row .t-lbl,
+  .totals-table .total-row .t-val {
+    font-weight: bold;
+  }
+
+  /* ── Signature row ─────────────────────────── */
+  .sign-grid {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .sign-grid .sign-col {
+    width: 33.333%;
+    padding: 6px 10px;
+    vertical-align: bottom;
+    text-align: center;
+    border: none;
+  }
+  .sign-grid .sign-imgs td { height: 90px; }
+  .sig-img-cell { text-align: center; }
+  .seal-img-cell { text-align: center; }
+  .sig-img { max-height: 80px; max-width: 160px; display: inline-block; }
+  .seal-img { max-height: 90px; max-width: 110px; display: inline-block; }
+  .sig-label { font-weight: bold; }
+  .seal-label { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="title-wrap">
+    <span class="main-title">QUOTATION</span>
+  </div>
+
+  <!-- Top Info Section -->
+  <table class="top-table">
+    <tr>
+      <td class="left-cell cust-cell">
+        <div class="cust-name-block">
+          <div class="cust-name">{{billing_address.[0].name}}</div>
+          {{#if billing_address_lang2.[0].name}}<div class="cust-name2">{{billing_address_lang2.[0].name}}</div>{{/if}}
+          {{#if basicdetails.[0].contactname}}<div class="">Name : {{basicdetails.[0].contactname}}<br>
+          No : {{basicdetails.[0].contactno}}<br>Email : {{basicdetails.[0].contactemail}}</div>{{/if}}
+          {{#if billing_address.[0].vat}}VAT : {{billing_address.[0].vat}}{{/if}}
+        </div>
+      </td>
+      <td class="right-cell">
+        <table class="ref-table">
+          <tr>
+            <td class="v-sep" style="font-weight:normal;">Reference</td>
+            <th class="v-sep">Doc No</th>
+            <th>Date</th>
+          </tr>
+          <tr>
+            <td class="v-sep">{{basicdetails.[0].reference_no}}</td>
+            <td class="v-sep">{{basicdetails.[0].inv_no}}</td>
+            <td>{{basicdetails.[0].inv_date}}</td>
+          </tr>
+          <tr>
+            <td colspan="3" style="height:24px; border-bottom:none;"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:5%">
+      <col style="width:10%">
+      <col style="width:29%">
+      <col style="width:9%">
+      <col style="width:8%">
+      <col style="width:10%">
+      <col style="width:10%">
+      <col style="width:9%">
+      <col style="width:10%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th style="border-left:1px solid #000;">#</th>
+        <th>Code</th>
+        <th class="left">Description</th>
+        <th>Quantity</th>
+        <th>UOM</th>
+        <th>Unit Price</th>
+        <th>Taxable</th>
+        <th>Tax</th>
+        <th style="border-right:1px solid #000;">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center" style="border-left:1px solid #000;">{{addOne @index}}</td>
+        <td class="center">{{#if part_number}}{{part_number}}{{else}}{{item_code}}{{/if}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div>{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{formatAmount quantity ../bcdp}}</td>
+        <td class="center">{{unit}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount taxable ../bcdp}}</td>
+        <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="right" style="border-right:1px solid #000;">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Terms & Conditions -->
+  <table class="terms-table">
+    <tr>
+      <td style="border-left:1px solid #000; border-right:1px solid #000;">
+        <div class="terms-label" style="font-weight:bold;">Terms And Conditions :</div>
+        {{#if basicdetails.[0].terms_and_condition}}
+        <div class="terms-text">{{{nl2br basicdetails.[0].terms_and_condition}}}</div>
+        {{else}}{{#if invterms}}
+        <div class="terms-text">{{{nl2br invterms}}}</div>
+        {{/if}}{{/if}}
+      </td>
+    </tr>
+  </table>
+
+  <!-- Bottom Section -->
+  <table class="bottom-table">
+    <tr>
+      <td style="width:50%; border-left:1px solid #000;">
+        <div class="words-cell">
+          <div class="words-label">Amount chargeable in words :</div>
+          <div class="words-value">{{bcamountinwords}}</div>
+          <div class="words-label">VAT Amount in words:</div>
+          <div class="words-value"></div>
+        </div>
+      </td>
+      <td style="width:50%;border-right:1px solid #000;">
+        <table class="totals-table">
+          <tr>
+            <td class="t-lbl" style="border-right: 1px solid #ccc;">Total Taxable Amount (Excluding VAT )</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="t-lbl" style="border-right: 1px solid #ccc;">VAT</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+          </tr>
+          <tr class="total-row">
+            <td class="t-lbl" style="border-right: 1px solid #ccc;border-bottom:1px dashed #ccc;">Total Amount</td>
+            <td class="t-val" style="border-bottom:1px dashed #ccc;">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr class="sign-row" style="border-right: 1px solid #000;border-left: 1px solid #000;border-bottom: 1px solid #000;">
+      <td colspan="2" style="padding:0;">
+        <table class="sign-grid">
+          <tr class="sign-imgs">
+            <td class="sign-col"></td>
+            <td class="sign-col sig-img-cell">
+              {{#if Signature}}<img class="sig-img" src="{{Signature}}" alt="signature"/>{{/if}}
+            </td>
+            <td class="sign-col seal-img-cell">
+              {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+            </td>
+          </tr>
+          <tr class="sign-labels">
+            <td class="sign-col"><span class="sig-label">Approved by</span></td>
+            <td class="sign-col"><span class="sig-label">Authorised Signatory</span></td>
+            <td class="sign-col"><span class="seal-label">For {{#if compprof.name}}{{compprof.name}}{{else}}{{basicdetails.[0].branchname}}{{/if}}</span></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

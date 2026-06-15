@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Invoice - MINU000021INV</title>
+<style>
+
+*{
+    margin:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:10px;
+    color:#000;
+    margin:0 8mm;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+td,th{
+    border:1px solid #000;
+    padding:2px 3px;
+    vertical-align:middle;
+}
+
+.invoice-title-ar{
+    text-align:center;
+    font-size:16px;
+    font-weight:bold;
+    direction:rtl;
+}
+
+.invoice-title{
+    text-align:center;
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.label-ar{
+    direction:rtl;
+    text-align:right;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Titles -->
+
+<div class="invoice-title-ar">
+    فاتورة ضريبية
+</div>
+
+<div class="invoice-title">
+    INVOICE
+</div>
+
+<!-- Top Info + QR -->
+
+<table style="border:none;border-collapse:collapse;width:100%;">
+    <tr>
+        <td style="border:none;padding:0;vertical-align:top;width:78%;">
+            <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                <td width="28%">Invoice Number</td>
+                <td width="44%">{{basicdetails.[0].inv_no}}</td>
+                <td width="28%" class="label-ar">رقم الفاتورة</td>
+                </tr>
+                <tr>
+                    <td>Invoice Issue Date</td>
+                    <td>{{basicdetails.[0].inv_date}}</td>
+                    <td class="label-ar">تاريخ الفاتورة</td>
+                </tr>
+                <tr>
+                    <td>DN Number</td>
+                    <td></td>
+                    <td class="label-ar">رقم الاسم المميز</td>
+                </tr>
+                <tr>
+                    <td>Date of Supply</td>
+                    <td>{{basicdetails.[0].sup_date}}</td>
+                    <td class="label-ar">تاريخ التوريد</td>
+                </tr>
+                <tr>
+                    <td>Branch</td>
+                    <td>{{branch.[0].name}}</td>
+                    <td class="label-ar">الفرع</td>
+                </tr>
+                <tr>
+                    <td>Due Date</td>
+                    <td>{{basicdetails.[0].due_date}}</td>
+                    <td class="label-ar">تاريخ الاستحقاق</td>
+                </tr>
+                <tr>
+                    <td>Customer Code</td>
+                    <td>{{customer_details.[0].profile_code}}</td>
+                    <td class="label-ar">رمز العميل</td>
+                </tr>
+                <tr>
+                    <td>Project</td>
+                    <td>{{basicdetails.[0].project_name}}</td>
+                    <td class="label-ar">مشروع</td>
+                </tr>
+                <tr>
+                    <td>PO Number</td>
+                    <td>{{basicdetails.[0].order_no}}</td>
+                    <td class="label-ar">رقم أمر الشراء</td>
+                </tr>
+            </table>
+        </td>
+        <td style="border:none;padding:0;width:4%;"></td>
+        <td style="border:none;padding:0;vertical-align:top;width:18%;">
+            <div style="border:1px solid #000;text-align:center;">
+            {{{qrDataUri qrCodeBase64}}}
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!-- Supplier + Customer -->
+
+<table style="border:none;border-collapse:collapse;width:100%;margin-top:5px;">
+    <tr>
+        <td style="border:none;padding:0;vertical-align:top;width:49.5%;">
+            <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                    <td width="28%" style="border:1px solid #000;border-right:none;">Supplier</td>
+                    <td width="44%" style="border:1px solid #000;border-right:none;border-left:none;"></td>
+                    <td width="28%" style="border:1px solid #000;border-left:none;" class="label-ar">المورد</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>{{branch.[0].name}}</td>
+                    <td class="label-ar">الإسم</td>
+                </tr>
+                <tr>
+                    <td>Building Number</td>
+                    <td>{{branch.[0].address_line1}}</td>
+                    <td class="label-ar">رقم المبنى</td>
+                </tr>
+                <tr>
+                    <td>Street Name</td>
+                    <td>{{branch.[0].address_line2}}</td>
+                    <td class="label-ar">اسم الشارع</td>
+                </tr>
+                <tr>
+                    <td>District</td>
+                    <td>{{branch.[0].address_line3}}</td>
+                    <td class="label-ar">الحي</td>
+                </tr>
+                <tr>
+                    <td>City</td>
+                    <td>{{branch.[0].address_line4}}</td>
+                    <td class="label-ar">المدينة</td>
+                </tr>
+                <tr>
+                    <td>Country</td>
+                    <td>{{branch.[0].address_line5}}</td>
+                    <td class="label-ar">البلد</td>
+                </tr>
+                <tr>
+                    <td>Postal Code</td>
+                    <td>{{branch.[0].address_code}}</td>
+                    <td class="label-ar">الرمز بريدي</td>
+                </tr>
+                <tr>
+                    <td>Additional NO</td>
+                    <td>{{branch.[0].additional_no}}</td>
+                    <td class="label-ar">الرقم إضافي</td>
+                </tr>
+                <tr>
+                    <td>VAT Number</td>
+                    <td>{{branch.[0].vat}}</td>
+                    <td class="label-ar">الرقم ضريبه الشراء</td>
+                </tr>
+                <tr>
+                    <td>Other Buyer ID</td>
+                    <td></td>
+                    <td class="label-ar">معرف المشتري الآخر</td>
+                </tr>
+            </table>
+        </td>
+        <td style="border:none;padding:0;width:1%;"></td>
+        <td style="border:none;padding:0;vertical-align:top;width:49.5%;">
+            <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                    <td width="28%" style="border:1px solid #000;border-right:none;">Customer</td>
+                    <td width="44%" style="border:1px solid #000;border-right:none;border-left:none;"></td>
+                    <td width="28%" style="border:1px solid #000;border-left:none;" class="label-ar">العميل</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>{{billing_address.[0].name}}</td>
+                    <td class="label-ar">الإسم</td>
+                </tr>
+                <tr>
+                    <td>Building Number</td>
+                    <td>{{billing_address.[0].address_line1}}</td>
+                    <td class="label-ar">رقم المبنى</td>
+                </tr>
+                <tr>
+                    <td>Street Name</td>
+                    <td>{{billing_address.[0].address_line2}}</td>
+                    <td class="label-ar">اسم الشارع</td>
+                </tr>
+                <tr>
+                    <td>District</td>
+                    <td>{{billing_address.[0].address_line3}}</td>
+                    <td class="label-ar">الحي</td>
+                </tr>
+                <tr>
+                    <td>City</td>
+                    <td>{{billing_address.[0].address_line4}}</td>
+                    <td class="label-ar">المدينة</td>
+                </tr>
+                <tr>
+                    <td>Country</td>
+                    <td>{{billing_address.[0].address_line5}}</td>
+                    <td class="label-ar">البلد</td>
+                </tr>
+                <tr>
+                    <td>Postal Code</td>
+                    <td>{{billing_address.[0].address_code}}</td>
+                    <td class="label-ar">الرمز بريدي</td>
+                </tr>
+                <tr>
+                    <td>Additional NO</td>
+                    <td>{{customer_details.[0].additional_no}}</td>
+                    <td class="label-ar">الرقم إضافي</td>
+                </tr>
+                <tr>
+                    <td>VAT Number</td>
+                    <td>{{customer_details.[0].VAT_number}}</td>
+                    <td class="label-ar">الرقم ضريبه الشراء</td>
+                </tr>
+                <tr>
+                    <td>Other Buyer ID</td>
+                    <td></td>
+                    <td class="label-ar">معرف المشتري الآخر</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Items Table -->
+
+<table style="width:100%;border-collapse:collapse;margin-top:5px;">
+    <thead>
+        <tr style="font-size:9px;">
+            <th style="text-align:center;width:13%;">
+                <div class="label-ar" style="text-align:center;font-size:9px;">المجموع شامل ضريبة</div>
+                <div>Subtotal Incl.VAT</div>
+            </th>
+            <th style="text-align:center;width:9%;font-size:9px;">
+                <div class="label-ar" style="text-align:center;">قيمة الضريبة</div>
+                <div>Tax Amount</div>
+            </th>
+            <th style="text-align:center;width:8%;">
+                <div class="label-ar" style="text-align:center;font-size:9px;">معدل الضريبة</div>
+                <div>Tax Rate</div>
+            </th>
+            <th style="text-align:center;width:11%;">
+                <div class="label-ar" style="text-align:center;">المبلغ</div>
+                <div style="font-size:9px;">Taxable Amount</div>
+            </th>
+            <th style="text-align:center;width:7%;">
+                <div class="label-ar" style="text-align:center;">خصومات</div>
+                <div>Discount</div>
+            </th>
+            <th style="text-align:center;width:8%;">
+                <div class="label-ar" style="text-align:center;">سعر الوحدة</div>
+                <div>Unit Price</div>
+            </th>
+            <th style="text-align:center;width:7%;">
+                <div class="label-ar" style="text-align:center;">الكمية</div>
+                <div>Quantity</div>
+            </th>
+            <th style="text-align:center;width:22%;">
+                <div class="label-ar" style="text-align:center;">اسم المنتج</div>
+                <div>Product Name</div>
+            </th>
+            <th style="text-align:center;width:9%;">
+                <div class="label-ar" style="text-align:center;">معرف المنتج</div>
+                <div>Product Id</div>
+            </th>
+            <th style="text-align:center;width:6%;">
+                <div class="label-ar" style="text-align:center;">رقم</div>
+                <div>No</div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each itemdetails}}
+        <tr style="font-size: 9px;">
+            <td style="text-align:right;">{{formatAmount amount ../bcdp}}</td>
+            <td style="text-align:right;">{{formatAmount tax ../bcdp}}</td>
+            <td style="text-align:center;">{{vat_perc}}</td>
+            <td style="text-align:right;">{{formatAmount taxable ../bcdp}}</td>
+            <td style="text-align:right;">{{formatAmount disc_amt ../bcdp}}</td>
+            <td style="text-align:right;">{{formatAmount price ../bcdp}}</td>
+            <td style="text-align:center;">{{formatAmount quantity ../bcdp}}</td>
+            <td style="text-align:right;">
+                {{item_name}}
+                    {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+                    {{#if description}}<div>{{description}}</div>{{/if}}
+            </td>
+            <td style="text-align:right;">{{item_code}}</td>
+            <td style="text-align:center;">{{addOne @index}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<!-- Totals + Notes -->
+
+<table style="border:none;border-collapse:collapse;width:100%;margin-top:5px;page-break-inside:avoid;break-inside:avoid;">
+    <tr>
+        <td style="border:none;padding:0;vertical-align:top;width:70%;">
+            <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                    <td width="18.5%" style="text-align:right;">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+                    <td width="42.5%" class="label-ar"> الإجمالي (باستثناء الضريبة على القيمة المضافة)</td>
+                    <td width="39%">Total (Excluding VAT)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+                    <td class="label-ar">إجمالي الخصومات</td>
+                    <td>Total Discounts</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">{{formatAmount (subtract (divide basicdetails.[0].subtotal ccrate) (divide basicdetails.[0].discount ccrate)) bcdp}}</td>
+                    <td class="label-ar">(باستثناء الضريبة) إجمالي الخاضع للضريبة</td>
+                    <td>Total Taxable Amount(excuding VAT)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+                    <td class="label-ar">ضريبة القيمة المضافة</td>
+                    <td>{{datasettingstextvalue.d828}}</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+                    <td class="label-ar">إجمالي المبلغ المستحق</td>
+                    <td>Total Amount Due</td>
+                </tr>
+            </table>
+        </td>
+        <td style="border:1px solid #000;border-left:none;padding:0;vertical-align:top;width:30%;">
+            <div style="text-decoration:underline;direction:rtl;text-align:right;font-weight:bold;padding:4px;">ملاحظات : </div>
+        </td>
+    </tr>
+</table>
+
+<!-- Bank Details + Signatures -->
+
+<table style="border:none;border-collapse:collapse;width:100%;margin-top:10px;page-break-inside:avoid;break-inside:avoid;">
+    <tr>
+        <td style="border:none;padding:0;vertical-align:top;width:50%;">
+            <div style="border:1px solid #000;padding:6px 8px;">
+                <div style="font-weight:bold;margin-bottom:4px;">Bank Details</div>
+                <table style="width:100%;border:none;border-collapse:collapse;">
+                    <tr>
+                        <td style="border:none;padding:1px 0;font-weight:bold;width:30%;">Bank Name</td>
+                        <td style="border:none;padding:1px 4px;width:2%;">:</td>
+                        <td style="border:none;padding:1px 0;width:40%;">{{bankdetails.name}}</td>
+                        <td style="border:none;padding:1px 0;width:28%;" class="label-ar">اسم المصرف</td>
+                    </tr>
+                    <tr>
+                        <td style="border:none;padding:1px 0;font-weight:bold;">Account Name</td>
+                        <td style="border:none;padding:1px 4px;">:</td>
+                        <td style="border:none;padding:1px 0;">{{bankdetails.acc_name}}</td>
+                        <td style="border:none;padding:1px 0;" class="label-ar">اسم العميل</td>
+                    </tr>
+                    <tr>
+                        <td style="border:none;padding:1px 0;font-weight:bold;">Account No</td>
+                        <td style="border:none;padding:1px 4px;">:</td>
+                        <td style="border:none;padding:1px 0;">{{bankdetails.acc_no}}</td>
+                        <td style="border:none;padding:1px 0;" class="label-ar">رقم العميل</td>
+                    </tr>
+                    <tr>
+                        <td style="border:none;padding:1px 0;font-weight:bold;">IBAN</td>
+                        <td style="border:none;padding:1px 4px;">:</td>
+                        <td style="border:none;padding:1px 0;">{{bankdetails.iban_no}}</td>
+                        <td style="border:none;padding:1px 0;" class="label-ar">رقم الآيبان</td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+        <td style="border:none;padding:0;width:50%;"></td>
+    </tr>
+    <tr>
+        <td style="border:none;padding:0;width:50%;">
+            <table style="border:none;border-collapse:collapse;width:100%;margin-top:14px;">
+                <tr>
+                    <td style="border:none;padding:0;direction:rtl;text-align:left;width:50%;">المبيعات</td>
+                    <td style="border:none;padding:0;width:50%;"></td>
+                </tr>
+                <tr>
+                    <td style="border:none;padding:14px 0 0 0;direction:rtl;text-align:left;">الاداره</td>
+                    <td style="border:none;padding:0;"></td>
+                </tr>
+            </table>
+        </td>
+        <td style="border:none;padding:0;vertical-align:top;width:50%;">
+            <div style="padding:4px 0;direction:rtl;text-align:right;">الاستلم : ...............</div>
+            <div style="padding:8px 0 4px 0;direction:rtl;text-align:right;"> التوقيع : ...............</div>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

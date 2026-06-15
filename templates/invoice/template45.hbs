@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INVOICE - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #000;
+    line-height: 1.5;
+    margin: 0 10mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Top green bar ─────────────────────────── */
+  .top-line {
+    height: 4px;
+    background: #1f9d57;
+    margin-bottom: 14px;
+  }
+
+  /* ── Header (Bill To + Invoice meta) ───── */
+  .header-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 14px;
+  }
+  .header-table > tbody > tr > td {
+    border: none;
+    padding: 0;
+    vertical-align: top;
+  }
+
+  .bill-to-cell {
+    width: 50%;
+    padding-right: 12px;
+  }
+  .bill-to-cell .title {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .bill-to-cell .name { font-weight: normal; }
+  .bill-to-cell .ar {
+    direction: rtl;
+    text-align: left;
+  }
+  .bill-to-cell .vat-row {
+    margin-top: 8px;
+  }
+
+  .invoice-meta-cell {
+    width: 50%;
+    padding-left: 12px;
+    text-align: right;
+  }
+  .invoice-meta-cell .doc-title {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .invoice-meta-cell .doc-no {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .invoice-meta-cell .meta-row {
+    line-height: 1.7;
+  }
+  .invoice-meta-cell .meta-lbl {
+    display: inline-block;
+    min-width: 110px;
+    text-align: right;
+  }
+  .invoice-meta-cell .meta-sep {
+    display: inline-block;
+    width: 12px;
+    text-align: center;
+  }
+  .invoice-meta-cell .meta-val {
+    display: inline-block;
+  }
+
+  /* ── Items table ────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 14px;
+  }
+  .items-table th,
+  .items-table td {
+    padding: 6px 8px;
+    font-size: 10px;
+    vertical-align: top;
+  }
+  .items-table thead th {
+    border-top: 1px solid #cfcfcf;
+    border-bottom: 1px solid #cfcfcf;
+    text-align: left;
+    font-weight: bold;
+  }
+  .items-table thead th.center { text-align: center; }
+  .items-table thead th.right { text-align: right; }
+  .items-table tbody td {
+    border-bottom: 1px solid #eee;
+  }
+  .items-table tbody td.c { text-align: center; }
+  .items-table tbody td.r { text-align: right; }
+
+  /* ── QR + Totals ─────────────────────────── */
+  .footer-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .footer-table > tbody > tr > td {
+    border: none;
+    padding: 0;
+    vertical-align: top;
+  }
+
+  .qr-cell {
+    width: 35%;
+    padding-right: 12px;
+  }
+  .qr-cell .qr-box {
+    display: inline-block;
+  }
+
+  .totals-cell {
+    width: 65%;
+  }
+  .totals-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .totals-table td {
+    border: none;
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  .totals-table .lbl {
+    text-align: right;
+    width: 60%;
+  }
+  .totals-table .val {
+    text-align: right;
+    width: 40%;
+  }
+  .totals-table tr.grand td {
+    font-weight: bold;
+    border-top: 1px solid #cfcfcf;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .totals-table .words {
+    padding-top: 10px;
+    font-size: 10px;
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <div class="top-line"></div>
+
+  <!-- Header : Bill To + Invoice meta -->
+  <table class="header-table">
+    <tr>
+      <td class="bill-to-cell">
+        <div class="title">Bill To</div>
+        <div class="name">{{billing_address.[0].name}}</div>
+        <div class="ar">{{billing_address_lang2.[0].name}}</div>
+        <div>{{billing_address.[0].address_line1}}</div>
+        <div>{{billing_address.[0].address_line2}} {{billing_address.[0].address_line3}}</div>
+        <div>{{billing_address.[0].address_line4}} {{billing_address.[0].address_line5}}</div>
+        <div class="ar">{{billing_address_lang2.[0].address_line1}}</div>
+        <div class="ar">
+          {{billing_address_lang2.[0].address_line2}} {{billing_address_lang2.[0].address_line3}}
+          {{billing_address_lang2.[0].address_line4}} {{billing_address_lang2.[0].address_line5}}
+        </div>
+        <div class="vat-row">VAT No : {{customer_details.[0].VAT_number}}</div>
+        <div>CR No : {{customer_details.[0].cr_no}}</div>
+      </td>
+
+      <td class="invoice-meta-cell">
+        <div class="doc-title">INVOICE</div>
+        <div class="doc-no">{{basicdetails.[0].inv_no}}</div>
+        <div class="meta-row">
+          <span class="meta-lbl">Invoice Date</span><span class="meta-sep">:</span><span class="meta-val">{{basicdetails.[0].inv_date}}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-lbl">Due Date</span><span class="meta-sep">:</span><span class="meta-val">{{basicdetails.[0].due_date}}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-lbl">Referance No</span><span class="meta-sep">:</span><span class="meta-val">{{basicdetails.[0].reference_no}}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-lbl">PO No</span><span class="meta-sep">:</span><span class="meta-val">{{basicdetails.[0].order_no}}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-lbl">PO Date</span><span class="meta-sep">:</span><span class="meta-val">{{basicdetails.[0].po_date}}</span>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+
+  <!-- Items table -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th class="center" style="width:5%;">#</th>
+        <th style="width:39%;">Item&amp; Description</th>
+        <th class="right" style="width:12%;">Price</th>
+        <th class="center" style="width:8%;">Qty</th>
+        <th class="center" style="width:10%;">UOM</th>
+        <th class="right" style="width:12%;">Tax</th>
+        <th class="right" style="width:14%;">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="c">{{addOne @index}}</td>
+        <td>
+          {{item_name}}{{#if name_lang2}}<br>{{name_lang2}}{{/if}}{{#if description}}<br>{{description}}{{/if}}
+        </td>
+        <td class="r">{{formatAmount price ../bcdp}}</td>
+        <td class="c">{{quantity}}</td>
+        <td class="c">{{unit}}</td>
+        <td class="r">{{formatAmount tax ../bcdp}}</td>
+        <td class="r">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+
+  <!-- QR + Totals -->
+  <table class="footer-table">
+    <tr>
+      <td class="qr-cell">
+        <div class="qr-box">{{{qrDataUri qrCodeBase64}}}</div>
+      </td>
+      <td class="totals-cell">
+        <table class="totals-table">
+          <tr>
+            <td class="lbl">Gross Total</td>
+            <td class="val">{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Discount</td>
+            <td class="val">{{formatAmount basicdetails.[0].discount bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Total (Excluding VAT)</td>
+            <td class="val">{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="lbl">VAT</td>
+            <td class="val">{{formatAmount basicdetails.[0].vatamt bcdp}}</td>
+          </tr>
+          <tr class="grand">
+            <td class="lbl">Total</td>
+            <td class="val">{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
+          </tr>
+          <tr>
+            <td colspan="2" class="words">Amount in words: {{bcamountinwords}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</div>
+</body>
+</html>

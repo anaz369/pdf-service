@@ -191,6 +191,33 @@ class PdfController {
         );
       }
 
+      // ── Task 8: Item images (itemdetails[].image1) → base64 data URI ─
+      // Adds itemdetails[].image1DataUri so templates can embed product images inline.
+      if (Array.isArray(pdfRequest.itemdetails) && pdfRequest.itemdetails.length) {
+        pdfRequest.itemdetails.forEach((item) => {
+          if (item && item.image1 && !String(item.image1).startsWith("data:")) {
+            const itemImageUrl = String(item.image1).startsWith("http")
+              ? item.image1
+              : `https://accounts.ethicfin.com/uploads/product_images/${item.image1}`;
+            preprocessingTasks.push(
+              pdfService
+                .getHighQualityImageBytes(itemImageUrl)
+                .then((imgBuffer) => {
+                  if (imgBuffer) {
+                    const ext = (String(item.image1).split(".").pop() || "png").toLowerCase();
+                    const mime = ext === "jpg" || ext === "jpeg" ? "jpeg" : ext;
+                    item.image1DataUri = `data:image/${mime};base64,${imgBuffer.toString("base64")}`;
+                  }
+                })
+                .catch((err) => {
+                  console.error(`✗ Item image '${item.image1}' failed:`, err.message);
+                  item.image1DataUri = "";
+                }),
+            );
+          }
+        });
+      }
+
       // ── Task 3: MyInvois QR ──────────────────────────────
       if (pdfRequest.MyInvoisDocument?.myinvois) {
         const myinvois = pdfRequest.MyInvoisDocument.myinvois;

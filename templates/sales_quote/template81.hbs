@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commercial Offer - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.45;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #1f3a6b;
+    padding: 6px 0 14px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Outer doc table ───────────────────────── */
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+  }
+  .doc-table > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 6px 10px;
+    vertical-align: top;
+    font-size: 11px;
+  }
+
+  /* ── Top header cells ──────────────────────── */
+  .ti-lbl { font-weight: bold; }
+  .ti-name { margin-top: 2px; }
+  .ti-center { text-align: center; }
+  .ti-center .lbl { font-weight: normal; }
+  .ti-center .val { font-weight: bold; }
+
+  /* ── Items table ──────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .items-table th,
+  .items-table td {
+    font-size: 11px;
+    vertical-align: middle;
+    padding: 6px 8px;
+    border: 1px solid #000;
+  }
+  .items-table thead th {
+    text-align: center;
+    font-weight: bold;
+    background: #ffffff;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Words + Totals ───────────────────────── */
+  .wt-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .wt-table td {
+    border: 1px solid #000;
+    padding: 8px 10px;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .wt-words-label { }
+  .wt-words-value { font-weight: bold; margin-top: 2px; margin-bottom: 6px; }
+  .wt-words-ar    { direction: rtl; font-weight: bold; }
+
+  .totals-inner {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .totals-inner td {
+    padding: 6px 10px;
+    font-size: 11px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    vertical-align: middle;
+  }
+  .totals-inner tr:last-child td { border-bottom: none; }
+  .totals-inner .t-lbl { text-align: right; width: 70%; }
+  .totals-inner .t-val { text-align: right; width: 30%; }
+  .totals-inner .total-row td { font-weight: bold; }
+
+  /* ── Terms + Signature area ────────────────── */
+  .tc-block { padding: 10px; }
+  .tc-title { font-weight: bold; margin-bottom: 4px; }
+  .tc-text  { margin-top: 4px; }
+
+  .sign-area {
+    padding: 10px;
+    min-height: 160px;
+    position: relative;
+    text-align: right;
+  }
+  .sig-img  { max-height: 80px; max-width: 160px; display: inline-block; vertical-align: middle; }
+  .seal-img { max-height: 90px; max-width: 110px; display: inline-block; vertical-align: middle; margin-left: 20px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">COMMERCIAL OFFER</div>
+
+  <!-- Document -->
+  <table class="doc-table">
+    <!-- Row 1: Customer Details | Quotation No | Date -->
+    <tr>
+      <td style="width:55%;">
+        <div class="ti-lbl">Customer Details:</div>
+        <div class="ti-name">{{billing_address.[0].name}}</div>
+      </td>
+      <td style="width:25%;" class="ti-center">
+        <div class="lbl">Quotation No</div>
+        <div class="val">{{basicdetails.[0].inv_no}}</div>
+      </td>
+      <td style="width:20%;" class="ti-center">
+        <div class="lbl">Date</div>
+        <div class="val">{{basicdetails.[0].inv_date}}</div>
+      </td>
+    </tr>
+
+    <!-- Row 2: blank | Validity (spanning 2 cols) -->
+    <tr>
+      <td></td>
+      <td colspan="2" class="ti-center">
+        Validity : <strong>{{#if basicdetails.[0].due_date}}{{basicdetails.[0].due_date}}{{else}}{{basicdetails.[0].inv_date}}{{/if}}</strong>
+      </td>
+    </tr>
+
+    <!-- Row 3: Project Name | Location (spanning 2 cols) -->
+    <tr>
+      <td>Project Name :{{#if basicdetails.[0].projectname}} {{basicdetails.[0].projectname}}{{/if}}</td>
+      <td colspan="2" class="ti-center">Location :{{#if basicdetails.[0].location}} {{basicdetails.[0].location}}{{/if}}</td>
+    </tr>
+
+    <!-- Items -->
+    <tr>
+      <td colspan="3" style="padding:0;">
+        <table class="items-table">
+          <colgroup>
+            <col style="width:6%">
+            <col style="width:11%">
+            <col style="width:38%">
+            <col style="width:9%">
+            <col style="width:12%">
+            <col style="width:12%">
+            <col style="width:12%">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Sl No</th>
+              <th>Part Number</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Discount</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each itemdetails}}
+            <tr>
+              <td class="center">{{addOne @index}}</td>
+              <td class="center">{{#if part_number}}{{part_number}}{{else}}{{item_code}}{{/if}}</td>
+              <td class="left">
+                {{item_name}}
+                {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+                {{#if description}}<div>{{description}}</div>{{/if}}
+              </td>
+              <td class="center">{{formatAmount quantity 0}}</td>
+              <td class="right">{{formatAmount price ../bcdp}}</td>
+              <td class="right">{{formatAmount disc_amt ../bcdp}}</td>
+              <td class="right">{{formatAmount amount ../bcdp}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Words + Totals -->
+    <tr>
+      <td colspan="3" style="padding:0;">
+        <table class="wt-table">
+          <tr>
+            <td style="width:55%;">
+              <div class="wt-words-label">Amount chargeable in words :</div>
+              <div class="wt-words-value">{{bcamountinwords}}</div>
+              <div class="wt-words-label">Amount in words in Arabic:</div>
+              <div class="wt-words-ar">{{bcamountinwordsar}}</div>
+            </td>
+            <td style="width:45%; padding:0;">
+              <table class="totals-inner">
+                <tr>
+                  <td class="t-lbl">Total Amount</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="t-lbl">Discount</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+                </tr>
+                <tr class="total-row">
+                  <td class="t-lbl">Total Amount After Discount</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Terms & Condition -->
+    <tr>
+      <td colspan="3" style="padding:0;">
+        <div class="tc-block">
+          <div class="tc-title">Terms &amp; Condition</div>
+          <div class="tc-text">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{else}}{{#if invterms}}{{{nl2br invterms}}}{{/if}}{{/if}}</div>
+        </div>
+        <div class="sign-area">
+          {{#if Signature}}<img class="sig-img" src="{{Signature}}" alt="signature"/>{{/if}}
+          {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="seal"/>{{/if}}
+        </div>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

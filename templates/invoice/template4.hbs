@@ -2,16 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <title>Tax Invoice - {{basicdetails.[0].inv_no}}</title>
+  <title>Invoice - {{basicdetails.[0].inv_no}}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; font-size: 11px; color: #000; background: #fff; }
+     body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #000;
+    line-height: 1.4;
+    margin: 0 8mm;
+  }
     .page { margin: 0 auto; padding: 0; }
 
     .main-title { text-align: center; font-size: 18px; font-weight: bold; letter-spacing: 1px; padding: 8px 0 6px 0; border-bottom: 1px solid #000; }
 
     .meta-bar { width: 100%; border-collapse: collapse; }
-    .meta-bar td { border: 1px solid #000; padding: 3px 8px; font-size: 10.5px; text-align: center; vertical-align: middle; }
+    .meta-bar td { border: 1px solid #000; border-top: none; padding: 3px 8px; font-size: 10.5px; text-align: center; vertical-align: middle; }
     .meta-bar .meta-lbl { font-size: 10px; font-weight: bold; }
     .meta-bar .meta-val { color: #555; font-size: 11px; }
 
@@ -107,7 +114,7 @@
       {{#if branch.[0].address_line3}}<div class="vc-addr">{{branch.[0].address_line3}}</div>{{/if}}
       {{#if branch.[0].address_line4}}<div class="vc-addr">{{branch.[0].address_line4}}</div>{{/if}}
       {{#if branch.[0].address_line5}}<div class="vc-addr">{{branch.[0].address_line5}}</div>{{/if}}
-      {{#if branch.[0].vat}}<div class="vc-trn">TRN : {{branch.[0].vat}}</div>{{/if}}
+      {{#if branch.[0].vat}}<div class="vc-trn">{{tax_label}}  : {{branch.[0].vat}}</div>{{/if}}
     </div>
     <div class="vc-customer">
       <div class="vc-name">{{billing_address.[0].name}}</div>
@@ -116,7 +123,7 @@
       {{#if billing_address.[0].address_line3}}<div class="vc-addr">{{billing_address.[0].address_line3}}</div>{{/if}}
       {{#if billing_address.[0].address_line4}}<div class="vc-addr">{{billing_address.[0].address_line4}}</div>{{/if}}
       {{#if billing_address.[0].address_line5}}<div class="vc-addr">{{billing_address.[0].address_line5}}</div>{{/if}}
-      {{#if customer_details.[0].VAT_number}}<div class="vc-trn">TRN : {{customer_details.[0].VAT_number}}</div>{{/if}}
+      {{#if customer_details.[0].VAT_number}}<div class="vc-trn">{{tax_label}}  : {{customer_details.[0].VAT_number}}</div>{{/if}}
     </div>
   </div>
 
@@ -161,7 +168,7 @@
 
   <div class="terms-section">
     <div class="terms-title">Terms And Conditions</div>
-    <div class="terms-text">{{#if invterms}}{{invterms}}{{/if}}</div>
+    <div class="terms-text">{{#if basicdetails.[0].terms_and_condition}}{{basicdetails.[0].terms_and_condition}}{{/if}}</div>
   </div>
 
   <div class="summary-outer">
@@ -178,7 +185,7 @@
           <span class="tl-amt">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</span>
         </div>
         <div class="tot-line">
-          <span class="tl-lbl">VAT ( 5% )</span>
+          <span class="tl-lbl">{{datasettingstextvalue.d828}}</span>
           <span class="tl-amt">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</span>
         </div>
         <div class="tot-line tot-final">
@@ -234,9 +241,7 @@
       </div>
       <div class="sum-auth">
         <div class="sig-company">For {{branch.[0].name}}</div>
-        {{#if Signature}}
-          <img src="{{Signature}}" class="sig-img" alt="Signature" onerror="this.style.display='none'"/>
-        {{/if}}
+        {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
         <div class="sig-auth">Authorised Signatory</div>
       </div>
     </div>

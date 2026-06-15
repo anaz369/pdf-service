@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INVOICE - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9px;
+    color: #000;
+    line-height: 1.4;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Shared ──────────────────────────────── */
+  .label-ar { direction: rtl; text-align: right; }
+  .center   { text-align: center; }
+  .right    { text-align: right; }
+  .bold     { font-weight: bold; }
+
+
+  /* ── Title ────────────────────────────── */
+  .doc-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 4px 0 8px 0;
+  }
+
+
+  /* ── Client + Invoice info ──────────────── */
+  .top-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .top-table > tbody > tr > td {
+    vertical-align: top;
+    padding: 0;
+    border: none;
+  }
+
+  .info-box {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+  }
+  .info-box td {
+    border: 1px solid #000;
+    padding: 5px 6px;
+    font-size: 9px;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .info-box .info-lbl-en {
+    font-weight: bold;
+    text-align: center;
+  }
+  .info-box .info-lbl-ar {
+    font-weight: bold;
+    direction: rtl;
+    text-align: center;
+  }
+  .info-box .info-val {
+    text-align: center;
+  }
+  .info-box .info-address {
+    text-align: center;
+    line-height: 1.7;
+    padding: 8px 6px;
+  }
+  .info-box .info-address .ar {
+    direction: rtl;
+  }
+
+
+  /* ── Items table ────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 6px;
+  }
+  .items-table th,
+  .items-table td {
+    border: 1px solid #000;
+    padding: 3px 4px;
+    font-size: 9px;
+    vertical-align: middle;
+  }
+  .items-table thead th {
+    font-weight: bold;
+    text-align: center;
+  }
+  .items-table thead th .en { display: block; }
+  .items-table thead th .ar {
+    display: block;
+    direction: rtl;
+    font-size: 9px;
+    font-weight: bold;
+  }
+  .items-table tbody td.c { text-align: center; }
+  .items-table tbody td.r { text-align: right; }
+
+
+  /* ── Bottom (QR + Bank + Totals) ────────── */
+  .bottom-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 6px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .bottom-table > tbody > tr > td {
+    border: none;
+    padding: 0;
+    vertical-align: top;
+    height: 100%;
+  }
+
+  .qr-cell {
+    width: 19%;
+    text-align: center;
+    height: 100%;
+  }
+
+  .bank-cell {
+    width: 41%;
+    padding: 0 6px;
+    height: 100%;
+  }
+  .qr-table {
+    border: 1px solid #000;
+  }
+  .bank-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    border-right:none;
+    height: 100%;
+  }
+  .bank-table td {
+    padding: 7px 6px;
+    font-size: 9px;
+  }
+  .bank-table .bank-head {
+    font-weight: bold;
+  }
+  .bank-table .bank-lbl-en {
+    font-weight: bold;
+    width: 45%;
+  }
+  .bank-table .bank-val {
+    width: 55%;
+  }
+
+  .totals-cell {
+    width: 40%;
+    height: 100%;
+  }
+  .totals-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    height: 100%;
+  }
+  .totals-table td {
+    border: 1px solid #000;
+    padding: 7px 6px;
+    font-size: 9px;
+  }
+  .totals-table .tot-lbl-en {
+    font-weight: bold;
+    width: 40%;
+  }
+  .totals-table .tot-lbl-ar {
+    font-weight: bold;
+    direction: rtl;
+    text-align: right;
+    width: 30%;
+  }
+  .totals-table .tot-val {
+    width: 30%;
+    text-align: right;
+    font-weight: bold;
+  }
+
+  /* ── Terms + Signatures ───────────────── */
+  .terms-bar {
+    width: 100%;
+    margin-top: 8px;
+    font-size: 9px;
+  }
+  .terms-bar .terms-head {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+  }
+  .terms-bar .terms-head .ar {
+    direction: rtl;
+  }
+
+  .sig-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    table-layout: fixed;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .sig-table td {
+    border: none;
+    padding: 4px 6px;
+    font-size: 9px;
+    vertical-align: top;
+  }
+  .sig-table .sig-ar {
+    direction: rtl;
+    text-align: right;
+    font-weight: bold;
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- Title -->
+  <div class="doc-title">TAX INVOICE / فاتورة ضريبية</div>
+
+
+  <!-- Client + Invoice info -->
+  <table class="top-table">
+    <tr>
+      <td style="width:52%;padding-right:5px;">
+        <table class="info-box">
+          <tr>
+            <td class="info-lbl-en" style="width:22%;">Client Name</td>
+            <td class="info-val">{{billing_address.[0].name}}</td>
+            <td class="info-lbl-ar" style="width:22%;">اسم العميل</td>
+          </tr>
+          <tr>
+            <td class="info-lbl-en">Address</td>
+            <td class="info-address">
+              {{billing_address.[0].address_line1}}<br>
+              {{billing_address.[0].address_line2}} {{billing_address.[0].address_line3}} {{billing_address.[0].address_line4}} {{billing_address.[0].address_line5}}
+              <div class="ar">
+                {{billing_address_lang2.[0].address_line1}}<br>
+                {{billing_address_lang2.[0].address_line2}} {{billing_address_lang2.[0].address_line3}} {{billing_address_lang2.[0].address_line4}} {{billing_address_lang2.[0].address_line5}}
+              </div>
+              <br>
+              ZIP/Postal Code: {{billing_address.[0].address_code}}<br>
+              Phone: {{customer_details.[0].contact_no1}}
+            </td>
+            <td class="info-lbl-ar">العنوان</td>
+          </tr>
+          <tr>
+            <td class="info-lbl-en">VAT No</td>
+            <td class="info-val">{{customer_details.[0].VAT_number}}</td>
+            <td class="info-lbl-ar">الرقم ضريبي</td>
+          </tr>
+        </table>
+      </td>
+
+      <td style="width:48%;padding-left:5px;">
+        <table class="info-box">
+          <tr>
+            <td class="info-lbl-en" style="width:25%;">Invoice No</td>
+            <td class="info-val">{{basicdetails.[0].inv_no}}</td>
+            <td class="info-lbl-ar" style="width:25%;">رقم الفاتورة</td>
+          </tr>
+          <tr>
+            <td class="info-lbl-en">Invoice Date</td>
+            <td class="info-val">{{basicdetails.[0].inv_date}}</td>
+            <td class="info-lbl-ar">تاريخ الفاتورة</td>
+          </tr>
+          <tr>
+            <td class="info-lbl-en">DN No</td>
+            <td class="info-val"></td>
+            <td class="info-lbl-ar">رقم الاقتباس</td>
+          </tr>
+          <tr>
+            <td class="info-lbl-en">DN Date</td>
+            <td class="info-val"></td>
+            <td class="info-lbl-ar">إشاره العملاء</td>
+          </tr>
+          <tr>
+            <td class="info-lbl-en">Mode of Pay</td>
+            <td class="info-val"></td>
+            <td class="info-lbl-ar">طريقة الدفع</td>
+          </tr>
+          <tr>
+            <td class="info-lbl-en">PO No</td>
+            <td class="info-val">{{basicdetails.[0].order_no}}</td>
+            <td class="info-lbl-ar">رقم الطلب الشراء</td>
+          </tr>
+          <tr>
+            <td class="info-lbl-en">PO Date</td>
+            <td class="info-val">{{basicdetails.[0].po_date}}</td>
+            <td class="info-lbl-ar">تاريخ امر الشراء</td>
+          </tr>
+          <tr>
+            <td class="info-lbl-en">Period</td>
+            <td class="info-val">{{basicdetails.[0].inv_from}} - {{basicdetails.[0].inv_to}}</td>
+            <td class="info-lbl-ar">الفترة</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+
+  <!-- Items table -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:6%;">
+          <span class="en">S.N</span>
+          <span class="ar">مسلسل</span>
+        </th>
+        <th style="width:36%;">
+          <span class="en">Description</span>
+          <span class="ar">البيان</span>
+        </th>
+        <th style="width:6%;">
+          <span class="en">Qty</span>
+          <span class="ar">الكمية</span>
+        </th>
+        <th style="width:6%;">
+          <span class="en">Unit</span>
+          <span class="ar">الوحدة</span>
+        </th>
+        <th style="width:10%;">
+          <span class="en">U.Rate</span>
+          <span class="ar">سعر الوحدة</span>
+        </th>
+        <th style="width:11%;">
+          <span class="en">Amount</span>
+          <span class="ar">المبلغ</span>
+        </th>
+        <th style="width:11%;">
+          <span class="en">VAT 15%</span>
+          <span class="ar">الضريبة</span>
+        </th>
+        <th style="width:14%;">
+          <span class="en">Total Price</span>
+          <span class="ar">المجموع</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="c">{{addOne @index}}</td>
+        <td>{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
+        <td class="c">{{quantity}}</td>
+        <td class="c">{{unit}}</td>
+        <td class="r">{{formatAmount price ../bcdp}}</td>
+        <td class="r">{{formatAmount taxable ../bcdp}}</td>
+        <td class="r">{{formatAmount tax ../bcdp}}</td>
+        <td class="r">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+
+  <!-- QR + Bank + Totals -->
+  <table class="bottom-table">
+    <tr>
+      <td class="qr-cell">
+        <table class="qr-table">
+          <tr>
+            <td class="qr">{{{qrDataUri qrCodeBase64}}}</td>
+          </tr>
+        </table>
+      </td>
+      <td class="bank-cell">
+        <table class="bank-table">
+          <tr>
+            <td class="bank-head" colspan="2" style="text-align: center;">Bank Details</td>
+          </tr>
+          <tr>
+            <td class="bank-lbl-en">Account Name / <span>إسم الحساب</span></td>
+            <td class="bank-val">: {{bankdetails.acc_name}}</td>
+          </tr>
+          <tr>
+            <td class="bank-lbl-en">Bank Name / <span>إسم البنك</span></td>
+            <td class="bank-val">: {{bankdetails.name}}</td>
+          </tr>
+          <tr>
+            <td class="bank-lbl-en">Account No / <span>رقم الحساب</span></td>
+            <td class="bank-val">: {{bankdetails.acc_no}}</td>
+          </tr>
+          <tr>
+            <td class="bank-lbl-en" style="padding-bottom: 10px;">IBAN No / <span>رقم الآيبان</span></td>
+            <td class="bank-val">: {{bankdetails.iban_no}}</td>
+          </tr>
+        </table>
+      </td>
+      <td class="totals-cell">
+        <table class="totals-table">
+          <tr>
+            <td class="tot-lbl-en">Total Amount / <span>المبلغ الإجمالي</span></td>
+            <td class="tot-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+          </tr>
+          {{#if zatcadiscount.[0]}}
+            {{#each zatcadiscount}}
+            <tr>
+              <td class="tot-lbl-en">{{reason_name}} / <span>{{reason_name_lang2}}</span></td>
+              <td class="tot-val">{{formatAmount (divide dld ../ccrate) bcdp}}</td>
+            </tr>
+            {{/each}}
+                <tr>
+                  <td class="tot-lbl-en">Net Amount / <span>كمية الصافي</span></td>
+                  <td class="tot-val">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td>
+                </tr>
+            {{else}}
+
+              {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
+                <tr>
+                  <td class="tot-lbl-en">Discount / <span>الخصم</span></td>
+                  <td class="tot-val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="tot-lbl-en">Net Amount / <span>كمية الصافي</span></td>
+                  <td class="tot-val">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
+                </tr>
+              {{/if}}
+          {{/if}}
+          <tr>
+            <td class="tot-lbl-en">VAT 15% / <span>ضريبة القيمة المضافة</span></td>
+            <td class="tot-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+          </tr>
+          <tr class="grand">
+            <td class="tot-lbl-en">Grand Total / <span>المجموع الإجمالي</span></td>
+            <td class="tot-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+
+  <!-- Terms + Signatures -->
+  <div class="terms-bar">
+    <div class="terms-head">
+      <span class="en">Terms And Conditions</span>
+    </div>
+    <div>{{basicdetails.[0].terms_and_condition}}</div>
+  </div>
+
+  <table class="sig-table">
+    <tr>
+      <td class="sig-en" style="width:50%;text-align:center;">PREPARED BY / <span>أُعد بواسطة</span></td>
+      <td class="sig-en" style="width:50%;text-align:center;">RECEIVED BY / <span>تم استلامه من قبل</span></td>
+    </tr>
+  </table>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INVOICE - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9px;
+    color: #000;
+    line-height: 1.4;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Shared ──────────────────────────────── */
+  .label-ar { direction: rtl; text-align: right; }
+  .center   { text-align: center; }
+  .right    { text-align: right; }
+  .bold     { font-weight: bold; }
+
+
+  /* ── Top section (Title + Inv No) ──────── */
+  .top-title {
+    text-align: center;
+    color: #0080ff;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 4px 0;
+    border-bottom: 1.5px solid #00008b;
+    margin-bottom: 0;
+  }
+  .top-strip {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 6px;
+  }
+  .top-strip td {
+    border: none;
+    padding: 5px 4px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .top-strip .inv-en { text-align: left; }
+  .top-strip .inv-ar {
+    direction: rtl;
+    text-align: right;
+  }
+
+
+  /* ── Party Section (Our / Client) ───────── */
+  .party-section-title {
+    font-weight: bold;
+    padding: 3px 6px;
+    border: 1px solid #bfbfbf;
+    border-bottom: none;
+    margin-top: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .party-section-title .ar { direction: rtl; }
+
+  .party-box {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #bfbfbf;
+    border-top: none;
+    table-layout: fixed;
+  }
+  .party-box td {
+    border: 1px solid #bfbfbf;
+    padding: 4px 6px;
+    font-size: 9px;
+    vertical-align: middle;
+  }
+  .party-box .party-lbl-en {
+    background: #ccc;
+    font-weight: bold;
+  }
+  .party-box .party-lbl-ar {
+    background: #ccc;
+    font-weight: bold;
+    direction: rtl;
+    text-align: right;
+  }
+  .party-box .party-val-ar {
+    direction: rtl;
+    text-align: right;
+  }
+
+
+  /* ── Date / Meta strip ──────────────────── */
+  .meta-strip {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #bfbfbf;
+  }
+  .meta-strip td {
+    border: 1px solid #bfbfbf;
+    padding: 4px 6px;
+    font-size: 9px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .meta-strip .meta-head {
+    background: #ccc;
+    font-weight: bold;
+  }
+  .meta-strip .meta-head .en { display: block; }
+  .meta-strip .meta-head .ar {
+    display: block;
+    direction: rtl;
+    font-size: 9px;
+  }
+
+
+  /* ── Items table ────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 4px;
+  }
+  .items-table th,
+  .items-table td {
+    border: 1px solid #bfbfbf;
+    padding: 3px 4px;
+    font-size: 9px;
+    vertical-align: middle;
+  }
+  .items-table thead th {
+    background: #ccc;
+    font-weight: bold;
+    text-align: center;
+  }
+  .items-table thead th .en { display: block; }
+  .items-table thead th .ar {
+    display: block;
+    direction: rtl;
+    font-size: 9px;
+  }
+  .items-table tbody td.c { text-align: center; }
+  .items-table tbody td.r { text-align: right; }
+
+
+  /* ── Subtotal block (Totals + Words + QR) ── */
+  .subtotal-block {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 6px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .subtotal-block > tbody > tr > td {
+    border: none;
+    padding: 0;
+    vertical-align: top;
+  }
+  .subtotal-left {
+    width: 80%;
+    padding-right: 6px;
+  }
+  .subtotal-qr {
+    width: 20%;
+    text-align: center;
+    vertical-align: middle;
+    padding: 4px;
+    border: 1px solid #000;
+  }
+
+  .totals-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    table-layout: fixed;
+  }
+  .totals-table td {
+    border: 1px solid #000;
+    padding: 5px 8px;
+    font-size: 10px;
+    vertical-align: middle;
+  }
+  .totals-table .tot-lbl-en {
+    font-weight: bold;
+    text-align: left;
+    width: 30%;
+  }
+  .totals-table .tot-val {
+    text-align: right;
+    font-weight: bold;
+    width: 20%;
+  }
+  .totals-table .tot-lbl-ar {
+    direction: rtl;
+    text-align: right;
+    width: 50%;
+  }
+  .totals-table tr.grand td {
+    background: #e6e6e6;
+  }
+
+
+  /* ── Words bar ──────────────────────────── */
+  .words-bar {
+    width: 100%;
+    border: 1px solid #000;
+    border-top: none;
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+
+
+  /* ── Footer (Bank / Stamp / Received) ──── */
+  .footer-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    border-top: none;
+    table-layout: fixed;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .footer-table > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 0;
+    vertical-align: top;
+  }
+
+  .footer-head {
+    background: #ccc;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-bottom: 1px solid #000;
+    text-align: center;
+  }
+  .footer-head .ar { direction: rtl; }
+
+  .bank-body {
+    padding: 5px 8px;
+    font-size: 10px;
+    line-height: 1.85;
+  }
+  .bank-body .bk-row {
+    display: table;
+    width: 100%;
+  }
+  .bank-body .bk-row .lbl-en {
+    display: table-cell;
+    width: 30%;
+    font-weight: bold;
+  }
+  .bank-body .bk-row .lbl-ar {
+    display: table-cell;
+    width: 35%;
+    direction: rtl;
+    text-align: right;
+  }
+  .bank-body .bk-row .val {
+    display: table-cell;
+    width: 35%;
+    text-align: left;
+  }
+
+  .stamp-body, .recv-body {
+    text-align: center;
+    padding: 10px;
+    vertical-align: middle;
+    font-size: 10px;
+    min-height: 120px;
+  }
+  .stamp-body img, .recv-body img {
+    max-height: 90px;
+    max-width: 140px;
+  }
+  .recv-body .caption {
+    margin-top: 6px;
+    font-style: italic;
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- Title bar -->
+  <div class="top-title"> TAX INVOICE / <span>فاتورة ضريبية </span></div>
+
+  <!-- Invoice No strip -->
+  <table class="top-strip">
+    <tr>
+      <td class="inv-en" style="width:50%;">Invoice No : {{basicdetails.[0].inv_no}}</td>
+      <td class="inv-ar" style="width:50%;"> رقم الفاتورة : {{basicdetails.[0].inv_no}} </td>
+    </tr>
+  </table>
+
+
+  <!-- Our Details -->
+  <div class="party-section-title">
+    <span class="en"><u>Our Details :</u></span>
+    <span class="ar"><u>تفاصيل المؤسسة</u></span>
+  </div>
+  <table class="party-box">
+    <tr>
+      <td class="party-lbl-en" style="width:10%;">Name</td>
+      <td colspan="3" style="width:40%;"><b>{{branch.[0].name}}</b></td>
+      <td colspan="3" class="party-val-ar" style="width:40%;"><b>{{branch_lang2.[0].name}}</b></td>
+      <td class="party-lbl-ar" style="width:10%;">الاسم</td>
+    </tr>
+    <tr>
+      <td class="party-lbl-en" style="width: 10%;">Address</td>
+      <td colspan="3" style="width: 40%;">
+        {{branch.[0].address_line1}}, {{branch.[0].address_line2}},
+        {{branch.[0].address_line3}}, {{branch.[0].address_line4}},
+        {{branch.[0].address_line5}}, {{branch.[0].address_code}}
+      </td>
+      <td colspan="3" class="party-val-ar" style="width: 40%;">
+        {{branch_lang2.[0].address_line1}} {{branch_lang2.[0].address_line2}}
+        {{branch_lang2.[0].address_line3}} {{branch_lang2.[0].address_line4}}
+        {{branch_lang2.[0].address_line5}} {{branch_lang2.[0].address_code}}
+      </td>
+      <td class="party-lbl-ar" style="width: 10%;">العنوان</td>
+    </tr>
+    <tr>
+      <td class="party-lbl-en" style="width: 10%;">VAT Number</td>
+      <td style="width: 18%;"><b>{{branch.[0].vat}}</b></td>
+      <td class="party-lbl-en" style="width: 8%;">CRN</td>
+      <td style="width: 14%;">{{branch.[0].cr_no}}</td>
+      <td class="party-val-ar" style="width: 14%;">{{branch_lang2.[0].cr_no}}</td>
+      <td class="party-lbl-ar" style="width: 8%;">معرف آخر</td>
+      <td class="party-val-ar" style="width: 18%;"><b>{{branch_lang2.[0].vat}}</b></td>
+      <td class="party-lbl-ar" style="width: 10%;">الرقم الضريبي</td>
+    </tr>
+  </table>
+
+
+  <!-- Client Details -->
+  <div class="party-section-title" style="margin-top:6px;">
+    <span class="en"><u>Client Details :</u></span>
+    <span class="ar"><u>تفاصيل العميل</u></span>
+  </div>
+  <table class="party-box">
+    <tr>
+      <td class="party-lbl-en" style="width:10%;">Name</td>
+      <td colspan="3" style="width:40%;"><b>{{billing_address.[0].name}}</b></td>
+      <td colspan="3" class="party-val-ar" style="width:40%;"><b>{{billing_address_lang2.[0].name}}</b></td>
+      <td class="party-lbl-ar" style="width:10%;">الاسم</td>
+    </tr>
+    <tr>
+      <td class="party-lbl-en" style="width: 10%;">Address</td>
+      <td colspan="3" style="width: 40%;">
+        {{billing_address.[0].address_line1}}, {{billing_address.[0].address_line2}},
+        {{billing_address.[0].address_line3}}, {{billing_address.[0].address_line4}},
+        {{billing_address.[0].address_line5}}
+      </td>
+      <td colspan="3" class="party-val-ar" style="width: 40%;">
+        {{billing_address_lang2.[0].address_line1}} {{billing_address_lang2.[0].address_line2}}
+        {{billing_address_lang2.[0].address_line3}} {{billing_address_lang2.[0].address_line4}}
+        {{billing_address_lang2.[0].address_line5}}
+      </td>
+      <td class="party-lbl-ar" style="width: 10%;">العنوان</td>
+    </tr>
+    <tr>
+      <td class="party-lbl-en" style="width: 10%;">VAT Number</td>
+      <td style="width: 18%;"><b>{{customer_details.[0].VAT_number}}</b></td>
+      <td class="party-lbl-en" style="width: 8%;">CRN</td>
+      <td style="width: 14%;">{{customer_details.[0].cr_no}}</td>
+      <td class="party-val-ar" style="width: 14%;">{{customer_details.[0].cr_no_lang2}}</td>
+      <td class="party-lbl-ar" style="width: 8%;">معرف آخر</td>
+      <td class="party-val-ar" style="width: 18%;"><b>{{customer_details.[0].VAT_number_lang2}}</b></td>
+      <td class="party-lbl-ar" style="width: 10%;">الرقم الضريبي</td>
+    </tr>
+  </table>
+
+
+  <!-- Date / Meta -->
+  <table class="meta-strip" style="margin-top:6px;">
+    <tr class="meta-head">
+      <td>
+        <span class="ar">تاريخ الفاتورة</span>
+        <span class="en">Invoice Date</span>
+      </td>
+      <td>
+        <span class="ar">تاريخ التوريد</span>
+        <span class="en">Delivery Date</span>
+      </td>
+      <td>
+        <span class="ar">تاريخ الاستحقاق</span>
+        <span class="en">Due Date</span>
+      </td>
+      <td>
+        <span class="ar">رقم العقد</span>
+        <span class="en">Contract/PO No</span>
+      </td>
+      <td>
+        <span class="ar">رقم الإشعار التسليم</span>
+        <span class="en">Delivery Notes Number</span>
+      </td>
+    </tr>
+    <tr>
+      <td>{{basicdetails.[0].inv_date}}</td>
+      <td>{{basicdetails.[0].sup_date}}</td>
+      <td>{{basicdetails.[0].due_date}}</td>
+      <td>{{basicdetails.[0].order_no}}</td>
+      <td>{{basicdetails.[0].dn_no}}</td>
+    </tr>
+  </table>
+
+
+  <!-- Items table -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:4%;">
+          <span class="ar">م</span>
+          <span class="en">#</span>
+        </th>
+        <th style="width:39%;">
+          <span class="ar">الوصف</span>
+          <span class="en">Service Description</span>
+        </th>
+        <th style="width:6%;">
+          <span class="ar">الكمية</span>
+          <span class="en">Qty</span>
+        </th>
+        <th style="width:6%;">
+          <span class="ar">الوحدة</span>
+          <span class="en">Unit</span>
+        </th>
+        <th style="width:10%;">
+          <span class="ar">سعر الوحدة</span>
+          <span class="en">Unit Rate</span>
+        </th>
+        <th style="width:11%;">
+          <span class="ar">المبلغ</span>
+          <span class="en">Amount</span>
+        </th>
+        <th style="width:11%;">
+          <span class="ar">المبلغ المضاف</span>
+          <span class="en">VAT Amount</span>
+        </th>
+        <th style="width:13%;">
+          <span class="ar">المجموع</span>
+          <span class="en">Total</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="c">{{addOne @index}}</td>
+        <td>{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
+        <td class="c">{{quantity}}</td>
+        <td class="c">{{unit}}</td>
+        <td class="r">{{formatAmount price ../bcdp}}</td>
+        <td class="r">{{formatAmount taxable ../bcdp}}</td>
+        <td class="r">{{formatAmount tax ../bcdp}}</td>
+        <td class="r">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+
+  <!-- Subtotal block : Totals + Words on left, QR on right -->
+  <table class="subtotal-block">
+    <tr>
+      <td class="subtotal-left">
+        <table class="totals-table">
+          <tr>
+            <td class="tot-lbl-en" style="width: 30%;">Total excl. VAT({{basicdetails.[0].base_country_isocode}})</td>
+            <td class="tot-val" style="width: 20%;">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+            <td class="tot-lbl-ar" style="width: 30%;font-weight:bold;">الإجمالي غير شامل ضريبة القيمة المضافة </td>
+            <td rowspan="4" style="width: 20%;" class="tot-lbl-ar">{{{qrDataUri qrCodeBase64}}}</td>
+          </tr>
+          <tr>
+            <td class="tot-lbl-en">VAT Amount({{basicdetails.[0].base_country_isocode}})</td>
+            <td class="tot-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+            <td class="tot-lbl-ar" style="font-weight:bold;">ضريبة القيمة المضافة </td>
+          </tr>
+          <tr class="grand">
+            <td class="tot-lbl-en">Amount Incl.VAT({{basicdetails.[0].base_country_isocode}})</td>
+            <td class="tot-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+            <td class="tot-lbl-ar" style="font-weight:bold;">المبلغ ضريبة القيمة المضافة </td>
+          </tr>
+          <tr class="">
+            <td colspan="3" class="tot-lbl-en">{{bcamountinwords}}</td>
+          </tr>
+        </table>
+      </td>
+
+    </tr>
+  </table>
+
+
+  <!-- Footer : Bank / Stamp / Received -->
+  <table class="footer-table" style="margin-top: 4px;">
+    <tr>
+      <td style="width:50%;">
+        <div class="footer-head">
+          <span style="text-align: center;">Bank Details / المصرفية التفاصيل</span>
+        </div>
+        <div class="bank-body">
+          <div class="bk-row">
+            <span class="lbl-en">ACCOUNT NAME / إسم الحساب</span>
+            <span class="val">{{bankdetails.acc_name}}</span>
+          </div>
+          <div class="bk-row">
+            <span class="lbl-en">BANK NAME / إسم البنك</span>
+            <span class="val">{{bankdetails.name}}</span>
+          </div>
+          <div class="bk-row">
+            <span class="lbl-en">ACCOUNT NO / رقم الحساب</span>
+            <span class="val">{{bankdetails.acc_no}}</span>
+          </div>
+          <div class="bk-row">
+            <span class="lbl-en">IBAN / رقم الآيبان</span>
+            <span class="val">{{bankdetails.iban_no}}</span>
+          </div>
+          <div class="bk-row">
+            <span class="lbl-en">BRANCH / الفرع</span>
+            <span class="val">{{bankdetails.branch_name}}</span>
+          </div>
+        </div>
+      </td>
+      <td style="width:25%;">
+        <div class="footer-head" style="text-align: center;">Company Stamp</div>
+        <div class="stamp-body">
+          {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+        </div>
+      </td>
+      <td style="width:25%;">
+        <div class="footer-head" style="text-align: center;">Received By</div>
+        <div class="recv-body">
+          {{#if Signature}}<img src="{{Signature}}" alt="Signature" style="text-align:right;max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+          <div class="caption">Signature with stamp</div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+</div>
+</body>
+</html>

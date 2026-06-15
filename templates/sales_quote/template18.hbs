@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUOTATION - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.45;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+
+  /* ── Title ─────────────────────────────────── */
+  .title-wrap {
+    text-align: center;
+    padding: 4px 0 12px;
+  }
+  .main-title {
+    display: inline-block;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 24px;
+    font-weight: normal;
+    color: #1f3a6b;
+  }
+
+  /* ── Outer doc table ───────────────────────── */
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+  }
+  .doc-table > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 0;
+    vertical-align: top;
+    font-size: 11px;
+  }
+
+  /* ── Top header row ────────────────────────── */
+  .cust-info-block { padding: 8px 10px; }
+  .cust-name { font-weight: bold; margin-bottom: 2px; }
+  .cust-line { line-height: 1.55; }
+
+  /* legacy classes kept for backward compatibility */
+  .cust-name-block {
+    padding: 8px 10px;
+    border-bottom: 1px solid #000;
+  }
+  .cust-name2 { font-weight: bold; }
+  .cust-vat-block { padding: 8px 10px; }
+
+  .subject-cell {
+    padding: 4px 10px;
+    font-size: 11px;
+    border-top: 1px solid #000;
+  }
+
+  .ref-head-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .ref-head-table td {
+    padding: 6px 8px;
+    font-size: 11px;
+    text-align: center;
+    border-bottom: 1px solid #000;
+  }
+  .ref-head-table .v-sep { border-right: 1px solid #000; }
+  .ref-head-table .ref-hdr { font-weight: normal; }
+  .ref-head-table .ref-val { font-weight: bold; }
+  .ref-head-table .empty-row td { height: 28px; border-bottom: none; }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .items-table th,
+  .items-table td {
+    font-size: 11px;
+    vertical-align: top;
+    padding: 6px 6px;
+    border: 1px solid #ccc;
+  }
+  .items-table thead th {
+    text-align: center;
+    font-weight: bold;
+    background: #ffffff;
+    border-top: none;
+  }
+  .items-table .desc-h { text-align: left; }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Remark row ────────────────────────────── */
+  .remark-cell { padding: 6px 10px; min-height: 70px; }
+
+  /* ── Bottom section ───────────────────────── */
+  .bottom-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .bottom-table > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+    font-size: 11px;
+  
+  }
+
+  .words-cell { padding: 8px 10px; }
+  .words-label { }
+  .words-value { font-weight: bold; }
+
+  .totals-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .totals-table td {
+    padding: 8px 10px;
+    font-size: 11px;
+    border-bottom: 1px solid #ccc;
+  }
+  .totals-table tr:last-child td { border-bottom: none; }
+  .totals-table .t-lbl { text-align: right; border-right: 1px solid #ccc; }
+  .totals-table .t-val { text-align: right; width: 22%; }
+
+  /* ── Unified words + totals table ─────────── */
+  .words-totals-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .words-totals-table td {
+    padding: 8px 10px;
+    font-size: 11px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+  }
+  .words-totals-table .wt-words { text-align: left; }
+  .words-totals-table .wt-lbl { text-align: right; }
+  .words-totals-table .wt-val { text-align: right; }
+
+  /* ── Signature row ─────────────────────────── */
+  .sign-row td {
+    padding: 6px 10px;
+    vertical-align: bottom;
+    text-align: center;
+  }
+  .sig-img-cell { text-align: center; }
+  .seal-img-cell { text-align: center; }
+  .sig-img { display: inline-block; }
+  .seal-img { display: inline-block; }
+
+  .sign-labels td {
+    padding: 6px 10px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .computer-gen {
+    padding: 6px 10px;
+    font-size: 11px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="title-wrap">
+    <span class="main-title">QUOTATION</span>
+  </div>
+
+  <!-- Document -->
+  <table class="doc-table">
+    <!-- Top header: Customer info | Reference / Doc No / Date -->
+    <tr>
+      <td style="width:40%; padding:0;">
+        <div class="cust-info-block">
+          <div class="cust-name">{{billing_address.[0].name}}</div>
+          {{#if billing_address.[0].address_line2}}<div class="cust-line">{{billing_address.[0].address_line2}}</div>{{/if}}
+          {{#if billing_address.[0].address_line4}}<div class="cust-line">{{billing_address.[0].address_line4}}</div>{{/if}}
+          {{#if billing_address.[0].address_line3}}<div class="cust-line">{{billing_address.[0].address_line3}}</div>{{/if}}
+          {{#if billing_address.[0].address_line5}}<div class="cust-line">{{billing_address.[0].address_line5}}</div>{{/if}}
+          {{#if billing_address.[0].vat}}<div class="cust-line">VAT : {{billing_address.[0].vat}}</div>{{/if}}
+          {{#if basicdetails.[0].contactname}}<div class="cust-line">Contact Name: {{basicdetails.[0].contactname}}{{#if basicdetails.[0].contactno}} <br>Contact:{{basicdetails.[0].contactno}}{{/if}}{{#if basicdetails.[0].contactemail}} <br>Email: {{basicdetails.[0].contactemail}}{{/if}}</div>{{/if}}
+        </div>
+      </td>
+      <td style="width:60%; padding:0;">
+        <table class="ref-head-table">
+          <tr>
+            <td class="v-sep ref-hdr">Reference<br><span class="ref-val">{{#if basicdetails.[0].reference_no}}{{basicdetails.[0].reference_no}}{{else}}Order No{{/if}}</span></td>
+            <td class="v-sep ref-hdr">Doc No<br><span class="ref-val">{{basicdetails.[0].inv_no}}</span></td>
+            <td class="ref-hdr">Date<br><span class="ref-val">{{basicdetails.[0].inv_date}}</span></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    {{#if basicdetails.[0].subj}}
+    <!-- Subject row -->
+    <tr>
+      <td colspan="2" style="padding:0;border-bottom:none;">
+        <div class="subject-cell"><strong>Subject</strong> : {{basicdetails.[0].subj}}</div>
+      </td>
+    </tr>
+    {{/if}}
+    {{#if basicdetails.[0].attention}}
+    <tr>
+      <td colspan="2" style="border-top:none;padding-bottom:5px;padding-left:10px;">
+        <div class="attention-cell"><strong>Attention</strong> : {{basicdetails.[0].attention}}</div>
+      </td>
+    </tr>
+    {{/if}}
+
+    <!-- Items -->
+    <tr>
+      <td colspan="2" style="padding:0; border-top:1px solid #000;">
+        <table class="items-table">
+          <colgroup>
+            <col style="width:4%">
+            <col style="width:28%">
+            <col style="width:9%">
+            <col style="width:8%">
+            <col style="width:12%">
+            <col style="width:12%">
+            <col style="width:11%">
+            <col style="width:16%">
+          </colgroup>
+          <thead>
+            <tr>
+              <th style="border-left:1px solid #000;">#</th>
+              <th class="desc-h">Description</th>
+              <th>Quantity</th>
+              <th>UOM</th>
+              <th>Unit Price</th>
+              <th>Taxable</th>
+              <th>Tax</th>
+              <th style="border-right:1px solid #000;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each itemdetails}}
+            <tr>
+              <td class="center" style="border-left:1px solid #000;">{{addOne @index}}</td>
+              <td class="left">
+                {{item_name}}
+                {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+                {{#if description}}<div>{{description}}</div>{{/if}}
+              </td>
+              <td class="center">{{formatAmount quantity ../bcdp}}</td>
+              <td class="center">{{unit}}</td>
+              <td class="right">{{formatAmount price ../bcdp}}</td>
+              <td class="right">{{formatAmount taxable ../bcdp}}</td>
+              <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
+              <td class="right" style="border-right:1px solid #000;">{{formatAmount amount ../bcdp}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Remark / Terms row -->
+    <tr>
+      <td colspan="2">
+        <div class="remark-cell">
+          {{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{else}}{{#if invterms}}{{{nl2br invterms}}}{{/if}}{{/if}}
+        </div>
+      </td>
+    </tr>
+
+    <!-- Amount in words + Totals (unified rows) -->
+    <tr>
+      <td colspan="2" style="padding:0;">
+        <table class="words-totals-table">
+          <colgroup>
+            <col style="width:50%">
+            <col style="width:35%">
+            <col style="width:15%">
+          </colgroup>
+          <tr>
+            <td class="wt-words" style=" border: 1px solid #ccc; border-bottom: none;">
+              <div class="words-label">Amount chargeable in words :</div>
+              <div class="words-value"></div>
+            </td>
+            <td class="wt-lbl">Total Taxable Amount (Excluding VAT)</td>
+            <td class="wt-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="wt-words">
+              <div class="words-label"><b>{{bcamountinwords}}</b></div>
+              <div class="words-value"></div>
+            </td>
+            <td class="wt-lbl">VAT</td>
+            <td class="wt-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="wt-words">VAT Amount in words :</td>
+            <td class="wt-lbl">Total Amount</td>
+            <td class="wt-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Signature row -->
+    <tr>
+      <td colspan="2" style="padding:0;">
+        <table class="bottom-table">
+          <tr class="sign-row">
+            <td style="width:33.333%; border:none;"></td>
+            <td style="width:33.333%; border:none;" class="sig-img-cell">
+              {{#if Signature}}<img class="sign-img" src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d458 '80'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+            </td>
+            <td style="width:33.333%; border:none;" class="seal-img-cell">
+              {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+            </td>
+          </tr>
+          <tr class="sign-labels">
+            <td style="border-left:none;">Approved by</td>
+            <td>Authorised Signatory</td>
+            <td style="border-right:none;">{{#if compprof.name}}{{compprof.name}}{{else}}{{basicdetails.[0].branchname}}{{/if}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Computer Generated row -->
+    <tr>
+      <td colspan="2" style="padding:0;">
+        <div class="computer-gen">Computer Generated Quotation</div>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

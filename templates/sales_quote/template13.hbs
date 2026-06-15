@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>SQ - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+      margin: 0mm 10mm;
+    }
+
+    /* ── Title ──────────────────────────────────── */
+    .main-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    .main-title .ar {
+      font-size: 17px;
+      direction: rtl;
+    }
+
+    /* ── Header (Quote No / Date / To) box ──────── */
+    .header-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #ccc;
+      margin-bottom: 14px;
+    }
+    .header-table td {
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      font-size: 11px;
+      vertical-align: top;
+    }
+    .header-table .lbl {
+      font-weight: bold;
+      width: 90px;
+      white-space: nowrap;
+    }
+    .header-table .val {
+      font-weight: normal;
+    }
+    .header-table .date-lbl {
+      font-weight: bold;
+      width: 110px;
+      white-space: nowrap;
+      text-align: left;
+    }
+    .header-table .to-cell {
+      line-height: 1.5;
+    }
+
+    /* ── Attention / Subject ───────────────────── */
+    .att-sub {
+      margin-bottom: 18px;
+    }
+    .att-sub div {
+      margin-bottom: 2px;
+    }
+
+    /* ── Items table ───────────────────────────── */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #ccc;
+      margin-bottom: 0;
+    }
+    .items-table th {
+      border: 1px solid #ccc;
+      padding: 5px 4px;
+      font-size: 11px;
+      font-weight: bold;
+      text-align: center;
+      vertical-align: middle;
+      background: #fff;
+    }
+    .items-table td {
+      border: 1px solid #ccc;
+      padding: 5px 3px;
+      font-size: 11px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .items-table td.td-desc {
+      text-align: center;
+      line-height: 1.4;
+    }
+    .items-table td.td-right {
+      text-align: right;
+    }
+    .items-table td.td-image {
+      height: 50px;
+    }
+    .items-table td.td-image img {
+      max-height: 45px;
+      max-width: 70px;
+    }
+
+    /* ── Summary table ─────────────────────────── */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #000;
+      margin-bottom: 0;
+      margin-top: 10px;
+    }
+    .summary-table th,
+    .summary-table td {
+      padding: 5px 6px;
+      font-size: 11px;
+      text-align: center;
+    }
+    .summary-table th {
+      font-weight: bold;
+    }
+    .summary-table td.total-val {
+      font-weight: bold;
+    }
+    .summary-table .tot-words td {
+      text-align: center;
+      padding-left: 10px;
+    }
+    .summary-table .tot-words .tw-lbl {
+      font-weight: bold;
+    }
+
+    /* ── Note paragraph ────────────────────────── */
+    .note-text {
+      margin-top: 8px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    /* ── Terms & Conditions ────────────────────── */
+    .terms-block {
+      margin-top: 16px;
+      font-size: 11px;
+    }
+    .terms-block .terms-title {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .terms-block .terms-text {
+      line-height: 1.5;
+    }
+
+    /* ── Sign off ──────────────────────────────── */
+    .sign-off {
+      margin-top: 22px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .sign-images {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .sign-images .sig-img {
+      max-height: 70px;
+      max-width: 140px;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* ── Bottom block (sender info) ────────────── */
+    .sender-block {
+      margin-top: 10px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .sender-block .sender-name {
+      margin-bottom: 2px;
+      {{!-- padding-left: 8px; --}}
+    }
+    {{!-- .sender-block .sender-email {
+      padding-left: 8px;
+    } --}}
+  </style>
+</head>
+<body>
+
+  {{!-- ══ TITLE ══ --}}
+  <div class="main-title">
+    QUOTATION /<span class="ar"> ﺍﻗﺘﺒﺎﺱ</span>
+  </div>
+
+  {{!-- ══ HEADER BOX ══ --}}
+  <table class="header-table">
+    <tr>
+      <td class="lbl">Quote No :</td>
+      <td class="val">{{basicdetails.[0].inv_no}}</td>
+      <td class="date-lbl">Quote Date : {{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">To :</td>
+      <td class="to-cell" colspan="2">
+        {{billing_address.[0].name}}<br>
+        {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{#if billing_address.[0].address_line2}}, {{billing_address.[0].address_line2}}{{/if}}{{#if billing_address.[0].address_line3}}, {{billing_address.[0].address_line3}}{{/if}}{{#if billing_address.[0].address_line4}}, {{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_line5}}, {{billing_address.[0].address_line5}}{{/if}}<br>{{/if}}
+        {{#if basicdetails.[0].salesman_name}}Sales Person: {{basicdetails.[0].salesman_name}}{{/if}}
+      </td>
+    </tr>
+  </table>
+
+  {{!-- ══ ATTENTION / SUBJECT ══ --}}
+  <div class="att-sub">
+    <div>Attention : {{#if basicdetails.[0].attention}}{{basicdetails.[0].attention}}{{/if}}</div>
+    <div>Subject : {{#if basicdetails.[0].subj}}{{basicdetails.[0].subj}}{{/if}}</div>
+  </div>
+
+  
+  {{!-- ══ ITEMS TABLES ══ --}}
+  {{!-- ══ ITEMS TABLES ══ --}}
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:5%;">#</th>
+        <th style="width:10%;">Image</th>
+        <th style="width:30%;">Description &amp; Specifications</th>
+        <th style="width:8%;">Unit</th>
+        <th style="width:8%;">Qty</th>
+        <th style="width:10%;">Unit Rate</th>
+        <th style="width:8%;">Disc</th>
+        <th style="width:9%;">VAT 15%</th>
+        <th style="width:12%;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td>{{addOne @index}}</td>
+        <td class="td-image">
+          {{#if image1}}
+          <img src="https://accounts.ethicfin.com/uploads/products/{{image1}}" alt="" onerror="this.style.display='none'"/>
+          {{/if}}
+        </td>
+        <td class="td-desc" style="text-align:left;padding-left: 10px;">
+          <div>{{item_name}}</div>
+          {{#if name_lang2}}<div style="direction:rtl;">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div style="font-size:10px;color:#444;">{{description}}</div>{{/if}}
+        </td>
+        <td>{{unit}}</td>
+        <td>{{formatAmount quantity ../bcdp}}</td>
+        <td class="td-right">{{formatAmount price ../bcdp}}</td>
+        <td class="td-right">{{formatAmount disc_amt ../bcdp}}</td>
+        <td class="td-right">{{formatAmount tax ../bcdp}}</td>
+        <td class="td-right">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  {{!-- ══ SUMMARY TABLE ══ --}}
+   {{!-- ══ SUMMARY TABLE ══ --}}
+  <table class="summary-table">
+    <tr style="border-bottom: 1px solid #808080;">
+      <th style="width:33.33%;  border-right:1px solid #808080;">Sub Total</th>
+      <th style="width:33.33%;  border-right:1px solid #808080;">VAT 15%</th>
+      <th style="width:33.34%;  border-left:1px solid #808080;">Total Amount</th>
+    </tr>
+    <tr style="border-bottom: 1px solid #808080;>
+      <td style="border-right:1px solid #808080;">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      <td style="border-right:1px solid #808080;">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+      <td class="total-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+    </tr>
+    <tr class="tot-words">
+      <td colspan="3"><span class="tw-lbl">Total In Words  :  </span>{{bcamountinwords}}</td>
+    </tr>
+  </table>
+
+  {{!-- ══ NOTE ══ --}}
+  <div class="note-text">
+    We hope that our offer is in line with requirements.Please indicate your purchase order our Quotation Reference and acceptance to the terms &amp; conditions.
+  </div>
+
+  {{!-- ══ TERMS &amp; CONDITIONS ══ --}}
+    {{#if invterms}}
+    <div class="terms-block">
+        <div class="terms-title">Terms &amp; Conditions :</div>
+        <div class="terms-text">{{{nl2br invterms}}}</div>
+    </div>
+    {{/if}}
+
+  {{!-- ══ SIGN OFF ══ --}}
+  <div class="sign-off">Many Thanks &amp; Regards</div>
+  <div class="sign-images">
+    {{#if Seal}}
+      <img src="{{Seal}}" class="sig-img" alt="Seal" onerror="this.style.display='none'"/>
+    {{/if}}
+    {{#if Signature}}
+      </br><img src="{{Signature}}" class="sig-img" alt="Signature" onerror="this.style.display='none'"/>
+    {{/if}}
+  </div>
+
+  {{!-- ══ SENDER BLOCK ══ --}}
+  <div class="sender-block">
+    <div class="sender-name">{{#if basicdetails.[0].employeename}}{{basicdetails.[0].employeename}}{{/if}}</div>
+    {{#if basicdetails.[0].employeecontactno}}<div class="sender-phone">{{basicdetails.[0].employeecontactno}}</div>{{/if}}
+    {{#if basicdetails.employeeemail}}<div class="sender-email">{{basicdetails.employeeemail}}</div>{{/if}}
+  </div>
+
+</body>
+</html>

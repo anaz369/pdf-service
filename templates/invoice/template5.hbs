@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Invoice - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+     body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #000;
+    line-height: 1.4;
+    margin: 0 8mm;
+  }
+    .page { margin: 0 auto; padding: 0; }
+
+    .main-title { text-align: center; font-size: 18px; font-weight: bold; letter-spacing: 1px; padding: 8px 0 6px 0; border-bottom: 1px solid #000; }
+
+    .meta-bar { width: 100%; border-collapse: collapse; }
+    .meta-bar td { border: 1px solid #000; padding: 3px 8px; font-size: 10.5px; text-align: center; vertical-align: middle; }
+    .meta-bar .meta-lbl { font-size: 18px; font-weight: bold; }
+    .meta-bar .meta-val { color: #555; font-size: 11px; }
+
+    .vc-wrap { display: flex; border-right: 1px solid #000; border-left: 1px solid #000; border-top: none; }
+    .vc-vendor { flex: 0 0 50%; padding: 4px 10px; border-right: 1px solid #000;line-height: 1.4; }
+    .vc-customer { flex: 1; padding: 4px 10px; }
+    .vc-name { font-weight: bold; font-size: 11px; line-height: 1.4; color: blue;}
+    .vc-addr { font-size: 11px; line-height: 1.4; }
+    .vc-trn  { font-size: 11px; line-height: 1.4; }
+
+    /* Vendor info table (Reference / Invoice / Date / Due / Prepared / Contact) */
+    .vc-vendor-table { width: 100%; border-collapse: collapse; }
+    .vc-vendor-table td { border: none; padding: 2px 0; font-size: 11px; vertical-align: top; line-height: 1.45; }
+    .vc-vendor-table .vv-k { width: 30%; white-space: nowrap; }
+    .vc-vendor-table .vv-s { width: 4%; }
+    .vc-vendor-table .vv-v { width: 41%; }
+    .vc-vendor-table .vv-ar {
+      width: 25%;
+      direction: rtl;
+      text-align: right;
+      vertical-align: middle;
+      padding-left: 8px;
+    }
+    .vc-vendor-table .vv-ar div { line-height: 1.8; }
+
+    .items-table { width: 100%; border-collapse: collapse; border-top: 1px solid #000; border-right: 1px solid #000; border-left: 1px solid #000; border-top: none; }
+    .items-table th { background: #fff; border: 1px solid #000; padding: 3px 4px; font-size: 10.5px; font-weight: bold; text-align: center; vertical-align: middle; }
+    .items-table td { border: 1px solid #ccc; padding: 3px 4px; font-size: 11px; text-align: center; vertical-align: middle; }
+    .items-table td.td-desc { text-align: left; padding-left: 8px; }
+    .items-table .spacer-row td { border-left: 1px solid #000; border-right: 1px solid #000; border-top: none; border-bottom: none; height: 16px; }
+
+    .terms-section { border-left: 1px solid #000; border-right: 1px solid #000; border-bottom: 1px solid #000;  border-top: none; padding: 2px 10px; min-height: 40px; }
+    .terms-title { font-weight: bold; font-size: 11px; }
+    .terms-text  { font-size: 11px; line-height: 1.6; color: #333; }
+
+    /* ── Summary outer box ── */
+    .summary-outer { border: 1px solid #000; border-top: none; }
+
+    /* Row 1: words | totals */
+    .sum-row1 { display: flex; border-top: 1px solid #ccc;}
+    .sum-words { flex: 0 0 50%; padding: 8px 10px;}
+    .sw-label  { font-weight: bold; font-size: 11px; margin-bottom: 2px; }
+    .sw-amount { font-size: 10px; color: #555; }
+    .sum-totals { flex: 1; display: flex; flex-direction: column; border-right: 1px solid #000;}
+    .tot-line { display: flex; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid #ddd; font-size: 11px;}
+    .tot-line:last-child { border-bottom: none; }
+    .tot-line .tl-lbl { flex: 1; text-align: right; padding-right: 10px; color: #555;}
+    .tot-line .tl-amt { min-width: 60px; text-align: right;}
+    .tot-line.tot-final { border-bottom: 2px dotted #555; }
+    .tot-line.tot-final .tl-lbl { font-weight: bold; color: #000;}
+    .tot-line.tot-final .tl-amt { font-weight: bold; font-size: 12px; }
+
+    /* Row 2: Declaration left | Bank right */
+    .sum-row2 { display: flex;  }
+    .sum-decl-top { flex: 0 0 50%; padding: 4px 10px;  }
+    .decl-title { font-weight: bold; text-decoration: underline; font-size: 11px; }
+    .decl-text  { font-size: 11px; line-height: 1.4; color: #333; }
+    .sum-bank { flex: 1; padding: 2px 10px; }
+    .bank-sec-title { font-weight: bold; font-size: 11px;  text-align: center; padding: 4px 10px; }
+    .bank-info-row { display: flex; font-size: 11px; line-height: 1.9; }
+    .bank-info-row .bi-key { min-width: 120px; color: #333; }
+    .bank-info-row .bi-val { color: #000; }
+
+    /* Row 3: Seal left | Company + Signature + Authorised right */
+    .sum-row3-bottom { display: flex; min-height: 70px; }
+    .sum-seal { flex: 0 0 50%; padding: 6px 10px; }
+    .decl-sign { font-size: 11px; color: #333; }
+    .seal-img  { max-height: 45px; margin-top: 6px; }
+    .sum-auth  { flex: 1; padding: 6px 12px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; }
+    .sig-company { font-size: 11px; text-align: right; }
+    .sig-img   { max-height: 45px; }
+    .sig-auth  { font-size: 11px; color: #555; text-align: right; }
+
+    /* Footer */
+    .footer-graphic img { width: 100%; height: 80px; object-fit: cover; display: block; }
+    .footer-graphic-fallback { width: 100%; height: 80px; background: linear-gradient(135deg, #1a1a1a 50%, #c0392b 50%); }
+    .footer-contact-bar { background: #1a1a1a; color: #fff; display: flex; justify-content: space-around; align-items: center; padding: 7px 16px; font-size: 10px; gap: 10px; }
+    .fc-item { display: flex; align-items: center; gap: 5px; }
+
+    /* ── Bank | QR | Totals (3-col) ── */
+    .bqt-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      border: 1px solid #000;
+      border-top: none;
+      font-size: 11px;
+    }
+
+    .bqt-qr   { width: 20%; text-align: center; vertical-align: middle; }
+    .bqt-qr img {max-width: 120px; max-height: 120px; display: inline-block; margin: 0 auto;}
+
+    .bqt-bank { width: 50%; padding: 0; }
+    .bqt-bank-list { width: 100%; border-collapse: collapse; }
+    .bqt-bank-list td {
+      padding: 4px 12px;
+      font-size: 11px;
+    }
+    
+    .bqt-bank-list .bk-k { width: 38%; white-space: nowrap; }
+    .bqt-bank-list .bk-s { text-align: right; width: 2%;}
+    .bqt-bank-list .bk-v { text-align: left; width: 60%; }
+
+    .bqt-totals { width: 30%; padding: 0; }
+    .bqt-totals-list { width: 100%; border-collapse: collapse; }
+    .bqt-totals-list td {
+      border: 1px solid #000;
+      padding: 4px 12px;
+      font-size: 11px;
+    }
+    .bqt-totals-list tr:first-child td { border-top: none; }
+    .bqt-totals-list tr:last-child td { border-bottom: none; }
+    .bqt-totals-list td:first-child { border-left: none; }
+    .bqt-totals-list td:last-child { border-right: none; }
+    .bqt-totals-list .tt-k { text-align: right; width: 60%; }
+    .bqt-totals-list .tt-v { text-align: right; width: 40%; }
+
+    /* ── Words strip ── */
+    .words-strip {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      border: 1px solid #000;
+      border-top: none;
+    }
+    .words-strip td {
+      padding: 4px 10px;
+      font-size: 11px;
+      border-bottom: 1px solid #000;
+    }
+    .words-strip tr:last-child td { border-bottom: none; }
+
+    /* ── Signature strip ── */
+    .sign-strip {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      border: 1px solid #000;
+      border-top: none;
+    }
+    .sign-strip td {
+      padding: 8px 10px;
+      font-size: 11px;
+      text-align: center;
+      vertical-align: top;
+      border-right: 1px solid #000;
+    }
+    .sign-strip td:last-child { border-right: none; }
+    .sign-strip .sgn-seal {
+      display: block;
+      margin: 6px auto 0;
+      max-height: 80px;
+      max-width: 110px;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <table class="meta-bar">
+    <tr>
+      <td class="meta-lbl" style="width:50%;">TAX INVOICE</td>
+      <td class="meta-lbl" style="width:50%;">فاتورة ضريبية</td>
+    </tr>
+  </table>
+
+  <div class="vc-wrap">
+    <div class="vc-customer" style="border-right:1px solid #000;">
+      <div class="vc-name">{{billing_address.[0].name}}</div>
+      {{#if billing_address.[0].address_line1}}<div class="vc-addr">{{billing_address.[0].address_line1}}</div>{{/if}}
+      {{#if billing_address.[0].address_line2}}<div class="vc-addr">{{billing_address.[0].address_line2}}</div>{{/if}}
+      {{#if billing_address.[0].address_line3}}<div class="vc-addr">{{billing_address.[0].address_line3}}</div>{{/if}}
+      {{#if billing_address.[0].address_line4}}<div class="vc-addr">{{billing_address.[0].address_line4}}</div>{{/if}}
+      {{#if billing_address.[0].address_line5}}<div class="vc-addr">{{billing_address.[0].address_line5}}</div>{{/if}}
+      {{#if customer_details.[0].VAT_number}}<div class="vc-trn">{{tax_label}}  : {{customer_details.[0].VAT_number}}</div>{{/if}}
+    </div>
+    <div class="vc-vendor">
+      <table class="vc-vendor-table">
+        <tr>
+          <td class="vv-k">Reference No</td>
+          <td class="vv-s">:</td>
+          <td class="vv-v">{{basicdetails.[0].reference_no}}</td>
+          <td class="vv-ar">الرقم المرجعي</td>
+        </tr>
+        <tr>
+          <td class="vv-k">Invoice No</td>
+          <td class="vv-s">:</td>
+          <td class="vv-v">{{basicdetails.[0].inv_no}}</td>
+          <td class="vv-ar">رقم الفاتورة</td>
+        </tr>
+        <tr>
+          <td class="vv-k">Invoice Date</td>
+          <td class="vv-s">:</td>
+          <td class="vv-v">{{basicdetails.[0].inv_date}}</td>
+          <td class="vv-ar">تاريخ الفاتورة</td>
+        </tr>
+        <tr>
+          <td class="vv-k">Due Date</td>
+          <td class="vv-s">:</td>
+          <td class="vv-v">{{basicdetails.[0].due_date}}</td>
+          <td class="vv-ar">تاريخ الاستحقاق</td>
+        </tr>
+        <tr>
+          <td class="vv-k">Prepared by</td>
+          <td class="vv-s">:</td>
+          <td class="vv-v">{{basicdetails.[0].salesman_name}}</td>
+          <td class="vv-ar">أُعدت بواسطة</td>
+        </tr>
+        <tr>
+          <td class="vv-k">Contact</td>
+          <td class="vv-s">:</td>
+          <td class="vv-v">{{basicdetails.[0].salesman_no}}</td>
+          <td class="vv-ar">اتصال</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:5%;">SI.</th>
+        <th style="width:35%; text-align:left; padding-left:8px;">Item Description</th>
+        <th style="width:8%;">Qty</th>
+        <th style="width:11%;">Price</th>
+        <th style="width:9%;">Disc</th>
+        <th style="width:10%;">Taxable</th>
+        <th style="width:10%;">TAX</th>
+        <th style="width:11%;">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td style="border-left:1px solid #000;">{{addOne @index}}</td>
+        <td class="td-desc">
+          <div>{{item_name}}</div>
+          {{#if name_lang2}}<div style="font-size:9.5px;color:#2b2a2a;direction:rtl;">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div style="font-size:9.5px;color:#302f2f;">{{description}}</div>{{/if}}
+        </td>
+        <td>{{formatAmount quantity bcdp}}</td>
+        <td style="text-align: right;">{{formatAmount price bcdp}}</td>        
+        <td style="text-align: right;">{{formatAmount disc_amt bcdp}}</td>
+        <td style="text-align: right;">{{formatAmount taxable bcdp}}</td>
+        <td style="text-align: right;">{{formatAmount tax bcdp}}</td>
+        <td style="text-align: right;border-right:1px solid #000;">{{formatAmount amount bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="terms-section">
+    <div class="terms-title">Terms And Conditions</div>
+    <div class="terms-text">{{#if basicdetails.[0].terms_and_condition}}{{basicdetails.[0].terms_and_condition}}{{/if}}</div>
+  </div>
+
+  {{!-- Bank | QR | Totals --}}
+  <table class="bqt-table">
+    <tr>
+      <td class="bqt-bank" style="border-right:1px solid #000;">
+        <table class="bqt-bank-list">
+            <tr>
+                <td class="bk-k" colspan="3" style="font-weight: bold;text-align:center;">Bank Details</td>
+            </tr>
+            <tr>
+                <td class="bk-k">Bank Name</td>
+                <td class="bk-s">:</td>
+                <td class="bk-v">{{bankdetails.name}}</td>
+            </tr>
+          <tr><td class="bk-k">Account Name</td><td class="bk-s">:</td><td class="bk-v">{{bankdetails.acc_name}}</td></tr>
+          <tr><td class="bk-k">Account No</td><td class="bk-s">:</td><td class="bk-v">{{bankdetails.acc_no}}</td></tr>
+          <tr><td class="bk-k">IBAN</td><td class="bk-s">:</td><td class="bk-v">{{bankdetails.iban_no}}</td></tr>
+          <tr><td class="bk-k">SWIFT</td><td class="bk-s">:</td><td class="bk-v">{{bankdetails.swift_no}}</td></tr>
+        </table>
+      </td>
+      <td class="bqt-qr">
+        {{{qrDataUri qrCodeBase64}}}
+      </td>
+      <td class="bqt-totals" style="border-left:1px solid #000;">
+        <table class="bqt-totals-list">
+          <tr><td class="tt-k">Gross Total</td><td class="tt-v">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td></tr>
+          <tr><td class="tt-k">Discount</td><td class="tt-v">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td></tr>
+          <tr><td class="tt-k">Taxable</td><td class="tt-v">{{formatAmount (subtract (divide basicdetails.[0].subtotal ccrate) (divide basicdetails.[0].discount ccrate)) bcdp}}</td></tr>
+          <tr><td class="tt-k">VAT</td><td class="tt-v">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td></tr>
+          <tr><td class="tt-k">Grand Total</td><td class="tt-v">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td></tr>
+          <tr><td class="tt-k">Paid</td><td class="tt-v">{{formatAmount (divide basicdetails.[0].received ccrate) bcdp}}</td></tr>
+          <tr><td class="tt-k">Balance</td><td class="tt-v">{{formatAmount (divide basicdetails.[0].balance ccrate) bcdp}}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  {{!-- Amount in words --}}
+  <table class="words-strip">
+    <tr><td>Amount Chargeable in words : {{bcamountinwords}}</td></tr>
+    <tr><td>VAT Chargeable in words :</td></tr>
+  </table>
+
+  {{!-- Signature row --}}
+  <table class="sign-strip">
+    <tr>
+      <td class="sgn-left">
+        Customer's signature</td>
+      <td class="sgn-right">
+        <div>For {{#if compprof.name}}{{compprof.name}}{{else}}{{branch.[0].name}}{{/if}}</div>
+        {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+      </td>
+    </tr>
+  </table>
+
+
+</div>
+</body>
+</html>
