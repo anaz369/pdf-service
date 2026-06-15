@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statement of Account – {{ledger.name}}</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --ink: #0f1923;
+      --ink-light: #4a5568;
+      --accent: #1a4f6e;
+      --accent-2: #c8963e;
+      --rule: #d4dde8;
+      --bg: #ffffff;
+      --row-alt: #f7f9fc;
+      --neg: #c0392b;
+      --pos: #1a7a3c;
+      --zero: #b0bec5;
+      --group-bg: #e8f0f7;
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 12mm 14mm;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: #fff;
+        padding: 0;
+        margin: 0;
+      }
+
+      .no-print {
+        display: none;
+      }
+
+      .sheet {
+        box-shadow: none;
+        border-radius: 0;
+        min-height: 0 !important;
+        height: 100% !important;
+      }
+
+      .footer {
+        position: fixed;
+        bottom: 8mm;
+        left: 0;
+        right: 0;
+        border-top: 1px solid #d4dde8;
+        background: #fff;
+        padding: 8px 14mm 0;
+        margin-top: 0 !important;
+      }
+
+      .body {
+        padding-bottom: 60px;
+        min-height: 600px;
+      }
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #e8edf4;
+      color: var(--ink);
+      padding: 40px 20px 60px;
+    }
+
+    .sheet {
+      background: var(--bg);
+      max-width: 820px;
+      margin: 0 auto;
+      border-radius: 4px;
+      box-shadow: 0 4px 40px rgba(0, 0, 0, .12);
+      display: flex;
+      flex-direction: column;
+      min-height: 1020px;
+    }
+
+
+
+    .doc-header {
+      padding: 26px 36px 22px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doc-header::before {
+      content: '';
+      position: absolute;
+      right: 70px;
+      bottom: -20px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 22px solid rgba(200, 150, 62, .10);
+    }
+
+    .header-left {
+      position: relative;
+      z-index: 1;
+    }
+
+    .doc-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(0, 0, 0, .4);
+      margin-bottom: 6px;
+    }
+
+    .doc-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      color: #333;
+      line-height: 1.1;
+    }
+
+    .accent-bar {
+      width: 36px;
+      height: 3px;
+      margin-top: 10px;
+      border-radius: 2px;
+      background: var(--accent-2);
+    }
+
+    .header-right {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .report-date {
+      font-size: 11px;
+      color: rgba(0, 0, 0, .55);
+      font-weight: 500;
+      background: rgba(0, 0, 0, .06);
+      padding: 5px 14px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .company-logo {
+      max-height: 44px;
+      max-width: 160px;
+      object-fit: contain;
+    }
+
+    .meta-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 2px solid var(--rule);
+    }
+
+    .meta-cell {
+      padding: 12px 24px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      border-right: 1px solid var(--rule);
+    }
+
+    .meta-cell:last-child {
+      border-right: none;
+    }
+
+    .meta-key {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      flex-shrink: 0;
+    }
+
+    .meta-val {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .body {
+      padding: 22px 36px 36px;
+      flex: 1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    thead th {
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: right;
+      border-right: 1px solid rgba(255, 255, 255, .1);
+      white-space: nowrap;
+    }
+
+    thead th:first-child {
+      text-align: left;
+    }
+
+    thead th:last-child {
+      border-right: none;
+    }
+
+    tr.ob-row td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--rule);
+      text-align: right;
+      font-size: 12px;
+      background: var(--row-alt);
+      color: var(--ink-light);
+    }
+
+    tr.ob-row td:first-child {
+      text-align: left;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    tr.tx-row td {
+      padding: 9px 14px;
+      border-bottom: 1px solid #edf0f4;
+      text-align: right;
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    tr.tx-row:nth-child(even) td {
+      background: var(--row-alt);
+    }
+
+    tr.tx-row td:first-child {
+      text-align: left;
+      color: var(--ink-light);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    tr.tx-row td.desc {
+      text-align: left;
+      color: var(--ink);
+    }
+
+    tr.closing-row td {
+      padding: 11px 14px;
+      border-top: 2px solid var(--accent);
+      border-bottom: 2px solid var(--accent);
+      text-align: right;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      background: var(--group-bg);
+    }
+
+    tr.closing-row td:first-child {
+      text-align: left;
+      color: var(--accent);
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 36px 14px;
+      color: var(--zero);
+      font-size: 13px;
+    }
+
+    td.neg {
+      color: var(--neg);
+      font-weight: 600;
+    }
+
+    td.pos {
+      color: var(--pos);
+      font-weight: 600;
+    }
+
+    td.zero {
+      color: var(--zero);
+    }
+
+    .footer {
+      padding: 13px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--rule);
+      margin-top: auto;
+    }
+
+    .footer-note {
+      font-size: 10px;
+      color: #9aa5b1;
+    }
+
+    .footer-brand {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: .07;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .print-btn {
+      display: block;
+      width: fit-content;
+      margin: 22px auto 0;
+      padding: 10px 28px;
+      color: #333;
+      border: 1px solid var(--rule);
+      background: #fff;
+      border-radius: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .print-btn:hover {
+      background: #f4f7fb;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="sheet" style="{{#if UseBGWatermark}}position:relative;{{/if}}">
+
+    {{#if UseBGWatermark}}
+    {{#if WatermarkUrl}}
+    <img class="watermark" src="{{WatermarkUrl}}" alt="" />
+    {{/if}}
+    {{/if}}
+
+    {{#if UseLetterhead}}
+    {{#if LetterheadImageUrl}}
+    <div style="{{LetterheadCss}}">
+      <img src="{{LetterheadImageUrl}}" style="width:100%;display:block;" alt="Letterhead" />
+    </div>
+    {{/if}}
+    {{/if}}
+
+    <!-- HEADER -->
+    <div class="doc-header">
+      <div class="header-left">
+        <div class="doc-label">Accounting</div>
+        <div class="doc-title">Statement of Account</div>
+        <div class="accent-bar"></div>
+      </div>
+      <div class="header-right">
+        {{#if Companylogo}}
+        <img class="company-logo" src="{{Companylogo}}" alt="Company Logo" />
+        {{/if}}
+        <span class="report-date">{{generatedAt}}</span>
+      </div>  
+    </div>
+
+    <!-- META BAR -->
+    <div class="meta-bar">
+      <div class="meta-cell">
+        <span class="meta-key">Account</span>
+        <span class="meta-val">{{ledger.name}}</span>
+      </div>
+      <div class="meta-cell">
+        <span class="meta-key">Period</span>
+        <span class="meta-val">{{fromdate}} – {{todate}}</span>
+      </div>
+      <div class="meta-cell">
+        <span class="meta-key">Category</span>
+        <span class="meta-val">{{ledger.category_name}}{{#if ledger.subcategory_name}} /
+          {{ledger.subcategory_name}}{{/if}}</span>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:90px;">Date</th>
+            <th style="width:80px;">Ref</th>
+            <th>Ledger</th>
+            <th>Description</th>
+            <th style="width:110px;">Debit</th>
+            <th style="width:110px;">Credit</th>
+            <th style="width:120px;">Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="ob-row">
+            <td colspan="6">Opening Balance</td>
+            <td class="{{openingBalanceClass}}">{{openingBalanceFmt}}</td>
+          </tr>
+
+          {{#if details.length}}
+          {{#each details}}
+          <tr class="tx-row">
+            <td>{{this.dateFmt}}</td>
+            <td style="text-align:right;">{{this.reference}}</td>
+            <td class="desc">{{this.acc_name}}</td>
+            <td class="desc">{{this.description}}</td>
+            <td class="{{this.debitClass}}">{{this.debitFmt}}</td>
+            <td class="{{this.creditClass}}">{{this.creditFmt}}</td>
+            <td class="{{this.balanceClass}}">{{this.balanceFmt}}</td>
+          </tr>
+          {{/each}}
+          {{else}}
+          <tr>
+            <td colspan="7" class="no-data">No transactions found for this period.</td>
+          </tr>
+          {{/if}}
+
+          <tr class="closing-row">
+            <td colspan="6">Closing Balance</td>
+            <td class="{{closingBalanceClass}}">{{closingBalanceFmt}}</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FOOTER -->
+    {{#if UseHeaderFooter}}
+    {{#if FooterImageUrl}}
+    <div>
+      <img src="{{FooterImageUrl}}" style="width:100%;display:block;" alt="Footer" />
+    </div>
+    {{else}}
+    <div class="footer">
+      <span class="footer-note">Generated: {{generatedAt}} &nbsp;·&nbsp; Account: {{ledger.name}} (ID:
+        {{accountId}})</span>
+      <span class="footer-brand">Ethicfin</span>
+    </div>
+    {{/if}}
+    {{else}}
+    <div class="footer">
+      <span class="footer-note">Generated: {{generatedAt}} &nbsp;·&nbsp; Account: {{ledger.name}} (ID:
+        {{accountId}})</span>
+      <span class="footer-brand">Ethicfin</span>
+    </div>
+    {{/if}}
+
+  </div>
+  {{!--
+  <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button> --}}
+
+</body>
+
+</html>

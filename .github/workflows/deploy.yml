@@ -8,60 +8,22 @@ name: 🚀 Deploy PDF Service
 
 jobs:
   deploy:
-    name: 🎉 Deploy to cPanel
+    name: 🎉 Deploy to EC2
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Checkout code
         uses: actions/checkout@v4
+
+      - name: 🔑 Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          fetch-depth: 2
-
-      - name: 🔍 Get changed files
-        id: changed
-        run: |
-          git diff --name-only HEAD~1 HEAD > changed_files.txt
-          echo "Changed files:"
-          cat changed_files.txt
-
-      - name: 📂 Upload only changed files
-        run: |
-          while IFS= read -r file; do
-            if [[ "$file" == node_modules/* ]] || \
-               [[ "$file" == .git* ]] || \
-               [[ "$file" == .env ]] || \
-               [[ "$file" == tmp/* ]] || \
-               [[ "$file" == .github/* ]]; then
-              echo "Skipping: $file"
-              continue
-            fi
-
-            if [ -f "$file" ]; then
-              echo "Uploading: $file"
-              curl -T "$file" \
-                --ftp-pasv \
-                --ftp-create-dirs \
-                --connect-timeout 30 \
-                --max-time 60 \
-                --retry 3 \
-                --retry-delay 5 \
-                --silent --show-error \
-                "ftp://${{ secrets.FTP_SERVER }}/puppeteer-pdf/$file" \
-                -u "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
-              echo "Done: $file"
-            fi
-          done < changed_files.txt
-
-      - name: 🔄 Restart app via FTP trigger
-        run: |
-          date > restart.txt
-          curl -T restart.txt \
-            --ftp-pasv \
-            --ftp-create-dirs \
-            --connect-timeout 30 \
-            --max-time 60 \
-            --retry 3 \
-            --retry-delay 5 \
-            --silent --show-error \
-            "ftp://${{ secrets.FTP_SERVER }}/puppeteer-pdf/tmp/restart.txt" \
-            -u "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
-          echo "✅ Restart triggered"
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            git config --global --add safe.directory /var/www/pdf-service
+            cd /var/www/pdf-service
+            git stash
+            git pull origin main
+            sudo docker compose up --build -d
+            echo "✅ Deployed successfully"

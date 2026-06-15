@@ -3,7 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
-const pdfController    = require('./controllers/pdfController');
+const Handlebars = require('handlebars');
+const pdfController = require('./controllers/pdfController');
 const reportController = require('./controllers/reportController');
 
 const app = express();
@@ -57,7 +58,7 @@ app.get('/', (req, res) => {
 app.get('/api/pdf/test', (req, res) => pdfController.test(req, res));
 
 // Main PDF generation endpoint
-app.post('/api/pdf/razor-view-pdf', (req, res) => 
+app.post('/api/pdf/razor-view-pdf', (req, res) =>
   pdfController.generatePdfWithRazorView(req, res)
 );
 
@@ -92,7 +93,7 @@ app.use((req, res) => {
 // Global error handler
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
-  
+
   res.status(err.status || 500).json({
     error: err.message || 'Internal Server Error',
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined

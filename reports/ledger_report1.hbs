@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{transactiondetails.[0].voucher_no}}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #0f1923;
+      --ink-light:  #4a5568;
+      --accent:     #1a4f6e;
+      --accent-2:   #c8963e;
+      --rule:       #d4dde8;
+      --bg:         #ffffff;
+      --row-alt:    #f7f9fc;
+      --section-bg: #f4f7fb;
+      --zero:       #b0bec5;
+    }
+
+    @media print {
+      @page { size: A4; margin: 12mm 14mm; }
+      body  { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; padding: 0; }
+      .no-print { display: none; }
+      .sheet { box-shadow: none; border-radius: 0; }
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #e8edf4;
+      color: var(--ink);
+      padding: 40px 20px 60px;
+    }
+
+    .sheet {
+      background: var(--bg);
+      max-width: 740px;
+      margin: 0 auto;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 4px 40px rgba(0,0,0,.12);
+    }
+
+    /* ── company header ─────────────────────── */
+    .company-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 22px 36px 18px;
+      border-bottom: 3px solid var(--accent);
+    }
+    .logo-area { display: flex; align-items: center; gap: 13px; }
+    .logo-box {
+      width: 46px; height: 46px; border-radius: 9px;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo-box svg { width: 24px; height: 24px; fill: #fff; opacity: .9; }
+    .company-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--accent); }
+    .company-tagline { font-size: 10.5px; color: var(--ink-light); margin-top: 2px; }
+    .company-info { text-align: right; font-size: 11px; color: var(--ink-light); line-height: 1.9; }
+    .company-info strong { display: block; font-size: 11.5px; color: var(--ink); font-weight: 600; }
+    .info-row { display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
+    .info-icon {
+      width: 13px; height: 13px; background: var(--accent); border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .info-icon svg { width: 7px; height: 7px; fill: #fff; }
+
+    .accent-stripe { height: 4px; background: linear-gradient(90deg, var(--accent) 60%, var(--accent-2) 100%); }
+
+    /* ── doc header ─────────────────────────── */
+    .doc-header {
+      padding: 22px 36px 18px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .doc-header::after {
+      content: ''; position: absolute; right: -40px; bottom: -60px;
+      width: 190px; height: 190px; border-radius: 50%;
+      border: 36px solid rgba(255,255,255,.05);
+    }
+    .doc-header::before {
+      content: ''; position: absolute; right: 65px; bottom: -18px;
+      width: 100px; height: 100px; border-radius: 50%;
+      border: 20px solid rgba(200,150,62,.15);
+    }
+    .header-left { position: relative; z-index: 1; }
+    .doc-label { font-size: 10.5px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: rgba(39, 37, 37, 0.6); margin-bottom: 6px; }
+    .doc-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: #333; line-height: 1.1; }
+    .accent-bar { width: 40px; height: 3px; margin-top: 11px; border-radius: 2px; }
+    .voucher-badge {
+      position: relative; z-index: 1;
+      background: rgba(26, 25, 25, 0.15);
+      border: 1px solid rgba(24, 23, 23, 0.25);
+      border-radius: 6px; padding: 8px 16px; text-align: right;
+    }
+    .voucher-badge .lbl { font-size: 9.5px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(39, 37, 37, 0.6); }
+    .voucher-badge .val { font-family: 'DM Serif Display', serif; font-size: 18px; color: #333; letter-spacing: .5px; }
+
+    /* ── meta strip ─────────────────────────── */
+    /* ── meta strip ─────────────────────────── */
+    .meta-strip {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid var(--rule);
+    }
+    .meta-cell { padding: 14px 36px; display: flex; align-items: baseline; gap: 10px; border-right: 1px solid var(--rule); }
+    .meta-cell:last-child { border-right: none; background: var(--section-bg); }
+    .meta-key { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-light); flex-shrink: 0; min-width: 80px; }
+    .meta-val { font-size: 13.5px; font-weight: 600; color: var(--accent); }
+    .meta-val.remark { color: var(--zero); font-weight: 400; font-style: italic; font-size: 12.5px; }
+
+    /* ── body ───────────────────────────────── */
+    .body { padding: 24px 36px 32px; }
+
+    .section-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--ink-light);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 7px;
+    }
+    .section-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); }
+
+    /* ── journal table ──────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    thead th { font-size: 10.5px; font-weight: 600;
+      letter-spacing: .6px; text-transform: uppercase;
+      padding: 10px 14px; text-align: right;
+      border-right: 1px solid rgba(255,255,255,.1); white-space: nowrap;
+    }
+    thead th:first-child  { text-align: left; border-radius: 4px 0 0 0; }
+    thead th:nth-child(2) { text-align: left; min-width: 120px; }
+    thead th:last-child   { border-right: none; border-radius: 0 4px 0 0; }
+
+    tbody tr:nth-child(even) { background: var(--row-alt); }
+    tbody tr:hover { background: #edf3f8; }
+    tbody td {
+      padding: 11px 14px;
+      border-bottom: 1px solid #edf0f4;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    tbody td:first-child  { text-align: left; font-weight: 500; }
+    tbody td:nth-child(2) { text-align: left; color: var(--ink-light); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    td.zero { color: var(--zero); }
+    td.debit-val { color: var(--accent); font-weight: 600; }
+
+    /* total row */
+    tfoot tr td {
+      font-weight: 600; font-size: 13.5px;
+      padding: 11px 14px; border: none;
+      text-align: right; font-variant-numeric: tabular-nums;
+    }
+    tfoot tr td:first-child  { text-align: left; border-radius: 0 0 0 4px; }
+    tfoot tr td:nth-child(2) { text-align: left; }
+    tfoot tr td:last-child   { border-radius: 0 0 4px 0; }
+
+    /* ── signature row ──────────────────────── */
+    .sig-section { padding: 0 36px 36px; }
+    .sig-divider { height: 1px; background: var(--rule); margin-bottom: 24px; }
+    .sig-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .sig-box { display: flex; flex-direction: column; }
+    .sig-area { height: 52px; border-bottom: 2px solid var(--ink); margin-bottom: 7px; }
+    .sig-label { font-size: 10.5px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: var(--ink-light); text-align: center; }
+
+    /* ── footer ─────────────────────────────── */
+    .footer {
+      padding: 14px 36px;
+      background: var(--section-bg);
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--rule);
+    }
+    .footer-note  { font-size: 10.5px; color: #9aa5b1; }
+    .footer-brand { font-size: 10.5px; font-weight: 600; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; }
+
+    /* ── print btn ──────────────────────────── */
+    .print-btn {
+      display: block; width: fit-content; margin: 22px auto 0;
+      padding: 10px 28px; color: #333;
+      border: none; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer;
+    }
+    .print-btn:hover { background: #15405a; }
+  </style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <!-- COMPANY HEADER -->
+  <div class="company-header">
+    <div class="logo-area">
+      <div class="logo-box">
+        {{#if Companylogo}}
+          <img src="{{Companylogo}}" alt="Logo" />
+        {{else}}
+          <svg viewBox="0 0 24 24"><path d="M3 21V7l9-4 9 4v14H3zm2-2h4v-4H5v4zm6 0h4v-4h-4v4zm6 0h2v-8h-2v8zM5 13h4v-3H5v3zm6 0h4v-3h-4v3z"/></svg>
+        {{/if}}
+      </div>
+      <div>
+        <div class="company-name">{{transactiondetails.[0].branch_name}}</div>
+        <div class="company-tagline">Solutions Co.</div>
+      </div>
+    </div>
+    <div class="company-info">
+      <strong>123 Anywhere St., Any City, ST 12345</strong>
+      <div class="info-row">
+        <span class="info-icon"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></span>
+        +123-456-7890
+      </div>
+      <div class="info-row">
+        <span class="info-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></span>
+        VAT: 339290290329829392
+      </div>
+    </div>
+  </div>
+
+  <div class="accent-stripe"></div>
+
+  <!-- DOC HEADER -->
+  <div class="doc-header">
+    <div class="header-left">
+      <div class="doc-label">Accounting Entry</div>
+      <div class="doc-title">{{doc_title}}</div>
+      <div class="accent-bar"></div>
+    </div>
+    <div class="voucher-badge">
+      <div class="lbl">Voucher No</div>
+      <div class="val">{{transactiondetails.[0].voucher_no}}</div>
+    </div>
+  </div>
+
+  <!-- META STRIP -->
+  <div class="meta-strip">
+    <div class="meta-cell">
+      <span class="meta-key">Date</span>
+      <span class="meta-val">{{formatted_date}}</span>
+    </div>
+    <div class="meta-cell">
+      <span class="meta-key">Remark</span>
+      {{#if transactiondetails.[0].description}}
+        <span class="meta-val">{{transactiondetails.[0].description}}</span>
+      {{else}}
+        <span class="meta-val remark">—</span>
+      {{/if}}
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+    <div class="section-label"><span class="dot"></span>{{doc_title}} Entries</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th>Description</th>
+          <th>Debit</th>
+          <th>Credit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each transactiondetails}}
+        <tr>
+          <td>{{account_name}}</td>
+          <td>{{#if description}}{{description}}{{else}}—{{/if}}</td>
+          <td class="{{#if_gt debit 0}}debit-val{{else}}zero{{/if_gt}}">
+            {{#if_gt debit 0}}{{formatNumber debit}}{{else}}0.00{{/if_gt}}
+          </td>
+          <td class="{{#unless_gt credit 0}}zero{{/unless_gt}}">
+            {{#if_gt credit 0}}{{formatNumber credit}}{{else}}0.00{{/if_gt}}
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Total</td>
+          <td></td>
+          <td>{{totaldebit}}</td>
+          <td>{{totalcredit}}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- SIGNATURES -->
+  <div class="sig-section">
+    <div class="sig-divider"></div>
+    <div class="sig-row">
+      <div class="sig-box"><div class="sig-area"></div><div class="sig-label">Prepared By</div></div>
+      <div class="sig-box"><div class="sig-area"></div><div class="sig-label">Approved By</div></div>
+      <div class="sig-box"><div class="sig-area"></div><div class="sig-label">Paid By</div></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-note">
+      {{transactiondetails.[0].voucher_no}} &nbsp;·&nbsp; {{formatted_date}} &nbsp;·&nbsp; Generated {{generated_date}}
+    </span>
+    <span class="footer-brand">Powered by EthicFin</span>
+  </div>
+
+</div>
+
+<button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
+
+</body>
+</html>

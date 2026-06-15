@@ -2,20 +2,19 @@
 
 const axios = require('axios');
 
-const LAMBDA_PDF_API =
-  'https://hcpuerxkuc.execute-api.ap-south-1.amazonaws.com/default/puppeteer-pdf-generator';
+const PUPPETEER_SERVICE_URL =
+  process.env.PUPPETEER_SERVICE_URL || 'http://puppeteer-service:3001';
 
 /**
- * Send HTML + Puppeteer options to AWS Lambda and return a PDF buffer.
- * Send HTML + Puppeteer options to AWS Lambda and return a PDF buffer.
+ * Send HTML + Puppeteer options to the Puppeteer service and return a PDF buffer.
  *
  * @param {string} html      - Rendered HTML string
  * @param {object} options   - Puppeteer PDF options (format, margin, etc.)
  * @returns {Promise<Buffer>}
  */
-async function callLambda(html, options) {
+async function generatePdf(html, options) {
   const response = await axios.post(
-    LAMBDA_PDF_API,
+    `${PUPPETEER_SERVICE_URL}/generate`,
     { html, options },
     {
       responseType: 'arraybuffer',
@@ -27,4 +26,4 @@ async function callLambda(html, options) {
   return Buffer.from(response.data);
 }
 
-module.exports = { callLambda };
+module.exports = { generatePdf };

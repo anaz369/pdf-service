@@ -1,10 +1,18 @@
 "use strict";
 
+<<<<<<< HEAD
 const Handlebars = require("handlebars");
 const fs = require("fs").promises;
 const fsSync = require("fs");
 const path = require("path");
 const qrCodeService = require("./qrCodeService");
+=======
+const Handlebars = require('handlebars');
+const fs = require('fs').promises;
+const fsSync = require('fs');
+const path = require('path');
+const qrCodeService = require('./qrCodeService');
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
 
 // ── Currency symbols ───────────────────────────────────────
 const CURRENCY_SYMBOLS = {
@@ -45,7 +53,11 @@ function findSvgPath(filename) {
 
 function loadCurrencySvg(filename, fallbackText) {
   const svgPath = findSvgPath(filename);
+<<<<<<< HEAD
   const result = { inline: "", dataUri: "" };
+=======
+  const result = { inline: '', dataUri: '' };
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
 
   if (!svgPath) {
     console.warn(
@@ -143,6 +155,7 @@ class TemplateService {
     const partialsDir = path.join(__dirname, "..", "templates", "partials");
     try {
       if (fsSync.existsSync(partialsDir)) {
+<<<<<<< HEAD
         fsSync
           .readdirSync(partialsDir)
           .filter((f) => f.endsWith(".hbs"))
@@ -152,6 +165,13 @@ class TemplateService {
               path.join(partialsDir, file),
               "utf-8",
             );
+=======
+        fsSync.readdirSync(partialsDir)
+          .filter(f => f.endsWith('.hbs'))
+          .forEach(file => {
+            const name = file.replace('.hbs', '');
+            const source = fsSync.readFileSync(path.join(partialsDir, file), 'utf-8');
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
             Handlebars.registerPartial(name, source);
             console.log(`Partial registered: ${name}`);
           });
@@ -164,8 +184,13 @@ class TemplateService {
   // ── HELPERS ───────────────────────────────────────────────
   registerHelpers() {
     // ── Date / Currency formatting ─────────────────────────
+<<<<<<< HEAD
     Handlebars.registerHelper("formatDate", function (dateStr) {
       if (!dateStr) return "----";
+=======
+    Handlebars.registerHelper('formatDate', function (dateStr) {
+      if (!dateStr) return '----';
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
       try {
         const d = new Date(dateStr);
         return d
@@ -180,6 +205,7 @@ class TemplateService {
       }
     });
 
+<<<<<<< HEAD
     Handlebars.registerHelper("formatCurrency", function (value) {
       if (typeof value !== "number") value = parseFloat(value) || 0;
       return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -189,12 +215,24 @@ class TemplateService {
       const dp = typeof decimals === "number" ? decimals : 2;
       const num = parseFloat(String(value || "0").replace(/,/g, "")) || 0;
       return num.toLocaleString("en-US", {
+=======
+    Handlebars.registerHelper('formatCurrency', function (value) {
+      if (typeof value !== 'number') value = parseFloat(value) || 0;
+      return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+
+    Handlebars.registerHelper('formatAmount', function (value, decimals) {
+      const dp = (typeof decimals === 'number') ? decimals : 2;
+      const num = parseFloat(String(value || '0').replace(/,/g, '')) || 0;
+      return num.toLocaleString('en-US', {
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
         minimumFractionDigits: dp,
         maximumFractionDigits: dp,
       });
     });
 
     // ── String helpers ─────────────────────────────────────
+<<<<<<< HEAD
     Handlebars.registerHelper("upper", (str) => (str ? str.toUpperCase() : ""));
     Handlebars.registerHelper("default", (v, d) => v || d);
     Handlebars.registerHelper("json", (ctx) => JSON.stringify(ctx, null, 2));
@@ -225,6 +263,30 @@ class TemplateService {
       (a, b) =>
         (parseFloat(String(a || 0).replace(/,/g, "")) || 0) +
         (parseFloat(String(b || 0).replace(/,/g, "")) || 0),
+=======
+    Handlebars.registerHelper('upper', (str) => str ? str.toUpperCase() : '');
+    Handlebars.registerHelper('default', (v, d) => v || d);
+    Handlebars.registerHelper('json', (ctx) => JSON.stringify(ctx, null, 2));
+    Handlebars.registerHelper('nl2br', (text) => text ? new Handlebars.SafeString(text.replace(/\n/g, '<br/>')) : '');
+    //Handlebars.registerHelper('nl2br', (text) => { if (!text) return ''; new Handlebars.SafeString(text.replace(/\r\n|\n|\r/g, '<br/>'));});
+
+    // ── Comparison helpers ─────────────────────────────────
+    Handlebars.registerHelper('eq', (a, b) => a === b);
+    Handlebars.registerHelper('neq', (a, b) => a !== b);
+    Handlebars.registerHelper('gt', (a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) >
+      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    );
+    Handlebars.registerHelper('lt', (a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) <
+      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    );
+
+    // ── Math helpers — all strip commas before parsing ─────
+    Handlebars.registerHelper('add', (a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) +
+      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
     );
     Handlebars.registerHelper(
       "subtract",
@@ -238,6 +300,7 @@ class TemplateService {
         (parseFloat(String(a || 0).replace(/,/g, "")) || 0) *
         (parseFloat(String(b || 0).replace(/,/g, "")) || 0),
     );
+<<<<<<< HEAD
     Handlebars.registerHelper(
       "divide",
       (a, b) =>
@@ -268,6 +331,25 @@ class TemplateService {
     );
 
     Handlebars.registerHelper("pageDisplay", function (pageNumber, totalPages) {
+=======
+    Handlebars.registerHelper('divide', (a, b) =>
+      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) /
+      (parseFloat(String(b || 1).replace(/,/g, '')) || 1)
+    );
+
+    // ── Array / misc helpers ───────────────────────────────
+    Handlebars.registerHelper('length', (arr) => arr ? arr.length : 0);
+    Handlebars.registerHelper('inc', (val) => parseInt(val) + 1);
+    Handlebars.registerHelper('addOne', (val) => parseInt(val, 10) + 1);
+    Handlebars.registerHelper('addOffset', (index, offset) =>
+      parseInt(index, 10) + parseInt(offset, 10) + 1
+    );
+    Handlebars.registerHelper('notEmpty', (val) =>
+      val !== null && val !== undefined && val !== '' && val !== '0' && val !== 0
+    );
+
+    Handlebars.registerHelper('pageDisplay', function (pageNumber, totalPages) {
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
       // If values are passed manually, use them
       if (pageNumber !== undefined && totalPages !== undefined) {
         return `${pageNumber}/${totalPages}`;
@@ -279,14 +361,20 @@ class TemplateService {
       );
     });
     // ── Invoice-specific helpers ───────────────────────────
+<<<<<<< HEAD
     Handlebars.registerHelper("ifFlag", function (settings, key, options) {
       if (!settings || typeof settings !== "object")
         return options.inverse(this);
+=======
+    Handlebars.registerHelper('ifFlag', function (settings, key, options) {
+      if (!settings || typeof settings !== 'object') return options.inverse(this);
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
       const val = settings[key];
       const isTrue = val === 1 || val === "1" || val === true || val === "true";
       return isTrue ? options.fn(this) : options.inverse(this);
     });
 
+<<<<<<< HEAD
     Handlebars.registerHelper("ifZatca", function (settings, options) {
       return settings && (settings.d51 == "154" || settings.d51 === 154)
         ? options.fn(this)
@@ -296,6 +384,16 @@ class TemplateService {
     Handlebars.registerHelper("joinAddress", function (addr, separator) {
       const sep = typeof separator === "string" ? separator : ", ";
       if (!addr || typeof addr !== "object") return "";
+=======
+    Handlebars.registerHelper('ifZatca', function (settings, options) {
+      return (settings && (settings.d51 == '154' || settings.d51 === 154))
+        ? options.fn(this) : options.inverse(this);
+    });
+
+    Handlebars.registerHelper('joinAddress', function (addr, separator) {
+      const sep = (typeof separator === 'string') ? separator : ', ';
+      if (!addr || typeof addr !== 'object') return '';
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
       return [
         addr.address_line1,
         addr.address_line2,
@@ -309,8 +407,13 @@ class TemplateService {
     });
 
     // ── Currency symbol helpers ────────────────────────────
+<<<<<<< HEAD
     Handlebars.registerHelper("currencySymbol", function (isocode) {
       const iso = (isocode || "SAR").toUpperCase().trim();
+=======
+    Handlebars.registerHelper('currencySymbol', function (isocode) {
+      const iso = (isocode || 'SAR').toUpperCase().trim();
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
 
       if (SVG_CURRENCY_MAP[iso]) {
         const svg = SVG_CURRENCY_MAP[iso]();
@@ -322,9 +425,15 @@ class TemplateService {
       );
     });
 
+<<<<<<< HEAD
     Handlebars.registerHelper("currencyImg", function (isocode, size) {
       const iso = (isocode || "SAR").toUpperCase().trim();
       const height = typeof size === "string" ? size : "8px";
+=======
+    Handlebars.registerHelper('currencyImg', function (isocode, size) {
+      const iso = (isocode || 'SAR').toUpperCase().trim();
+      const height = (typeof size === 'string') ? size : '8px';
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
 
       if (SVG_CURRENCY_MAP[iso]) {
         const svg = SVG_CURRENCY_MAP[iso]();
@@ -341,7 +450,11 @@ class TemplateService {
       );
     });
 
+<<<<<<< HEAD
     Handlebars.registerHelper("qrDataUri", function (qrCodeBase64) {
+=======
+    Handlebars.registerHelper('qrDataUri', function (qrCodeBase64) {
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
       if (qrCodeBase64 && String(qrCodeBase64).length > 20) {
         return new Handlebars.SafeString(
           `<img src="data:image/png;base64,${qrCodeBase64}" ` +
@@ -353,8 +466,13 @@ class TemplateService {
       );
     });
 
+<<<<<<< HEAD
     Handlebars.registerHelper("hasVat", function (items, options) {
       const hasVat = (items || []).some((i) => parseFloat(i.vat_amt) > 0);
+=======
+    Handlebars.registerHelper('hasVat', function (items, options) {
+      const hasVat = (items || []).some(i => parseFloat(i.vat_amt) > 0);
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
       return hasVat ? options.fn(this) : options.inverse(this);
     });
     
@@ -365,6 +483,7 @@ class TemplateService {
       return hasRemarks ? options.fn(this) : options.inverse(this);
     });
 
+<<<<<<< HEAD
     Handlebars.registerHelper("hasItemCode", function (items, options) {
     const hasItemCode = (items || []).some(
             (i) => i.item_code && String(i.item_code).trim() !== ""
@@ -372,16 +491,40 @@ class TemplateService {
 
         return hasItemCode ? options.fn(this) : options.inverse(this);
     });
+=======
+    // ✅ ADDED: Register Handlebars helpers (lines 2-14)
+    Handlebars.registerHelper('if_gt', function (a, b, options) {
+      return parseFloat(a) > parseFloat(b) ? options.fn(this) : options.inverse(this);
+    });
+
+    Handlebars.registerHelper('unless_gt', function (a, b, options) {
+      return parseFloat(a) <= parseFloat(b) ? options.fn(this) : options.inverse(this);
+    });
+
+    Handlebars.registerHelper('formatNumber', function (val) {
+      return parseFloat(val || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+    // ✅ END OF ADDED LINES
+
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
   }
 
   // ── DATA PREPARATION ──────────────────────────────────────
   prepareTemplateData(data) {
     const basic = (data.basicdetails && data.basicdetails[0]) || {};
+<<<<<<< HEAD
     const iso = (basic.isocode || "SAR").toUpperCase().trim();
 
     data.isocode = iso;
     data.isSAR = iso === "SAR";
     data.isAED = iso === "AED";
+=======
+    const iso = (basic.isocode || 'SAR').toUpperCase().trim();
+
+    data.isocode = iso;
+    data.isSAR = iso === 'SAR';
+    data.isAED = iso === 'AED';
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
 
     const countryIso = (
       basic.base_country_isocode ||
@@ -494,9 +637,15 @@ class TemplateService {
     const templatesDir = path.join(__dirname, "..", "templates");
     try {
       const files = await fs.readdir(templatesDir);
+<<<<<<< HEAD
       for (const file of files.filter((f) => f.endsWith(".hbs"))) {
         const name = file.replace(".hbs", "");
         const src = await fs.readFile(path.join(templatesDir, file), "utf-8");
+=======
+      for (const file of files.filter(f => f.endsWith('.hbs'))) {
+        const name = file.replace('.hbs', '');
+        const src = await fs.readFile(path.join(templatesDir, file), 'utf-8');
+>>>>>>> cfa2a387b8f535e9aa79a0cc332681ec8a5b566f
         this.compiledTemplates.set(name, Handlebars.compile(src));
         console.log(`Precompiled: ${name}`);
       }

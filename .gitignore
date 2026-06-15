@@ -1,9 +1,9 @@
 # Dependencies
 node_modules/
-package-lock.json
 .claude
 
 # Environment
+.env
 .env.local
 .env.*.local
 

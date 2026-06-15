@@ -3,12 +3,14 @@
 // Maps report_type (int sent from PHP) → template name prefix + label
 // Template file resolved as: reports/{name}{template_no}.hbs
 // e.g. report_type=1, template_no=2  →  reports/project_report2.hbs
+// e.g. report_type=1, template_no=2  →  reports/project_report2.hbs
 
 const REPORT_TYPES = {
   1: { name: 'project_report',   label: 'Project Report'   },
   2: { name: 'sales_report',     label: 'Sales Report'     },
   3: { name: 'products_report',  label: 'Products Report'  },
   4: { name: 'customers_report', label: 'Customers Report' },
+  5: { name: 'ledger_report', label: 'Ledger Report' }, 
   10: { name: 'vat_report', label: 'Vat Report' },
   11: { name: 'oman_vat_report', label: 'Oman Vat Report' },
   12: { name: 'uae_vat_report',  label: 'UAE VAT Return'  },
