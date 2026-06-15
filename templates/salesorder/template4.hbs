@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.55;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 4px; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #5fa1c4;
+    padding: 8px 0 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Header (left/right info) ──────────────── */
+  .header-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+  }
+  .header-table > tbody > tr > td {
+    vertical-align: top;
+    padding: 0;
+    font-size: 11px;
+  }
+  .header-table .left-col  { width: 50%; padding-right: 14px; }
+  .header-table .right-col { width: 50%; padding-left: 14px; }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table td {
+    padding: 2px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .info-table .il-lbl { width: 44%; font-weight: bold; }
+  .info-table .il-sep { width: 4%; }
+  .info-table .il-val { width: 52%; }
+
+  /* ── Items table ──────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+    margin-top: 6px;
+  }
+  .items-table th,
+  .items-table td {
+    border: 1px solid #000;
+    padding: 8px 6px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .items-table thead th {
+    background: #95b6e0;
+    color: #222;
+    text-align: center;
+    font-weight: bold;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  .totals-lbl {
+    text-align: right;
+    color: #5fa1c4;
+    font-weight: bold;
+  }
+  .totals-val {
+    text-align: right;
+    color: #5fa1c4;
+    font-weight: bold;
+  }
+
+  /* ── Budgetory line ────────────────────────── */
+  .budgetory-line {
+    color: #5fa1c4;
+    margin: 14px 0 12px;
+    font-size: 11px;
+  }
+
+  /* ── Bank Details ──────────────────────────── */
+  .bank-wrap { margin-top: 20px; }
+  .bank-title {
+    text-decoration: underline;
+    color: #5fa1c4;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .bank-table { border-collapse: collapse; }
+  .bank-table td {
+    padding: 3px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .bank-table .bk-lbl { width: 130px; }
+  .bank-table .bk-sep { width: 14px; }
+
+  /* ── Footer note ───────────────────────────── */
+  .footer-note {
+    margin-top: 24px;
+    font-size: 11px;
+    line-height: 1.55;
+    color: #5fa1c4;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">ORDER CONFIRMATION</div>
+
+  <!-- Header: Order info (left) + Reference info (right) -->
+  <table class="header-table">
+    <tr>
+      <td class="left-col">
+        <table class="info-table">
+          <tr>
+            <td class="il-lbl">ORDER CONFIRMED TO</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{billing_address.[0].name}}</td>
+          </tr>
+          <tr>
+            <td class="il-lbl">PERSON</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].contactname}}</td>
+          </tr>
+          <tr>
+            <td class="il-lbl">DESIGNATION</td>
+            <td class="il-sep">:</td>
+            <td class="il-val"></td>
+          </tr>
+          <tr>
+            <td class="il-lbl">EMAIL</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].contactemail}}</td>
+          </tr>
+          <tr>
+            <td class="il-lbl">CONTACT</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].contactno}}</td>
+          </tr>
+        </table>
+      </td>
+      <td class="right-col">
+        <table class="info-table">
+          <tr>
+            <td class="il-lbl">OUR QUOTATION REFERENCE NO</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].inv_no}}</td>
+          </tr>
+          <tr>
+            <td class="il-lbl">CUSTOMER RFQ</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].rfq}}</td>
+          </tr>
+          <tr>
+            <td class="il-lbl">VESSEL NAME</td>
+            <td class="il-sep">:</td>
+            <td class="il-val"></td>
+          </tr>
+          <tr>
+            <td class="il-lbl">DATE</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].inv_date}}</td>
+          </tr>
+          <tr>
+            <td class="il-lbl">PERSON</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].salesman_name}}</td>
+          </tr>
+          <tr>
+            <td class="il-lbl">CONTACT</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].salesman_no}}</td>
+          </tr>
+          <tr>
+            <td class="il-lbl">EMAIL</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].salesman_email}}</td>
+          </tr>
+          <tr>
+            <td class="il-lbl">PORT</td>
+            <td class="il-sep">:</td>
+            <td class="il-val">{{basicdetails.[0].port_of_delivery}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:6%">
+      <col style="width:32%">
+      <col style="width:7%">
+      <col style="width:7%">
+      <col style="width:12%">
+      <col style="width:9%">
+      <col style="width:13%">
+      <col style="width:14%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>DESCRIPTION</th>
+        <th>UNIT</th>
+        <th>QTY</th>
+        <th>UNIT PRICE</th>
+        <th>VAT</th>
+        <th>DISCOUNT</th>
+        <th>TOTAL PRICE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div>{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{unit}}</td>
+        <td class="center">{{formatAmount quantity 0}}</td>
+        <td class="right">{{formatAmount price 3}}</td>
+        <td class="right">{{formatAmount tax 3}}</td>
+        <td class="right">{{#if disc_amt}}{{formatAmount disc_amt 3}}{{/if}}</td>
+        <td class="right">{{formatAmount amount 3}}</td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td colspan="7" class="totals-lbl">DISCOUNT AMOUNT</td>
+        <td class="totals-val">{{formatAmount (divide basicdetails.[0].discount ccrate) 3}}</td>
+      </tr>
+      <tr>
+        <td colspan="7" class="totals-lbl">TOTAL PRICE IN {{basicdetails.[0].base_country_isocode}}</td>
+        <td class="totals-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) 3}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Total Budgetory line -->
+  {{#if bcamountinwords}}
+  <div class="budgetory-line">TOTAL BUDGETORY QUOTATION: {{bcamountinwords}}</div>
+  {{/if}}
+
+  <!-- Bank Details -->
+  <div class="bank-wrap">
+    <div class="bank-title">Bank Details:</div>
+    <table class="bank-table">
+      <tr>
+        <td class="bk-lbl">A/C Name</td>
+        <td class="bk-sep">:</td>
+        <td>{{bankdetails.acc_name}}</td>
+      </tr>
+      <tr>
+        <td class="bk-lbl">A/C NO</td>
+        <td class="bk-sep">:</td>
+        <td>{{bankdetails.acc_no}}</td>
+      </tr>
+      <tr>
+        <td class="bk-lbl">IBAN</td>
+        <td class="bk-sep">:</td>
+        <td>{{bankdetails.iban_no}}</td>
+      </tr>
+      <tr>
+        <td class="bk-lbl">BIC/SWIFT</td>
+        <td class="bk-sep">:</td>
+        <td>{{bankdetails.swift_no}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Footer note -->
+  <div class="footer-note">
+    Should you require any additional information, please do not hesitate to contact our Operational Unit. We require a Purchase Order to start the following project, and mobilization time of 24 hours needs to be provided.
+  </div>
+
+</div>
+
+</body>
+</html>

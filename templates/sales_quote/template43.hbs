@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUOTATION - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.45;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    color: #1f3a6b;
+    padding: 4px 0 12px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Outer doc table ───────────────────────── */
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+  }
+  .doc-table > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 8px 10px;
+    vertical-align: top;
+    font-size: 11px;
+  }
+
+  /* ── Top header row ────────────────────────── */
+  .cust-name { font-weight: normal; }
+  .cust-line { line-height: 1.7; }
+  .center-cell { text-align: center; vertical-align: middle; line-height: 1.7; }
+  .right-cell  { text-align: center; vertical-align: middle; }
+  .date-val { font-weight: bold; }
+
+  /* ── Subject row ───────────────────────────── */
+  .subject-cell {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .items-table th,
+  .items-table td {
+    font-size: 11px;
+    vertical-align: middle;
+    padding: 6px 8px;
+    border: 1px solid #bfbfbf;
+  }
+  .items-table thead th {
+    text-align: center;
+    font-weight: bold;
+    background: #ffffff;
+    border-top: 1px solid #000;
+  }
+  .items-table .desc-h { text-align: center; }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Totals (split right side) ─────────────── */
+  .totals-wrap-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .totals-wrap-table > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+    font-size: 11px;
+  }
+  .totals-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .totals-table td {
+    padding: 6px 10px;
+    font-size: 11px;
+    border: 1px solid #bfbfbf;
+    vertical-align: middle;
+  }
+  .totals-table .t-lbl {
+    text-align: right;
+    width: 65%;
+  }
+  .totals-table .t-val {
+    text-align: right;
+    width: 35%;
+  }
+
+  /* ── Amount in words ──────────────────────── */
+  .words-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .words-table td {
+    padding: 5px 10px;
+    font-size: 11px;
+    color: #777;
+    vertical-align: top;
+  }
+  .words-table .w-lbl { width: 22%; }
+  .words-table .w-sep { width: 3%; }
+  .words-table .w-val { width: 75%; }
+
+  /* ── Terms ─────────────────────────────────── */
+  .terms-cell { padding: 8px 10px; }
+  .terms-title { font-weight: bold; }
+  .terms-text { margin-top: 2px; }
+
+  /* ── Computer generated note ──────────────── */
+  .computer-gen {
+    padding: 6px 10px;
+    font-size: 11px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">QUOTATION</div>
+
+  <!-- Document -->
+  <table class="doc-table">
+    <!-- Top header: Customer info | Reference / Doc No / Project | Date -->
+    <tr>
+      <td style="width:34%;">
+        <div class="cust-name">{{billing_address.[0].name}}</div>
+        <div class="cust-line">Contact Name:{{#if basicdetails.[0].contactname}} {{basicdetails.[0].contactname}}{{/if}}</div>
+        <div class="cust-line">Contact No:{{#if basicdetails.[0].contactno}} {{basicdetails.[0].contactno}}{{/if}}</div>
+        <div class="cust-line" style="">VAT No:{{#if billing_address.[0].vat}} {{billing_address.[0].vat}}{{/if}}</div>
+      </td>
+      <td style="width:33%;" class="center-cell">
+        <div>Reference No:{{#if basicdetails.[0].reference_no}} {{basicdetails.[0].reference_no}}{{/if}}</div>
+        <div>Doc No: {{basicdetails.[0].inv_no}}</div>
+      </td>
+      <td style="width:33%;" class="right-cell">
+        <div class="date-val">Date  : {{basicdetails.[0].inv_date}}</div>
+        <div>Project Name:{{#if basicdetails.[0].projectname}} {{basicdetails.[0].projectname}}{{/if}}</div>
+      </td>
+    </tr>
+
+    <!-- Subject row -->
+    <tr>
+      <td colspan="3" style="padding:0;border-bottom:none;">
+        <div class="subject-cell">Subject :{{#if basicdetails.[0].subj}} {{basicdetails.[0].subj}}{{/if}}</div>
+      </td>
+    </tr>
+
+    <!-- Items -->
+    <tr>
+      <td colspan="3" style="padding:0;border-top:none;">
+        <table class="items-table">
+          <colgroup>
+            <col style="width:5%">
+            <col style="width:32%">
+            <col style="width:8%">
+            <col style="width:8%">
+            <col style="width:12%">
+            <col style="width:12%">
+            <col style="width:10%">
+            <col style="width:13%">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th class="desc-h">Description</th>
+              <th>QTY</th>
+              <th>Unit</th>
+              <th>Unit Price</th>
+              <th>Amount</th>
+              <th>VAT</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each itemdetails}}
+            <tr>
+              <td class="center">{{addOne @index}}</td>
+              <td class="left">
+                {{item_name}}
+                {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+                {{#if description}}<div>{{description}}</div>{{/if}}
+              </td>
+              <td class="center">{{formatAmount quantity ../bcdp}}</td>
+              <td class="center">{{unit}}</td>
+              <td class="right">{{formatAmount price ../bcdp}}</td>
+              <td class="right">{{formatAmount taxable ../bcdp}}</td>
+              <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
+              <td class="right">{{formatAmount amount ../bcdp}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Totals -->
+    <tr>
+      <td colspan="3" style="padding:0;">
+        <table class="totals-wrap-table">
+          <tr>
+            <td style="width:50%; border:none; padding:0;"></td>
+            <td style="width:50%; border:none; padding:0;">
+              <table class="totals-table">
+                <tr>
+                  <td class="t-lbl">Gross Total</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="t-lbl">Discount</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="t-lbl">Taxable Amount</td>
+                  <td class="t-val">{{formatAmount (subtract (divide basicdetails.[0].subtotal ccrate) (divide basicdetails.[0].discount ccrate)) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="t-lbl">VAT</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="t-lbl">Total Amount</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Amount in words -->
+    <tr>
+      <td colspan="3" style="padding:0;">
+        <table class="words-table">
+          <tr>
+            <td class="w-lbl">Amount in Words</td>
+            <td class="w-sep">:</td>
+            <td class="w-val">{{bcamountinwords}}</td>
+          </tr>
+          <tr>
+            <td class="w-lbl">VAT Amount in Words</td>
+            <td class="w-sep">:</td>
+            <td class="w-val"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Terms & Conditions -->
+    <tr>
+      <td colspan="3" style="padding:0;">
+        <div class="terms-cell">
+          <div class="terms-title">TERMS &amp; CONDITIONS</div>
+          <div class="terms-text">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{else}}{{#if invterms}}{{{nl2br invterms}}}{{/if}}{{/if}}</div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- Computer generated -->
+    <tr>
+      <td colspan="3" style="padding:0;">
+        <div class="computer-gen">Computer Generated Quotation</div>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

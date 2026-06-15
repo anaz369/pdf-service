@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUOTATION - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.45;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+
+  /* ── Title ─────────────────────────────────── */
+  .title-wrap {
+    text-align: center;
+    position: relative;
+    padding: 6px 0 14px;
+  }
+  .main-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2a4d7b;
+  }
+
+  /* ── Outer table ───────────────────────────── */
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+  }
+  .doc-table > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 0;
+    vertical-align: top;
+    font-size: 11px;
+  }
+
+  /* ── Top info row ──────────────────────────── */
+  .cust-block { padding: 6px 10px; }
+  .cust-name { font-weight: bold; }
+  .cust-line { line-height: 1.45; }
+
+  .meta-block { padding: 6px 10px; border-top: 1px solid #ccc; }
+
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    height: 100%;
+    border: 1px solid #ccc;
+  }
+  .ref-table td {
+    padding: 6px 8px;
+    font-size: 11px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .ref-table .v-sep { border-right: 1px solid #ccc; }
+  .ref-table .ref-hdr { font-weight: normal; }
+  .ref-table .ref-val { font-weight: bold; }
+
+  /* ── Items table ──────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .items-table th,
+  .items-table td {
+    font-size: 11px;
+    vertical-align: top;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+  }
+  .items-table th {
+    text-align: center;
+    font-weight: bold;
+    background: #ffffff;
+  }
+  .items-table .desc-h { text-align: left; }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Remark row ───────────────────────────── */
+  .remark-cell { padding: 6px 10px; }
+
+  /* ── Totals section ───────────────────────── */
+  .totals-wrap-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .totals-wrap-table > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+    font-size: 11px;
+  }
+  .seal-sig-cell {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .seal-img { max-height: 80px; max-width: 90px; display: inline-block; vertical-align: middle; }
+  .sig-img  { max-height: 60px; max-width: 140px; display: inline-block; vertical-align: middle; margin-left: 6px; }
+
+  .totals-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .totals-table td {
+    padding: 6px 10px;
+    font-size: 11px;
+    border-bottom: 1px solid #ccc;
+  }
+  .totals-table tr:last-child td { border-bottom: none; }
+  .totals-table .t-lbl { text-align: right;  }
+  .totals-table .t-val { text-align: right; width: 32%; }
+
+  /* ── Amount in words ──────────────────────── */
+  .words-cell {
+    padding: 6px 10px;
+    font-weight: bold;
+  }
+  .words-label { font-weight: bold; }
+
+  /* ── Sign-off ─────────────────────────────── */
+  .signoff-cell {
+    padding: 8px 10px;
+    text-align: right;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="title-wrap">
+    <span class="main-title">QUOTATION</span>
+  </div>
+
+  <!-- Document -->
+  <table class="doc-table">
+    <!-- Top info row -->
+    <tr>
+      <td style="width:50%; padding:0;">
+        <div class="cust-block">
+          <div class="cust-name">{{billing_address.[0].name}}</div>
+          <div class="cust-line">{{joinAddress billing_address.[0] "، "}}</div>
+        </div>
+        <div class="meta-block">
+          <div>Phone : {{basicdetails.[0].contactno}} | Email: {{basicdetails.[0].contactemail}}</div>
+          {{#if billing_address.[0].vat}}<div>VAT : {{billing_address.[0].vat}}</div>{{/if}}
+        </div>
+      </td>
+      <td style="width:50%; padding:0;border: 1px solid #ccc;">
+        <table class="ref-table">
+          <tr style="border-bottom: 1px solid #ccc;">
+            <td class="v-sep ref-hdr">Reference No:{{basicdetails.[0].reference_no}}<br>Doc. No: <span class="ref-val">{{basicdetails.[0].inv_no}}</span></td>
+            <td class="ref-hdr">Date<br><span class="ref-val">{{basicdetails.[0].inv_date}}</span></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Items table -->
+    <tr>
+      <td colspan="2" style="padding:0; border-top:1px solid #000;">
+        <table class="items-table">
+          <colgroup>
+            <col style="width:6%">
+            <col style="width:34%">
+            <col style="width:10%">
+            <col style="width:12%">
+            <col style="width:12%">
+            <col style="width:12%">
+            <col style="width:14%">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th class="desc-h">Description</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Amount</th>
+              <th>VAT</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each itemdetails}}
+            <tr>
+              <td class="center">{{addOne @index}}</td>
+              <td class="left">
+                {{item_name}}
+                {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+                {{#if description}}<div>{{description}}</div>{{/if}}
+              </td>
+              <td class="center">{{formatAmount quantity ../bcdp}}</td>
+              <td class="right">{{formatAmount price ../bcdp}}</td>
+              <td class="right">{{formatAmount taxable ../bcdp}}</td>
+              <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
+              <td class="right">{{formatAmount amount ../bcdp}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Remark / notes row -->
+    <tr>
+      <td colspan="2">
+        <div class="remark-cell">
+          {{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}
+        </div>
+      </td>
+    </tr>
+
+    <!-- Seal/Signature + Totals -->
+    <tr>
+      <td colspan="2" style="padding:0;">
+        <table class="totals-wrap-table">
+          <tr>
+            <td style="width:45%;">
+              <div class="seal-sig-cell">
+              </div>
+            </td>
+            <td style="width:55%;">
+              <table class="totals-table">
+                <tr>
+                  <td class="t-lbl">Gross Total</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="t-lbl">Discount</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="t-lbl">Taxable Amount</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="t-lbl">VAT</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="t-lbl">Total Amount</td>
+                  <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Amount in words -->
+    <tr>
+      <td colspan="2">
+        <div class="words-cell">
+          <span class="words-label">Amount in words :</span> {{bcamountinwords}}
+        </div>
+      </td>
+    </tr>
+
+    <!-- Sign-off -->
+    <tr>
+      <td colspan="2">
+        <div class="signoff-cell">
+          For {{#if compprof.name}}{{compprof.name}}{{else}}{{basicdetails.[0].branchname}}{{/if}}<br>
+          Authorised Signatory
+        </div>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

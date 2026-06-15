@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #000;
+    line-height: 1.4;
+    margin: 0 6mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 20px;
+    font-weight: normal;
+    margin: 4px 0 12px;
+  }
+  .main-title .ar {
+    direction: rtl;
+    unicode-bidi: embed;
+    margin-right: 4px;
+  }
+
+  /* ── Header Info Table ─────────────────────── */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #bfbfbf;
+  }
+  .info-table td {
+    border: 1px solid #bfbfbf;
+    padding: 8px 10px;
+    vertical-align: middle;
+    font-size: 11px;
+  }
+  .info-table .lbl {
+    background: #ececec;
+    font-weight: bold;
+    width: 14%;
+  }
+  .info-table .val { width: 36%; }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+    margin-top: 18px;
+  }
+  .items-table th,
+  .items-table td {
+    border: 1px solid #000;
+    padding: 6px 5px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .items-table th {
+    text-align: center;
+    font-weight: bold;
+    background: #ffffff;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  .grand-row td {
+    font-weight: bold;
+    text-align: right;
+  }
+
+  /* ── Terms ─────────────────────────────────── */
+  .terms-wrap { margin-top: 14px; }
+  .terms-title {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 4px;
+  }
+  .terms-body {
+    white-space: pre-wrap;
+    margin-bottom: 4px;
+  }
+
+  .signer {
+    margin-top: 2px;
+    font-weight: bold;
+    font-size: 11px;
+  }
+  .mob {
+    margin-top: 5px;
+    font-size: 11px;
+  }
+
+  /* ── Footer (signature + seal) ────────────── */
+  .tb-row {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 14px;
+  }
+  .tb-row td {
+    vertical-align: top;
+    padding: 0 6px 0 0;
+    font-size: 11px;
+  }
+  .sig-stack {
+    display: block;
+  }
+  .sig-stack img {
+    display: block;
+    object-fit: contain;
+  }
+  .sig-stack .sign-img {
+    max-height: 80px;
+    max-width: 180px;
+    margin-bottom: 6px;
+  }
+  .sig-stack .seal-img {
+    max-height: 100px;
+    max-width: 180px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">QUOTATION /<span class="ar"> عرض سعر</span></div>
+
+  <!-- Header Info Table -->
+  <table class="info-table">
+    <tr>
+      <td class="lbl">COMPANY</td>
+      <td class="val"><b>{{billing_address.[0].name}}</b></td>
+      <td class="lbl">DATE</td>
+      <td class="val">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">YOUR REF</td>
+      <td class="val">{{basicdetails.[0].reference_no}}</td>
+      <td class="lbl">OUR REF</td>
+      <td class="val">{{basicdetails.[0].inv_no}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">ATTENTION</td>
+      <td class="val" colspan="3">{{basicdetails.[0].attention}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">SUBJECT</td>
+      <td class="val" colspan="3">{{basicdetails.[0].subj}}</td>
+    </tr>
+  </table>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:6%">
+      <col style="width:36%">
+      <col style="width:9%">
+      <col style="width:8%">
+      <col style="width:13%">
+      <col style="width:13%">
+      <col style="width:15%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>UOM</th>
+        <th>QTY</th>
+        <th>Unit Rate</th>
+        <th>Tax</th>
+        <th>Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div style="direction:rtl;">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div>{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{unit}}</td>
+        <td class="center">{{formatAmount quantity ../bcdp}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="right">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr class="grand-row">
+        <td colspan="6">Total Amount in {{default basicdetails.[0].base_country_isocode}} (Excluding VAT)</td>
+        <td>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Terms & Conditions -->
+  <div class="terms-wrap">
+    <div class="terms-title">TERMS &amp; CONDITIONS:</div>
+    {{#if basicdetails.[0].terms_and_condition}}
+    <div class="terms-body">{{nl2br basicdetails.[0].terms_and_condition}}</div>
+    {{/if}}
+    {{#if basicdetails.[0].employeename}}
+    <div class="signer">{{basicdetails.[0].employeename}}</div>
+    {{/if}}
+  </div>
+
+  <!-- Mob -->
+  <div class="mob">Mob:{{#if basicdetails.[0].employeecontactno}} {{basicdetails.[0].employeecontactno}}{{/if}}</div>
+
+  <!-- Signature & Seal -->
+  <table class="tb-row">
+    <colgroup>
+      <col style="width:50%">
+      <col style="width:50%">
+    </colgroup>
+    <tr>
+      <td>
+        <div class="sig-stack">
+          {{#if Signature}}
+          <img class="sign-img" src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d458 '80'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>
+          {{/if}}
+          {{#if Seal}}
+          <img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>
+          {{/if}}
+        </div>
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

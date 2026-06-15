@@ -656,7 +656,7 @@ hr {
         <th>Total</th>
         <td class="text-end">
             {{basicdetails.[0].isocode}} 
-            {{formatAmount basicdetails.[0].subtotal bcdp}}
+            {{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}
         </td>
     </tr>
 
@@ -664,7 +664,7 @@ hr {
         <th>Discount</th>
         <td class="text-end">
             {{basicdetails.[0].isocode}} 
-            {{formatAmount basicdetails.[0].discount bcdp}}
+            {{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}
         </td>
     </tr>
 
@@ -672,7 +672,7 @@ hr {
         <th>Total After Discount</th>
         <td class="text-end">
             {{basicdetails.[0].isocode}} 
-            {{formatAmount (subtract basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}
+            {{formatAmount (subtract (divide basicdetails.[0].subtotal ccrate) (divide basicdetails.[0].discount ccrate)) bcdp}}
         </td>
     </tr>
 
@@ -680,7 +680,7 @@ hr {
         <th>CGST Amount</th>
         <td class="text-end">
             {{basicdetails.[0].isocode}} 
-            {{formatAmount basicdetails.[0].cgst_total bcdp}}
+            {{formatAmount (divide basicdetails.[0].cgst ccrate) bcdp}}
         </td>
     </tr>
 
@@ -688,7 +688,7 @@ hr {
         <th>SGST Amount</th>
         <td class="text-end">
             {{basicdetails.[0].isocode}} 
-            {{formatAmount basicdetails.[0].sgst_total bcdp}}
+            {{formatAmount (divide basicdetails.[0].sgst ccrate) bcdp}}
         </td>
     </tr>
 
@@ -696,7 +696,7 @@ hr {
         <th>Round Off</th>
         <td class="text-end">
             {{basicdetails.[0].isocode}} 
-            {{formatAmount basicdetails.[0].round_off bcdp}}
+            {{formatAmount (divide basicdetails.[0].round_off ccrate) bcdp}}
         </td>
     </tr>
 
@@ -704,7 +704,7 @@ hr {
         <th>Grand Amount</th>
         <td class="text-end">
             {{basicdetails.[0].isocode}} 
-            {{formatAmount basicdetails.[0].grand_total bcdp}}
+            {{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}
         </td>
     </tr>
 

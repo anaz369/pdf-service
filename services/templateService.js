@@ -1,69 +1,79 @@
-'use strict';
-
-const Handlebars = require('handlebars');
-const fs = require('fs').promises;
-const fsSync = require('fs');
-const path = require('path');
-const qrCodeService = require('./qrCodeService');
+"use strict";
+const Handlebars = require("handlebars");
+const fs = require("fs").promises;
+const fsSync = require("fs");
+const path = require("path");
+const qrCodeService = require("./qrCodeService");
 
 // ── Currency symbols ───────────────────────────────────────
 const CURRENCY_SYMBOLS = {
-  AED: 'د.إ',
-  USD: '$',
-  EUR: '€',
-  GBP: '£',
-  QAR: 'ر.ق',
-  KWD: 'د.ك',
-  BHD: 'د.ب',
-  OMR: 'ر.ع',
-  MYR: 'RM',
-  INR: '₹',
-  JPY: '¥',
-  CNY: '¥',
-  AUD: 'A$',
-  CAD: 'C$',
+  AED: "د.إ",
+  USD: "$",
+  EUR: "€",
+  GBP: "£",
+  QAR: "ر.ق",
+  KWD: "د.ك",
+  BHD: "د.ب",
+  OMR: "ر.ع",
+  MYR: "RM",
+  INR: "₹",
+  JPY: "¥",
+  CNY: "¥",
+  AUD: "A$",
+  CAD: "C$",
 };
 
 // ── SVG helper — generic loader ────────────────────────────
 function findSvgPath(filename) {
   const candidates = [
-    path.join(__dirname, '..', 'assets', filename),
-    path.join(__dirname, '..', 'public', 'assets', filename),
-    path.join(process.cwd(), 'src', 'assets', filename),
-    path.join(process.cwd(), 'assets', filename),
+    path.join(__dirname, "..", "assets", filename),
+    path.join(__dirname, "..", "public", "assets", filename),
+    path.join(process.cwd(), "src", "assets", filename),
+    path.join(process.cwd(), "assets", filename),
   ];
-  return candidates.find(p => {
-    try { return fsSync.existsSync(p); } catch { return false; }
-  }) || null;
+  return (
+    candidates.find((p) => {
+      try {
+        return fsSync.existsSync(p);
+      } catch {
+        return false;
+      }
+    }) || null
+  );
 }
 
 function loadCurrencySvg(filename, fallbackText) {
   const svgPath = findSvgPath(filename);
-  const result = { inline: '', dataUri: '' };
+  const result = { inline: "", dataUri: "" };
+
 
   if (!svgPath) {
-    console.warn(`⚠ ${filename} not found. Falling back to text: ${fallbackText}`);
+    console.warn(
+      `⚠ ${filename} not found. Falling back to text: ${fallbackText}`,
+    );
     result.inline = `<span style="font-family:Arial;">${fallbackText}</span>`;
     return result;
   }
 
   try {
-    const raw = fsSync.readFileSync(svgPath, 'utf-8');
+    const raw = fsSync.readFileSync(svgPath, "utf-8");
 
     result.inline = raw
-      .replace(/<\?xml[^?]*\?>/gi, '')
+      .replace(/<\?xml[^?]*\?>/gi, "")
       .trim()
       .replace(/<svg([^>]*)>/i, (match, attrs) => {
         const cleaned = attrs
-          .replace(/\s*width\s*=\s*["'][^"']*["']/gi, '')
-          .replace(/\s*height\s*=\s*["'][^"']*["']/gi, '');
+          .replace(/\s*width\s*=\s*["'][^"']*["']/gi, "")
+          .replace(/\s*height\s*=\s*["'][^"']*["']/gi, "");
         return `<svg${cleaned} style="height:0.75em;width:auto;vertical-align:middle;display:inline-block;margin-right:2px;">`;
       });
 
-    result.dataUri = `data:image/svg+xml;base64,${Buffer.from(raw).toString('base64')}`;
+    result.dataUri = `data:image/svg+xml;base64,${Buffer.from(raw).toString("base64")}`;
     console.log(`✓ ${filename} loaded from: ${svgPath}`);
   } catch (err) {
-    console.warn(`⚠ Could not read ${filename}: ${err.message}. Falling back to text.`);
+    console.warn(
+      `⚠ Could not read ${filename}: ${err.message}. Falling back to text.`,
+    );
     result.inline = `<span style="font-family:Arial;">${fallbackText}</span>`;
   }
 
@@ -71,8 +81,8 @@ function loadCurrencySvg(filename, fallbackText) {
 }
 
 // ── Load SAR + AED SVGs at startup ────────────────────────
-let sarSvg = loadCurrencySvg('sar.svg', '﷼');
-let aedSvg = loadCurrencySvg('aed.svg', 'د.إ');
+let sarSvg = loadCurrencySvg("sar.svg", "﷼");
+let aedSvg = loadCurrencySvg("aed.svg", "د.إ");
 
 // Map iso → svg object for easy lookup
 const SVG_CURRENCY_MAP = {
@@ -83,22 +93,32 @@ const SVG_CURRENCY_MAP = {
 // ── Bootstrap CSS — loaded once at startup ─────────────────
 // Tries multiple path candidates — works on any server structure
 // process.cwd() = app root on cPanel (most reliable)
-let bootstrapCss = '';
+let bootstrapCss = "";
 
-const BOOTSTRAP_FILE = path.join('bootstrap', 'dist', 'css', 'bootstrap.min.css');
+const BOOTSTRAP_FILE = path.join(
+  "bootstrap",
+  "dist",
+  "css",
+  "bootstrap.min.css",
+);
 const bootstrapCandidates = [
-  path.join(process.cwd(), 'node_modules', BOOTSTRAP_FILE),                // cPanel app root ✅
-  path.join(__dirname, '..', '..', 'node_modules', BOOTSTRAP_FILE),        // services/src/root
-  path.join(__dirname, '..', 'node_modules', BOOTSTRAP_FILE),              // src/root
-  path.join(__dirname, '..', '..', '..', 'node_modules', BOOTSTRAP_FILE),  // deep nesting
-  path.join(__dirname, 'node_modules', BOOTSTRAP_FILE),                    // same folder
+  path.join(process.cwd(), "node_modules", BOOTSTRAP_FILE), // cPanel app root ✅
+  path.join(__dirname, "..", "..", "node_modules", BOOTSTRAP_FILE), // services/src/root
+  path.join(__dirname, "..", "node_modules", BOOTSTRAP_FILE), // src/root
+  path.join(__dirname, "..", "..", "..", "node_modules", BOOTSTRAP_FILE), // deep nesting
+  path.join(__dirname, "node_modules", BOOTSTRAP_FILE), // same folder
 ];
 
 for (const candidate of bootstrapCandidates) {
   try {
     if (fsSync.existsSync(candidate)) {
-      bootstrapCss = fsSync.readFileSync(candidate, 'utf-8');
-      console.log('[Bootstrap] ✓ Loaded from:', candidate, '| Length:', bootstrapCss.length);
+      bootstrapCss = fsSync.readFileSync(candidate, "utf-8");
+      console.log(
+        "[Bootstrap] ✓ Loaded from:",
+        candidate,
+        "| Length:",
+        bootstrapCss.length,
+      );
       break;
     }
   } catch (err) {
@@ -107,10 +127,9 @@ for (const candidate of bootstrapCandidates) {
 }
 
 if (!bootstrapCss) {
-  console.warn('[Bootstrap] ✗ Not found. Run: npm install bootstrap');
-  console.warn('[Bootstrap] Tried paths:', bootstrapCandidates);
+  console.warn("[Bootstrap] ✗ Not found. Run: npm install bootstrap");
+  console.warn("[Bootstrap] Tried paths:", bootstrapCandidates);
 }
-
 
 class TemplateService {
   constructor() {
@@ -121,9 +140,10 @@ class TemplateService {
 
   // ── PARTIALS ──────────────────────────────────────────────
   registerPartials() {
-    const partialsDir = path.join(__dirname, '..', 'templates', 'partials');
+    const partialsDir = path.join(__dirname, "..", "templates", "partials");
     try {
       if (fsSync.existsSync(partialsDir)) {
+
         fsSync.readdirSync(partialsDir)
           .filter(f => f.endsWith('.hbs'))
           .forEach(file => {
@@ -134,87 +154,121 @@ class TemplateService {
           });
       }
     } catch (err) {
-      console.warn('Could not load partials directory:', err.message);
+      console.warn("Could not load partials directory:", err.message);
     }
   }
 
   // ── HELPERS ───────────────────────────────────────────────
   registerHelpers() {
-
     // ── Date / Currency formatting ─────────────────────────
+
     Handlebars.registerHelper('formatDate', function (dateStr) {
       if (!dateStr) return '----';
       try {
         const d = new Date(dateStr);
-        return d.toLocaleDateString('en-GB', {
-          day: '2-digit', month: 'short', year: 'numeric'
-        }).replace(/ /g, '-');
-      } catch { return dateStr; }
+        return d
+          .toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })
+          .replace(/ /g, "-");
+      } catch {
+        return dateStr;
+      }
     });
 
-    Handlebars.registerHelper('formatCurrency', function (value) {
-      if (typeof value !== 'number') value = parseFloat(value) || 0;
-      return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    Handlebars.registerHelper("formatCurrency", function (value) {
+      if (typeof value !== "number") value = parseFloat(value) || 0;
+      return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     });
 
-    Handlebars.registerHelper('formatAmount', function (value, decimals) {
-      const dp = (typeof decimals === 'number') ? decimals : 2;
-      const num = parseFloat(String(value || '0').replace(/,/g, '')) || 0;
-      return num.toLocaleString('en-US', {
+    Handlebars.registerHelper("formatAmount", function (value, decimals) {
+      const dp = typeof decimals === "number" ? decimals : 2;
+      const num = parseFloat(String(value || "0").replace(/,/g, "")) || 0;
+      return num.toLocaleString("en-US", {
+
         minimumFractionDigits: dp,
         maximumFractionDigits: dp,
       });
     });
 
     // ── String helpers ─────────────────────────────────────
-    Handlebars.registerHelper('upper', (str) => str ? str.toUpperCase() : '');
-    Handlebars.registerHelper('default', (v, d) => v || d);
-    Handlebars.registerHelper('json', (ctx) => JSON.stringify(ctx, null, 2));
-    Handlebars.registerHelper('nl2br', (text) => text ? new Handlebars.SafeString(text.replace(/\n/g, '<br/>')) : '');
+    Handlebars.registerHelper("upper", (str) => (str ? str.toUpperCase() : ""));
+    Handlebars.registerHelper("default", (v, d) => v || d);
+    Handlebars.registerHelper("json", (ctx) => JSON.stringify(ctx, null, 2));
+    Handlebars.registerHelper("nl2br", (text) =>
+      text ? new Handlebars.SafeString(text.replace(/\n/g, "<br/>")) : "",
+    );
     //Handlebars.registerHelper('nl2br', (text) => { if (!text) return ''; new Handlebars.SafeString(text.replace(/\r\n|\n|\r/g, '<br/>'));});
 
     // ── Comparison helpers ─────────────────────────────────
-    Handlebars.registerHelper('eq', (a, b) => a === b);
-    Handlebars.registerHelper('neq', (a, b) => a !== b);
-    Handlebars.registerHelper('gt', (a, b) =>
-      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) >
-      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    Handlebars.registerHelper("eq", (a, b) => a === b);
+    Handlebars.registerHelper("neq", (a, b) => a !== b);
+    Handlebars.registerHelper(
+      "gt",
+      (a, b) =>
+        (parseFloat(String(a || 0).replace(/,/g, "")) || 0) >
+        (parseFloat(String(b || 0).replace(/,/g, "")) || 0),
     );
-    Handlebars.registerHelper('lt', (a, b) =>
-      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) <
-      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    Handlebars.registerHelper(
+      "lt",
+      (a, b) =>
+        (parseFloat(String(a || 0).replace(/,/g, "")) || 0) <
+        (parseFloat(String(b || 0).replace(/,/g, "")) || 0),
     );
 
     // ── Math helpers — all strip commas before parsing ─────
-    Handlebars.registerHelper('add', (a, b) =>
-      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) +
-      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    Handlebars.registerHelper(
+      "add",
+      (a, b) =>
+        (parseFloat(String(a || 0).replace(/,/g, "")) || 0) +
+        (parseFloat(String(b || 0).replace(/,/g, "")) || 0),
+
     );
-    Handlebars.registerHelper('subtract', (a, b) =>
-      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) -
-      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    Handlebars.registerHelper(
+      "subtract",
+      (a, b) =>
+        (parseFloat(String(a || 0).replace(/,/g, "")) || 0) -
+        (parseFloat(String(b || 0).replace(/,/g, "")) || 0),
     );
-    Handlebars.registerHelper('multiply', (a, b) =>
-      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) *
-      (parseFloat(String(b || 0).replace(/,/g, '')) || 0)
+    Handlebars.registerHelper(
+      "multiply",
+      (a, b) =>
+        (parseFloat(String(a || 0).replace(/,/g, "")) || 0) *
+        (parseFloat(String(b || 0).replace(/,/g, "")) || 0),
     );
-    Handlebars.registerHelper('divide', (a, b) =>
-      (parseFloat(String(a || 0).replace(/,/g, '')) || 0) /
-      (parseFloat(String(b || 1).replace(/,/g, '')) || 1)
+    Handlebars.registerHelper(
+      "divide",
+      (a, b) =>
+        (parseFloat(String(a || 0).replace(/,/g, "")) || 0) /
+        (parseFloat(String(b || 1).replace(/,/g, "")) || 1),
+    );
+    Handlebars.registerHelper(
+      "or",
+      (a, b) => a || b
     );
 
     // ── Array / misc helpers ───────────────────────────────
-    Handlebars.registerHelper('length', (arr) => arr ? arr.length : 0);
-    Handlebars.registerHelper('inc', (val) => parseInt(val) + 1);
-    Handlebars.registerHelper('addOne', (val) => parseInt(val, 10) + 1);
-    Handlebars.registerHelper('addOffset', (index, offset) =>
-      parseInt(index, 10) + parseInt(offset, 10) + 1
+    Handlebars.registerHelper("length", (arr) => (arr ? arr.length : 0));
+    Handlebars.registerHelper("inc", (val) => parseInt(val) + 1);
+    Handlebars.registerHelper("addOne", (val) => parseInt(val, 10) + 1);
+    Handlebars.registerHelper(
+      "addOffset",
+      (index, offset) => parseInt(index, 10) + parseInt(offset, 10) + 1,
     );
-    Handlebars.registerHelper('notEmpty', (val) =>
-      val !== null && val !== undefined && val !== '' && val !== '0' && val !== 0
+    Handlebars.registerHelper(
+      "notEmpty",
+      (val) =>
+        val !== null &&
+        val !== undefined &&
+        val !== "" &&
+        val !== "0" &&
+        val !== 0,
     );
 
-    Handlebars.registerHelper('pageDisplay', function (pageNumber, totalPages) {
+    Handlebars.registerHelper("pageDisplay", function (pageNumber, totalPages) {
+
       // If values are passed manually, use them
       if (pageNumber !== undefined && totalPages !== undefined) {
         return `${pageNumber}/${totalPages}`;
@@ -222,34 +276,45 @@ class TemplateService {
 
       // Automatic page numbering inside body using CSS counters
       return new Handlebars.SafeString(
-        '<span class="page-counter"></span>/<span class="page-total"></span>'
+        '<span class="page-counter"></span>/<span class="page-total"></span>',
       );
     });
     // ── Invoice-specific helpers ───────────────────────────
-    Handlebars.registerHelper('ifFlag', function (settings, key, options) {
-      if (!settings || typeof settings !== 'object') return options.inverse(this);
+    Handlebars.registerHelper("ifFlag", function (settings, key, options) {
+      if (!settings || typeof settings !== "object")
+        return options.inverse(this);
+
       const val = settings[key];
-      const isTrue = val === 1 || val === '1' || val === true || val === 'true';
+      const isTrue = val === 1 || val === "1" || val === true || val === "true";
       return isTrue ? options.fn(this) : options.inverse(this);
     });
 
-    Handlebars.registerHelper('ifZatca', function (settings, options) {
-      return (settings && (settings.d51 == '154' || settings.d51 === 154))
-        ? options.fn(this) : options.inverse(this);
+    Handlebars.registerHelper("ifZatca", function (settings, options) {
+      return settings && (settings.d51 == "154" || settings.d51 === 154)
+        ? options.fn(this)
+        : options.inverse(this);
     });
 
-    Handlebars.registerHelper('joinAddress', function (addr, separator) {
-      const sep = (typeof separator === 'string') ? separator : ', ';
-      if (!addr || typeof addr !== 'object') return '';
+    Handlebars.registerHelper("joinAddress", function (addr, separator) {
+      const sep = typeof separator === "string" ? separator : ", ";
+      if (!addr || typeof addr !== "object") return "";
+
       return [
-        addr.address_line1, addr.address_line2, addr.address_line3,
-        addr.address_line4, addr.address_line5, addr.address_code,
-      ].filter(Boolean).join(sep);
+        addr.address_line1,
+        addr.address_line2,
+        addr.address_line3,
+        addr.address_line4,
+        addr.address_line5,
+        addr.address_code,
+      ]
+        .filter(Boolean)
+        .join(sep);
     });
 
     // ── Currency symbol helpers ────────────────────────────
-    Handlebars.registerHelper('currencySymbol', function (isocode) {
-      const iso = (isocode || 'SAR').toUpperCase().trim();
+    Handlebars.registerHelper("currencySymbol", function (isocode) {
+      const iso = (isocode || "SAR").toUpperCase().trim();
+
 
       if (SVG_CURRENCY_MAP[iso]) {
         const svg = SVG_CURRENCY_MAP[iso]();
@@ -257,44 +322,62 @@ class TemplateService {
       }
 
       return new Handlebars.SafeString(
-        `<span>${CURRENCY_SYMBOLS[iso] || iso}</span>`
+        `<span>${CURRENCY_SYMBOLS[iso] || iso}</span>`,
       );
     });
 
-    Handlebars.registerHelper('currencyImg', function (isocode, size) {
-      const iso = (isocode || 'SAR').toUpperCase().trim();
-      const height = (typeof size === 'string') ? size : '8px';
+    Handlebars.registerHelper("currencyImg", function (isocode, size) {
+      const iso = (isocode || "SAR").toUpperCase().trim();
+      const height = typeof size === "string" ? size : "8px";
+
 
       if (SVG_CURRENCY_MAP[iso]) {
         const svg = SVG_CURRENCY_MAP[iso]();
         if (svg.dataUri) {
           return new Handlebars.SafeString(
             `<img src="${svg.dataUri}" ` +
-            `style="height:${height};width:auto;vertical-align:middle;margin-right:2px;" alt="${iso}">`
+              `style="height:${height};width:auto;vertical-align:middle;margin-right:2px;" alt="${iso}">`,
           );
         }
       }
 
       return new Handlebars.SafeString(
-        `<span>${CURRENCY_SYMBOLS[iso] || iso}</span>`
+        `<span>${CURRENCY_SYMBOLS[iso] || iso}</span>`,
       );
     });
 
-    Handlebars.registerHelper('qrDataUri', function (qrCodeBase64) {
+    Handlebars.registerHelper("qrDataUri", function (qrCodeBase64) {
+
       if (qrCodeBase64 && String(qrCodeBase64).length > 20) {
         return new Handlebars.SafeString(
           `<img src="data:image/png;base64,${qrCodeBase64}" ` +
-          `width="130" height="130" style="display:block;" alt="QR Code">`
+            `width="130" height="130" style="display:block;" alt="QR Code">`,
         );
       }
       return new Handlebars.SafeString(
-        `<span style="font-size:9px;color:#999;">QR unavailable</span>`
+        `<span style="font-size:9px;color:#999;">QR unavailable</span>`,
       );
     });
 
-    Handlebars.registerHelper('hasVat', function (items, options) {
-      const hasVat = (items || []).some(i => parseFloat(i.vat_amt) > 0);
+    Handlebars.registerHelper("hasVat", function (items, options) {
+      const hasVat = (items || []).some((i) => parseFloat(i.vat_amt) > 0);
+
       return hasVat ? options.fn(this) : options.inverse(this);
+    });
+    
+    Handlebars.registerHelper("hasRemarks", function (items, options) {
+      const hasRemarks = (items || []).some(
+        (i) => i.remark && String(i.remark).trim() !== "",
+      );
+      return hasRemarks ? options.fn(this) : options.inverse(this);
+    });
+
+    Handlebars.registerHelper("hasItemCode", function (items, options) {
+    const hasItemCode = (items || []).some(
+            (i) => i.item_code && String(i.item_code).trim() !== ""
+        );
+
+        return hasItemCode ? options.fn(this) : options.inverse(this);
     });
 
     // ✅ ADDED: Register Handlebars helpers (lines 2-14)
@@ -316,15 +399,27 @@ class TemplateService {
   // ── DATA PREPARATION ──────────────────────────────────────
   prepareTemplateData(data) {
     const basic = (data.basicdetails && data.basicdetails[0]) || {};
-    const iso = (basic.isocode || 'SAR').toUpperCase().trim();
+
+    const iso = (basic.isocode || "SAR").toUpperCase().trim();
 
     data.isocode = iso;
-    data.isSAR = iso === 'SAR';
-    data.isAED = iso === 'AED';
+    data.isSAR = iso === "SAR";
+    data.isAED = iso === "AED";
 
-    data.ccrate = parseFloat(
-      String(data.ccrate || basic.ccrate || 1).replace(/,/g, '')
-    ) || 1;
+
+    const countryIso = (
+      basic.base_country_isocode ||
+      basic.isocode ||
+      "SAR"
+    ).toUpperCase();
+
+    data.tax_label = countryIso === "AED" ? "TRN" : "VAT Number";
+
+    data.tax_label_ar = countryIso === "AED" ? "رقم التسجيل" : "رقم ضريبة";
+
+    data.ccrate =
+      parseFloat(String(data.ccrate || basic.ccrate || 1).replace(/,/g, "")) ||
+      1;
 
     data.bcdp = parseInt(data.bcdp || basic.bcdp || 2);
 
@@ -332,17 +427,21 @@ class TemplateService {
   }
 
   // ── RENDER ────────────────────────────────────────────────
-  async renderToString(templateName, data, docTypeFolder = 'invoice') {
+  async renderToString(templateName, data, docTypeFolder = "invoice") {
     try {
       const templateData = this.prepareTemplateData(data);
 
       const cacheKey = `${docTypeFolder}/${templateName}`;
       if (!this.compiledTemplates.has(cacheKey)) {
         const templatePath = path.join(
-          __dirname, '..', 'templates', docTypeFolder, `${templateName}.hbs`
+          __dirname,
+          "..",
+          "templates",
+          docTypeFolder,
+          `${templateName}.hbs`,
         );
         console.log(`Loading template: ${templatePath}`);
-        const source = await fs.readFile(templatePath, 'utf-8');
+        const source = await fs.readFile(templatePath, "utf-8");
         this.compiledTemplates.set(cacheKey, Handlebars.compile(source));
       }
 
@@ -350,17 +449,16 @@ class TemplateService {
 
       // ── Bootstrap CSS injection ──────────────────────────
       // Replaces CDN link with inline styles — no network call needed
-      if (bootstrapCss && html.includes('cdn.jsdelivr.net')) {
+      if (bootstrapCss && html.includes("cdn.jsdelivr.net")) {
         html = html.replace(
           /<link[^<]*bootstrap[^<]*>/gi,
-          `<style>${bootstrapCss}</style>`
+          `<style>${bootstrapCss}</style>`,
         );
-        console.log('[Bootstrap] ✓ Injected into template:', templateName);
+        console.log("[Bootstrap] ✓ Injected into template:", templateName);
       }
 
       console.log(`Template rendered: ${cacheKey} (${html.length} chars)`);
       return html;
-
     } catch (error) {
       console.error(`Error rendering template ${templateName}:`, error);
       throw new Error(`Template rendering failed: ${error.message}`);
@@ -375,26 +473,33 @@ class TemplateService {
 
       if (!this.compiledTemplates.has(cacheKey)) {
         const templatePath = path.join(
-          __dirname, '..', 'reports', `${templateName}.hbs`
+          __dirname,
+          "..",
+          "reports",
+          `${templateName}.hbs`,
         );
         console.log(`Loading report template: ${templatePath}`);
-        const source = await fs.readFile(templatePath, 'utf-8');
+        const source = await fs.readFile(templatePath, "utf-8");
         this.compiledTemplates.set(cacheKey, Handlebars.compile(source));
       }
 
       let html = this.compiledTemplates.get(cacheKey)(data);
 
-      if (bootstrapCss && html.includes('cdn.jsdelivr.net')) {
+      if (bootstrapCss && html.includes("cdn.jsdelivr.net")) {
         html = html.replace(
           /<link[^<]*bootstrap[^<]*>/gi,
-          `<style>${bootstrapCss}</style>`
+          `<style>${bootstrapCss}</style>`,
         );
-        console.log('[Bootstrap] ✓ Injected into report template:', templateName);
+        console.log(
+          "[Bootstrap] ✓ Injected into report template:",
+          templateName,
+        );
       }
 
-      console.log(`Report template rendered: ${cacheKey} (${html.length} chars)`);
+      console.log(
+        `Report template rendered: ${cacheKey} (${html.length} chars)`,
+      );
       return html;
-
     } catch (error) {
       console.error(`Error rendering report template ${templateName}:`, error);
       throw new Error(`Report template rendering failed: ${error.message}`);
@@ -404,24 +509,26 @@ class TemplateService {
   // ── CACHE ─────────────────────────────────────────────────
   clearCache() {
     this.compiledTemplates.clear();
-    sarSvg = loadCurrencySvg('sar.svg', '﷼');
-    aedSvg = loadCurrencySvg('aed.svg', 'د.إ');
-    console.log('Template cache cleared');
+    sarSvg = loadCurrencySvg("sar.svg", "﷼");
+    aedSvg = loadCurrencySvg("aed.svg", "د.إ");
+    console.log("Template cache cleared");
   }
 
   async precompileTemplates() {
-    const templatesDir = path.join(__dirname, '..', 'templates');
+    const templatesDir = path.join(__dirname, "..", "templates");
     try {
       const files = await fs.readdir(templatesDir);
-      for (const file of files.filter(f => f.endsWith('.hbs'))) {
-        const name = file.replace('.hbs', '');
-        const src = await fs.readFile(path.join(templatesDir, file), 'utf-8');
+
+      for (const file of files.filter((f) => f.endsWith(".hbs"))) {
+        const name = file.replace(".hbs", "");
+        const src = await fs.readFile(path.join(templatesDir, file), "utf-8");
+
         this.compiledTemplates.set(name, Handlebars.compile(src));
         console.log(`Precompiled: ${name}`);
       }
-      console.log('All templates precompiled successfully');
+      console.log("All templates precompiled successfully");
     } catch (error) {
-      console.error('Error precompiling templates:', error);
+      console.error("Error precompiling templates:", error);
       throw error;
     }
   }
@@ -444,12 +551,11 @@ class TemplateService {
     data.extraPages = pages.slice(1).map((page, idx) => ({
       pageItems: page.items,
       startIndex: page.startIndex,
-      isLastPage: idx === pages.length - 2
+      isLastPage: idx === pages.length - 2,
     }));
 
     return data;
   }
-
 }
 
 module.exports = new TemplateService();

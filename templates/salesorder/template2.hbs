@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Order - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.45;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 4px 0 14px;
+  }
+  .main-title .ar { direction: rtl; }
+
+  /* ── Top info blocks ───────────────────────── */
+  .top-info-wrap {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 10px;
+  }
+  .top-info-wrap > tbody > tr > td {
+    vertical-align: top;
+    padding: 0;
+  }
+  .ti-box {
+    border: 1px solid #bfbfbf;
+    background: #bababa;
+    padding: 10px 14px;
+  }
+  .ti-row {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .ti-row td {
+    padding: 3px 0;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .ti-row .ti-lbl { width: 56%; }
+  .ti-row .ti-sep { width: 4%; text-align: center; }
+  .ti-row .ti-val { width: 46%; }
+  .ti-lbl .en { display: inline; }
+  .ti-lbl .ar { direction: rtl; display: inline; margin-left: 4px; }
+
+  /* ── Items table ──────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #bfbfbf;
+  }
+  .items-table th,
+  .items-table td {
+    border: 1px solid #bfbfbf;
+    padding: 6px 8px;
+    font-size: 10px;
+    vertical-align: middle;
+  }
+  .items-table thead th {
+    background: #bababa;
+    border:1px solid #eeeeee;
+    text-align: center;
+    font-weight: bold;
+  }
+  .items-table .head-ar { display: block; direction: rtl; font-weight: normal; }
+  .items-table .head-en { display: block; font-weight: bold; }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Totals ───────────────────────────────── */
+  .totals-table {
+    width: 50%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-left: 50%;
+    margin-top: 8px;
+  }
+  .totals-table td {
+    padding: 4px 8px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .totals-table .t-lbl { width: 70%; text-align: left; }
+  .totals-table .t-lbl .en { display: inline; }
+  .totals-table .t-lbl .ar { direction: rtl; display: inline; margin-left: 4px; }
+  .totals-table .t-sep { width: 3%; text-align: center; }
+  .totals-table .t-val { width: 27%; text-align: right; }
+
+  .totals-table .grand-row td {
+    background: #bababa;
+    font-weight: bold;
+    padding: 8px 8px;
+  }
+
+  /* ── Amount in words ──────────────────────── */
+  .words-row {
+    width: 100%;
+    margin-top: 8px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: #bababa;
+  }
+  .words-row td {
+    padding: 8px 14px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .words-row .w-en { text-align: left; }
+  .words-row .w-ar { text-align: right; direction: rtl; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">
+    Sales Order / <span class="ar">طلب المبيعات</span>
+  </div>
+
+  <!-- Top Info Blocks -->
+  <table class="top-info-wrap">
+    <tr>
+      <td style="width:55%; padding-right:0;">
+        <div class="ti-box">
+          <table class="ti-row">
+            <tr>
+              <td class="ti-lbl" style="width: 35%;"><span class="en">Customer Name</span> / <span class="ar">اسم</span></td>
+              <td class="ti-sep" style="width: 2%;">:</td>
+              <td class="ti-val" style="width: 63%;">{{billing_address.[0].name}}</td>
+            </tr>
+            <tr>
+              <td class="ti-lbl" style="width: 35%;"><span class="en">Address</span> / <span class="ar">عنوان</span></td>
+              <td class="ti-sep" style="width: 2%;">:</td>
+              <td class="ti-val" style="width: 63%;">{{joinAddress billing_address.[0] ", "}}</td>
+            </tr>
+            <tr>
+              <td class="ti-lbl" style="width: 35%;"><span class="en">VAT</span> / <span class="ar">رقم ضريبة</span></td>
+              <td class="ti-sep" style="width: 2%;">:</td>
+              <td class="ti-val" style="width: 63%;">{{billing_address.[0].vat}}</td>
+            </tr>
+          </table>
+        </div>
+      </td>
+      <td style="width:2%;"></td>
+      <td style="width:45%;">
+        <div class="ti-box">
+          <table class="ti-row">
+            <tr>
+              <td class="ti-lbl"><span class="en">Order No</span> / <span class="ar">رقم الطلب</span></td>
+              <td class="ti-sep">:</td>
+              <td class="ti-val">{{basicdetails.[0].inv_no}}</td>
+            </tr>
+            <tr>
+              <td class="ti-lbl"><span class="en">Date</span> / <span class="ar">تاريخ</span></td>
+              <td class="ti-sep">:</td>
+              <td class="ti-val">{{basicdetails.[0].inv_date}}</td>
+            </tr>
+            <tr>
+              <td class="ti-lbl"><span class="en">Created By</span> / <span class="ar">تم الإنشاء بواسطة</span></td>
+              <td class="ti-sep">:</td>
+              <td class="ti-val">{{basicdetails.[0].salesman_name}}</td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:6%">
+      <col style="width:32%">
+      <col style="width:8%">
+      <col style="width:8%">
+      <col style="width:12%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th style="border-left:1px solid #eeeeee;">
+          <span class="head-ar">رقم</span>
+          <span class="head-en">Sl No</span>
+        </th>
+        <th>
+          <span class="head-ar">وصف الخدمة</span>
+          <span class="head-en">Service Description</span>
+        </th>
+        <th>
+          <span class="head-ar">الكمية</span>
+          <span class="head-en">Qty</span>
+        </th>
+        <th>
+          <span class="head-ar">وحدة</span>
+          <span class="head-en">Unit</span>
+        </th>
+        <th>
+          <span class="head-ar">سعر الوحدة</span>
+          <span class="head-en">Unit Rate</span>
+        </th>
+        <th>
+          <span class="head-ar">المبلغ</span>
+          <span class="head-en">Amount</span>
+        </th>
+        <th>
+          <span class="head-ar">قيمة الضريبة</span>
+          <span class="head-en">VAT Amount</span>
+        </th>
+        <th style="border-right:1px solid #eeeeee;">
+          <span class="head-ar">المجموع</span>
+          <span class="head-en">Total</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div>{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{formatAmount quantity 0}}</td>
+        <td class="center">{{unit}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount taxable ../bcdp}}</td>
+        <td class="right">{{formatAmount tax ../bcdp}}</td>
+        <td class="right">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Totals -->
+  <table class="totals-table">
+    <tr>
+      <td class="t-lbl"><span class="en">Total Amount</span> / <span class="ar">المبلغ الإجمالي</span></td>
+      <td class="t-sep">:</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-lbl"><span class="en">Discount</span> / <span class="ar">الخصم</span></td>
+      <td class="t-sep">:</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-lbl"><span class="en">After Discount</span> / <span class="ar">بعد الخصم</span></td>
+      <td class="t-sep">:</td>
+      <td class="t-val">{{formatAmount (subtract (divide basicdetails.[0].subtotal ccrate) (divide basicdetails.[0].discount ccrate)) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-lbl"><span class="en">VAT {{#if itemdetails.[0].vat_perc}}({{itemdetails.[0].vat_perc}}%){{/if}}</span> / <span class="ar">ضريبة القيمة المضافة</span></td>
+      <td class="t-sep">:</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+    </tr>
+    <tr class="grand-row">
+      <td class="t-lbl"><span class="en">Grand Total</span> / <span class="ar">المبلغ الإجمالي</span></td>
+      <td class="t-sep"></td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+    </tr>
+  </table>
+
+  <!-- Amount in words -->
+  <table class="words-row">
+    <tr>
+      <td class="w-en" style="width:50%;">{{bcamountinwords}}</td>
+      <td class="w-ar" style="width:50%;">{{bcamountinwordsar}}</td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

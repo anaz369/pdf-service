@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #222;
+    line-height: 1.5;
+    margin: 0 10mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 8px; }
+
+  .ar { direction: rtl; }
+
+  /* ── Top header ─────────────────────────────── */
+  .top-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .top-table > tbody > tr > td {
+    vertical-align: top;
+    padding: 0;
+    font-size: 10px;
+  }
+  .invoice-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #344767;
+    letter-spacing: -1px;
+  }
+  .meta-block {
+    text-align: right;
+    line-height: 1.7;
+  }
+  .meta-block .ml-lbl { color: #555; display: inline-block; }
+  .meta-block .ml-val { color: #344767; font-weight: bold; }
+
+  .divider {
+    width: 100%;
+    border: none;
+    border-top: 1px solid #d4d4d4;
+    margin: 6px 0 14px;
+  }
+
+  /* ── Address blocks ─────────────────────────── */
+  .addr-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 14px;
+  }
+  .addr-table > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+    font-size: 10px;
+    width: 50%;
+  }
+  .addr-label { color: #2a4d7b; margin-bottom: 4px; }
+  .addr-name { font-weight: bold; }
+  .addr-name-ar { color: #2a4d7b;font-weight: bold;}
+  .addr-line { line-height: 1.5; }
+  
+
+  /* ── Info section (Services/POC/Project/Techs | Dates) ── */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 14px;
+  }
+  .info-table td {
+    padding: 1px 0;
+    font-size: 10px;
+    vertical-align: top;
+  }
+  .info-table .iv-lbl { color: #555; width: 18%; }
+  .info-table .iv-sep { width: 3%; }
+  .info-table .iv-val { width: 29%; color: #2a4d7b; }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 6px;
+  }
+  .items-table thead th {
+    background: #2a4d7b;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  .items-table tbody td {
+    padding: 6px 10px;
+    font-size: 10px;
+    border-bottom: 1px solid #e8e8e8;
+    vertical-align: middle;
+  }
+  .items-table .desc { color: #555; }
+  .items-table .num { color: #2a4d7b; text-align: right; }
+  .items-table .center { text-align: center; }
+  .items-table .right { text-align: right; }
+  .items-table .total-row td {
+    border-bottom: none;
+    font-weight: bold;
+  }
+
+  /* ── Footer ────────────────────────────────── */
+  .words-line {
+    border-top: 1px solid #d4d4d4;
+    padding-top: 8px;
+    margin-top: 8px;
+    font-size: 10px;
+  }
+  .bank-info { margin-top: 10px; font-size: 10px; }
+  .bank-info .bk-row { margin-bottom: 2px; }
+  .bank-info .bk-lbl { display: inline-block; min-width: 80px; color: #555; }
+  .bank-info .bk-val { color: #2a4d7b; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Top header -->
+  <table class="top-table">
+    <tr>
+      <td style="width:50%;">
+        <div class="invoice-title">Invoice</div>
+      </td>
+      <td style="width:50%;">
+        <div class="meta-block">
+          <div><span class="ml-lbl">Date :</span> <span class="ml-val">{{basicdetails.[0].inv_date}}</span></div>
+          <div><span class="ml-lbl">No :</span> <span class="ml-val">{{basicdetails.[0].inv_no}}</span></div>
+          <div><span class="ml-lbl">PO Number :</span> <span class="ml-val">{{basicdetails.[0].order_no}}</span></div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- Address blocks -->
+  <table class="addr-table">
+    <tr>
+      <td>
+        <div class="addr-label">To:</div>
+        <div class="addr-name">{{billing_address.[0].name}}</div>
+        {{#if billing_address_lang2.[0].name}}<div class="addr-name-ar">{{billing_address_lang2.[0].name}}</div>{{/if}}
+        {{#if billing_address.[0].address_line1}}<div class="addr-line">{{billing_address.[0].address_line1}}</div>{{/if}}
+        <div class="addr-line">
+          {{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}} {{/if}}{{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}} {{/if}}{{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}} {{/if}}{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}
+        </div>
+        {{#if billing_address_lang2.[0].address_line1}}<div class="addr-line-ar">{{billing_address_lang2.[0].address_line1}}</div>{{/if}}
+        <div class="addr-line-ar">
+          {{#if billing_address_lang2.[0].address_line2}}{{billing_address_lang2.[0].address_line2}} {{/if}}{{#if billing_address_lang2.[0].address_line3}}{{billing_address_lang2.[0].address_line3}} {{/if}}{{#if billing_address_lang2.[0].address_line4}}{{billing_address_lang2.[0].address_line4}} {{/if}}{{#if billing_address_lang2.[0].address_line5}}{{billing_address_lang2.[0].address_line5}}{{/if}}
+        </div>
+      </td>
+      <td>
+        <div class="addr-label">From:</div>
+        <div class="addr-name">{{#if branch.[0].name}}{{branch.[0].name}}{{else}}{{compprof.name}}{{/if}}</div>
+        {{#if branch_lang2.[0].name}}<div class="addr-name-ar">{{branch_lang2.[0].name}}</div>{{/if}}
+        {{#if branch.[0].address_line1}}<div class="addr-line">{{branch.[0].address_line1}}</div>{{/if}}
+        <div class="addr-line">
+          {{#if branch.[0].address_line2}}{{branch.[0].address_line2}} {{/if}}{{#if branch.[0].address_line3}}{{branch.[0].address_line3}} {{/if}}{{#if branch.[0].address_line4}}{{branch.[0].address_line4}} {{/if}}{{#if branch.[0].address_line5}}{{branch.[0].address_line5}}{{/if}}
+        </div>
+        {{#if branch_lang2.[0].address_line1}}<div class="addr-line-ar">{{branch_lang2.[0].address_line1}}</div>{{/if}}
+        <div class="addr-line-ar">
+          {{#if branch_lang2.[0].address_line2}}{{branch_lang2.[0].address_line2}} {{/if}}{{#if branch_lang2.[0].address_line3}}{{branch_lang2.[0].address_line3}} {{/if}}{{#if branch_lang2.[0].address_line4}}{{branch_lang2.[0].address_line4}} {{/if}}{{#if branch_lang2.[0].address_line5}}{{branch_lang2.[0].address_line5}}{{/if}}
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Info section -->
+  <table class="info-table">
+    <tr>
+      <td class="iv-lbl">Services provided</td>
+      <td class="iv-sep">:</td>
+      <td class="iv-val">{{basicdetails.[0].subject}}</td>
+      <td class="iv-lbl" style="text-align:right; padding-right:8px;">Date</td>
+      <td class="iv-sep">:</td>
+      <td class="iv-val">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="iv-lbl">POC</td>
+      <td class="iv-sep">:</td>
+      <td class="iv-val">{{basicdetails.[0].contactname}}</td>
+      <td class="iv-lbl" style="text-align:right; padding-right:8px;">Start Date</td>
+      <td class="iv-sep">:</td>
+      <td class="iv-val">{{basicdetails.[0].inv_from}}</td>
+    </tr>
+    <tr>
+      <td class="iv-lbl">Project</td>
+      <td class="iv-sep">:</td>
+      <td class="iv-val">{{basicdetails.[0].project_name}}</td>
+      <td class="iv-lbl" style="text-align:right; padding-right:8px;">End Date</td>
+      <td class="iv-sep">:</td>
+      <td class="iv-val">{{basicdetails.[0].inv_to}}</td>
+    </tr>
+    <tr>
+      <td class="iv-lbl">Techs</td>
+      <td class="iv-sep">:</td>
+      <td class="iv-val">{{basicdetails.[0].salesman_name}}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+
+  <!-- Items table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:40%">
+      <col style="width:14%">
+      <col style="width:15%">
+      <col style="width:15%">
+      <col style="width:16%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th style="text-align:right;">Quantity</th>
+        <th style="text-align:right;">Price</th>
+        <th style="text-align:right;">VAT</th>
+        <th style="text-align:right;">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="desc">
+          {{#if item_name}}{{item_name}}{{else}}{{description}}{{/if}}
+          {{#if name_lang2}} {{name_lang2}}{{/if}}
+          {{#if description}}{{#if item_name}} {{description}}{{/if}}{{/if}}
+        </td>
+        <td class="num">{{formatAmount quantity 0}}</td>
+        <td class="num">{{formatAmount price ../bcdp}}</td>
+        <td class="num">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="num">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr class="total-row">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="num">Total</td>
+        <td class="num">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Amount in words + Bank info -->
+  <div class="words-line">{{bcamountinwords}}</div>
+
+  <div class="bank-info">
+    <div class="bk-row"><span class="bk-lbl">Swift Code</span><span class="bk-val">{{bankdetails.swift_no}}</span></div>
+    <div class="bk-row"><span class="bk-lbl">IBAN No</span><span class="bk-val">{{bankdetails.iban_no}}</span></div>
+    <div class="bk-row"><span class="bk-lbl">Account No</span><span class="bk-val">{{bankdetails.acc_no}}</span></div>
+    <div class="bk-row"><span class="bk-lbl">Bank Name</span><span class="bk-val">{{bankdetails.name}}</span></div>
+    <div class="bk-row"><span class="bk-lbl">Branch</span><span class="bk-val">{{bankdetails.branch_name}}</span></div>
+  </div>
+
+</div>
+
+</body>
+</html>

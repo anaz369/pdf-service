@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.45;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #c81e1e;
+    padding: 4px 0 12px;
+  }
+  .main-title .ar { direction: rtl; }
+
+  /* ── Top info table ────────────────────────── */
+  .info-table {
+    width: 60%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 8px;
+  }
+  .info-table td {
+    border: 1px solid #bfbfbf;
+    padding: 6px 10px;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .info-table .info-lbl {
+    width: 22%;
+    background: #2a4d7b;
+    color: #ffffff;
+  }
+  .info-table .info-val { background: #ffffff; }
+
+  /* ── Items table ───────────────────────────── */
+  .items-wrap {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+    border-bottom: none;
+  }
+  .items-wrap th,
+  .items-wrap td {
+    font-size: 11px;
+    vertical-align: top;
+    padding: 6px 6px;
+  }
+  .items-wrap td {
+    border: 1px solid #bfbfbf;
+    border-bottom: none;
+    border-top: none;
+  }
+  .items-wrap thead th {
+    text-align: center;
+    font-weight: normal;
+    background: #2a4d7b;
+    color:#ffffff;
+    border: 1px solid #bfbfbf;
+    padding: 4px 6px;
+  }
+  .items-wrap .head-ar {
+    display: block;
+    direction: rtl;
+  }
+  .items-wrap .head-en {
+    display: block;
+    font-weight: bold;
+  }
+  .items-wrap .center { text-align: center; }
+  .items-wrap .right  { text-align: right; }
+  .items-wrap .left   { text-align: left; }
+
+  .item-spacer td {
+    border-left: 1px solid #bfbfbf;
+    border-right: 1px solid #bfbfbf;
+    border-top: none;
+    border-bottom: none;
+    height: 180px;
+    padding: 0;
+  }
+  .item-spacer td:first-child { border-left: 1px solid #bfbfbf; }
+  .item-spacer td:last-child  { border-right: 1px solid #bfbfbf; }
+
+  /* ── Totals ───────────────────────────────── */
+  .totals-wrap {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #bfbfbf;
+    border-top: none;
+  }
+  .totals-wrap td {
+    border: 1px solid #bfbfbf;
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  .totals-wrap .t-lbl { text-align: right; font-weight: bold; }
+  .totals-wrap .t-val { text-align: right; font-weight: bold; width: 18%; }
+  .totals-wrap .t-blank { border: none; }
+  .totals-wrap .grand-row td {
+    background: #2a4d7b;
+    color: #ffffff;
+  }
+
+
+  /* ── Remark row ───────────────────────────── */
+  .remark-row {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #bfbfbf;
+    margin-top: 4px;
+  }
+  .remark-row td {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  /* ── Bottom: Signature + Bank ─────────────── */
+  .bottom-wrap {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 6px;
+  }
+  .bottom-wrap > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 0;
+    vertical-align: top;
+    font-size: 11px;
+  }
+
+  .sign-cell {
+    padding: 16px;
+    text-align: center;
+    vertical-align: middle;
+    min-height: 200px;
+  }
+  .sign-img { max-height: 80px; max-width: 180px; display: block; margin: 0 auto 18px; }
+  .seal-img { max-height: 90px; max-width: 130px; display: block; margin: 0 auto; }
+
+  .bank-block { padding: 0; }
+  .bank-head {
+    background: #2a4d7b;
+    color: #ffffff;
+    padding: 6px 10px;
+    font-weight: bold;
+    border-bottom: 1px solid #bfbfbf;
+  }
+  .bank-body { padding: 8px 10px; }
+  .bank-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .bank-detail-table td {
+    border: none;
+    padding: 2px 0;
+    font-size: 11px;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .bank-detail-table .bd-lbl { width: 35%; white-space: nowrap; }
+  .bank-detail-table .bd-sep { width: 10px; padding: 2px 6px; }
+  .bank-detail-table .bd-val { width: auto; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">
+    <span class="ar">عرض السعر</span>/Quotation
+  </div>
+
+  <!-- Top Info Table -->
+  <table class="info-table">
+    <tr>
+      <td class="info-lbl">Date</td>
+      <td class="info-val">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="info-lbl">To</td>
+      <td class="info-val">
+        <div>{{billing_address.[0].name}}</div>
+        {{#if billing_address.[0].address_line1}}<div>{{billing_address.[0].address_line1}}</div>{{/if}}
+        {{#if billing_address.[0].address_line2}}<div>{{billing_address.[0].address_line2}}</div>{{/if}}
+        {{#if billing_address.[0].address_line3}}<div>{{billing_address.[0].address_line3}}</div>{{/if}}
+        {{#if billing_address.[0].address_line4}}<div>{{billing_address.[0].address_line4}}</div>{{/if}}
+        {{#if billing_address.[0].address_line5}}<div>{{billing_address.[0].address_line5}}</div>{{/if}}
+      </td>
+    </tr>
+    <tr>
+      <td class="info-lbl">VAT</td>
+      <td class="info-val">{{billing_address.[0].vat}}</td>
+    </tr>
+    <tr>
+      <td class="info-lbl">Quotation No</td>
+      <td class="info-val">{{basicdetails.[0].inv_no}}</td>
+    </tr>
+  </table>
+
+  <!-- Items Table -->
+  <table class="items-wrap">
+    <colgroup>
+      <col style="width:5%">
+      <col style="width:11%">
+      <col style="width:32%">
+      <col style="width:10%">
+      <col style="width:9%">
+      <col style="width:14%">
+      <col style="width:19%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>
+          <span class="head-ar">م</span>
+          <span class="head-en">S.N</span>
+        </th>
+        <th>
+          <span class="head-ar">رمز الصنف</span>
+          <span class="head-en">Item Code</span>
+        </th>
+        <th>
+          <span class="head-ar">الوصف</span>
+          <span class="head-en">Description</span>
+        </th>
+        <th>
+          <span class="head-ar">نوع الوحدة</span>
+          <span class="head-en">Unit</span>
+        </th>
+        <th>
+          <span class="head-ar">الكمية</span>
+          <span class="head-en">QTY</span>
+        </th>
+        <th>
+          <span class="head-ar">سعر الوحدة</span>
+          <span class="head-en">U.Rate</span>
+        </th>
+        <th>
+          <span class="head-ar">القيمة الإجمالي</span>
+          <span class="head-en">Total Price</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="center">{{#if part_number}}{{part_number}}{{else}}{{item_code}}{{/if}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div style="text-align:right;">{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{unit}}</td>
+        <td class="center">{{formatAmount quantity 0}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr class="item-spacer">
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Totals -->
+  <table class="totals-wrap">
+    <colgroup>
+      <col style="width:81%">
+      <col style="width:19%">
+    </colgroup>
+    <tr>
+
+      <td class="t-lbl">Sub Total</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+
+      <td class="t-lbl">Discount</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+
+      <td class="t-lbl">Net Amount</td>
+      <td class="t-val">{{formatAmount (subtract (divide basicdetails.[0].subtotal ccrate) (divide basicdetails.[0].discount ccrate)) bcdp}}</td>
+    </tr>
+    <tr>
+
+      <td class="t-lbl">VAT</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+    </tr>
+    <tr class="grand-row">
+      <td class="t-lbl">TOTAL AMOUNT IN {{basicdetails.[0].base_country_isocode}}</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+    </tr>
+  </table>
+
+  <!-- Remark row -->
+  <table class="remark-row">
+    <tr>
+      <td>{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{else}}{{#if invterms}}{{{nl2br invterms}}}{{/if}}{{/if}}</td>
+    </tr>
+  </table>
+
+  <!-- Bottom: Signature/Seal | Bank Details -->
+  <table class="bottom-wrap">
+    <colgroup>
+      <col style="width:50%">
+      <col style="width:50%">
+    </colgroup>
+    <tr>
+      <td>
+        <div class="sign-cell">
+          {{#if Signature}}<img src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+          {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+        </div>
+      </td>
+      <td class="bank-block">
+        <div class="bank-head">Bank Details</div>
+        <div class="bank-body">
+          <table class="bank-detail-table">
+            <tr><td class="bd-lbl">Bank Name</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.name}}</td></tr>
+            <tr><td class="bd-lbl">A/c Name</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.acc_name}}</td></tr>
+            <tr><td class="bd-lbl">A/c No</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.acc_no}}</td></tr>
+            <tr><td class="bd-lbl">IBAN</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.iban_no}}</td></tr>
+            <tr><td class="bd-lbl">SWIFT</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.swift_no}}</td></tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

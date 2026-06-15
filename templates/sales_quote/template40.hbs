@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUOTATION - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.45;
+    margin: 0 10mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 10px; }
+
+  /* ── Title badge (top right) ──────────────── */
+  .title-row {
+    text-align: right;
+    padding-bottom: 12px;
+  }
+  .title-badge {
+    display: inline-block;
+    border: 1px solid #2a4d7b;
+    padding: 6px 22px;
+    font-weight: bold;
+    font-size: 13px;
+    color: #2a4d7b;
+  }
+
+  /* ── Top reference + date ──────────────────── */
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+  }
+  .ref-table td {
+    padding: 4px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .ref-table .ref-left { width: 50%; font-weight: bold; }
+  .ref-table .ref-right { width: 50%; text-align: left; padding-left: 30%; }
+  .ref-table .ref-right .meta-line { margin-bottom: 4px; }
+
+  /* ── Address block ─────────────────────────── */
+  .addr-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+  }
+  .addr-table td {
+    padding: 2px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .addr-table .lbl-col {
+    width: 60px;
+    font-weight: bold;
+    padding-right: 10px;
+    padding-left: 5px;
+  }
+  .addr-line { line-height: 1.55; font-weight: bold; }
+
+  .attn-row, .subj-row {
+    margin: 14px 0 6px;
+    padding-left: 5px;
+    font-weight: bold;
+  }
+  .subj-row { margin-top: 18px; margin-bottom: 18px; }
+
+  /* ── Items table ──────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #2a4d7b;
+    margin-top: 10px;
+  }
+  .items-table th,
+  .items-table td {
+    border: 1px solid #2a4d7b;
+    padding: 8px 8px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .items-table thead th {
+    background: #2a4d7b;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+  .items-table .total-lbl { font-weight: bold; }
+  .items-table .total-val { font-weight: bold; text-align: right; }
+  .items-table .blank-cell { background: #ffffff; }
+
+  /* ── Person block ──────────────────────────── */
+  .person-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+  }
+  .person-table td {
+    padding: 1px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .person-table .p-left { width: 50%; padding-left: 0; }
+  .person-table .p-right { width: 50%; text-align: right; }
+  .person-name { font-weight: bold; }
+  .person-name1 { font-weight: bold;font-size: 13px; }
+  .person-role { }
+  .person-link { color: #1f63b0; text-decoration: underline; }
+
+  /* ── Terms ─────────────────────────────────── */
+  .terms-block {
+    margin-top: 20px;
+  }
+  .terms-title {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  .terms-text { margin-top: 4px; }
+  .ack-text { font-weight: bold; margin-top: 8px; }
+
+  /* ── Signature fields ──────────────────────── */
+  .sig-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+  }
+  .sig-table td {
+    padding: 10px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .sig-table .sig-left { width: 50%; padding-right: 14px; }
+  .sig-table .sig-right { width: 50%; padding-left: 14px; }
+  .sig-table .sig-line {
+    font-weight: bold;
+  }
+  .sig-table .sig-blank {
+    display: inline-block;
+    border-bottom: 1px solid #000;
+    min-width: 180px;
+    height: 1em;
+  }
+  .sig-table .sig-blank1 {
+    display: inline-block;
+    border-bottom: 1px solid #000;
+    min-width: 120px;
+    height: 1em;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="title-row">
+    <span class="title-badge">QUOTATION</span>
+  </div>
+
+  <!-- Reference / Date / Location -->
+  <table class="ref-table">
+    <tr>
+      <td class="ref-left">{{basicdetails.[0].inv_no}}</td>
+      <td class="ref-right">
+        <div class="meta-line"><strong>Date:</strong> {{basicdetails.[0].inv_date}}</div>
+        <div class="meta-line"><strong>Location:</strong>{{#if basicdetails.[0].location}} {{basicdetails.[0].location}}{{/if}}</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- To / Address -->
+  <table class="addr-table">
+    <tr>
+      <td class="lbl-col">To,</td>
+      <td>
+        <div class="addr-line">{{billing_address.[0].name}}</div>
+        {{#if billing_address.[0].address_line1}}<div class="addr-line">{{billing_address.[0].address_line1}}</div>{{/if}}
+        {{#if billing_address.[0].address_line2}}<div class="addr-line">{{billing_address.[0].address_line2}}</div>{{/if}}
+        {{#if billing_address.[0].address_line3}}<div class="addr-line">{{billing_address.[0].address_line3}}</div>{{/if}}
+        {{#if billing_address.[0].address_line4}}<div class="addr-line">{{billing_address.[0].address_line4}}</div>{{/if}}
+        {{#if billing_address.[0].address_line5}}<div class="addr-line">{{billing_address.[0].address_line5}}</div>{{/if}}
+        {{#if billing_address.[0].address_code}}<div class="addr-line">{{billing_address.[0].address_code}}</div>{{/if}}
+      </td>
+    </tr>
+  </table>
+
+  <div class="attn-row">Attn:{{#if basicdetails.[0].attention}} {{basicdetails.[0].attention}}{{/if}}</div>
+
+  <div class="subj-row">Subject:{{#if basicdetails.[0].subj}} {{basicdetails.[0].subj}}{{/if}}</div>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:7%">
+      <col style="width:36%">
+      <col style="width:9%">
+      <col style="width:14%">
+      <col style="width:15%">
+      <col style="width:19%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="center">S/no</th>
+        <th>Description</th>
+        <th class="center">Qty</th>
+        <th class="center">Rate/unit</th>
+        <th class="center">Total Amount</th>
+        <th class="center">Remark</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div>{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{formatAmount quantity 0}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount amount ../bcdp}}</td>
+        <td class="left">{{remark}}</td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td class="blank-cell"></td>
+        <td class="total-lbl" colspan="3">Total</td>
+        <td class="total-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+        <td class="blank-cell"></td>
+      </tr>
+      <tr>
+        <td class="blank-cell"></td>
+        <td class="total-lbl" colspan="3">Vat {{#if itemdetails.[0].vat_perc}}@ {{itemdetails.[0].vat_perc}}%{{/if}}</td>
+        <td class="total-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+        <td class="blank-cell"></td>
+      </tr>
+      <tr>
+        <td class="blank-cell"></td>
+        <td class="total-lbl" colspan="3">Grand Total</td>
+        <td class="total-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+        <td class="blank-cell"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Person block -->
+  <table class="person-table">
+    <tr>
+      <td class="p-left">
+        <div class="person-name">{{basicdetails.[0].employeename}}</div>
+        <div>{{basicdetails.[0].employeedesignation}}</div>
+        <div>Mobile no: {{basicdetails.[0].employeecontactno}}</div>
+        <div>Email:{{basicdetails.[0].employeeemail}}</div>
+      </td>
+      <td class="p-right">
+        <div class="person-name1">Abdul Rahaman Sajid</div>
+        <div class="person-role">Sales &amp; Marketing Director</div>
+        <div> Mobile no : +966 596704641</div>
+        <div>Email: <span class="person-link">a.sajid@angcindus.com</span></div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Terms -->
+  <div class="terms-block">
+    <div class="terms-title">TERMS AND CONDITIONS</div>
+    <div class="terms-text">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{else}}{{#if invterms}}{{{nl2br invterms}}}{{/if}}{{/if}}</div>
+    <div class="ack-text">I acknowledge that I have read and agree to the above terms and conditions outlined on the cover page(s) by signing below.</div>
+  </div>
+
+  <!-- Signature fields -->
+  <table class="sig-table">
+    <tr>
+      <td class="sig-left sig-line">Name Of clients authorized signatory:  <span class="sig-blank1"></span></td>
+      <td class="sig-right sig-line">Company Stamp:<span class="sig-blank" style="min-width:220px;"></span></td>
+    </tr>
+    <tr>
+      <td class="sig-left sig-line">Job Title: <span class="sig-blank" style="min-width:260px;"></span></td>
+      <td class="sig-right sig-line">Date: <span class="sig-blank" style="min-width:220px;"></span></td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

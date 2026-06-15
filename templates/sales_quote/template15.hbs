@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #000;
+    line-height: 1.4;
+    margin: 0 6mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+
+  /* ── Top bar ─────────────────────────────── */
+  .top-bar {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+  .top-bar td {
+    font-size: 13px;
+    vertical-align: middle;
+    padding: 0;
+  }
+  .top-bar .vat-no {
+    font-weight: bold;
+    padding-left: 6px;
+  }
+  .top-bar .title {
+    text-align: center;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 22px;
+    font-weight: bold;
+  }
+  .top-bar .title .ar {
+    direction: rtl;
+    unicode-bidi: embed;
+    margin-right: 4px;
+  }
+  .top-bar .spacer { width: 220px; }
+
+  /* ── Info Table ──────────────────────────── */
+  .outer {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+  }
+  .outer > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 0;
+    vertical-align: top;
+  }
+
+  .info-list {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .info-list td {
+    border: none;
+    padding: 6px 8px;
+    vertical-align: top;
+    font-size: 11px;
+  }
+  .info-list .k {
+    width: 28%;
+    white-space: nowrap;
+  }
+  .info-list .sep { width: 12px; }
+  .info-list .v { font-weight: bold; }
+
+  /* ── Items table ─────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .items-table th,
+  .items-table td {
+    border: 1px solid #000;
+    padding: 6px 6px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .items-table th {
+    text-align: center;
+    font-weight: bold;
+    background: #ffffff;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Totals row (combined with words) ────── */
+  .totals-row {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .totals-row td {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    vertical-align: top;
+    font-size: 11px;
+  }
+  .totals-row .words-cell {
+    border-right: 1px solid #000;
+  }
+  .totals-row .words-en {
+    margin-bottom: 4px;
+  }
+  .totals-row .words-ar {
+    direction: rtl;
+    unicode-bidi: embed;
+  }
+  .totals-row .tot-labels {
+    text-align: left;
+  }
+  .totals-row .tot-labels .ar {
+    direction: rtl;
+    unicode-bidi: embed;
+  }
+  .totals-row .tot-labels b { font-weight: bold; }
+  .totals-row .tot-vals { text-align: right; }
+  .totals-row .tot-labels div,
+  .totals-row .tot-vals div {
+    padding: 1px 0;
+  }
+
+  .remark-cell {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .footer-row {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .footer-row td {
+    border: 1px solid #000;
+    padding: 8px 10px;
+    vertical-align: top;
+    font-size: 11px;
+    height: 40px;
+  }
+  .footer-row .prep-lbl { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Top: VAT no on left, Title centered -->
+  <table class="top-bar">
+    <tr>
+      <td class="vat-no" style="width:28%;">{{#if compprof.gstin}}{{compprof.gstin}}{{else}}{{compprof.vat}}{{/if}}</td>
+      <td class="title">QUOTATION /<span class="ar"> عرض سعر</span></td>
+      <td class="spacer" style="width:28%;">&nbsp;</td>
+    </tr>
+  </table>
+
+  <!-- Bordered container -->
+  <table class="outer">
+    <colgroup>
+      <col style="width:55%">
+      <col style="width:45%">
+    </colgroup>
+    <tr>
+      <td>
+        <table class="info-list">
+          <tr>
+            <td class="k">Name</td>
+            <td class="sep">:</td>
+            <td class="v">
+              {{billing_address.[0].name}}
+              {{#if customer_details.[0].name_lang2}}<div>{{customer_details.[0].name_lang2}}</div>{{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td class="k">VAT No</td>
+            <td class="sep">:</td>
+            <td class="v">{{billing_address.[0].vat}}</td>
+          </tr>
+          <tr>
+            <td class="k">Address</td>
+            <td class="sep">:</td>
+            <td class="v">
+              {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}} {{/if}}{{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}} {{/if}}{{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}} {{/if}}{{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}} {{/if}}{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}{{#if billing_address.[0].address_code}} {{billing_address.[0].address_code}}{{/if}}
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="info-list">
+          <tr>
+            <td class="k">Quotation No</td>
+            <td class="sep">:</td>
+            <td class="v">{{basicdetails.[0].inv_no}}</td>
+          </tr>
+          <tr>
+            <td class="k">Quotation Date</td>
+            <td class="sep">:</td>
+            <td class="v">{{basicdetails.[0].inv_date}}</td>
+          </tr>
+          <tr>
+            <td class="k">RFQ</td>
+            <td class="sep">:</td>
+            <td class="v">{{basicdetails.[0].rfq}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:7%">
+      <col style="width:42%">
+      <col style="width:8%">
+      <col style="width:10%">
+      <col style="width:15%">
+      <col style="width:18%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>SL.No</th>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Unit</th>
+        <th>Rate</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div style="direction:rtl;">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div>{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{formatAmount quantity 0}}</td>
+        <td class="center">{{unit}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Words + Totals -->
+  <table class="totals-row">
+    <colgroup>
+      <col style="width:49%">
+      <col style="width:33%">
+      <col style="width:18%">
+    </colgroup>
+    <tr>
+      <td class="words-cell" rowspan="1">
+        <div class="words-en">{{default basicdetails.[0].base_country_isocode 'SAR'}} :&nbsp;{{bcamountinwords}}</div>
+        {{#if bcamountinwordsar}}
+        <div class="words-ar">{{bcamountinwordsar}}</div>
+        {{/if}}
+      </td>
+      <td class="tot-labels">
+        <div><b>Gross Amount /</b> <span class="ar">الإجمالي</span></div>
+        <div><b>Discount /</b> <span class="ar">خصم</span></div>
+        <div><b>VAT Amount /</b> <span class="ar">الضريبة قيمة</span></div>
+        <div><b>Net Amount /</b> <span class="ar">الشبكة كمية</span></div>
+      </td>
+      <td class="tot-vals">
+        <div>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</div>
+        <div>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</div>
+        <div>{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</div>
+        <div>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Remark -->
+  <div class="remark-cell">{{#if basicdetails.[0].remark}}{{basicdetails.[0].remark}}{{else}}&nbsp;{{/if}}</div>
+
+  <!-- Prepared By -->
+  <table class="footer-row">
+    <colgroup>
+      <col style="width:49%">
+      <col style="width:51%">
+    </colgroup>
+    <tr>
+      <td>&nbsp;</td>
+      <td>
+        <div class="prep-lbl">Prepared By</div>
+        <div>{{basicdetails.[0].employeename}}</div>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

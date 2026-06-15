@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+
+*{
+    margin:0;
+   
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:11px;
+    color:#000;
+     padding:0 8mm;
+}
+
+.invoice{
+    width:100%;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+td,th{
+    border:1px solid #bcbcbc;
+    padding:4px;
+}
+
+.header-bg{
+    background:#0b5a69;
+    color:#fff;
+    font-weight:bold;
+}
+
+.title{
+    font-size:24px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.arabic{
+    direction:rtl;
+    text-align:right;
+}
+
+.center{
+    text-align:center;
+}
+
+.right{
+    text-align:right;
+}
+
+.bold{
+    font-weight:bold;
+}
+
+.small{
+    font-size:10px;
+}
+
+.item-head{
+    background:#0b5a69;
+    color:#fff;
+    font-weight:bold;
+    text-align:center;
+}
+
+.total-box td{
+    padding:3px 5px;
+}
+
+.signature{
+    height:90px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="invoice">
+
+<!-- Header -->
+
+<table>
+<tr>
+<td width="40%">
+    VAT Number : {{branch.[0].vat}}
+</td>
+
+<td width="30%" class="title">
+    TAX INVOICE
+</td>
+
+<td width="30%" class="arabic title">
+    فاتورة ضريبية
+</td>
+</tr>
+</table>
+
+<br>
+
+<!-- Customer + Invoice -->
+
+<table>
+
+<tr>
+
+<td width="58%" valign="top">
+
+<div class="header-bg">
+Customer Details
+</div>
+
+<table>
+
+<tr>
+<td width="25%">Name</td>
+<td>{{billing_address.[0].name}}</td>
+</tr>
+
+<tr>
+<td>Address</td>
+<td>
+{{billing_address.[0].address_line1}}
+{{billing_address.[0].address_line2}}
+{{billing_address.[0].address_line3}}
+</td>
+</tr>
+
+<tr>
+<td>VAT Number</td>
+<td>{{customer_details.[0].VAT_number}}</td>
+</tr>
+
+<tr>
+<td>CR Number</td>
+<td>{{customer_details.[0].cr_number}}</td>
+</tr>
+
+</table>
+
+</td>
+
+<td width="42%" valign="top">
+
+<div class="header-bg">
+Invoice Details
+</div>
+
+<table>
+
+<tr>
+<td>Invoice Number</td>
+<td>{{basicdetails.[0].inv_no}}</td>
+</tr>
+
+<tr>
+<td>Invoice Date</td>
+<td>{{basicdetails.[0].inv_date}}</td>
+</tr>
+
+<tr>
+<td>Purchase Order Number</td>
+<td>{{basicdetails.[0].reference_no}}</td>
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<!-- Terms -->
+
+<table>
+
+<tr>
+<td class="bold">
+Terms And Conditions
+</td>
+</tr>
+
+<tr>
+<td>
+{{basicdetails.[0].terms_and_condition}}
+</td>
+</tr>
+
+</table>
+
+<br>
+
+<!-- Item Table -->
+
+<table>
+
+<thead>
+
+<tr class="item-head">
+
+<th width="5%">Sl</th>
+
+<th width="30%">
+Description
+</th>
+
+<th width="8%">
+QTY
+</th>
+
+<th width="10%">
+UOM
+</th>
+
+<th width="10%">
+Rate
+</th>
+
+<th width="12%">
+Taxable Amount
+</th>
+
+<th width="8%">
+Tax %
+</th>
+
+<th width="10%">
+Tax Amount
+</th>
+
+<th width="12%">
+Subtotal
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{{#each itemdetails}}
+
+<tr>
+
+<td class="center">
+{{addOne @index}}
+</td>
+
+<td>
+{{item_name}}
+</td>
+
+<td class="center">
+{{quantity}}
+</td>
+
+<td class="center">
+{{unit}}
+</td>
+
+<td class="right">
+{{formatAmount price ../bcdp}}
+</td>
+
+<td class="right">
+{{formatAmount taxable ../bcdp}}
+</td>
+
+<td class="center">
+{{vat_perc}}
+</td>
+
+<td class="right">
+{{formatAmount tax ../bcdp}}
+</td>
+
+<td class="right">
+{{formatAmount amount ../bcdp}}
+</td>
+
+</tr>
+
+{{/each}}
+
+</tbody>
+
+</table>
+
+<br>
+
+<!-- Bottom -->
+
+<table>
+
+<tr>
+
+<td width="35%" valign="top">
+
+<div class="header-bg center">
+Bank Details
+</div>
+
+<table>
+
+<tr>
+<td>A/c Name</td>
+<td>{{bankdetails.acc_name}}</td>
+</tr>
+
+<tr>
+<td>Bank Name</td>
+<td>{{bankdetails.name}}</td>
+</tr>
+
+<tr>
+<td>A/c No</td>
+<td>{{bankdetails.acc_no}}</td>
+</tr>
+
+<tr>
+<td>IBAN</td>
+<td>{{bankdetails.iban_no}}</td>
+</tr>
+
+<tr>
+<td>SWIFT</td>
+<td>{{bankdetails.swift_no}}</td>
+</tr>
+
+</table>
+
+</td>
+
+<td width="15%" class="center">
+
+
+{{{qrDataUri qrCodeBase64}}}
+
+
+</td>
+
+<td width="50%" valign="top">
+
+<table class="total-box">
+
+<tr>
+<td>Total (Including VAT)</td>
+<td class="right">
+{{formatAmount basicdetails.[0].grand_total bcdp}}
+</td>
+</tr>
+
+<tr>
+<td>Total Taxable Amount</td>
+<td class="right">
+{{formatAmount basicdetails.[0].subtotal bcdp}}
+</td>
+</tr>
+
+<tr>
+<td>Total VAT</td>
+<td class="right">
+{{formatAmount basicdetails.[0].vatamt bcdp}}
+</td>
+</tr>
+
+<tr>
+<td class="bold">Total Amount</td>
+<td class="right bold">
+{{formatAmount basicdetails.[0].grand_total bcdp}}
+</td>
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<!-- Amount In Words -->
+
+<table>
+
+<tr>
+<td width="20%" class="bold">
+Amount In Words
+</td>
+
+<td>
+{{bcamountinwords}}
+</td>
+</tr>
+
+</table>
+
+<br><br>
+
+<!-- Signature -->
+
+<table>
+
+<tr>
+
+<td class="center signature">
+Authorized Signature
+<br><br>
+
+{{#if Signature}}
+<img src="{{Signature}}" height="70">
+{{/if}}
+
+</td>
+
+<td class="center signature">
+Authorized Stamp
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</body>
+</html>

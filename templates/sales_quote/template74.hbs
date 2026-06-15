@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #222;
+    line-height: 1.45;
+    margin: 0 10mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; padding-top: 8px; }
+
+  /* ── Top header ─────────────────────────────── */
+  .top-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .top-table > tbody > tr > td {
+    vertical-align: top;
+    padding: 0 6px;
+    font-size: 9px;
+  }
+
+  .to-block .lbl {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  .to-block .name { font-weight: bold; margin-top: 2px; }
+  .to-block .line { line-height: 1.55; }
+
+  .center-block { text-align: center; }
+  .center-block .ar {
+    direction: rtl;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  .center-block .en { font-weight: bold; }
+
+  .right-block { text-align: right; }
+  .right-block .qtitle {
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: 2px;
+  }
+  .right-block .qno {
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  /* ── Right meta table ──────────────────────── */
+  .meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+  }
+  .meta-table td {
+    padding: 3px 4px;
+    font-size: 9px;
+    vertical-align: middle;
+  }
+  .meta-table .m-lbl  { text-align: left; }
+  .meta-table .m-val  { text-align: right; }
+  .meta-table .m-ar   { text-align: right; direction: rtl;color:rgb(65, 64, 64); }
+
+  /* ── Intro paragraph ───────────────────────── */
+  .intro-block {
+    margin-top: 18px;
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
+  .intro-block .dear { font-weight: bold; font-size: 9px;}
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 6px;
+  }
+  .items-table th,
+  .items-table td {
+    vertical-align: top;
+    padding: 8px 8px;
+  }
+  .items-table td {
+     font-size: 9px;
+     padding: 6px 8px;
+     border-bottom: 0.1px solid #ccc;
+  }
+  .items-table thead th {
+    background: #19aec6;
+    border:1px solid #ffffff;
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+    padding: 6px 8px;
+    font-size: 9px;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Totals (bilingual, right aligned) ─────── */
+  .totals-wrap {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 14px;
+  }
+  .totals-wrap td {
+    padding: 4px 8px;
+    font-size: 9px;
+    vertical-align: middle;
+  }
+  .totals-wrap .t-blank { border: none; }
+  .totals-wrap .t-en { text-align: left; }
+  .totals-wrap .t-ar { text-align: right; direction: rtl; }
+  .totals-wrap .t-val { text-align: right; }
+  .totals-wrap .grand-row td {
+    font-weight: bold;
+    border-top: 1px solid #ccc;
+  }
+
+  /* ── Words ────────────────────────────────── */
+  .words-line {
+    text-align: right;
+    margin-top: 6px;
+    font-size: 9px;
+  }
+
+  /* ── Thank You + Payment Details ───────────── */
+  .thanks-line {
+    margin-top: 28px;
+    font-family: 'thecoastal';
+    font-size: 22px;
+    color: #1a3a5c;
+  }
+
+  .payment-title {
+    text-align: center;
+    font-weight: bold;
+    margin-top: -32px;
+    margin-bottom: 10px;
+  }
+
+  .payment-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #bfbfbf;
+  }
+  .payment-table td {
+    border: none;
+    padding: 6px 12px;
+    font-size: 9px;
+    vertical-align: middle;
+  }
+  .payment-table tr + tr td {  }
+  .payment-table .p-en-lbl { width: 16%; }
+  .payment-table .p-sep1   { width: 4%; }
+  .payment-table .p-en-val { width: 32%; }
+  .payment-table .p-seal   { width: 16%; text-align: center; }
+  .payment-table .p-sep2   { width: 4%; text-align: center; }
+  .payment-table .p-ar-lbl { width: 28%; direction: rtl; text-align: right; }
+  .payment-table .seal-img { max-height: 80px; max-width: 110px; display: inline-block; }
+
+  /* ── Signatory ───────────────────────────── */
+  .signatory {
+    margin-top: 20px;
+    font-size: 9px;
+  }
+
+  /* ── Terms ────────────────────────────────── */
+  .terms-block { margin-top: 18px; }
+  .terms-title {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  .terms-text { margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Top: To | Center label | QUOTATION title -->
+  <table class="top-table">
+    <colgroup>
+      <col style="width:33%">
+      <col style="width:33%">
+      <col style="width:34%">
+    </colgroup>
+    <tr>
+      <td>
+        <div class="to-block">
+          <div class="lbl">To</div>
+          <div class="name">{{billing_address.[0].name}}</div>
+          {{#if billing_address.[0].vat}}<div class="line">VAT Number: {{billing_address.[0].vat}}</div>{{/if}}
+          {{#if billing_address.[0].gstin}}<div class="line">C R Number: {{billing_address.[0].gstin}}</div>{{/if}}
+        </div>
+      </td>
+      <td>
+        <div class="center-block">
+          <div class="ar">تمت محاسبته على</div>
+          <div class="en">{{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}{{else}}ABC{{/if}}</div>
+        </div>
+      </td>
+      <td>
+        <div class="right-block">
+          <div class="qtitle">QUOTATION</div>
+          <div class="qno">{{basicdetails.[0].inv_no}}</div>
+        </div>
+        <table class="meta-table">
+          <tr>
+            <td class="m-lbl">Doc Date</td>
+            <td class="m-val">{{basicdetails.[0].inv_date}}</td>
+            <td class="m-ar">تاريخ الوثيقة</td>
+          </tr>
+          <tr>
+            <td class="m-lbl">Due Date</td>
+            <td class="m-val">{{basicdetails.[0].due_date}}</td>
+            <td class="m-ar">تاريخ الاستحقاق</td>
+          </tr>
+          <tr>
+            <td class="m-lbl">Reference No</td>
+            <td class="m-val">{{basicdetails.[0].reference_no}}</td>
+            <td class="m-ar">رقم المرجع</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Intro paragraph -->
+  <div class="intro-block">
+    <div class="dear">Dear Sir,</div>
+    <div style="font-size: 9px;">We appreciate your interest in Ethicfin Accounting Software.Based on your discussion with our team, we are pleased to provide you with the following quotation for Ethicfin subscription to our services:</div>
+  </div>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:3.5%">
+      <col style="width:27%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:14.5%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="center">#</th>
+        <th>Item Description</th>
+        <th class="center">Qty</th>
+        <th>Price</th>
+        <th>Item Total</th>
+        <th>Discount</th>
+        <th>Tax</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div>{{description}}</div>{{/if}}
+        </td>
+        <td class="center">{{formatAmount quantity 0}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{formatAmount taxable ../bcdp}}</td>
+        <td class="right">{{formatAmount disc_amt ../bcdp}}</td>
+        <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="right">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Totals -->
+  <table class="totals-wrap">
+    <colgroup>
+      <col style="width:48%">
+      <col style="width:16%">
+      <col style="width:18%">
+      <col style="width:6%">
+      <col style="width:12%">
+    </colgroup>
+    <tr>
+      <td class="t-blank" rowspan="4"></td>
+      <td class="t-en">Total Price</td>
+      <td class="t-ar">السعر الإجمالي</td>
+      <td class="t-blank"></td>
+      <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-en">Total Discount</td>
+      <td class="t-ar">إجمالي الخصم</td>
+      <td class="t-blank"></td>
+      <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-en">VAT</td>
+      <td class="t-ar">ضريبة القيمة المضافة</td>
+      <td class="t-blank"></td>
+      <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+    </tr>
+    <tr class="grand-row">
+      <td class="t-en">Total</td>
+      <td class="t-ar">المبلغ الإجمالي</td>
+      <td class="t-blank"></td>
+      <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+    </tr>
+  </table>
+
+  <!-- Amount in words -->
+  <div class="words-line">Total Amount in words : {{bcamountinwords}}</div>
+
+  <!-- Thank You / Payment Details -->
+  <div class="thanks-line">Thank You</div>
+  <div class="payment-title">Payment Details</div>
+
+  <table class="payment-table">
+    <tr>
+      <td class="p-en-lbl">Account Name</td>
+      <td class="p-sep1">:</td>
+      <td class="p-en-val">{{bankdetails.acc_name}}</td>
+      <td class="p-sep2">:</td>
+      <td class="p-ar-lbl">اسم الحساب</td>
+    </tr>
+    <tr>
+      <td class="p-en-lbl">Bank Name</td>
+      <td class="p-sep1">:</td>
+      <td class="p-en-val">{{bankdetails.name}}</td>
+      <td class="p-sep2">:</td>
+      <td class="p-ar-lbl">بنك</td>
+    </tr>
+    <tr>
+      <td class="p-en-lbl">Account Number</td>
+      <td class="p-sep1">:</td>
+      <td class="p-en-val">{{bankdetails.acc_no}}</td>
+      <td class="p-sep2">:</td>
+      <td class="p-ar-lbl">رقم الحساب</td>
+    </tr>
+    <tr>
+      <td class="p-en-lbl">IBAN No</td>
+      <td class="p-sep1">:</td>
+      <td class="p-en-val">{{bankdetails.iban_no}}</td>
+      <td class="p-sep2">:</td>
+      <td class="p-ar-lbl">آيبان</td>
+    </tr>
+  </table>
+
+  <!-- Signatory -->
+  <div class="signatory">Authorized Signatory / <span style="direction:rtl;">المعتمد التوقيع</span></div>
+
+  <!-- Terms and Conditions -->
+  <div class="terms-block">
+    <div class="terms-title">Terms and Conditions</div>
+    <div class="terms-text">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{else}}{{#if invterms}}{{{nl2br invterms}}}{{/if}}{{/if}}</div>
+  </div>
+
+</div>
+
+</body>
+</html>

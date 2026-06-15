@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUOTATION - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.45;
+    margin: 0 10mm;
+  }
+
+ /* ── Title badge (top right) ──────────────── */
+  .title-row {
+    text-align: center;
+  }
+  .title-badge {
+    font-weight: bold;
+    font-size: 15px;
+    color: #000;
+  }
+  .page { width: 100%; margin: 0 auto; padding-top: 10px; }
+
+  /* ── Top header row (ref / title / date) ───── */
+  .top-head-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+  }
+  .top-head-table td {
+    padding: 2px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .th-left { width: 33%; font-weight: bold; font-size: 12px; }
+  .th-center {
+    width: 34%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .th-right { width: 33%; text-align: left; padding-left: 14%; }
+
+  /* ── Address block ─────────────────────────── */
+  .addr-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    margin-top: 18px;
+  }
+  .addr-table td {
+    padding: 2px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .addr-table .lbl-col {
+    width: 60px;
+    font-weight: bold;
+    padding-right: 10px;
+    padding-left: 5px;
+  }
+  .addr-line { line-height: 1.55; font-weight: bold; }
+
+  .attn-row, .subj-row {
+    margin: 8px 0 6px;
+    padding-left: 5px;
+    font-weight: bold;
+  }
+  .subj-row { margin-top: 8px; margin-bottom: 8px; }
+
+  /* ── Items table ──────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #000;
+    margin-top: 10px;
+  }
+  .items-table th,
+  .items-table td {
+    border: 1px solid #000;
+    padding: 8px 8px;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .items-table thead th {
+    background: #e7a26d;
+    color: #222;
+    text-align: left;
+    font-weight: bold;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left   { text-align: left; }
+
+  /* ── Special Note box ──────────────────────── */
+  .note-block {
+    border: 1px solid #999;
+    padding: 8px 10px;
+    margin-top: 12px;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .note-label { font-weight: bold; }
+
+  /* ── Payment / Thanks ──────────────────────── */
+  .payment-block { margin-top: 18px; }
+  .payment-title { font-weight: bold; margin-bottom: 14px; }
+  .thanks-line { }
+
+  /* ── Person block ──────────────────────────── */
+  .person-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+  }
+  .person-table td {
+    padding: 1px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .person-table .p-left { width: 50%; padding-left: 0; }
+  .person-table .p-right { width: 50%; text-align: right; }
+  .person-name { font-weight: bold; }
+  .person-link { color: #1f63b0; text-decoration: underline; }
+
+  /* ── Standard Terms ───────────────────────── */
+  .std-terms-block { margin-top: 14px; }
+  .std-terms-title {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  .std-terms-text { margin-top: 4px; }
+
+  /* ── Signature fields ──────────────────────── */
+  .sig-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 28px;
+  }
+  .sig-table td {
+    padding: 10px 0;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .sig-table .sig-left { width: 50%; padding-right: 14px; }
+  .sig-table .sig-right { width: 50%; padding-left: 14px; }
+  .sig-table .sig-line { font-weight: bold; text-align: center;}
+  .sig-table .sig-blank {
+    display: inline-block;
+    border-bottom: 1px solid #000;
+    min-width: 130px;
+    height: 1em;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="title-row">
+    <span class="title-badge">QUOTATION</span>
+  </div>
+  <!-- Top header: ref | QUOTATION | date/location -->
+  <table class="top-head-table">
+    <tr>
+      <td class="th-left">{{basicdetails.[0].inv_no}}</td>
+      <td class="th-center"></td>
+      <td class="th-right">
+        <div class="meta-line"><strong>Date:</strong> {{basicdetails.[0].inv_date}}</div>
+        <div class="meta-line"><strong>Location:</strong>{{#if basicdetails.[0].location}} {{basicdetails.[0].location}}{{/if}}</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- To / Address -->
+  <table class="addr-table">
+    <tr>
+      <td class="lbl-col">To,</td>
+      <td>
+        <div class="addr-line">{{billing_address.[0].name}}</div>
+        {{#if billing_address.[0].address_line1}}<div class="addr-line">{{billing_address.[0].address_line1}}</div>{{/if}}
+        {{#if billing_address.[0].address_line2}}<div class="addr-line">{{billing_address.[0].address_line2}}</div>{{/if}}
+        {{#if billing_address.[0].address_line3}}<div class="addr-line">{{billing_address.[0].address_line3}}</div>{{/if}}
+        {{#if billing_address.[0].address_line4}}<div class="addr-line">{{billing_address.[0].address_line4}}</div>{{/if}}
+        {{#if billing_address.[0].address_line5}}<div class="addr-line">{{billing_address.[0].address_line5}}</div>{{/if}}
+        {{#if billing_address.[0].address_code}}<div class="addr-line">{{billing_address.[0].address_code}}</div>{{/if}}
+      </td>
+    </tr>
+  </table>
+
+  <div class="attn-row">Attn:{{#if basicdetails.[0].attention}} {{basicdetails.[0].attention}}{{/if}}</div>
+
+  <div class="subj-row">Subject:{{#if basicdetails.[0].subj}} {{basicdetails.[0].subj}}{{/if}}</div>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:4%">
+      <col style="width:26%">
+      <col style="width:9%">
+      <col style="width:8%">
+      <col style="width:12%">
+      <col style="width:13%">
+      <col style="width:15%">
+      <col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="center">#</th>
+        <th>Item Description</th>
+        <th class="center">Qty</th>
+        <th class="center">UOM</th>
+        <th class="center">Rate Each</th>
+        <th class="center">Mob Charges</th>
+        <th class="center">De Mob Charges</th>
+        <th class="center">Remark</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="center">{{addOne @index}}</td>
+        <td class="left">
+          {{item_name}}
+          {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div>{{description}}</div>{{/if}}
+        </td>
+        <td class="right">{{formatAmount quantity 0}}</td>
+        <td class="center">{{unit}}</td>
+        <td class="right">{{formatAmount price ../bcdp}}</td>
+        <td class="right">{{#if mobilization}}{{formatAmount mobilization ../bcdp}}{{else}}0{{/if}}</td>
+        <td class="right">{{#if demobilization}}{{formatAmount demobilization ../bcdp}}{{else}}0{{/if}}</td>
+        <td class="left">{{#if remark}}{{remark}}{{else}}DELIVERY{{/if}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Special Note -->
+  <div class="note-block">
+    <span class="note-label">Special Note:</span> Our price is exclusive of any taxes including <strong>VAT, duties</strong> and / or levies. Upon implementation of any such taxes hereafter shall be charged extra at actual as per <strong>Saudi Government Standards.</strong>
+  </div>
+
+  <!-- Payment Terms / Thanks -->
+  <div class="payment-block">
+    <div class="payment-title">Payment Terms:{{#if basicdetails.[0].payment_terms}} {{basicdetails.[0].payment_terms}}{{/if}}</div>
+    <div class="thanks-line">Thanks &amp; Best Regards</div>
+  </div>
+
+  <!-- Person block -->
+  <table class="person-table">
+    <tr>
+      <td class="p-left">
+        <div class="person-name">{{basicdetails.[0].employeename}}</div>
+        <div style="">Mobile no : {{basicdetails.[0].employeecontactno}}</div>
+        <div>Email:{{basicdetails.[0].employeeemail}}</div>
+      </td>
+      <td class="p-right">
+      </td>
+    </tr>
+  </table>
+
+  <!-- Standard Terms -->
+  <div class="std-terms-block">
+    <div class="std-terms-title">STANDARD TERMS AND CONDITIONS (Annexure-1)</div>
+    <div class="std-terms-text">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{else}}{{#if invterms}}{{{nl2br invterms}}}{{/if}}{{/if}}</div>
+  </div>
+
+  <!-- Signature fields -->
+  <table class="sig-table">
+    <tr>
+      <td class="sig-left sig-line">Authorized Signature</span></td>
+      <td class="sig-right sig-line">Received By</span></td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>
