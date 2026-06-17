@@ -253,6 +253,14 @@ class TemplateService {
     Handlebars.registerHelper("length", (arr) => (arr ? arr.length : 0));
     Handlebars.registerHelper("inc", (val) => parseInt(val) + 1);
     Handlebars.registerHelper("addOne", (val) => parseInt(val, 10) + 1);
+    Handlebars.registerHelper("sumProperty", (arr, prop) => {
+      if (!Array.isArray(arr)) return 0;
+      return arr.reduce(
+        (s, it) =>
+          s + (parseFloat(String(it?.[prop] ?? 0).replace(/,/g, "")) || 0),
+        0,
+      );
+    });
     Handlebars.registerHelper(
       "addOffset",
       (index, offset) => parseInt(index, 10) + parseInt(offset, 10) + 1,
