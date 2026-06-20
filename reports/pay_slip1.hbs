@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Salary Slip</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+
+    .wrapper { padding: 28px 15px; }
+
+    /* ── Company Header ─────────────────────────── */
+    .co-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #344767;
+      margin-bottom: 12px;
+    }
+    .co-header .logo img {
+      max-height: 52px;
+      max-width: 140px;
+      object-fit: contain;
+    }
+    .co-header .co-info { text-align: right; }
+    .co-header .co-info .co-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #344767;
+      margin: 0 0 2px;
+    }
+    .co-header .co-info p { margin: 0; font-size: 10px; color: #666; }
+
+    /* ── Slip Title Bar ─────────────────────────── */
+    .slip-title {
+      background: #344767;
+      color: #fff;
+      text-align: center;
+      padding: 7px 0;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    /* ── Info Grid ──────────────────────────────── */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      font-size: 11px;
+    }
+    .info-table td {
+      padding: 5px 10px;
+      border: 1px solid #dee2e6;
+    }
+    .info-table td.lbl {
+      background: #f0f2f5;
+      font-weight: 600;
+      color: #555;
+      width: 15%;
+      white-space: nowrap;
+    }
+    .info-table td.val {
+      color: #222;
+      width: 35%;
+    }
+
+    /* ── Section Tables ─────────────────────────── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #344767;
+      background: #e9ecef;
+      padding: 5px 8px;
+      border: 1px solid #dee2e6;
+      border-bottom: none;
+      margin-top: 14px;
+    }
+    .slip-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-bottom: 0;
+    }
+    .slip-table thead tr th {
+      background: #f8f9fa;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #666;
+      padding: 5px 8px;
+      border: 1px solid #dee2e6;
+    }
+    .slip-table tbody tr td {
+      padding: 5px 8px;
+      border: 1px solid #dee2e6;
+      vertical-align: middle;
+    }
+    .slip-table tbody tr:nth-child(even) td { background: #fafafa; }
+    .slip-table tfoot tr td {
+      padding: 5px 8px;
+      border: 1px solid #dee2e6;
+      font-weight: 700;
+      background: #f0f2f5;
+    }
+    .text-end { text-align: right; }
+    .text-center { text-align: center; }
+
+    /* ── Totals Summary ─────────────────────────── */
+    .totals-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+    .totals-table {
+      border-collapse: collapse;
+      font-size: 11px;
+      min-width: 300px;
+    }
+    .totals-table td {
+      padding: 5px 12px;
+      border: 1px solid #dee2e6;
+    }
+    .totals-table td.t-lbl {
+      background: #f0f2f5;
+      font-weight: 600;
+      color: #555;
+    }
+    .totals-table td.t-val { text-align: right; min-width: 100px; }
+    .totals-table tr.net td {
+      background: #344767;
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    /* ── Employer Contributions ─────────────────── */
+    .er-note {
+      font-size: 9px;
+      color: #888;
+      font-style: italic;
+      margin-left: 4px;
+    }
+
+    /* ── Footer ─────────────────────────────────── */
+    .slip-footer {
+      margin-top: 30px;
+      padding-top: 10px;
+      border-top: 1px solid #dee2e6;
+      font-size: 9px;
+      color: #999;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Company Header -->
+  <div class="co-header">
+    <div class="logo">
+      {{#if Companylogo}}
+        <img src="{{Companylogo}}" alt="Logo" />
+      {{/if}}
+    </div>
+    <div class="co-info">
+      {{#if company_name}}<p class="co-name">{{company_name}}</p>{{/if}}
+    </div>
+  </div>
+
+  <!-- Title Bar -->
+  <div class="slip-title">Salary Slip</div>
+
+  <!-- Employee Info -->
+  <table class="info-table">
+    <tbody>
+      <tr>
+        <td class="lbl">Employee</td>
+        <td class="val">
+          {{slip.employee_name}}
+          {{#if slip.profile_code}}<span style="color:#888;font-size:10px;">({{slip.profile_code}})</span>{{/if}}
+        </td>
+        <td class="lbl">Pay Period</td>
+        <td class="val">{{formatDate slip.period_from}} &mdash; {{formatDate slip.period_to}}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Date</td>
+        <td class="val">{{formatDate slip.date}}</td>
+        <td class="lbl">Reference No</td>
+        <td class="val">{{default slip.reference_no '-'}}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Basic Pay</td>
+        <td class="val">{{formatAmount slip.basic_pay}}</td>
+        <td class="lbl">Description</td>
+        <td class="val">{{default slip.description '-'}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Earnings -->
+  <div class="section-title">Earnings</div>
+  <table class="slip-table">
+    <thead>
+      <tr>
+        <th style="width:35%;">Category</th>
+        <th style="width:30%;">Description</th>
+        <th class="text-end" style="width:12%;">Unit</th>
+        <th class="text-end" style="width:12%;">Rate</th>
+        <th class="text-end" style="width:11%;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each earnings}}
+      <tr>
+        <td>{{category_name}}</td>
+        <td>{{description}}</td>
+        <td class="text-end">{{formatAmount unit}}</td>
+        <td class="text-end">{{formatAmount rate}}</td>
+        <td class="text-end">{{formatAmount total}}</td>
+      </tr>
+      {{else}}
+      <tr><td colspan="5" class="text-center" style="color:#aaa;">No earnings recorded.</td></tr>
+      {{/each}}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4" class="text-end">Total Earnings</td>
+        <td class="text-end">{{formatAmount slip.total_earnings}}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- Deductions -->
+  <div class="section-title">Deductions</div>
+  <table class="slip-table">
+    <thead>
+      <tr>
+        <th style="width:35%;">Category</th>
+        <th style="width:30%;">Description</th>
+        <th class="text-end" style="width:12%;">Unit</th>
+        <th class="text-end" style="width:12%;">Rate</th>
+        <th class="text-end" style="width:11%;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each deductions}}
+      <tr>
+        <td>{{category_name}}</td>
+        <td>{{description}}</td>
+        <td class="text-end">{{formatAmount unit}}</td>
+        <td class="text-end">{{formatAmount rate}}</td>
+        <td class="text-end">{{formatAmount total}}</td>
+      </tr>
+      {{else}}
+      <tr><td colspan="5" class="text-center" style="color:#aaa;">No deductions recorded.</td></tr>
+      {{/each}}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4" class="text-end">Total Deductions</td>
+        <td class="text-end">{{formatAmount slip.total_deductions}}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- Employer Contributions (if any) -->
+  {{#if employer_contributions.length}}
+  {{#if_gt employer_contributions.length 0}}
+  <div class="section-title">Employer Contributions <span class="er-note">(not deducted from employee)</span></div>
+  <table class="slip-table">
+    <thead>
+      <tr>
+        <th style="width:70%;">Component</th>
+        <th class="text-end" style="width:30%;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each employer_contributions}}
+      <tr>
+        <td>{{category_name}}</td>
+        <td class="text-end">{{formatAmount total}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{/if_gt}}
+  {{/if}}
+
+  <!-- Net Pay Summary -->
+  <div class="totals-wrapper">
+    <table class="totals-table">
+      <tbody>
+        <tr>
+          <td class="t-lbl">Total Earnings</td>
+          <td class="t-val">{{formatAmount slip.total_earnings}}</td>
+        </tr>
+        <tr>
+          <td class="t-lbl">Total Deductions</td>
+          <td class="t-val">{{formatAmount slip.total_deductions}}</td>
+        </tr>
+        <tr class="net">
+          <td class="t-lbl">Net Pay</td>
+          <td class="t-val">{{formatAmount slip.total}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div class="slip-footer">
+    This is a computer-generated salary slip and does not require a signature.
+  </div>
+
+</div>
+</body>
+</html>
