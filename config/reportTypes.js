@@ -14,6 +14,7 @@ const REPORT_TYPES = {
   10: { name: 'vat_report', label: 'Vat Report' },
   11: { name: 'oman_vat_report', label: 'Oman Vat Report' },
   12: { name: 'uae_vat_report',  label: 'UAE VAT Return'  },
+  19: { name: 'pay_slip',        label: 'Salary Slip'     },
 };
 
 const DEFAULT_REPORT_TYPE = 1;
