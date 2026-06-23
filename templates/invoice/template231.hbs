@@ -364,6 +364,81 @@
             text-align: center;
         }
 
+        /* SEAL & SIGNATURE SECTION */
+        .seal-signature-section {
+            display: flex;
+            justify-content: flex-end;
+            margin: 16px 0 6px 0;
+            page-break-inside: avoid;
+        }
+
+        .seal-signature-box {
+            text-align: center;
+            min-width: 160px;
+            max-width: 220px;
+        }
+
+        .seal-signature-images {
+            position: relative;
+            display: inline-block;
+            width: 150px;
+            height: 100px;
+            margin-bottom: 4px;
+        }
+
+        .seal-img {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            bottom: 0;
+            left: 0;
+            opacity: 0.85;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .signature-img {
+            position: absolute;
+            width: 130px;
+            height: 60px;
+            object-fit: contain;
+            bottom: 10px;
+            right: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .seal-only .seal-img,
+        .signature-only .signature-img {
+            position: static;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .seal-only {
+            width: 90px;
+            height: 90px;
+        }
+
+        .signature-only {
+            width: 130px;
+            height: 60px;
+        }
+
+        .seal-signature-line {
+            border-top: 1px solid #000;
+            margin-top: 4px;
+            padding-top: 3px;
+            font-size: 7pt;
+            font-weight: bold;
+        }
+
+        .seal-signature-name {
+            font-size: 7pt;
+            font-weight: bold;
+        }
+
         @media print {
             body {
                 -webkit-print-color-adjust: exact;
@@ -713,9 +788,47 @@
         <div class="info-section">
             <div class="info-title">Bank Details</div>
             <div class="info-content">
-                <strong>Bank Name:</strong> {{MyInvoisDocument.bank.name}}
+                <strong>Bank Name:</strong> {{MyInvoisDocument.bank.name}}<br>
+                {{#if MyInvoisDocument.bank.acc_name}}
+                <strong>Account Name:</strong> {{MyInvoisDocument.bank.acc_name}}<br>
+                {{/if}}
+                {{#if MyInvoisDocument.bank.acc_no}}
+                <strong>Account No:</strong> {{MyInvoisDocument.bank.acc_no}}
+                {{/if}}
             </div>
         </div>
+        {{/if}}
+
+        <!-- Seal & Signature Section -->
+        {{#if MyInvoisDocument.supplier.seal}}
+        <div class="seal-signature-section">
+            <div class="seal-signature-box">
+                {{#if MyInvoisDocument.supplier.signature}}
+                <div class="seal-signature-images">
+                    <img class="seal-img" src="{{MyInvoisDocument.supplier.seal}}" alt="Seal" />
+                    <img class="signature-img" src="{{MyInvoisDocument.supplier.signature}}" alt="Signature" />
+                </div>
+                {{else}}
+                <div class="seal-signature-images seal-only">
+                    <img class="seal-img" src="{{MyInvoisDocument.supplier.seal}}" alt="Seal" />
+                </div>
+                {{/if}}
+                <div class="seal-signature-line">Authorised Signature &amp; Stamp</div>
+                <div class="seal-signature-name">{{upper MyInvoisDocument.supplier.name}}</div>
+            </div>
+        </div>
+        {{else}}
+        {{#if MyInvoisDocument.supplier.signature}}
+        <div class="seal-signature-section">
+            <div class="seal-signature-box">
+                <div class="seal-signature-images signature-only">
+                    <img class="signature-img" src="{{MyInvoisDocument.supplier.signature}}" alt="Signature" />
+                </div>
+                <div class="seal-signature-line">Authorised Signature</div>
+                <div class="seal-signature-name">{{upper MyInvoisDocument.supplier.name}}</div>
+            </div>
+        </div>
+        {{/if}}
         {{/if}}
     </div>
 </body>
