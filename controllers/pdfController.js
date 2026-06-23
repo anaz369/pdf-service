@@ -106,7 +106,49 @@ class PdfController {
         );
       }
 
-      // ── Task 4: Seal → base64 ───────────────────────────────────  ← ADD HERE
+      // ── Task 4a: MyInvois supplier seal → base64 ─────────────────
+      if (
+        pdfRequest.MyInvoisDocument?.supplier?.seal &&
+        String(pdfRequest.MyInvoisDocument.supplier.seal).startsWith("http")
+      ) {
+        preprocessingTasks.push(
+          pdfService
+            .getHighQualityImageBytes(pdfRequest.MyInvoisDocument.supplier.seal)
+            .then((imgBuffer) => {
+              if (imgBuffer) {
+                pdfRequest.MyInvoisDocument.supplier.seal = `data:image/png;base64,${imgBuffer.toString("base64")}`;
+                console.log("✓ MyInvois supplier seal converted to base64");
+              }
+            })
+            .catch((err) => {
+              console.error("✗ MyInvois supplier seal failed:", err.message);
+              pdfRequest.MyInvoisDocument.supplier.seal = "";
+            }),
+        );
+      }
+
+      // ── Task 4b: MyInvois supplier signature → base64 ────────────
+      if (
+        pdfRequest.MyInvoisDocument?.supplier?.signature &&
+        String(pdfRequest.MyInvoisDocument.supplier.signature).startsWith("http")
+      ) {
+        preprocessingTasks.push(
+          pdfService
+            .getHighQualityImageBytes(pdfRequest.MyInvoisDocument.supplier.signature)
+            .then((imgBuffer) => {
+              if (imgBuffer) {
+                pdfRequest.MyInvoisDocument.supplier.signature = `data:image/png;base64,${imgBuffer.toString("base64")}`;
+                console.log("✓ MyInvois supplier signature converted to base64");
+              }
+            })
+            .catch((err) => {
+              console.error("✗ MyInvois supplier signature failed:", err.message);
+              pdfRequest.MyInvoisDocument.supplier.signature = "";
+            }),
+        );
+      }
+
+      // ── Task 4: Seal → base64 ────────────────────────────────────
       if (pdfRequest.Seal && String(pdfRequest.Seal).startsWith("http")) {
         preprocessingTasks.push(
           pdfService
