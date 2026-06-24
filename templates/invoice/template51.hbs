@@ -4,14 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>INVOICE - {{basicdetails.[0].inv_no}}</title>
     <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
       body {
         font-family: "IBM Plex Sans Arabic", Arial, sans-serif;
         font-size: 9px;
@@ -25,9 +17,7 @@
       }
 
       table {
-        border-collapse: collapse;
         width: 100%;
-        table-layout: fixed;
       }
 
       /* ── TITLE ────────────────────────────────────── */
@@ -108,6 +98,7 @@
 
       /* ── SHIPMENT BANDS ───────────────────────────── */
       .ship {
+        border-collapse: collapse;
         margin-top: 6px;
       }
       .ship th,
@@ -122,6 +113,7 @@
 
       /* ── ITEMS TABLE ──────────────────────────────── */
       .items-table {
+        border-collapse: collapse;
         margin-top: 6px;
       }
       .items-table th,
@@ -149,55 +141,87 @@
 
       /* ── BANK + TOTALS ────────────────────────────── */
       .bt-wrap {
-        margin-top: 6px;
+          width: 100%;
+          margin-top: 6px;
+          border-collapse: collapse;
+          border-spacing: 0;
+          table-layout: fixed;
       }
+
       .bt-wrap > tbody > tr > td {
-        vertical-align: top;
-        border: none;
-        padding: 0;
+          vertical-align: top;
+          padding: 0;
+          border: none !important;
       }
-      .bank th,
+
+      /* BANK TABLE */
+      .bank {
+          width: 100%;
+          border-collapse: collapse;
+          table-layout: fixed;
+      }
+
       .bank td {
-        font-size: 9px;
-        border: 1px solid #000;
-        padding: 4px 6px;
-        vertical-align: middle;
+          border: 1px solid #000;
+          padding: 5px 6px;
       }
+
+      .bank .lbl {
+          font-weight: 600;
+      }
+
+      .bank td,
+      .bank th {
+          font-size: 9px;
+          border: 1px solid #000;
+          padding: 4px 6px;
+          vertical-align: middle;
+          box-sizing: border-box;
+      }
+
       .bank .bhead {
-        font-weight: 700;
-        text-align: center;
+          font-weight: 700;
+          text-align: center;
       }
-      .bank td.lbl {
-        font-weight: 600;
-        width: 15%;
+
+      /* TOTALS TABLE */
+      .totals {
+          width: 100%;
+          border-collapse: collapse;
+          border-spacing: 0;
+          table-layout: fixed;
       }
-      .bank td.arl {
-        width: 85%;
-      }
+
       .totals td {
-        font-size: 9px;
-        border: 1px solid #000;
-        padding: 4px 6px;
-        vertical-align: middle;
+          font-size: 9px;
+          border: 1px solid #000;
+          padding: 4px 6px;
+          vertical-align: middle;
+          box-sizing: border-box;
       }
+
       .totals td.lbl {
-        font-weight: 600;
-        width: 32%;
+          font-weight: 600;
+          width: 32%;
       }
+
       .totals td.arl {
-        text-align: right;
-        direction: rtl;
-        width: 47%;
+          text-align: right;
+          direction: rtl;
+          width: 47%;
       }
+
       .totals td.val {
-        text-align: right;
-        width: 21%;
+          text-align: right;
+          width: 21%;
       }
+
       .totals .due td {
-        font-weight: 700;
+          font-weight: 700;
       }
+
       .totals .words-en td {
-        font-weight: 600;
+          font-weight: 600;
       }
 
       /* ── SIGN + TERMS ─────────────────────────────── */
@@ -316,7 +340,7 @@
           {{#ifFlag datasettings "d230"}}<th>ETA</th>{{/ifFlag}}
           {{#ifFlag datasettings "d231"}}<th>ETD</th>{{/ifFlag}}
           <th>Weight</th>
-          <th>Volume/Measure<br>ment</th>
+          <th>Volume/Measurement</th>
         </tr>
       </thead>
       <tbody>
@@ -378,103 +402,145 @@
           <td class="num">{{addOne @index}}</td>
           <td>{{item_name}}{{name_lang2}}{{description}}</td>
           <td class="num">{{formatAmount quantity ../bcdp}}</td>
-          <td class="right">{{formatAmount price ../bcdp}}</td>
-          <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
-          <td class="right">{{formatAmount amount ../bcdp}}</td>
+          <td class="right"><span style="font-size: 12px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount price ../bcdp}}</td>
+          <td class="right"><span style="font-size: 12px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount vat_amt ../bcdp}}</td>
+          <td class="right"><b><span style="font-size: 12px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span></b>{{formatAmount amount ../bcdp}}</td>
         </tr>
         {{/each}}
       </tbody>
     </table>
 
     <!-- BANK + TOTALS -->
-    <table class="bt-wrap">
-      <tr>
-        <td style="width:41%">
-          <table class="bank">
-            <tr><td class="bhead" colspan="2">BANK DETAILS</td></tr>
-            <tr>
-              <td class="lbl">Bank Name</td>
-              <td class="arl">{{bankdetails.name}}</td>
-            </tr>
-            <tr>
-              <td class="lbl">Account Name</td>
-              <td class="arl">{{bankdetails.acc_name}}</td>
-            </tr>
-            <tr>
-              <td class="lbl">Branch Name</td>
-              <td class="arl">{{bankdetails.branch_name}}</td>
-            </tr>
-            <tr>
-              <td class="lbl">Beneficiary A/c No</td>
-              <td class="arl">{{bankdetails.acc_no}}</td>
-            </tr>
-            <tr>
-              <td class="lbl">Swift Code</td>
-              <td class="arl">{{bankdetails.swift_no}}</td>
-            </tr>
-            <tr>
-              <td class="lbl">IBAN No</td>
-              <td class="arl">{{bankdetails.iban_no}}</td>
-            </tr>
-          </table>
-        </td>
-        <td style="width:1%"></td>
-        <td style="width:58%">
-          <table class="totals">
-            <tr>
-              <td class="lbl">Sub Total</td>
-              <td class="arl">المبلغ الفرعي</td>
-              <td class="val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
-            </tr>
-            {{#if zatcadiscount.[0]}}
-              {{#each zatcadiscount}}
-                  <tr>
-                      <td class="lbl">{{reason_name}}</td>
-                      <td class="arl">{{reason_name_lang2}}</td>
-                      <td class="val">{{formatAmount (divide dld ../ccrate) bcdp}}</td>
-                    </tr>
-              {{/each}}
-                <tr>
-                  <td class="lbl">Total Amount Excluding VAT</td>
-                  <td class="arl">المبلغ الإجمالي باستثناء ضريبة القيمة المضافة</td>
-                  <td class="val">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td>
-                </tr>
-              {{else}}
+    <table class="bt-wrap" cellpadding="0" cellspacing="0">
+    <tr>
 
-              {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
-                <tr>
-                  <td class="lbl">Discount</td>
-                  <td class="arl">الخصم</td>
-                  <td class="val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
-                </tr>
-                <tr>
-                  <td class="lbl">Total Amount Excluding VAT</td>
-                  <td class="arl">المبلغ الإجمالي باستثناء ضريبة القيمة المضافة</td>
-                  <td class="val">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
-                </tr>
-              {{/if}}
-          {{/if}}
-            <tr>
-              <td class="lbl">VAT</td>
-              <td class="arl">ضريبة القيمة المضافة</td>
-              <td class="val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
-            </tr>
-            <tr class="due">
-              <td class="lbl">Total Amount Including VAT</td>
-              <td class="arl">المبلغ الإجمالي شامل ضريبة القيمة المضافة</td>
-              <td class="val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
-            </tr>
-            <tr class="words-en">
-              <td class="lbl">Amount In Words</td>
-              <td colspan="2">{{bcamountinwords}}</td>
-            </tr>
-            <tr>
-              <td class="arl" colspan="3">{{bcamountinwordsar}}</td>
-            </tr>
+        <!-- BANK DETAILS -->
+        <td style="width:41%;">
+            <table class="bank">
+              <colgroup>
+                  <col style="width:31%;">
+                  <col style="width:69%;">
+              </colgroup>
+
+              <tr>
+                  <td class="bhead" colspan="2">BANK DETAILS</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Bank Name</td>
+                  <td>{{bankdetails.name}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Account Name</td>
+                  <td>{{bankdetails.acc_name}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Branch Name</td>
+                  <td>{{bankdetails.branch_name}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Beneficiary A/c No</td>
+                  <td>{{bankdetails.acc_no}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Swift Code</td>
+                  <td>{{bankdetails.swift_no}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">IBAN No</td>
+                  <td>{{bankdetails.iban_no}}</td>
+              </tr>
           </table>
         </td>
-      </tr>
-    </table>
+
+        <td style="width:1%;"></td>
+
+        <!-- TOTALS -->
+        <td style="width:58%;">
+            <table class="totals">
+
+                <tr>
+                    <td class="lbl">Sub Total</td>
+                    <td class="arl">المبلغ الفرعي</td>
+                    <td class="val"><span style="font-size:13px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}
+                    </td>
+                </tr>
+
+                {{#if zatcadiscount.[0]}}
+
+                    {{#each zatcadiscount}}
+                    <tr>
+                        <td class="lbl">{{reason_name}}</td>
+                        <td class="arl">{{reason_name_lang2}}</td>
+                        <td class="val"><span style="font-size:13px;">{{currencySymbol ../basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide dld ../ccrate) ../bcdp}}
+                        </td>
+                    </tr>
+                    {{/each}}
+
+                    <tr>
+                        <td class="lbl">Total Amount Excluding VAT</td>
+                        <td class="arl">المبلغ الإجمالي باستثناء ضريبة القيمة المضافة</td>
+                        <td class="val"><span style="font-size:13px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}
+                        </td>
+                    </tr>
+
+                {{else}}
+
+                    {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
+
+                    <tr>
+                        <td class="lbl">Discount</td>
+                        <td class="arl">الخصم</td>
+                        <td class="val"><span style="font-size:13px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="lbl">Total Amount Excluding VAT</td>
+                        <td class="arl">المبلغ الإجمالي باستثناء ضريبة القيمة المضافة</td>
+                        <td class="val"><span style="font-size:13px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}
+                        </td>
+                    </tr>
+
+                    {{/if}}
+
+                {{/if}}
+
+                <tr>
+                    <td class="lbl">VAT</td>
+                    <td class="arl">ضريبة القيمة المضافة</td>
+                    <td class="val"><span style="font-size:13px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}
+                    </td>
+                </tr>
+
+                <tr class="due">
+                    <td class="lbl">Total Amount Including VAT</td>
+                    <td class="arl">المبلغ الإجمالي شامل ضريبة القيمة المضافة</td>
+                    <td class="val"><span style="font-size:13px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}
+                    </td>
+                </tr>
+
+                <tr class="words-en">
+                    <td class="lbl">Amount In Words</td>
+                    <td colspan="2">{{bcamountinwords}}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="3" class="arl">
+                        {{bcamountinwordsar}}
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+
+    </tr>
+</table>
 
     <!-- TERMS -->
     <div class="terms">
