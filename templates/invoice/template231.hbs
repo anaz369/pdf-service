@@ -720,7 +720,7 @@
                     </tr>
                     <tr>
                         <td class="label">Total Net Amount</td>
-                        <td class="value">{{formatCurrency MyInvoisDocument.document.total}}</td>
+                        <td class="value">{{formatCurrency (divide MyInvoisDocument.document.total MyInvoisDocument.document.ccrate)}}</td>
                     </tr>
                     {{#if (gt MyInvoisDocument.document.dld 0)}}
                     <tr>
@@ -736,7 +736,7 @@
                     {{/if}}
                     <tr class="total-row">
                         <td class="label"><strong>Total Payable Amount</strong></td>
-                        <td class="value"><strong>{{formatCurrency MyInvoisDocument.document.grand_total}}</strong></td>
+                        <td class="value"><strong>{{formatCurrency (divide MyInvoisDocument.document.grand_total MyInvoisDocument.document.ccrate)}}</strong></td>
                     </tr>
                 </table>
             </div>
