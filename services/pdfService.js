@@ -62,7 +62,7 @@ class PdfService {
    * @param {number} opacity - Opacity value (0-1)
    * @returns {Promise<Buffer>} Processed image buffer
    */
-  async getHighQualityImageBytes(imageUrl, opacity = 1.0) {
+  async getHighQualityImageBytes(imageUrl, opacity = 1.0, keepTransparency = false) {
     if (!imageUrl) return null;
 
     const cacheKey = `hq_image_${this.getUrlHash(imageUrl)}_${opacity.toFixed(2)}`;
@@ -99,23 +99,26 @@ class PdfService {
 
         console.log(`Image format: ${metadata.format}, Size: ${metadata.width}x${metadata.height}`);
 
-        // Handle PNG - convert to JPEG with white background
+        // Handle PNG
         if (metadata.format === 'png') {
-          console.log('Converting PNG to JPEG with white background');
+          if (keepTransparency) {
+            console.log('Keeping PNG transparency');
+          } else {
+            console.log('Converting PNG to JPEG with white background');
 
-          // Apply opacity if needed
-          if (opacity < 1.0) {
-            // Create a semi-transparent version
-            image = image.composite([{
-              input: Buffer.from([255, 255, 255, Math.round(255 * opacity)]),
-              raw: { width: 1, height: 1, channels: 4 },
-              tile: true,
-              blend: 'dest-in'
-            }]);
+            // Apply opacity if needed
+            if (opacity < 1.0) {
+              image = image.composite([{
+                input: Buffer.from([255, 255, 255, Math.round(255 * opacity)]),
+                raw: { width: 1, height: 1, channels: 4 },
+                tile: true,
+                blend: 'dest-in'
+              }]);
+            }
+
+            // Flatten with white background
+            image = image.flatten({ background: '#ffffff' });
           }
-
-          // Flatten with white background
-          image = image.flatten({ background: '#ffffff' });
         } else if (opacity < 1.0) {
           // For JPEG, reduce brightness to simulate opacity
           image = image.modulate({ brightness: opacity });
@@ -138,10 +141,10 @@ class PdfService {
           console.log(`Resized to ${newWidth}x${newHeight}`);
         }
 
-        // Convert to JPEG with high quality
-        processedBuffer = await image
-          .jpeg({ quality: 95, mozjpeg: true })
-          .toBuffer();
+        // Convert to JPEG (or keep as PNG if transparency required)
+        processedBuffer = await (keepTransparency && metadata.format === 'png'
+          ? image.png().toBuffer()
+          : image.jpeg({ quality: 95, mozjpeg: true }).toBuffer());
 
         // Cache the processed image
         this.cache.set(cacheKey, processedBuffer);

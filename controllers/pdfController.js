@@ -113,7 +113,7 @@ class PdfController {
       ) {
         preprocessingTasks.push(
           pdfService
-            .getHighQualityImageBytes(pdfRequest.MyInvoisDocument.supplier.seal)
+            .getHighQualityImageBytes(pdfRequest.MyInvoisDocument.supplier.seal, 1.0, true)
             .then((imgBuffer) => {
               if (imgBuffer) {
                 pdfRequest.MyInvoisDocument.supplier.seal = `data:image/png;base64,${imgBuffer.toString("base64")}`;
@@ -134,7 +134,7 @@ class PdfController {
       ) {
         preprocessingTasks.push(
           pdfService
-            .getHighQualityImageBytes(pdfRequest.MyInvoisDocument.supplier.signature)
+            .getHighQualityImageBytes(pdfRequest.MyInvoisDocument.supplier.signature, 1.0, true)
             .then((imgBuffer) => {
               if (imgBuffer) {
                 pdfRequest.MyInvoisDocument.supplier.signature = `data:image/png;base64,${imgBuffer.toString("base64")}`;
