@@ -1,0 +1,502 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>INVOICE - {{basicdetails.[0].inv_no}}</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "IBM Plex Sans Arabic", Arial, sans-serif;
+        font-size: 9px;
+        line-height: 1.3;
+        color: #000;
+        margin: 0 4mm;
+      }
+
+      .ar {
+        direction: rtl;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed;
+      }
+
+      /* ── TITLE ────────────────────────────────────── */
+      .doc-title {
+        text-align: center;
+        font-size: 15px;
+        font-weight: 800;
+        color: #344766;
+        margin-bottom: 6px;
+      }
+
+      /* TOP SECTION */
+      .top-wrap {
+          width: 100%;
+          border-collapse: collapse;
+          table-layout: fixed;
+      }
+
+      .top-wrap > tbody > tr {
+          height: 105px;
+      }
+
+      .top-wrap > tbody > tr > td {
+          vertical-align: top;
+      }
+
+      /* CUSTOMER */
+      .cust {
+          width: 100%;
+          border-collapse: collapse;
+          border: 1px solid #000;
+      }
+
+      .cust td {
+          font-size: 9px;
+          padding: 7px 6px;
+          vertical-align: top;
+      }
+
+      .cust .chead {
+          font-weight: bold;
+          border-bottom: 1px solid #000;
+          background: #fff;
+      }
+
+      /* INVOICE INFO */
+      .info {
+          width: 100%;
+          border-collapse: collapse;
+          border: 1px solid #000;
+      }
+
+      .info td {
+          font-size: 9px;
+          padding: 7px 6px;
+          border: 1px solid #000;
+          vertical-align: middle;
+      }
+
+      .info .lbl {
+          width: 40%;
+          font-weight: bold;
+      }
+
+      /* QR */
+      .qr-cell {
+          border: 1px solid #000;
+          text-align: center;
+          vertical-align: middle !important;
+      }
+
+      .qr-cell img {
+          width: 100px;
+          height: 100px;
+          display: block;
+          margin: 6px auto;
+      }
+
+      /* ── SHIPMENT BANDS ───────────────────────────── */
+      .ship {
+        margin-top: 6px;
+      }
+      .ship th,
+      .ship td {
+        font-size: 9px;
+        border: 1px solid #000;
+        padding: 3px 4px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 1.2;
+      }
+
+      /* ── ITEMS TABLE ──────────────────────────────── */
+      .items-table {
+        margin-top: 6px;
+      }
+      .items-table th,
+      .items-table td {
+        font-size: 9px;
+        border: 1px solid #000;
+        padding: 4px 5px;
+        vertical-align: top;
+      }
+      .items-table thead th {
+        text-align: center;
+        line-height: 1.2;
+      }
+      .items-table thead th .ar {
+        display: block;
+        direction: rtl;
+        font-size: 8px;
+      }
+      .items-table td.num {
+        text-align: center;
+      }
+      .items-table td.right {
+        text-align: right;
+      }
+
+      /* ── BANK + TOTALS ────────────────────────────── */
+      .bt-wrap {
+        margin-top: 6px;
+      }
+      .bt-wrap > tbody > tr > td {
+        vertical-align: top;
+        border: none;
+        padding: 0;
+      }
+      .bank th,
+      .bank td {
+        font-size: 9px;
+        border: 1px solid #000;
+        padding: 4px 6px;
+        vertical-align: middle;
+      }
+      .bank .bhead {
+        font-weight: 700;
+        text-align: center;
+      }
+      .bank td.lbl {
+        font-weight: 600;
+        width: 15%;
+      }
+      .bank td.arl {
+        width: 85%;
+      }
+      .totals td {
+        font-size: 9px;
+        border: 1px solid #000;
+        padding: 4px 6px;
+        vertical-align: middle;
+      }
+      .totals td.lbl {
+        font-weight: 600;
+        width: 32%;
+      }
+      .totals td.arl {
+        text-align: right;
+        direction: rtl;
+        width: 47%;
+      }
+      .totals td.val {
+        text-align: right;
+        width: 21%;
+      }
+      .totals .due td {
+        font-weight: 700;
+      }
+      .totals .words-en td {
+        font-weight: 600;
+      }
+
+      /* ── SIGN + TERMS ─────────────────────────────── */
+      .sign-table {
+        margin-top: 6px;
+      }
+      .sign-table td {
+        font-size: 9px;
+        border: 1px solid #000;
+        width: 25%;
+        vertical-align: top;
+        padding: 4px 6px;
+      }
+      .sign-table .s-head {
+        text-align: center;
+        border-bottom: none;
+      }
+      .sign-table .s-head .ar {
+        display: block;
+        direction: rtl;
+      }
+      .sign-table .s-body {
+        text-align: center;
+        height: 60px;
+      }
+      .sign-table .s-body img {
+        max-height: 55px;
+        max-width: 120px;
+      }
+
+      .terms {
+        margin-top: 6px;
+        border: 1px solid #000;
+        padding: 4px 6px;
+      }
+      .terms .thead {
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+      .terms .thead .ar {
+        direction: rtl;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- TITLE -->
+    <div class="doc-title">TAX INVOICE / <span class="ar">فاتورة ضريبية</span></div>
+
+    <!-- TOP : CUSTOMER | INFO | QR -->
+    <table class="top-wrap" cellpadding="0" cellspacing="0">
+      <tr>
+          <!-- CUSTOMER -->
+          <td style="width:42%;">
+              <table class="cust">
+                  <tr>
+                      <td class="chead">Customer</td>
+                  </tr>
+                  <tr>
+                      <td>{{billing_address.[0].name}}</td>
+                  </tr>
+                  <tr>
+                      <td>
+                          {{billing_address.[0].address_line1}}
+                          {{billing_address.[0].address_line2}}
+                          {{billing_address.[0].address_line4}}
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          {{billing_address.[0].address_line3}}
+                          {{billing_address.[0].address_line5}}
+                      </td>
+                  </tr>
+              </table>
+          </td>
+
+          <!-- INVOICE DETAILS -->
+          <td style="width:36%;padding: 0 2px;">
+              <table class="info">
+                  <tr>
+                      <td class="lbl" style="border: 1px solid #000;border-right:none;">Invoice No</td>
+                      <td style="border: 1px solid #000;border-left:none;">: {{basicdetails.[0].inv_no}}</td>
+                  </tr>
+                  <tr>
+                      <td class="lbl" style="border: 1px solid #000;border-right:none;">Invoice Date</td>
+                      <td style="border: 1px solid #000;border-left:none;">: {{basicdetails.[0].inv_date}}</td>
+                  </tr>
+                  <tr>
+                      <td class="lbl" style="border: 1px solid #000;border-right:none;">Reference No</td>
+                      <td style="border: 1px solid #000;border-left:none;">: {{basicdetails.[0].reference_no}}</td>
+                  </tr>
+                  <tr>
+                      <td class="lbl" style="border: 1px solid #000;border-right:none;">PO No</td>
+                      <td style="border: 1px solid #000;border-left:none;">: {{basicdetails.[0].order_no}}</td>
+                  </tr>
+              </table>
+          </td>
+
+          <!-- QR -->
+          <td class="qr-cell" style="width:22%;padding: 0 2px;">
+              {{{qrDataUri qrCodeBase64}}}
+          </td>
+      </tr>
+  </table>
+
+    <!-- SHIPMENT BAND A -->
+    <table class="ship">
+      <thead>
+        <tr>
+          <th>Job No</th>
+          {{#ifFlag datasettings "d228"}}<th>POL</th>{{/ifFlag}}
+          {{#ifFlag datasettings "d229"}}<th>POD</th>{{/ifFlag}}
+          <th>HBL / HAWB</th>
+          <th>MBL / MAWB</th>
+          {{#ifFlag datasettings "d230"}}<th>ETA</th>{{/ifFlag}}
+          {{#ifFlag datasettings "d231"}}<th>ETD</th>{{/ifFlag}}
+          <th>Weight</th>
+          <th>Volume/Measure<br>ment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{basicdetails.[0].logisticsjobno}}</td>
+          {{#ifFlag datasettings "d228"}}<td>{{basicdetails.[0].port_of_loading}}</td>{{/ifFlag}}
+          {{#ifFlag datasettings "d229"}}<td>{{basicdetails.[0].port_of_delivery}}</td>{{/ifFlag}}
+          <td>{{basicdetails.[0].hbl_no}}</td>
+          <td>{{basicdetails.[0].mbl_no}}</td>
+          {{#ifFlag datasettings "d230"}}<td>{{basicdetails.[0].eta_date}}</td>{{/ifFlag}}
+          {{#ifFlag datasettings "d231"}}<td>{{basicdetails.[0].etd_date}}</td>{{/ifFlag}}
+          <td>{{basicdetails.[0].chargeable_weight}}</td>
+          <td>{{basicdetails.[0].diamension}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- SHIPMENT BAND B -->
+    <table class="ship" style="border-top:none;">
+      <thead>
+        <tr>
+          {{#ifFlag datasettings "d257"}}<th>Consignee Name</th>{{/ifFlag}}
+          <th>Shipper/ Supplier/ Exporter Name</th>
+          {{#ifFlag datasettings "d239"}}<th>Container Size</th>{{/ifFlag}}
+          {{#ifFlag datasettings "d240"}}<th>Cargo Details</th>{{/ifFlag}}
+          {{#ifFlag datasettings "d241"}}<th>Shipment/ Service Type</th>{{/ifFlag}}
+          {{#ifFlag datasettings "d242"}}<th>No of pieces</th>{{/ifFlag}}
+          {{#ifFlag datasettings "d243"}}<th>Gross Weight</th>{{/ifFlag}}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {{#ifFlag datasettings "d257"}}<td>{{basicdetails.[0].consignee_name}}</td>{{/ifFlag}}
+          <td>{{basicdetails.[0].shipper_name}}</td>
+          {{#ifFlag datasettings "d239"}}<td>{{basicdetails.[0].container_size}}</td>{{/ifFlag}}
+          {{#ifFlag datasettings "d240"}}<td>{{basicdetails.[0].cargo_details}}</td>{{/ifFlag}}
+          {{#ifFlag datasettings "d241"}}<td></td>{{/ifFlag}}
+          {{#ifFlag datasettings "d242"}}<td>{{basicdetails.[0].no_pcs}}</td>{{/ifFlag}}
+          {{#ifFlag datasettings "d243"}}<td>{{basicdetails.[0].gross_weight}}</td>{{/ifFlag}}
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ITEMS TABLE -->
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width:6%">Item<span class="ar">غرض</span></th>
+          <th style="width:48%">Description<span class="ar">الوصف</span></th>
+          <th style="width:10%">Quantity<span class="ar">الكمية</span></th>
+          <th style="width:10%">Unit Price<span class="ar">سعر الوحدة</span></th>
+          <th style="width:11%">Tax Amount<span class="ar">قيمة الضريبة</span></th>
+          <th style="width:15%">Total Amount<span class="ar">المبلغ الإجمالي</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each itemdetails}}
+        <tr>
+          <td class="num">{{addOne @index}}</td>
+          <td>{{item_name}}{{name_lang2}}{{description}}</td>
+          <td class="num">{{formatAmount quantity ../bcdp}}</td>
+          <td class="right">{{formatAmount price ../bcdp}}</td>
+          <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
+          <td class="right">{{formatAmount amount ../bcdp}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <!-- BANK + TOTALS -->
+    <table class="bt-wrap">
+      <tr>
+        <td style="width:41%">
+          <table class="bank">
+            <tr><td class="bhead" colspan="2">BANK DETAILS</td></tr>
+            <tr>
+              <td class="lbl">Bank Name</td>
+              <td class="arl">{{bankdetails.name}}</td>
+            </tr>
+            <tr>
+              <td class="lbl">Account Name</td>
+              <td class="arl">{{bankdetails.acc_name}}</td>
+            </tr>
+            <tr>
+              <td class="lbl">Branch Name</td>
+              <td class="arl">{{bankdetails.branch_name}}</td>
+            </tr>
+            <tr>
+              <td class="lbl">Beneficiary A/c No</td>
+              <td class="arl">{{bankdetails.acc_no}}</td>
+            </tr>
+            <tr>
+              <td class="lbl">Swift Code</td>
+              <td class="arl">{{bankdetails.swift_no}}</td>
+            </tr>
+            <tr>
+              <td class="lbl">IBAN No</td>
+              <td class="arl">{{bankdetails.iban_no}}</td>
+            </tr>
+          </table>
+        </td>
+        <td style="width:1%"></td>
+        <td style="width:58%">
+          <table class="totals">
+            <tr>
+              <td class="lbl">Sub Total</td>
+              <td class="arl">المبلغ الفرعي</td>
+              <td class="val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+            </tr>
+            {{#if zatcadiscount.[0]}}
+              {{#each zatcadiscount}}
+                  <tr>
+                      <td class="lbl">{{reason_name}}</td>
+                      <td class="arl">{{reason_name_lang2}}</td>
+                      <td class="val">{{formatAmount (divide dld ../ccrate) bcdp}}</td>
+                    </tr>
+              {{/each}}
+                <tr>
+                  <td class="lbl">Total Amount Excluding VAT</td>
+                  <td class="arl">المبلغ الإجمالي باستثناء ضريبة القيمة المضافة</td>
+                  <td class="val">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td>
+                </tr>
+              {{else}}
+
+              {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
+                <tr>
+                  <td class="lbl">Discount</td>
+                  <td class="arl">الخصم</td>
+                  <td class="val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+                </tr>
+                <tr>
+                  <td class="lbl">Total Amount Excluding VAT</td>
+                  <td class="arl">المبلغ الإجمالي باستثناء ضريبة القيمة المضافة</td>
+                  <td class="val">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
+                </tr>
+              {{/if}}
+          {{/if}}
+            <tr>
+              <td class="lbl">VAT</td>
+              <td class="arl">ضريبة القيمة المضافة</td>
+              <td class="val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+            </tr>
+            <tr class="due">
+              <td class="lbl">Total Amount Including VAT</td>
+              <td class="arl">المبلغ الإجمالي شامل ضريبة القيمة المضافة</td>
+              <td class="val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+            </tr>
+            <tr class="words-en">
+              <td class="lbl">Amount In Words</td>
+              <td colspan="2">{{bcamountinwords}}</td>
+            </tr>
+            <tr>
+              <td class="arl" colspan="3">{{bcamountinwordsar}}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- TERMS -->
+    <div class="terms">
+      <div class="thead">Terms And Conditions / <span class="ar">الأحكام والشروط</span></div>
+      <div>{{basicdetails.[0].terms_and_condition}}</div>
+    </div>
+
+    <!-- SIGNATURES -->
+    <table class="sign-table">
+      <tr>
+        <td class="s-head">Company Stamp<span class="ar">ختم الشركة</span></td>
+        <td class="s-head">Prepared By<span class="ar">أعدت بواسطة</span></td>
+        <td class="s-head">Authorized Signature<span class="ar">توقيع معتمد</span></td>
+        <td class="s-head">Received By<span class="ar">استلمت من قبل</span></td>
+      </tr>
+      <tr>
+        <td class="s-body">{{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}</td>
+        <td class="s-body">{{basicdetails.[0].created_user}}</td>
+        <td class="s-body">{{#if Signature}}<img src="{{Signature}}" alt="Signature" style="text-align:right;max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}</td>
+        <td class="s-body"></td>
+      </tr>
+    </table>
+
+  </body>
+</html>
