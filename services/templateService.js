@@ -248,7 +248,13 @@ class TemplateService {
       "or",
       (a, b) => a || b
     );
+    Handlebars.registerHelper("tripCount", (arr) => {
+      if (!Array.isArray(arr)) return 0;
 
+      return arr.filter(
+        item => String(item.unit || "").trim().toLowerCase() === "trip"
+      ).length;
+    });
     // ── Array / misc helpers ───────────────────────────────
     Handlebars.registerHelper("length", (arr) => (arr ? arr.length : 0));
     Handlebars.registerHelper("inc", (val) => parseInt(val) + 1);
