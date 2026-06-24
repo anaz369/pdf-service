@@ -11,7 +11,7 @@
             size: A4;
             margin-top: 140px;
             margin-bottom: 40px;
-            margin-left: 10px;
+            margin-left: 10px; 
 
             margin-right: 10px;
         }
@@ -599,12 +599,12 @@
                         </td>
                         <td class="amount">{{formatCurrency quantity}}</td>
                         <td class="number">{{default unit_code 'EA'}}</td>
-                        <td class="amount">{{formatCurrency (multiply price ../MyInvoisDocument.document.ccrate)}}</td>
-                        <td class="amount">{{formatCurrency (multiply (multiply price quantity) ../MyInvoisDocument.document.ccrate)}}</td>
-                        <td class="amount">{{formatCurrency (multiply disc_amt ../MyInvoisDocument.document.ccrate)}}</td>
-                        <td class="amount">{{formatCurrency (multiply charge_amt ../MyInvoisDocument.document.ccrate)}}</td>
-                        <td class="amount">{{formatCurrency (multiply taxable ../MyInvoisDocument.document.ccrate)}}</td>
-                        <td class="amount">{{formatCurrency (multiply vat_amt ../MyInvoisDocument.document.ccrate)}}</td>
+                        <td class="amount">{{formatCurrency price}}</td>
+                        <td class="amount">{{formatCurrency (multiply price quantity)}}</td>
+                        <td class="amount">{{formatCurrency disc_amt}}</td>
+                        <td class="amount">{{formatCurrency charge_amt}}</td>
+                        <td class="amount">{{formatCurrency taxable}}</td>
+                        <td class="amount">{{formatCurrency vat_amt}}</td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -626,7 +626,7 @@
                     </tr>
                     <tr>
                         <td class="number">1</td>
-                        <td class="amount">{{formatCurrency (multiply disc_amt ../MyInvoisDocument.document.ccrate)}}</td>
+                        <td class="amount">{{formatCurrency disc_amt}}</td>
                         <td class="amount">{{disc_perc}}% | --</td>
                         <td>--</td>
                     </tr>
@@ -648,7 +648,7 @@
                     </tr>
                     <tr>
                         <td class="number">1</td>
-                        <td class="amount">{{formatCurrency (multiply charge_amt ../MyInvoisDocument.document.ccrate)}}</td>
+                        <td class="amount">{{formatCurrency charge_amt}}</td>
                         <td class="amount">{{charge_perc}}% | --</td>
                         <td>--</td>
                     </tr>
@@ -678,7 +678,7 @@
                         <td class="amount">0.00</td>
                         <td class="amount">0.00</td>
                         <td class="amount">{{rate}}%</td>
-                        <td class="amount">{{formatCurrency (multiply tax_amt ../../MyInvoisDocument.document.ccrate)}}</td>
+                        <td class="amount">{{formatCurrency tax_amt}}</td>
                     </tr>
                     {{/each}}
                 </table>
@@ -716,27 +716,27 @@
                 <table class="summary-table">
                     <tr>
                         <td class="label">Total Tax Amount</td>
-                        <td class="value">{{formatCurrency (multiply MyInvoisDocument.document.vat MyInvoisDocument.document.ccrate)}}</td>
+                        <td class="value">{{formatCurrency MyInvoisDocument.document.vat}}</td>
                     </tr>
                     <tr>
                         <td class="label">Total Net Amount</td>
-                        <td class="value">{{formatCurrency (multiply MyInvoisDocument.document.total MyInvoisDocument.document.ccrate)}}</td>
+                        <td class="value">{{formatCurrency MyInvoisDocument.document.total}}</td>
                     </tr>
                     {{#if (gt MyInvoisDocument.document.dld 0)}}
                     <tr>
                         <td class="label">{{MyInvoisDocument.document_info.type_display}} Additional Discount Amount (DLD)</td>
-                        <td class="value">{{formatCurrency (multiply MyInvoisDocument.document.dld MyInvoisDocument.document.ccrate)}}</td>
+                        <td class="value">{{formatCurrency MyInvoisDocument.document.dld}}</td>
                     </tr>
                     {{/if}}
                     {{#if (gt MyInvoisDocument.document.dlc 0)}}
                     <tr>
                         <td class="label">{{MyInvoisDocument.document_info.type_display}} Additional Fee / Charge Amount (DLC)</td>
-                        <td class="value">{{formatCurrency (multiply MyInvoisDocument.document.dlc MyInvoisDocument.document.ccrate)}}</td>
+                        <td class="value">{{formatCurrency MyInvoisDocument.document.dlc}}</td>
                     </tr>
                     {{/if}}
                     <tr class="total-row">
                         <td class="label"><strong>Total Payable Amount</strong></td>
-                        <td class="value"><strong>{{formatCurrency (multiply MyInvoisDocument.document.grand_total MyInvoisDocument.document.ccrate)}}</strong></td>
+                        <td class="value"><strong>{{formatCurrency MyInvoisDocument.document.grand_total}}</strong></td>
                     </tr>
                 </table>
             </div>
@@ -754,8 +754,8 @@
                         <th>Description</th>
                     </tr>
                     <tr>
-                        <td>{{formatCurrency (multiply MyInvoisDocument.document.discount_rate MyInvoisDocument.document.ccrate)}}</td>
-                        <td>{{formatCurrency (multiply MyInvoisDocument.document.dld MyInvoisDocument.document.ccrate)}}</td>
+                        <td>{{formatCurrency MyInvoisDocument.document.discount_rate}}</td>
+                        <td>{{formatCurrency MyInvoisDocument.document.dld}}</td>
                         <td>{{default MyInvoisDocument.doc_details.discount_description '----'}}</td>
                     </tr>
                 </table>
@@ -775,8 +775,8 @@
                         <th>Description</th>
                     </tr>
                     <tr>
-                        <td>{{formatCurrency (multiply MyInvoisDocument.document.fee_rate MyInvoisDocument.document.ccrate)}}</td>
-                        <td>{{formatCurrency (multiply MyInvoisDocument.document.dlc MyInvoisDocument.document.ccrate)}}</td>
+                        <td>{{formatCurrency MyInvoisDocument.document.fee_rate}}</td>
+                        <td>{{formatCurrency MyInvoisDocument.document.dlc}}</td>
                         <td>{{default MyInvoisDocument.doc_details.fee_description '----'}}</td>
                     </tr>
                 </table>
