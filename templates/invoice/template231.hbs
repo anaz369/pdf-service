@@ -179,11 +179,15 @@
             line-height: 1.3;
         }
 
-        .invoice-title {
-            font-size: 11pt;
+        .document-title {
+            text-align: center;
+            font-size: 16pt;
             font-weight: bold;
-            margin-bottom: 6px;
-            color: {{default MyInvoisDocument.document_info.color_code '#2563eb'}};
+            letter-spacing: 2px;
+            color: #444;
+            padding: 6px 0 8px 0;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
         }
 
         .qr-code {
@@ -450,6 +454,9 @@
 </head>
 <body>
     <div class="page1">
+        <!-- Document Title -->
+        <div class="document-title">{{upper MyInvoisDocument.document_info.type_display}}</div>
+
         <!-- Header Section -->
        
         <div class="header">
@@ -549,7 +556,6 @@
 
             <!-- Invoice Box -->
             <div class="party-box invoice-box">
-                <div class="invoice-title">{{MyInvoisDocument.document_info.type_display}} {{default MyInvoisDocument.document_info.version 'v1.1'}}</div>
                 <div class="qr-code">
                     {{#if MyInvoisDocument.myinvois.qr_code}}
                     <img src="{{MyInvoisDocument.myinvois.qr_code}}" alt="QR Code" />
