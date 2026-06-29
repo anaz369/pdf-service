@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <title>Tax Invoice - {{basicdetails.[0].inv_no}}</title>
+  <title>Invoice - {{basicdetails.[0].inv_no}}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -11,13 +11,9 @@
       font-size: 11px;
       color: #000;
       background: #fff;
+      margin: 0 8mm;
     }
 
-    .page {
-      width: 750px;
-      margin: 0 auto;
-      padding: 16px;
-    }
 
     /* ════════════════════════════════════════════
        ROUNDED BOX — used for every section
@@ -29,7 +25,6 @@
       margin-bottom: 10px;
       width: 100%;
     }
-
     /* ════════════════════════════════════════════
        BLOCK 1 — VENDOR | CUSTOMER
        Two cols side by side, divider in middle
@@ -156,7 +151,6 @@
       text-align: center;
     }
     .items-table td {
-      {{!-- border: 1px solid #aaa; --}}
       padding: 2px 4px;
       font-size: 11px;
       vertical-align: middle;
@@ -279,23 +273,39 @@
     /* ════════════════════════════════════════════
        BLOCK 7 — SIGNATURES
     ════════════════════════════════════════════ */
-    .b7-wrap { display: flex; width: 100%; }
-    .b7-issued {
-      flex: 0 0 50%;
-      text-align: center;
-      min-height: 90px;
-      padding: 8px;
-      border-right: 1px solid #888;
+    .keep-together{
+    page-break-inside: avoid;
+    break-inside: avoid;
     }
-    .b7-received {
-      flex: 0 0 50%;
-      text-align: center;
-      min-height: 90px;
-      padding: 8px;
+
+    .b7-table{
+        width:100%;
+        border-collapse:collapse;
+        table-layout:fixed;
     }
-    .sig-lbl  { font-size: 11px; margin-bottom: 5px; }
-    .sig-img  { max-height: 60px; margin-top: 4px; }
-    .seal-img { max-height: 60px; margin-top: 4px; }
+
+    .b7-table td{
+        width:50%;
+        padding:10px;
+        text-align:center;
+        vertical-align:top;
+        height:130px;
+    }
+
+    .b7-table td:first-child{
+        border-right:1px solid #888;
+    }
+
+    .sig-lbl{
+        font-size:11px;
+        margin-bottom:8px;
+    }
+
+    .sig-img,
+    .seal-img{
+        display:block;
+        margin:6px auto;  
+    }
   </style>
 </head>
 <body>
@@ -443,7 +453,7 @@
        BLOCK 4 — BANK (left box) | TOTALS (right box)
        Both in same row, each their own rounded box
   ══════════════════════════════════════════════ --}}
-  <div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;">
+  <div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start; page-break-inside:avoid; break-inside:avoid;">
 
     {{!-- BANK BOX --}}
     <div class="rbox" style="flex:0 0 42%; margin-bottom:0;">
@@ -476,37 +486,61 @@
             <td class="tot-td-right">
               <div class="tot-right-inner">
                 <span class="ar-lbl">المجموع الكلي</span>
-                <span class="amt">{{formatAmount (add basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</span>
+                <span class="amt">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</span>
               </div>
             </td>
           </tr>
-{{#if (gt basicdetails.[0].discount 0)}}
-          <tr>
-            <td class="tot-td-en">Discount</td>
-            <td class="tot-td-right">
-              <div class="tot-right-inner">
-                <span class="ar-lbl">خصومات</span>
-                <span class="amt">{{formatAmount basicdetails.[0].discount bcdp}}</span>
-              </div>
-            </td>
-          </tr>
- {{/if}}
-          <tr>
-            <td class="tot-td-en multiline">Total Taxable Amount (Excl. VAT)</td>
-            <td class="tot-td-right">
-              <div class="tot-right-inner">
-                <span class="ar-lbl">الإجمالي الواضع للضريبة</span>
-                <span class="amt">{{formatAmount basicdetails.[0].subtotal bcdp}}</span>
-              </div>
-            </td>
-          </tr>
+          {{#if zatcadiscount.[0]}}
+            {{#each zatcadiscount}}
+              <tr>
+                <td class="tot-td-en">{{reason_name}}</td>
+                <td class="tot-td-right">
+                  <div class="tot-right-inner">
+                    <span class="ar-lbl">{{reason_name_lang2}}</span>
+                    <span class="amt">{{formatAmount (divide dld ../ccrate) bcdp}}</span>
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+            <tr>
+                <td class="tot-td-en multiline">Total Taxable Amount (Excl. VAT)</td>
+                <td class="tot-td-right">
+                  <div class="tot-right-inner">
+                    <span class="ar-lbl">الإجمالي الواضع للضريبة</span>
+                    <span class="amt">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</span>
+                  </div>
+                </td>
+              </tr>
+            {{else}}
+
+              {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
+              <tr>
+                <td class="tot-td-en">Discount</td>
+                <td class="tot-td-right">
+                  <div class="tot-right-inner">
+                    <span class="ar-lbl">خصومات</span>
+                    <span class="amt">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="tot-td-en multiline">Total Taxable Amount (Excl. VAT)</td>
+                <td class="tot-td-right">
+                  <div class="tot-right-inner">
+                    <span class="ar-lbl">الإجمالي الواضع للضريبة</span>
+                    <span class="amt">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</span>
+                  </div>
+                </td>
+              </tr>
+              {{/if}}
+          {{/if}}
 
           <tr>
             <td class="tot-td-en">Total VAT</td>
             <td class="tot-td-right">
               <div class="tot-right-inner">
                 <span class="ar-lbl">مجموع ضريبة القيمة المضافة</span>
-                <span class="amt">{{formatAmount basicdetails.[0].vatamt bcdp}}</span>
+                <span class="amt">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</span>
               </div>
             </td>
           </tr>
@@ -516,7 +550,7 @@
             <td class="tot-td-right">
               <div class="tot-right-inner">
                 <span class="ar-lbl">جمالي المبلغ المستحق</span>
-                <span class="amt">{{formatAmount basicdetails.[0].grand_total bcdp}}</span>
+                <span class="amt">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</span>
               </div>
             </td>
           </tr>
@@ -526,7 +560,7 @@
             <td class="tot-td-right">
               <div class="tot-right-inner">
                 <span class="ar-lbl">تم الاستلام</span>
-                <span class="amt">{{formatAmount basicdetails.[0].received bcdp}}</span>
+                <span class="amt">{{formatAmount (divide basicdetails.[0].received ccrate) bcdp}}</span>
               </div>
             </td>
           </tr>
@@ -536,7 +570,7 @@
             <td class="tot-td-right">
               <div class="tot-right-inner">
                 <span class="ar-lbl">الرصيد</span>
-                <span class="amt">{{formatAmount basicdetails.[0].balance bcdp}}</span>
+                <span class="amt">{{formatAmount (divide basicdetails.[0].balance ccrate) bcdp}}</span>
               </div>
             </td>
           </tr>
@@ -569,8 +603,8 @@
     <div class="b6-pad">
       <span class="b6-title">Terms And Conditions/</span>
       <span style="font-weight:bold; direction:rtl; font-size:11px;"> والشروط الأحكام</span>
-      {{#if invterms}}
-      <div style="margin-top:3px; font-size:11px;">{{invterms}}</div>
+      {{#if basicdetails.[0].terms_and_condition}}
+      <div style="margin-top:3px; font-size:11px;">{{basicdetails.[0].terms_and_condition}}</div>
       {{/if}}
     </div>
   </div>
@@ -578,23 +612,24 @@
   {{!-- ══════════════════════════════════════════════
        BLOCK 7 — ISSUED BY | RECEIVED BY  (rounded box)
   ══════════════════════════════════════════════ --}}
-  <div class="rbox">
-    <div class="b7-wrap">
-      <div class="b7-issued">
-        <div class="sig-lbl">Issued By</div>
-        {{#if Seal}}
-          <img src="{{Seal}}" class="seal-img" alt="Seal">
-        {{/if}}
-        {{#if Signature}}
-          <img src="{{Signature}}" class="sig-img"  alt="Signature">
-        {{/if}}
-      </div>
-      <div class="b7-received">
-        <div class="sig-lbl">Received By</div>
-      </div>
-    </div>
-  </div>
-
+  <div class="rbox keep-together">
+    <table class="b7-table">
+      <tr>
+        <td>
+          <div class="sig-lbl">Issued By</div>
+          {{#if Seal}}
+            <img class="seal-img" src="{{Seal}}" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '120'}}px;" onerror="this.style.display='none'">
+          {{/if}}
+          {{#if Signature}}
+            <img class="sig-img"  src="{{Signature}}" style="max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '120'}}px;" onerror="this.style.display='none'">
+          {{/if}}
+        </td> 
+        <td>
+          <div class="sig-lbl">Received By</div>
+        </td>
+      </tr>
+    </table>
+  </div>        
 </div>
 </body>
 </html>
