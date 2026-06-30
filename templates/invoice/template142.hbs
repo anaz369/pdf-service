@@ -599,15 +599,15 @@
   {{!-- ══════════════════════════════════════════════
        BLOCK 6 — TERMS  (rounded box)
   ══════════════════════════════════════════════ --}}
+  {{#if basicdetails.[0].terms_and_condition}}
   <div class="rbox" style="margin-bottom:5px;">
     <div class="b6-pad">
       <span class="b6-title">Terms And Conditions/</span>
       <span style="font-weight:bold; direction:rtl; font-size:11px;"> والشروط الأحكام</span>
-      {{#if basicdetails.[0].terms_and_condition}}
       <div style="margin-top:3px; font-size:11px;">{{basicdetails.[0].terms_and_condition}}</div>
-      {{/if}}
     </div>
   </div>
+  {{/if}}
 
   {{!-- ══════════════════════════════════════════════
        BLOCK 7 — ISSUED BY | RECEIVED BY  (rounded box)
