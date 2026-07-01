@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INVOICE - {{basicdetails.[0].inv_no}}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #000;
+    background: #fff;
+    line-height: 1.4;
+    margin: 0 6mm;
+  }
+  .page { width: 100%; padding-top: 6px; }
+
+  table { border-collapse: collapse; width: 100%; }
+
+  /* ── Title ─────────────────────────────────── */
+  .doc-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 4px 0 10px;
+  }
+  .doc-title .t-ar  { color: #33666d; }
+  .doc-title .t-en  { color: #33666d; }
+  .doc-title .t-sep { color: #33666d; }
+
+  /* ── Details grid ──────────────────────────── */
+  .details { table-layout: fixed; }
+  .details td {
+    border: 1px solid #000;
+    padding: 4px 6px;
+    vertical-align: middle;
+    font-size: 9.5px;
+  }
+  .details .lbl    { background: #e9bfa7; text-align: center;}
+  .details .lbl-ar { background: #e9bfa7;direction: rtl; text-align: center; }
+  .details .val    { text-align: center; background: #ffffff; }
+  .details .val-l  { text-align: center; }
+
+  /* ── Items table ───────────────────────────── */
+  .items { table-layout: fixed; margin-top: 8px; }
+  .items th, .items td { border: 1px solid #000; padding: 3px 4px; }
+  .items thead .r-ar th { background: #6b9da8; direction: rtl; font-weight: bold; text-align: center; font-size: 9px; }
+  .items thead .r-en th { background: #6b9da8; font-weight: bold; text-align: center; font-size: 9px; }
+  .items thead th.idx { background: #6b9da8; vertical-align: middle; }
+  .items tbody td { text-align: center; font-size: 9px; vertical-align: middle; }
+  .items tbody td.r { text-align: center; }
+  .items .desc .sub { color: #444; font-size: 8.5px; }
+
+  /* ── Totals ────────────────────────────────── */
+  .totals { table-layout: fixed; margin-top: 8px; }
+  .totals td { border: 1px solid #000; padding: 5px 8px; font-size: 11px; }
+  .totals .t-lbl    { background: #7da9b6; font-weight: bold; width: 27.5%; }
+  .totals .t-lbl-ar { background: #7da9b6; font-weight: bold; direction: rtl; text-align: right; width: 27.5%; }
+  .totals .t-val    { text-align: right; width: 20%; font-weight: bold; }
+
+  /* ── Amount in words ───────────────────────── */
+  .words {
+    padding: 6px 8px;
+    font-size: 11px;
+    text-align: center;
+  }
+  /* ── Bottom : Bank + QR ────────────────────── */
+  .bottom{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:8px;
+}
+
+.bank{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+}
+
+.bank td{
+    border:1px solid #000;
+    padding:8px;
+    font-size:10px;
+    vertical-align:middle;
+}
+
+.bank .hd{
+    background:#6b9da8;
+    font-weight:bold;
+    text-align:center;
+    font-size:12px;
+}
+
+.bank .lbl{
+    background:#e0b7a2;
+    font-weight:bold;
+}
+
+.bank .lbl-ar{
+    background:#e0b7a2;
+    font-weight:bold;
+    direction:rtl;
+    text-align:right;
+}
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  {{!-- ══ TITLE ══ --}}
+  <div class="doc-title"><span class="t-en">TAX INVOICE</span><span class="t-sep">/</span><span class="t-ar">فاتورة ضريبية</span>
+  </div>
+
+  {{!-- ══ DETAILS GRID ══ --}}
+  <table class="details">
+    <colgroup>
+      <col style="width:15%">
+      <col style="width:23%">
+      <col style="width:15%">
+      <col style="width:1%">
+      <col style="width:15%">
+      <col style="width:19%">
+      <col style="width:15%">
+    </colgroup>
+    <tr>
+      <td class="lbl">Customer Name</td>
+      <td class="val">{{billing_address.[0].name}}{{#if billing_address_lang2.[0].name}}<br>{{billing_address_lang2.[0].name}}{{/if}}</td>
+      <td class="lbl-ar">اسم العميل</td>
+      <td style="width: 1%; background-color: #ffffff; border-top: none; border-bottom: none;border-right: 1px solid black;"></td>
+      <td class="lbl">Invoice No</td>
+      <td class="val">{{basicdetails.[0].inv_no}}</td>
+      <td class="lbl-ar">رقم الفاتورة</td>
+    </tr>
+    <tr>
+      <td class="lbl">Customer's Address</td>
+      <td class="val-l">{{billing_address.[0].address_line1}}  {{billing_address.[0].address_line2}}  {{billing_address.[0].address_line4}}  {{billing_address.[0].address_line3}}  {{billing_address.[0].address_line5}}  {{billing_address_lang2.[0].address_line1}}  {{billing_address_lang2.[0].address_line2}}  {{billing_address_lang2.[0].address_line4}}  {{billing_address_lang2.[0].address_line3}}  {{billing_address_lang2.[0].address_line5}}{{#if billing_address.[0].address_code}}<br>ZIP/Postal Code: {{billing_address.[0].address_code}}{{/if}}{{#if customer_details.[0].contact_no1}}<br>Phone: {{customer_details.[0].contact_no1}}{{/if}}</td>
+      <td class="lbl-ar">العنوان الوطني للعميل</td>
+      <td style="width: 1%; background-color: #ffffff; border-top: none; border-bottom: none;border-right: 1px solid black;"></td>
+      <td class="lbl">Invoice Date</td>
+      <td class="val">{{basicdetails.[0].inv_date}}</td>
+      <td class="lbl-ar">تاريخ الفاتورة</td>
+    </tr>
+    <tr>
+      <td class="lbl">Mode of Payment</td>
+      <td class="val">{{invterms}}</td>
+      <td class="lbl-ar">طريقة الدفع</td>
+      <td style="width: 1%; background-color: #ffffff; border-top: none; border-bottom: none;border-right: 1px solid black;"></td>
+      <td class="lbl">Due Date</td>
+      <td class="val">{{basicdetails.[0].due_date}}</td>
+      <td class="lbl-ar">تاريخ الاستحقاق</td>
+    </tr>
+    <tr>
+      <td class="lbl">Payment Terms</td>
+      <td class="val">{{basicdetails.[0].payment_terms}}</td>
+      <td class="lbl-ar">شروط الدفع</td>
+      <td style="width: 1%; background-color: #ffffff; border-top: none; border-bottom: none;border-right: 1px solid black;"></td>
+      <td class="lbl">Our Ref</td>
+      <td class="val">{{basicdetails.[0].reference_no}}</td>
+      <td class="lbl-ar">رقم المرجعي</td>
+    </tr>
+    <tr>
+      <td class="lbl">VAT NO</td>
+      <td class="val">{{customer_details.[0].VAT_number}}</td>
+      <td class="lbl-ar">الرقم الضريبي</td>
+      <td style="width: 1%; background-color: #ffffff; border-top: none; border-bottom: none;border-right: 1px solid black;"></td>
+      <td class="lbl">PO Number</td>
+      <td class="val">{{basicdetails.[0].order_no}}</td>
+      <td class="lbl-ar">طلب الشراء</td>
+    </tr>
+    <tr>
+      <td class="lbl">CR NO</td>
+      <td class="val">{{customer_details.[0].cr_no}}</td>
+      <td class="lbl-ar">سجل تجاري</td>
+      <td style="width: 1%; background-color: #ffffff; border-top: none; border-bottom: none;border-right: 1px solid black;"></td>
+      <td class="lbl">Sales Person</td>
+      <td class="val">{{basicdetails.[0].salesman_name}}</td>
+      <td class="lbl-ar">مندوب المبيعات</td>
+    </tr>
+  </table>
+
+  {{!-- ══ ITEMS ══ --}}
+  <table class="items">
+    <colgroup>
+      <col style="width:3%">
+      <col style="width:9%">
+      <col style="width:29%">
+      <col style="width:6%">
+      <col style="width:7%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:13%">
+    </colgroup>
+    <thead>
+      <tr class="r-ar">
+        <th class="idx" rowspan="2">#</th>
+        <th>رمز الصنف</th>
+        <th>الاسم والوصف</th>
+        <th>الكمية</th>
+        <th>الوحدة</th>
+        <th>سعر الوحدة</th>
+        <th>قيمة بدون ضريبة</th>
+        <th>قيمة الضريبة</th>
+        <th>المجموع شامل الضريبة</th>
+      </tr>
+      <tr class="r-en">
+        <th>Item Code</th>
+        <th>Item &amp; Description</th>
+        <th>Qty</th>
+        <th>Unit</th>
+        <th>Price</th>
+        <th>Without VAT</th>
+        <th>VAT Amount</th>
+        <th>Total Inc. VAT</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td>{{addOne @index}}</td>
+        <td>{{item_code}}</td>
+        <td class="desc">
+          <span class="nm">{{item_name}}</span>
+          {{#if name_lang2}}<div class="sub" style="direction: rtl; text-align: right; ">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div class="sub">{{description}}</div>{{/if}}
+        </td>
+        <td>{{quantity}}</td>
+        <td>{{unit}}</td>
+        <td class="r">{{formatAmount price ../bcdp}}</td>
+        <td class="r">{{formatAmount taxable ../bcdp}}</td>
+        <td class="r">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="r">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  {{!-- ══ TOTALS ══ --}}
+  <table class="totals">
+    <tr>
+      <td rowspan="5" style="background-color: #e8ecef; border: 1px solid black; width: 25%;"></td>
+      <td class="t-lbl">Total Without VAT</td>
+      <td class="t-lbl-ar">إجمالي بدون ضريبة</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+    </tr>
+    {{#if zatcadiscount}}
+        {{#each zatcadiscount}}
+            <tr>
+              <td class="t-lbl">{{reason_name}}</td>
+              <td class="t-lbl-ar">{{reason_name_lang2}}</td>
+              <td class="t-val">{{formatAmount (divide dld ../ccrate) ../bcdp}}</td>
+            </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td class="t-lbl">Discount</td>
+          <td class="t-lbl-ar">الخصومات</td>
+          <td class="t-val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+        </tr>
+        {{/if}}
+    <tr>
+      <td class="t-lbl">{{datasettingstextvalue.d828}}</td>
+      <td class="t-lbl-ar">ضريبة القيمة المضافة</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="t-lbl">Total With VAT In {{basicdetails.[0].base_country_isocode}}</td>
+      <td class="t-lbl-ar">المجموع شامل الضريبة</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="words" colspan="3">{{bcamountinwordsar}}<br>{{bcamountinwords}}</td>
+    </tr>
+  </table>
+
+
+  <!-- ═══════ BANK + QR ═══════ -->
+  <table class="bottom" style="width:100%;border-collapse:collapse;">
+      <tr>
+
+          <!-- BANK DETAILS -->
+          <td style="width:75%;vertical-align:top;padding-right:6px;">
+
+              <table class="bank" style="width:100%;border-collapse:collapse;table-layout:fixed;">
+
+                  <colgroup>
+                      <col style="width:22%;">
+                      <col style="width:56%;">
+                      <col style="width:22%;">
+                  </colgroup>
+
+                  <tr>
+                      <td colspan="3" class="hd">
+                          Bank Account Details | تفاصيل الحساب البنكي
+                      </td>
+                  </tr>
+
+                  <tr>
+                      <td class="lbl">Account Name</td>
+                      <td>{{bankdetails.acc_name}}</td>
+                      <td class="lbl-ar">اسم الحساب</td>
+                  </tr>
+
+                  <tr>
+                      <td class="lbl">Bank Name</td>
+                      <td>{{bankdetails.name}}</td>
+                      <td class="lbl-ar">اسم البنك</td>
+                  </tr>
+
+                  <tr>
+                      <td class="lbl">Account Number</td>
+                      <td>{{bankdetails.acc_no}}</td>
+                      <td class="lbl-ar">رقم الحساب</td>
+                  </tr>
+
+                  <tr>
+                      <td class="lbl">IBAN No</td>
+                      <td>{{bankdetails.iban_no}}</td>
+                      <td class="lbl-ar">رقم الآيبان</td>
+                  </tr>
+
+              </table>
+
+          </td>
+
+          <!-- QR -->
+          <td style="width:25%;border:1px solid #000;text-align:center;vertical-align:middle;background:#f5f5f5;">
+
+              <div style="width:130px;margin:0 auto;">{{{qrDataUri qrCodeBase64}}}</div>
+
+          </td>
+
+      </tr>
+  </table>
+
+  {{!-- ══ SEAL (shown only when datasettings d146 is active) ══ --}}
+  {{#ifFlag datasettings "d146"}}
+  {{#if Seal}}
+  <table class="bottom" style="margin-top:8px;">
+    <tr>
+      <td style="text-align:left;vertical-align:top;">
+        <img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>
+      </td>
+    </tr>
+  </table>
+  {{/if}}
+  {{/ifFlag}}
+
+</div>
+</body>
+</html>

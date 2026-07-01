@@ -175,7 +175,7 @@
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-top: 8px;
+    margin-top: 12px;
     page-break-inside: avoid;
     break-inside: avoid;
   }
@@ -192,18 +192,6 @@
   .terms-title {
     font-weight: bold;
     padding-bottom: 2px;
-    display: table;
-    width: 100%;
-  }
-  .terms-title .en {
-    display: table-cell;
-    text-align: left;
-  }
-  .terms-title .ar {
-    display: table-cell;
-    direction: rtl;
-    text-align: right;
-    padding-right: 15px;
   }
   .terms-body {
     font-size: 10px;
@@ -279,55 +267,27 @@
   .words-text .en { text-align: left; width: 60%; }
   .words-text .ar { direction: rtl; text-align: right; width: 40%; }
 
-
-  /* ── Footer : Bank Account + Signature + Stamp ── */
-  .footer-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    margin-top: 14px;
+  /* ── Bank Account Details ────────────────── */
+  .bank-wrap {
+    margin-top: 12px;
     page-break-inside: avoid;
     break-inside: avoid;
   }
-  .footer-table > tbody > tr > td {
-    border: none;
-    padding: 6px;
-    vertical-align: top;
-    font-size: 10px;
-  }
-
-  .bank-acc-cell {
-    width: 45%;
-  }
-  .bank-acc-cell .bank-title {
+  .bank-title {
     font-weight: bold;
-    margin-bottom: 6px;
     font-size: 11px;
+    margin-bottom: 8px;
   }
-  .bank-acc-cell .ba-row {
-    display: table;
-    width: 100%;
-    padding: 1px 0;
+  .bank-table {
+    border-collapse: collapse;
   }
-  .bank-acc-cell .ba-row .lbl {
-    display: table-cell;
-    width: 40%;
+  .bank-table td {
+    padding: 1px 4px;
+    font-size: 10px;
+    vertical-align: top;
   }
-  .bank-acc-cell .ba-row .val {
-    display: table-cell;
-    width: 60%;
-  }
-
-  .signature-cell {
-    width: 30%;
-    text-align: center;
-    vertical-align: middle;
-  }
-  .stamp-cell {
-    width: 25%;
-    text-align: center;
-    vertical-align: middle;
-  }
+  .bank-table .bk-lbl { white-space: nowrap; }
+  .bank-table .bk-sep { padding: 1px 12px; }
 </style>
 </head>
 
@@ -341,30 +301,23 @@
       <table style="width: 100%;font-family: arial;padding: 0;margin-top: 10px;font-size: 10px;" cellspacing="0">
         <tr>
             <td style="text-align: left;font-weight:bold;">Bill To</td>
-            <td style="text-align: right;font-weight:bold;"> تمت محاسبته على</td>
+            <td style="text-align: right;font-weight:bold;"> فاتوره إلى</td>
         </tr>
         <tr>
-            <td colspan="2" style="text-align: left;">
-                {{billing_address.[0].name}}<br>
-                    {{#if billing_address_lang2.[0].name}}
-                        {{billing_address_lang2.[0].name}}<br>
-                    {{/if}}
-                        {{billing_address.[0].address_line1}}
-                        {{billing_address.[0].address_line2}}
-                        {{billing_address.[0].address_line3}}
-                        {{billing_address.[0].address_line4}}
-                        {{billing_address.[0].address_line5}}<br>
-                    {{#if billing_address_lang2.[0].name}}
-                        {{billing_address_lang2.[0].address_line1}}
-                        {{billing_address_lang2.[0].address_line2}}
-                        {{billing_address_lang2.[0].address_line3}}
-                        {{billing_address_lang2.[0].address_line4}}
-                        {{billing_address_lang2.[0].address_line5}}
-                    {{/if}}
-            </td>
+          <td style="text-align: left;">
+            {{billing_address.[0].name}}<br>
+            {{{joinAddress billing_address.[0] '<br>'}}}
+
+          </td>
+          {{#if billing_address_lang2.[0].name}}
+          <td colspan="2" style="text-align: right;">
+                {{billing_address_lang2.[0].name}}<br>
+                {{{joinAddress billing_address_lang2.[0] '<br>'}}}
+          </td>
+          {{/if}}
         </tr>
         <tr>
-            <td style="text-align: left;">Customer VAT Number : {{customer_details.[0].VAT_number}}</td>
+            <td style="text-align: left;">VAT Number : {{customer_details.[0].VAT_number}}</td>
         </tr>
         <tr>
             <td style="text-align: left;">CR Number : {{customer_details.[0].cr_no}}</td>
@@ -380,44 +333,39 @@
           </tr>
       </table>
       <table style="width: 100%;font-family: arial;margin-top: 10px;" cellspacing="0">
-            <tr>
-                <td colspan="3" style=";text-align: center;font-size: 20px;">TAX INVOICE <span> فاتورة ضريبية </span></td>
-            </tr>
-                <tr>
-                <td style="text-align: left;">VAT No</td>
-                <td style="text-align: left;">{{branch.[0].vat}}</td>
-                <td style="text-align: right;">ضريبةالمضافة</td>
-            </tr> 
-            <tr>
-                <td style="text-align: left;" width="24%">Invoice Number</td>
-                <td style="text-align: left;" width="56%">{{basicdetails.[0].inv_no}}</td>
-                <td style="text-align: right;" width="20%">رقم الفاتورة</td>
-            </tr>
-            <tr>
-                <td style="text-align: left;">Invoice Date</td>
-                <td style="text-align: left;">{{basicdetails.[0].inv_date}}</td>
-                <td style="text-align: right;">تاريخ الفاتورة</td>
-            </tr>
-            <tr>
-                <td style="text-align: left;">P O Number</td>
-                <td style="text-align: left;">{{basicdetails.[0].order_no}}</td>
-                <td style="text-align: right;">رقم طلب الشراء</td>
-            </tr>						
-            <tr>
-                <td style="text-align: left;">P O Date</td>
-                <td style="text-align: left;">{{basicdetails.[0].po_date}}</td>
-                <td style="text-align: right;">تاريخ أمر الشراء</td>
-            </tr>
-            <tr>
-                <td style="text-align: left;">Reference No</td>
-                <td style="text-align: left;">{{basicdetails.[0].reference_no}}</td>
-                <td style="text-align: right;">رقم المرجع</td>
-            </tr>
-            <tr>
-                <td style="text-align: left;">Payment Mode</td>
-                <td style="text-align: left;"></td>
-                <td style="text-align: right;">رطريقة الدفع</td>
-            </tr> 
+          <tr>
+              <td colspan="3" style=";text-align: center;font-size: 20px;">TAX INVOICE <span> فاتورة ضريبية </span></td>
+          </tr>
+          <tr>
+              <td style="text-align: left;" width="24%">Invoice Number</td>
+              <td style="text-align: left;" width="52%">{{basicdetails.[0].inv_no}}</td>
+              <td style="text-align: right;" width="24%">رقم الفاتورة</td>
+          </tr>
+          <tr>
+              <td style="text-align: left;">Invoice Date</td>
+              <td style="text-align: left;">{{basicdetails.[0].inv_date}}</td>
+              <td style="text-align: right;">تاريخ الفاتورة</td>
+          </tr>
+          <tr>
+              <td style="text-align: left;">Invoice Time</td>
+              <td style="text-align: left;">{{basicdetails.[0].inv_time}}</td>
+              <td style="text-align: right;">وقت الفاتورة</td>
+          </tr>
+          <tr>
+              <td style="text-align: left;">P O Number</td>
+              <td style="text-align: left;">{{basicdetails.[0].order_no}}</td>
+              <td style="text-align: right;">رقم طلب الشراء</td>
+          </tr>						
+          <tr>
+              <td style="text-align: left;">P O Date</td>
+              <td style="text-align: left;">{{basicdetails.[0].po_date}}</td>
+              <td style="text-align: right;">تاريخ أمر الشراء</td>
+          </tr>
+          <tr>
+              <td style="text-align: left;">Reference No</td>
+              <td style="text-align: left;">{{basicdetails.[0].reference_no}}</td>
+              <td style="text-align: right;">رقم المرجع</td>
+          </tr>
         </table>
     </td>
   </tr>
@@ -430,12 +378,14 @@
   <table class="items-table">
     <thead>
       <tr class="head-en">
-        <th style="width:7%;">No </br>م</th>
-        <th style="width:52%;"> Description </br>وصف السلعة</th>
-        <th style="width:9%;">Qty </br>الكمية</th>
-        <th style="width:8%;">Unit </br>وحدة </th>
-        <th style="width:11%;">Price </br>المجموع</th>
-        <th style="width:13%;"> Total </br> الإجمالي</th>
+        <th style="width:4%;">Sl </br>م</th>
+        <th style="width:38%;">Item Description </br>وصف السلعة</th>
+        <th style="width:6%;">Qty </br>الكمية</th>
+        <th style="width:7%;">UOM </br>وحدة </th>
+        <th style="width:10%;">Unit Rate </br>معدل الوحدة</th>
+        <th style="width:11%;">Total </br>المجموع</th>
+        <th style="width:11%;">{{datasettingstextvalue.d828}} </br>قيمة الضريبة</th>
+        <th style="width:13%;">Grand Total </br>المجموع الإجمالي</th>
       </tr>
     </thead>
     <tbody>
@@ -446,6 +396,8 @@
         <td class="c">{{quantity}}</td>
         <td class="c">{{unit}}</td>
         <td class="r">{{formatAmount price ../bcdp}}</td>
+        <td class="r">{{formatAmount taxable ../bcdp}}</td>
+        <td class="r">{{formatAmount tax ../bcdp}}</td>
         <td class="r">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
@@ -458,10 +410,7 @@
     <tr>
 
       <td class="terms-cell">
-        <div class="terms-title">
-          <span class="en">Terms and Conditions :</span>
-          <span class="ar">الشروط والأحكام</span>
-        </div>
+        <div class="terms-title">Terms and Conditions :</div>
         <div class="terms-body">{{basicdetails.[0].terms_and_condition}}</div>
       </td>
 
@@ -491,7 +440,7 @@
               {{/if}}
           {{/if}}
           <tr>
-            <td class="lbl-en">VAT(15%)</td>
+            <td class="lbl-en">{{datasettingstextvalue.d828}}</td>
             <td class="lbl-ar">ضريبة القيمة المضافة</td>
             <td class="val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
           </tr>
@@ -528,26 +477,20 @@
   </div>
 
 
-  <!-- Bank Account + Signature + Stamp -->
-  <table class="footer-table">
-    <tr>
-      <td class="bank-acc-cell">
-        <div class="bank-title">Bank Account Details</div>
-        <div class="ba-row"><span class="lbl">Bank Name</span><span class="val">: {{bankdetails.name}}</span></div>
-        <div class="ba-row"><span class="lbl">Account Name</span><span class="val">: {{bankdetails.acc_name}}</span></div>
-        <div class="ba-row"><span class="lbl">Account Number</span><span class="val">: {{bankdetails.acc_no}}</span></div>
-        <div class="ba-row"><span class="lbl">IBAN No</span><span class="val">: {{bankdetails.iban_no}}</span></div>
-        <div class="ba-row"><span class="lbl">SWIFT No</span><span class="val">: {{bankdetails.swift_no}}</span></div>
-        <div class="ba-row"><span class="lbl">Branch Name</span><span class="val">: {{bankdetails.branch_name}}</span></div>
-      </td>
-      <td class="signature-cell">
-        {{#if Signature}}<img src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
-      </td>
-      <td class="stamp-cell">
-        {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
-      </td>
-    </tr>
-  </table>
+  <!-- Bank Account Details -->
+  {{#if bankdetails.name}}
+  <div class="bank-wrap">
+    <div class="bank-title">Bank Account Details</div>
+    <table class="bank-table">
+      <tr><td class="bk-lbl">Bank Name</td><td class="bk-sep">:</td><td class="bk-val">{{bankdetails.name}}</td></tr>
+      <tr><td class="bk-lbl">Account Name</td><td class="bk-sep">:</td><td class="bk-val">{{bankdetails.acc_name}}</td></tr>
+      <tr><td class="bk-lbl">Account Number</td><td class="bk-sep">:</td><td class="bk-val">{{bankdetails.acc_no}}</td></tr>
+      <tr><td class="bk-lbl">IBAN No</td><td class="bk-sep">:</td><td class="bk-val">{{bankdetails.iban_no}}</td></tr>
+      <tr><td class="bk-lbl">SWIFT No</td><td class="bk-sep">:</td><td class="bk-val">{{bankdetails.swift_no}}</td></tr>
+      <tr><td class="bk-lbl">Branch Name</td><td class="bk-sep">:</td><td class="bk-val">{{bankdetails.branch_name}}</td></tr>
+    </table>
+  </div>
+  {{/if}}
 
 </div>
 </body>

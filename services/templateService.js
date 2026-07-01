@@ -309,21 +309,46 @@ class TemplateService {
         : options.inverse(this);
     });
 
-    Handlebars.registerHelper("joinAddress", function (addr, separator) {
-      const sep = typeof separator === "string" ? separator : ", ";
-      if (!addr || typeof addr !== "object") return "";
+    // Handlebars.registerHelper("joinAddress", function (addr, separator) {
+    //   const sep = typeof separator === "string" ? separator : ", ";
+    //   if (!addr || typeof addr !== "object") return "";
 
-      return [
+    //   return [
+    //     addr.address_line1,
+    //     addr.address_line2,
+    //     addr.address_line3,
+    //     addr.address_line4,
+    //     addr.address_line5,
+    //     addr.address_code,
+    //   ]
+    //     .filter(Boolean)
+    //     .join(sep);
+    // });
+    Handlebars.registerHelper("joinAddress", function (addr, separator) {
+    const sep = typeof separator === "string" ? separator : ", ";
+
+    if (!addr || typeof addr !== "object") {
+        return "";
+    }
+
+    const address = [
         addr.address_line1,
         addr.address_line2,
         addr.address_line3,
         addr.address_line4,
         addr.address_line5,
         addr.address_code,
-      ]
-        .filter(Boolean)
-        .join(sep);
-    });
+    ]
+    .filter(v => v && String(v).trim() !== "")
+    .join(sep);
+
+    // Return SafeString only if separator contains HTML
+    if (sep.includes("<")) {
+        return new Handlebars.SafeString(address);
+    }
+
+    return address;
+});
 
     // ── Currency symbol helpers ────────────────────────────
     Handlebars.registerHelper("currencySymbol", function (isocode) {
