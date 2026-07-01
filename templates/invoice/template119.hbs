@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Tax Invoice - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; font-size: 11px; color: #000; background: #fff; }
+    .page { width: 780px; margin: 0 auto; padding: 12px 16px; }
+
+    /* ══ TITLE ══ */
+    .main-title {
+      text-align: center; font-family: "Times New Roman", serif;
+      font-size: 18px; font-weight: bold; padding: 4px 0 10px 0;
+    }
+
+    /* ══ DETAILS SECTION ══ */
+    .details-table {
+      width: 100%; border-collapse: collapse;
+      border: 1px solid #000;
+    }
+    .details-table td {
+      vertical-align: top; padding: 6px 10px;
+    }
+    .details-table .td-customer {
+      width: 50%; border-right: 1px solid #000;
+    }
+    .sec-title { font-weight: bold; font-size: 11px; color: #1a56db; margin-bottom: 3px; }
+    .info-line { font-size: 11px; line-height: 1.5; }
+    .detail-row { display: flex; font-size: 11px; line-height: 1.7; }
+    .detail-row .d-lbl { min-width: 110px; font-weight: bold; }
+    .detail-row .d-sep { width: 14px; text-align: center; }
+    .detail-row .d-val { flex: 1; }
+
+    /* ══ ITEMS TABLE ══ */
+    .items-table {
+      width: 100%; border-collapse: collapse;
+    }
+    .items-table th {
+      border: 1px solid #000;
+      padding: 4px 4px;
+      font-size: 11px; font-weight: bold;
+      text-align: center; vertical-align: middle; background: #fff;
+    }
+    .items-table td {
+      border-left: 1px solid #000; border-right: 1px solid #000;
+      padding: 4px 6px; font-size: 11px;
+      text-align: center; vertical-align: middle;
+    }
+    .items-table td.td-desc { text-align: left; padding-left: 8px; color: #1a56db; }
+    .items-table .col-amt { text-align: right; padding-right: 8px; }
+    .items-table tbody tr:last-child td { border-bottom: 1px solid #000; }
+
+    /* ══ FILLER (empty bordered area) ══ */
+    .filler {
+      border-left: 1px solid #000; border-right: 1px solid #000;
+      min-height: 220px;
+    }
+
+    /* ══ BOTTOM SECTION ══ */
+    .bottom-table {
+      width: 100%; border-collapse: collapse;
+    }
+    .bottom-table > tbody > tr > td {
+      vertical-align: top; border: 1px solid #000; padding: 0;
+    }
+    .td-bank { width: 45%; padding: 8px 8px; }
+    .td-summary { width: 55%; padding: 0; }
+
+    /* Bank Details */
+    .bank-title { font-weight: bold; font-size: 12px; margin-bottom: 2px; }
+    .bank-row { font-size: 11px; line-height: 1.8; display: flex; }
+    .bank-row .bk-lbl { min-width: 110px; }
+    .bank-row .bk-sep { width: 14px; text-align: center; }
+    .bank-row .bk-val { flex: 1; }
+
+    /* Summary Totals */
+    .summary-table { width: 100%; border-collapse: collapse; height: 100%; }
+    .summary-table td { padding: 3px 8px; font-size: 11px; }
+    .summary-table .s-lbl {
+      text-align: right; border-left: 1px solid #000; border-bottom: 1px solid #ccc;
+      font-weight: bold; background: #e8ecef; white-space: nowrap;
+    }
+    .summary-table .s-amt {
+      text-align: right; min-width: 90px; border-bottom: 1px solid #ccc;
+      font-family: 'Courier New', monospace;
+    }
+    .summary-table tr.grand-row .s-lbl,
+    .summary-table tr.grand-row .s-amt { background: #e0e0e0; font-weight: bold; }
+
+    /* ══ AMOUNT IN WORDS ══ */
+    .words-bar {
+      border: 1px solid #000; border-top: none;
+      padding: 4px 10px; font-size: 11px;
+    }
+
+    /* ══ SIGNATURE ══ */
+    .sig-table { width: 100%; border-collapse: collapse; }
+    .sig-table td {
+      width: 50%; border: 1px solid #000; border-top: none;
+      padding: 6px 10px; vertical-align: top; height: 30px;
+    }
+    .sig-left { text-align: center; font-style: italic; }
+    .sig-right { text-align: center; font-weight: bold; }
+    .sig-right .pageno { float: right; font-weight: normal; font-style: italic; }
+    .sig-img { max-height: 50px; display: block; margin: 4px auto 0 auto; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  {{!-- ══ TITLE ══ --}}
+  <div class="main-title">Tax Invoice</div>
+
+  {{!-- ══ CUSTOMER + INVOICE DETAILS ══ --}}
+  <table class="details-table">
+    <tr>
+      <td class="td-customer">
+        <div class="sec-title">Customer Details</div>
+        <div class="info-line">{{billing_address.[0].name}}</div>
+        <div class="info-line">{{billing_address.[0].address_line1}}</div>
+        <div class="info-line">{{billing_address.[0].address_line2}}</div>
+        <div class="info-line">{{billing_address.[0].address_line3}}</div>
+        <div class="info-line">VAT: {{billing_address.[0].vat}}</div>
+      </td>
+      <td>
+        <div class="detail-row">
+          <span class="d-lbl">Delivery Note No</span>
+          <span class="d-sep">:</span>
+          <span class="d-val">{{basicdetails.[0].dn_no}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="d-lbl">Invoice No</span>
+          <span class="d-sep">:</span>
+          <span class="d-val">{{basicdetails.[0].inv_no}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="d-lbl">Invoice Date</span>
+          <span class="d-sep">:</span>
+          <span class="d-val">{{basicdetails.[0].inv_date}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="d-lbl">Due Date</span>
+          <span class="d-sep">:</span>
+          <span class="d-val">{{basicdetails.[0].due_date}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="d-lbl">Prepared by</span>
+          <span class="d-sep">:</span>
+          <span class="d-val">{{default basicdetails.[0].salesman_name basicdetails.[0].created_user}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="d-lbl">Contact</span>
+          <span class="d-sep">:</span>
+          <span class="d-val">{{customer_details.[0].contact_no1}}</span>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  {{!-- ══ ITEMS TABLE ══ --}}
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:5%">Sl No</th>
+        <th style="width:33%">Item Description</th>
+        <th style="width:8%">Qty</th>
+        <th style="width:11%">Price</th>
+        <th style="width:9%">Disc</th>
+        <th style="width:12%">Taxable</th>
+        <th style="width:10%">Tax</th>
+        <th style="width:12%">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td>{{addOne @index}}</td>
+        <td class="td-desc">
+          {{item_name}}{{name_lang2}}{{description}}
+        </td>
+        <td>{{formatAmount quantity 0}}</td>
+        <td class="col-amt">{{formatAmount price ../bcdp}}</td>
+        <td class="col-amt">{{formatAmount disc_amt ../bcdp}}</td>
+        <td class="col-amt">{{formatAmount taxable ../bcdp}}</td>
+        <td class="col-amt">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="col-amt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  {{!-- ══ FILLER ══ --}}
+  <div class="filler"></div>
+
+  {{!-- ══ BOTTOM: BANK + TOTALS ══ --}}
+  <table class="bottom-table">
+    <tr>
+      <td class="td-bank">
+        <div class="bank-title">Bank Details</div>
+        <div class="bank-row"><span class="bk-lbl">Bank Name</span><span class="bk-sep">:</span><span class="bk-val">{{bankdetails.name}}</span></div>
+        <div class="bank-row"><span class="bk-lbl">Account Name</span><span class="bk-sep">:</span><span class="bk-val">{{bankdetails.acc_name}}</span></div>
+        <div class="bank-row"><span class="bk-lbl">Account No</span><span class="bk-sep">:</span><span class="bk-val">{{bankdetails.acc_no}}</span></div>
+        <div class="bank-row"><span class="bk-lbl">IBAN</span><span class="bk-sep">:</span><span class="bk-val">{{bankdetails.iban_no}}</span></div>
+        <div class="bank-row"><span class="bk-lbl">SWIFT</span><span class="bk-sep">:</span><span class="bk-val">{{bankdetails.swift_no}}</span></div>
+      </td>
+      <td class="td-summary">
+        <table class="summary-table">
+          <tr>
+            <td class="s-lbl">Gross Total</td>
+            <td class="s-amt">{{formatAmount (add basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="s-lbl">Discount</td>
+            <td class="s-amt">{{formatAmount basicdetails.[0].discount bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="s-lbl">Taxable</td>
+            <td class="s-amt">{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="s-lbl">VAT</td>
+            <td class="s-amt">{{formatAmount basicdetails.[0].vatamt bcdp}}</td>
+          </tr>
+          <tr class="grand-row">
+            <td class="s-lbl">Grand Total</td>
+            <td class="s-amt">{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="s-lbl">Paid</td>
+            <td class="s-amt">{{formatAmount basicdetails.[0].received bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="s-lbl">Balance</td>
+            <td class="s-amt">{{formatAmount basicdetails.[0].balance bcdp}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  {{!-- ══ AMOUNT IN WORDS ══ --}}
+  <div class="words-bar">
+    Amount Chargeable in words : {{bcamountinwords}}
+  </div>
+
+  {{!-- ══ SIGNATURE ══ --}}
+  <table class="sig-table">
+    <tr>
+      <td class="sig-left">
+        Customer's signature
+        {{#if Seal}}<img src="{{Seal}}" class="sig-img" alt="Seal" onerror="this.style.display='none'"/>{{/if}}
+      </td>
+      <td class="sig-right">
+        <span class="pageno">1 / 1</span>
+        For {{branch.[0].name}}
+        {{#if Signature}}<img src="{{Signature}}" class="sig-img" alt="Signature" onerror="this.style.display='none'"/>{{/if}}
+      </td>
+    </tr>
+  </table>
+
+</div>
+</body>
+</html>

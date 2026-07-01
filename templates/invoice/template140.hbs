@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INVOICE - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "IBM Plex Sans Arabic", Arial, sans-serif;
+      font-size: 10px;
+      line-height: 1.4;
+      color: #000;
+      margin: 0 5mm;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    /* ── TOP : TO | QR | COMPANY ──────────────────── */
+    .top-table {
+      border: 1px solid #000;
+    }
+    .top-table > tbody > tr > td {
+      border: 1px solid #000;
+      vertical-align: top;
+      padding: 8px 10px;
+    }
+    .to-cell .to-lbl {
+      font-weight: 700;
+    }
+    .to-cell .to-name {
+      font-weight: 700;
+      margin-top: 12px;
+    }
+    .qr-cell {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .qr-cell .qr-wrap {
+      width: 110px;
+      height: 110px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .qr-cell .qr-wrap img {
+      width: 100%;
+      height: auto;
+      max-width: 110px;
+      max-height: 110px;
+    }
+    .comp-cell {
+      padding: 0 !important;
+    }
+    .comp-top {
+      padding: 8px 10px;
+      line-height: 1.5;
+    }
+    .comp-top .cname {
+      font-weight: 700;
+    }
+    .inv-rows {
+      width: 100%;
+      border-collapse: collapse;
+      border-top: 1px solid #000;
+    }
+    .inv-rows td {
+      border-top: 1px solid #000;
+      padding: 4px 10px;
+      font-size: 10px;
+    }
+    .inv-rows tr:first-child td {
+      border-top: none;
+    }
+    .inv-rows td.ir-lbl {
+      font-weight: 700;
+      width: 42%;
+    }
+    .inv-rows td.ir-lbl .sep {
+      float: right;
+    }
+    .inv-rows .red {
+      color: #c00000;
+      font-weight: 700;
+    }
+
+    /* ── TITLE ────────────────────────────────────── */
+    .doc-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #c00000;
+      padding: 8px 0 6px;
+    }
+
+    /* ── ITEMS TABLE ──────────────────────────────── */
+    .items-table {
+      border: 1px solid #000;
+    }
+    .items-table th,
+    .items-table td {
+      font-size: 9.5px;
+      border: 1px solid #bfbfbf;
+      padding: 4px 6px;
+      vertical-align: middle;
+    }
+    .items-table thead th {
+      background: #149a9a;
+      color: #fff;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .items-table .summary-row td {
+      background: #149a9a;
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+    }
+    .items-table td.c {
+      text-align: center;
+    }
+    .items-table td.r {
+      text-align: right;
+    }
+    .items-table td.desc {
+      text-align: left;
+      color: #1a56db;
+    }
+    .items-table td.desc .sub-ar {
+      direction: rtl;
+      color: #1a56db;
+    }
+    .items-table tbody td {
+      border-top: none;
+      border-bottom: none;
+    }
+    .items-table tbody tr.last-item td {
+      border-bottom: 1px solid #bfbfbf;
+    }
+    .items-table .tot-lbl {
+      text-align: right;
+      font-weight: 700;
+    }
+    .items-table .tot-val {
+      text-align: right;
+      font-weight: 700;
+    }
+    .items-table .words-row td {
+      text-align: left;
+      font-weight: 700;
+    }
+
+    /* ── FOR COMPANY ──────────────────────────────── */
+    .for-company {
+      font-weight: 700;
+      margin: 6px 0 4px;
+    }
+
+    /* ── BANK ─────────────────────────────────────── */
+    .bank-banner {
+      background: #c00000;
+      color: #fff;
+      font-weight: 700;
+      padding: 4px 10px;
+    }
+    .bank-wrap > tbody > tr > td {
+      vertical-align: top;
+      border: none;
+      padding: 8px 10px;
+    }
+    .bank-lines {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .bank-lines td {
+      border: none;
+      padding: 3px 2px;
+      font-size: 10px;
+    }
+    .bank-lines td.bl {
+      width: 32%;
+      color: #444;
+    }
+    .bank-lines td.bc {
+      width: 4%;
+    }
+    .sig-cell {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .sig-cell img {
+      max-height: 80px;
+      max-width: 130px;
+    }
+
+    /* ── FOOTER ───────────────────────────────────── */
+    .faithfully {
+      font-weight: 700;
+      margin-top: 6px;
+    }
+    .emp {
+      font-weight: 700;
+    }
+    .thanks {
+      text-align: center;
+      font-weight: 700;
+      font-size: 13px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP : TO | QR | COMPANY -->
+  <table class="top-table">
+    <tr>
+      <td class="to-cell" style="width:40%">
+        <div class="to-lbl">To</div>
+        <div class="to-name">{{billing_address.[0].name}}</div>
+        <div>{{billing_address.[0].address_line1}}, {{billing_address.[0].address_line2}}</div>
+        <div>P.O. Box - {{billing_address.[0].address_code}}</div>
+        <div>{{billing_address.[0].address_line4}}, {{billing_address.[0].address_line5}}</div>
+        <div>TRN: {{billing_address.[0].vat}}</div>
+      </td>
+      <td class="qr-cell" style="width:18%">
+        <div class="qr-wrap">{{{qrDataUri qrCodeBase64}}}</div>
+      </td>
+      <td class="comp-cell" style="width:42%">
+        <div class="comp-top">
+          <div class="cname">{{branch.[0].name}}</div>
+          <div>PO Box No: {{branch.[0].address_code}}, {{branch.[0].address_line4}}, {{branch.[0].address_line5}}</div>
+          <div>TRN No:{{branch.[0].vat}}</div>
+        </div>
+        <table class="inv-rows">
+          <tr><td class="ir-lbl">Invoice Number <span class="sep">:</span></td><td class="red">{{basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="ir-lbl">Invoice Date <span class="sep">:</span></td><td>{{basicdetails.[0].inv_date}}</td></tr>
+          <tr><td class="ir-lbl">LPO Date <span class="sep">:</span></td><td>{{basicdetails.[0].po_date}}</td></tr>
+          <tr><td class="ir-lbl">LPO No <span class="sep">:</span></td><td>{{basicdetails.[0].order_no}}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- TITLE -->
+  <div class="doc-title">TAX INVOICE</div>
+
+  <!-- ITEMS TABLE -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:6%">Sl No</th>
+        <th style="width:32%">Description</th>
+        <th style="width:7%">Unit</th>
+        <th style="width:7%">QTY</th>
+        <th style="width:12%">Unit/ price</th>
+        <th style="width:9%">VAT Rate</th>
+        <th style="width:13%">VAT Amount</th>
+        <th style="width:14%">Total Amount</th>
+      </tr>
+      <tr class="summary-row">
+        <td colspan="8">SUMMARY:</td>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr{{#if @last}} class="last-item"{{/if}}>
+        <td class="c">{{addOne @index}}</td>
+        <td class="desc">
+          {{item_name}}
+          {{#if name_lang2}}<div class="sub-ar">{{name_lang2}}</div>{{/if}}
+          {{#if description}}<div>{{description}}</div>{{/if}}
+        </td>
+        <td class="c">{{unit}}</td>
+        <td class="c">{{formatAmount quantity ../bcdp}}</td>
+        <td class="r">{{formatAmount price ../bcdp}}</td>
+        <td class="c">{{default vat_perc "15"}}%</td>
+        <td class="r">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="r">{{formatAmount taxable ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td colspan="7" class="tot-lbl">TOTAL SAR</td>
+        <td class="tot-val">{{formatAmount (add basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</td>
+      </tr>
+      <tr>
+        <td colspan="7" class="tot-lbl">DISCOUNT</td>
+        <td class="tot-val">{{formatAmount basicdetails.[0].discount bcdp}}</td>
+      </tr>
+      <tr>
+        <td colspan="7" class="tot-lbl">TOTAL VALUE AFTER DISCOUNT</td>
+        <td class="tot-val">{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
+      </tr>
+      <tr>
+        <td colspan="7" class="tot-lbl">VAT @ 5%</td>
+        <td class="tot-val">{{formatAmount basicdetails.[0].vatamt bcdp}}</td>
+      </tr>
+      <tr>
+        <td colspan="7" class="tot-lbl">GRAND TOTAL</td>
+        <td class="tot-val">{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
+      </tr>
+      <tr class="words-row">
+        <td colspan="8">Amount in Word (Including Tax):{{bcamountinwords}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- FOR COMPANY -->
+  <div class="for-company">For {{branch.[0].name}}</div>
+
+  <!-- BANK DETAILS -->
+  <div class="bank-banner">OUR BANK DETAILS:</div>
+  <table class="bank-wrap">
+    <tr>
+      <td style="width:55%">
+        <table class="bank-lines">
+          <tr><td class="bl">Account Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
+          <tr><td class="bl">Account No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
+          <tr><td class="bl">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
+          <tr><td class="bl">Swift Code</td><td class="bc">:</td><td>{{bankdetails.swift_no}}</td></tr>
+          <tr><td class="bl">IBAN No</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
+          <tr><td class="bl">Branch Name</td><td class="bc">:</td><td>{{bankdetails.branch_name}}</td></tr>
+        </table>
+      </td>
+      <td class="sig-cell" style="width:22%">
+        {{#if Signature}}<img src="{{Signature}}" alt="" onerror="this.style.display='none'"/>{{/if}}
+      </td>
+      <td class="sig-cell" style="width:23%">
+        {{#if Seal}}<img src="{{Seal}}" alt="" onerror="this.style.display='none'"/>{{/if}}
+      </td>
+    </tr>
+  </table>
+
+  <!-- FOOTER -->
+  <div class="faithfully">Yours Faithfully</div>
+  <div class="emp">{{default basicdetails.[0].salesman_name basicdetails.[0].created_user}}</div>
+
+  <div class="thanks">Thank You For Your Business !</div>
+
+</body>
+</html>

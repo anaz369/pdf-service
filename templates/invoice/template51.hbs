@@ -544,12 +544,13 @@
 
     </tr>
 </table>
-
+  {{#if basicdetails.[0].terms_and_condition}}
     <!-- TERMS -->
     <div class="terms">
       <div class="thead">Terms And Conditions / <span class="ar">الأحكام والشروط</span></div>
       <div>{{basicdetails.[0].terms_and_condition}}</div>
     </div>
+  {{/if}}
 
     <!-- SIGNATURES -->
     <table class="sign-table">

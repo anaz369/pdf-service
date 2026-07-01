@@ -13,19 +13,9 @@
       background: #fff;
     }
 
-    {{!-- .page {
-      width: 750px;
-      margin: 0 auto;
-      padding: 0;
-      position: relative;
-      min-height: 1000px;
-    } --}}
 
     /* ── Top red bar ───────────────────────────── */
-    .top-bar {
-      height: 8px;
-      background: #e74c4c;
-    }
+    
 
     /* ── Left vertical text ────────────────────── */
     .left-vertical {
@@ -297,8 +287,11 @@
           <td class="td-center">{{addOne @index}}.</td>
           <td class="td-left">
             <b>{{item_name}}</b>
-            {{#if name_lang2}}<br><span style="font-size:10px;">{{name_lang2}}</span>{{/if}}
-            {{#if description}}<br><span style="font-size:10px; color:#555;">{{description}}</span>{{/if}}
+            {{#if name_lang2}}<div class="item-desc-ar" style="font-size:10px;">{{name_lang2}}</div>{{/if}}
+            {{#if description}}
+                <div class="item-desc-sub" style="font-size:10px; color:#555;">{{description}}</div>
+            {{/if}}
+
           </td>
           <td class="td-center">{{formatAmount quantity ../bcdp}}</td>
           <td class="td-right">{{formatAmount price ../bcdp}}</td>
