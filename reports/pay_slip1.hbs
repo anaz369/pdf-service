@@ -202,7 +202,7 @@
       </tr>
       <tr>
         <td class="lbl">Basic Pay</td>
-        <td class="val">{{formatAmount slip.basic_pay}}</td>
+        <td class="val">RM {{formatAmount slip.basic_pay}}</td>
         <td class="lbl">Description</td>
         <td class="val">{{default slip.description '-'}}</td>
       </tr>
@@ -217,8 +217,8 @@
         <th style="width:35%;">Category</th>
         <th style="width:30%;">Description</th>
         <th class="text-end" style="width:12%;">Unit</th>
-        <th class="text-end" style="width:12%;">Rate</th>
-        <th class="text-end" style="width:11%;">Amount</th>
+        <th class="text-end" style="width:12%;">Rate (RM)</th>
+        <th class="text-end" style="width:11%;">Amount (RM)</th>
       </tr>
     </thead>
     <tbody>
@@ -237,7 +237,7 @@
     <tfoot>
       <tr>
         <td colspan="4" class="text-end">Total Earnings</td>
-        <td class="text-end">{{formatAmount slip.total_earnings}}</td>
+        <td class="text-end">RM {{formatAmount slip.total_earnings}}</td>
       </tr>
     </tfoot>
   </table>
@@ -250,8 +250,8 @@
         <th style="width:35%;">Category</th>
         <th style="width:30%;">Description</th>
         <th class="text-end" style="width:12%;">Unit</th>
-        <th class="text-end" style="width:12%;">Rate</th>
-        <th class="text-end" style="width:11%;">Amount</th>
+        <th class="text-end" style="width:12%;">Rate (RM)</th>
+        <th class="text-end" style="width:11%;">Amount (RM)</th>
       </tr>
     </thead>
     <tbody>
@@ -270,7 +270,7 @@
     <tfoot>
       <tr>
         <td colspan="4" class="text-end">Total Deductions</td>
-        <td class="text-end">{{formatAmount slip.total_deductions}}</td>
+        <td class="text-end">RM {{formatAmount slip.total_deductions}}</td>
       </tr>
     </tfoot>
   </table>
@@ -283,7 +283,7 @@
     <thead>
       <tr>
         <th style="width:70%;">Component</th>
-        <th class="text-end" style="width:30%;">Amount</th>
+        <th class="text-end" style="width:30%;">Amount (RM)</th>
       </tr>
     </thead>
     <tbody>
@@ -304,15 +304,15 @@
       <tbody>
         <tr>
           <td class="t-lbl">Total Earnings</td>
-          <td class="t-val">{{formatAmount slip.total_earnings}}</td>
+          <td class="t-val">RM {{formatAmount slip.total_earnings}}</td>
         </tr>
         <tr>
           <td class="t-lbl">Total Deductions</td>
-          <td class="t-val">{{formatAmount slip.total_deductions}}</td>
+          <td class="t-val">RM {{formatAmount slip.total_deductions}}</td>
         </tr>
         <tr class="net">
           <td class="t-lbl">Net Pay</td>
-          <td class="t-val">{{formatAmount slip.total}}</td>
+          <td class="t-val">RM {{formatAmount slip.total}}</td>
         </tr>
       </tbody>
     </table>
