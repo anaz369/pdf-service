@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    margin: 0mm 10mm;
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.4;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 800;
+    color: #c0392b;
+    margin: 4px 0 12px;
+  }
+  .main-title .ar {
+    font-family: "Arial", "Tahoma", sans-serif;
+    direction: rtl;
+    unicode-bidi: embed;
+    margin-left: 4px;
+  }
+
+  /* ── Common table styles ───────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  /* ── Top Info Table ────────────────────────── */
+  .info-table {
+    border: 1px solid #000;
+  }
+  .info-table td {
+    border: 1px solid #000;
+    padding: 4px 4px;
+    vertical-align: middle;
+    font-size: 11px;
+  }
+  .info-table .lbl {
+    background: #d3d3d3;
+    font-weight: bold;
+    width: 20%;
+  }
+  .info-table .val { width: 30%; }
+
+  /* ── Scope of Work bar ─────────────────────── */
+  .scope-bar {
+    margin-top:10px;
+    border: 1px solid #000;
+    background: #d3d3d3;
+    text-align: center;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 4px 4px;
+  }
+  .scope-blank {
+    border: 1px solid #000;
+    border-top: none;
+    border-bottom: none;
+    min-height: 22px;
+    padding: 4px 4px;
+    font-size: 11px;
+  }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    border: 1px solid #000;
+    border-top: none;
+    
+  }
+  .items-table th, .items-table td {
+    border: 1px solid #000;
+    padding: 4px 5px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .items-table th {
+    text-align: center;
+    font-weight: bold;
+        background: #d3d3d3;
+  }
+  .items-table th .ar {
+    display: block;
+    font-weight: bold;
+    direction: rtl;
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+  .items-table .center { text-align: center; }
+  .items-table .right  { text-align: right; }
+  .items-table .left  { text-align: left; }
+.items-table tbody tr.item-row td {
+  border-bottom: 0 !important;
+}
+
+  /* ── Totals rows ───────────────────────────── */
+  .totals-row td {
+    border: 1px solid #000;
+    padding: 4px 4px;
+    font-size: 11px;
+  }
+  .totals-row .t-label {
+    text-align: right;
+    font-weight: bold;
+  }
+  .totals-row .t-value {
+    text-align: right;
+    font-weight: bold;
+  }
+
+  /* ── Amount in words ───────────────────────── */
+  .aiw {
+    margin-top:5px;
+    border: 1px solid #000;
+    border-bottom: none;
+    padding: 4px 4px;
+    font-size: 11px;
+  }
+
+  /* ── Terms / Payment table ─────────────────── */
+  .terms-table {
+    border: 1px solid #000;
+    border-top: none;
+  }
+  .terms-table td {
+    border: 1px solid #000;
+    padding: 4px 4px;
+    vertical-align: top;
+    font-size: 11px;
+    width: 50%;
+  }
+  .terms-table .t-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .terms-body { white-space: pre-wrap; }
+
+  /* ── Signature row ─────────────────────────── */
+  .sign-row {
+    margin-top: 16px;
+    width: 100%;
+    table-layout: fixed;
+  }
+  .sign-row td {
+    width: 33.33%;
+    padding: 4px 8px;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .sign-row .s-lbl {
+    text-decoration: underline;
+    font-weight: normal;
+  }
+  .sign-row .center { text-align: center; }
+  .sign-row .right  { text-align: right; }
+
+  /* ── Stamp area ────────────────────────────── */
+  .stamp-area {
+    margin-top: 10px;
+    text-align: center;
+  }
+  .stamp-area img {
+    max-height: 120px;
+    object-fit: contain;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="main-title">Quotation/ <span class="ar">عرض السعر</span></div>
+
+  <!-- Top Info Table -->
+  <table class="info-table">
+    <tr>
+      <td class="lbl">Number</td>
+      <td colspan="3">{{basicdetails.[0].inv_no}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Date</td>
+      <td colspan="3">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Client / To</td>
+      <td colspan="3">{{billing_address.[0].name}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Address</td>
+      <td colspan="3">{{joinAddress billing_address.[0] "، "}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Customer VAT </td>
+      <td colspan="3">{{customer_details.[0].VAT_number}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Contact Person</td>
+      <td colspan="3">{{basicdetails.[0].contactname}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Email</td>
+      <td class="val">{{customer_details.[0].email}}</td>
+      <td class="lbl">Contact No :</td>
+      <td class="val">{{customer_details.[0].contact_no1}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Project Name</td>
+      <td class="val">{{basicdetails.[0].projectname}}</td>
+      <td class="lbl">Ref No :</td>
+      <td class="val">{{basicdetails.[0].reference_no}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Attention</td>
+      <td class="val" colspan="3">{{basicdetails.[0].attention}}</td>
+    </tr>
+  </table>
+
+  <!-- Scope of Work bar -->
+  <div class="scope-bar">SCOPE OF WORK</div>
+  <div class="scope-blank">{{basicdetails.[0].subj}}</div>
+
+  <!-- Items Table -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:6%">
+      <col style="width:52%">
+      <col style="width:7%">
+      <col style="width:8%">
+      <col style="width:12%">
+      <col style="width:15%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th><span class="ar">م</span>S.N</th>
+        <th><span class="ar">الأوصاف</span>Description</th>
+        <th><span class="ar">وحدة</span>UOM</th>
+        <th><span class="ar">كمية</span>Qty</th>
+        <th><span class="ar">السعر الصافي</span>Net Price</th>
+        <th><span class="ar">السعر الإجمالي</span>Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+        <tr class="item-row">
+          <td class="center">{{addOne @index}}</td>
+          <td class="left">
+            {{item_name}} {{description}}
+            {{#if name_lang2}}
+              <div style="direction:rtl;">{{name_lang2}}</div>
+            {{/if}}
+          </td>
+          <td class="center">{{unit}}</td>
+          <td class="center">{{formatAmount quantity ../bcdp}}</td>
+          <td class="right">{{formatAmount price ../bcdp}}</td>
+          <td class="right">{{formatAmount amount ../bcdp}}</td>
+        </tr>
+      {{/each}}
+
+      <tr class="totals-row">
+        <td colspan="5"  class="t-label">Sub Total</td>
+        <td class="t-value">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      </tr>
+      <tr class="totals-row">
+        <td colspan="5"  class="t-label">Discount</td>
+        <td class="t-value">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+      </tr>
+      <tr class="totals-row">
+        <td colspan="5"  class="t-label">Grand Total</td>
+        <td class="t-value">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Amount in Words -->
+  <div class="aiw">Amount in Words :{{bcamountinwords}}</div>
+
+  <!-- Terms & Payment -->
+  <table class="terms-table">
+    <tr>
+      <td>
+        <div class="t-title">Terms and Condition</div>
+        <div class="terms-body">{{nl2br basicdetails.[0].terms_and_condition}}</div>
+      </td>
+      <td>
+        <div class="t-title">Payment Terms</div>
+        <div class="terms-body">{{{nl2br basicdetails.[0].payment_terms}}}</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Signature labels -->
+  <table class="sign-row">
+    <tr>
+      <td class="s-lbl">Company Stamp</td>
+    </tr>
+  </table>
+
+  <!-- Stamp image -->
+  {{#if seal}}
+  <div class="stamp-area" style="text-align: left;">
+      <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/> 
+  </div>
+  {{/if}}
+
+</div>
+
+</body>
+</html>
