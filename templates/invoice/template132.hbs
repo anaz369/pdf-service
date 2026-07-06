@@ -294,14 +294,14 @@
               <col style="width:44%;">
               <col style="width:27%;">
           </colgroup>
-            <tr><td class="lbl">Invoice No</td><td>{{basicdetails.[0].inv_no}}</td><td class="arl">رقم الفاتورة</td></tr>
-            <tr><td class="lbl">Invoice Date</td><td>{{basicdetails.[0].inv_date}}</td><td class="arl">تاريخ الفاتورة</td></tr>
-            <tr><td class="lbl">DN No</td><td></td><td class="arl">رقم الإشعار</td></tr>
-            <tr><td class="lbl">DN Date</td><td></td><td class="arl">تاريخ الإشعار</td></tr>
-            <tr><td class="lbl">Mode of Pay</td><td></td><td class="arl">طريقة الدفع</td></tr>
-            <tr><td class="lbl">PO No</td><td>{{basicdetails.[0].order_no}}</td><td class="arl">رقم أمر الشراء</td></tr>
-            <tr><td class="lbl">PO Date</td><td>{{basicdetails.[0].po_date}}</td><td class="arl">تاريخ أمر الشراء</td></tr>
-            <tr><td class="lbl">Payment Terms</td><td>{{basicdetails.[0].payment_terms}}</td><td class="arl">شروط الدفع</td></tr>
+            <tr><td class="lbl">Invoice No</td><td style="text-align: center;">{{basicdetails.[0].inv_no}}</td><td class="arl">رقم الفاتورة</td></tr>
+            <tr><td class="lbl">Invoice Date</td><td style="text-align: center;">{{basicdetails.[0].inv_date}}</td><td class="arl">تاريخ الفاتورة</td></tr>
+            <tr><td class="lbl">DN No</td><td style="text-align: center;">{{basicdetails.[0].deliverynote_no}}</td><td class="arl">رقم الإشعار</td></tr>
+            <tr><td class="lbl">DN Date</td><td style="text-align: center;">{{basicdetails.[0].deliverynote_date}}</td><td class="arl">تاريخ الإشعار</td></tr>
+            <tr><td class="lbl">Mode of Pay</td style="text-align: center;"><td>{{basicdetails.[0].modeofpayment}}</td><td class="arl">طريقة الدفع</td></tr>
+            <tr><td class="lbl">PO No</td><td style="text-align: center;">{{basicdetails.[0].order_no}}</td><td class="arl">رقم أمر الشراء</td></tr>
+            <tr><td class="lbl">PO Date</td><td style="text-align: center;">{{basicdetails.[0].po_date}}</td><td class="arl">تاريخ أمر الشراء</td></tr>
+            <tr><td class="lbl">Payment Terms</td><td style="text-align: center;">{{basicdetails.[0].payment_terms}}</td><td class="arl">شروط الدفع</td></tr>
           </table>
         </td>
       </tr>
@@ -365,7 +365,7 @@
               {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
               <tr>
                 <td class="tl">Discount / <span>الخصم</span></td>
-                <td class="tv">{{formatAmount basicdetails.[0].discount bcdp}}{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+                <td class="tv">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
               </tr>
               <tr class="b">
                 <td class="tl">Net Amount / <span>صافي المجموع</span></td>
