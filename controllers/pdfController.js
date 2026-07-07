@@ -417,6 +417,15 @@ class PdfController {
               right: "0px",
             };
             break;
+            case 3:
+            // Proforma invoice
+            pdfOptions.margin = {
+              top: withUnit(ds.d881, "120px"),
+              bottom: withUnit(ds.d882, "5px"),
+              left: "0px",
+              right: "0px",
+            };
+            break;
             case 4:
             // Sales Order
             pdfOptions.margin = {

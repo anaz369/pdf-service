@@ -240,6 +240,22 @@
         text-align: left;
 
       }
+
+      /* ── FOOTER BLOCK : keep together, else move to next page ── */
+
+      .footer-block{
+          page-break-inside: avoid;
+          break-inside: avoid;
+      }
+
+      /* ── FOOTER NOTE ──────────────────────────────── */
+      .note-text {
+        text-align: center;
+        font-weight: 700;
+        font-size: 11px;
+        color: #b72031;
+        margin-top: 8px;
+      }
     </style>
   </head>
   <body>
@@ -395,6 +411,11 @@
       </tr>
     </table>
 
+<div style="page-break-before: always;"></div>
+
+    <!-- FOOTER BLOCK : bank/signatures (kept together) -->
+    <div class="footer-block">
+
     <!-- FOOTER : BANK | SIGNATURES -->
     <table class="footer" cellpadding="0" cellspacing="0">
       <tr>
@@ -469,6 +490,8 @@
       </tr>
 
   </table>
+
+    </div><!-- /footer-block -->
 
   </body>
 </html>
