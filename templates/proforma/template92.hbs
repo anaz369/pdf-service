@@ -377,11 +377,11 @@
                   {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
                   <tr style="border-bottom: 1px solid#000000;">
                     <td class="tl" style="border-right: 1px solid#000000;">Discount<br><span class="ar">الخصم</span></td>
-                    <td class="tv">{{formatAmount (divide (add basicdetails.[0].subtotal basicdetails.[0].dld) ccrate) bcdp}}</td>
+                    <td class="tv">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
                   </tr>
                   <tr class="b" style="border-bottom: 1px solid#000000;">
                     <td class="tl" style="border-right: 1px solid#000000;">Net Amount<br><span class="ar">صافي المجموع</span></td>
-                    <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].subtotal basicdetails.[0].dld)) ccrate) bcdp}}</td>
+                    <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
                   </tr>
                   {{/if}}
               {{/if}}
