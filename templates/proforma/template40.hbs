@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proforma Invoice - {{basicdetails.[0].inv_no}}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9px;
+    color: #000;
+    background: #fff;
+    line-height: 1.4;
+    margin: 0 8mm;
+  }
+  html, body { height: 100%; }
+  .page { width: 100%; padding-top: 8px; }
+  
+  .rtl { direction: rtl; text-align: right; }
+  .blue { }
+
+  /* ── Title ─────────────────────────────────── */
+  .doc-title { text-align: center; font-size: 15px; font-weight: bold;color: #0080ff; }
+
+  /* ── Doc strip ─────────────────────────────── */
+  .doc-strip { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  .doc-strip td { border: none; font-size: 10px; font-weight: bold; padding: 2px 0; }
+  .doc-strip .r { direction: rtl; text-align: right; }
+
+  /* ── Section heading ───────────────────────── */
+  .sec-head { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  .sec-head td { border: none; font-weight: bold; font-size: 10px; background-color:#bfbfbf; padding: 1px 0; }
+  .sec-head .r { direction: rtl; text-align: right; }
+
+  /* ── Party (details) table ─────────────────── */
+  .party { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 2px; }
+  .party td { border: 1px solid #bfbfbf; padding: 3px 5px; font-size: 9px; vertical-align: top; }
+  .party .lbl    { background-color:#ccc; font-weight: bold; }
+  .party .lbl-ar { background-color:#ccc; font-weight: bold; direction: rtl; text-align: right; }
+  .party .val-ar { direction: rtl; text-align: right; }
+
+  /* ── Meta dates ────────────────────────────── */
+  .meta { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 6px; }
+  .meta th, .meta td { border: 1px solid #bfbfbf; padding: 3px 4px; font-size: 9px; text-align: center; }
+  .meta th { background-color:#ccc; line-height: 1.3; }
+  .meta th .ar { display: block; direction: rtl; font-weight: bold; }
+  .meta th .en { display: block; font-weight: bold; }
+
+  /* ── Items ─────────────────────────────────── */
+  .items { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 6px; }
+  .items th, .items td { border: 1px solid #bfbfbf; padding: 3px 4px; font-size: 9px; }
+  .items thead th { background-color:#ccc; text-align: center; line-height: 1.3; }
+  .items thead th .ar { display: block; direction: rtl; }
+  .items thead th .en { display: block; }
+  .items tbody td { text-align: center; vertical-align: top; }
+  .items tbody td.desc { text-align: left; }
+  .items tbody td.r { text-align: right; }
+  /* Spacer height is set by the pin script below (0 by default). It grows the
+     items box down so the bank block lands at the bottom of its page. */
+  .items .spacer td { height: 0; border-top: none; }
+
+  /* Never split the totals + amount-in-words + bank across a page. If it can't
+     fit in the space left, this pushes the whole block to the next page. */
+  .footer-block { page-break-inside: avoid; break-inside: avoid; }
+
+  /* ── Totals ────────────────────────────────── */
+  .totals { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 6px; }
+  .totals td { border: 1px solid #bfbfbf; padding: 4px 6px; font-size: 10px; }
+  .totals .t-en  { font-weight: bold; text-align: right;}
+  .totals .t-val { text-align: center;font-weight: bold; }
+  .totals .t-ar  { direction: rtl; text-align: right;}
+  .totals tr.grand td { font-weight: bold; }
+
+  /* ── Words ─────────────────────────────────── */
+  .words { margin-top: 5px; font-size: 10px; }
+  .words .ar { direction: rtl; }
+
+  /* ── Bottom ────────────────────────────────── */
+  .bottom { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 8px; }
+  .bottom th, .bottom td { border: 1px solid #808080; font-size: 9px; vertical-align: top; }
+  .bottom thead th {  background-color:#bfbfbf; text-align: center; padding: 4px; }
+  .bottom .bankcell { padding: 6px; }
+  .bottom .bank-row { padding: 2px 0; }
+  .bottom .stampcell { text-align: center; vertical-align: middle; padding: 6px; }
+  .bottom .stampcell img { max-height: 95px; max-width: 120px; }
+  .bottom .rcvcell { text-align: center; vertical-align: bottom; padding: 6px; height: 120px; }
+</style>
+</head>
+<body>
+{{!-- Probe: height:100% resolves to page.pdf's real printable content box, so the
+     pin script below measures the true page height instead of guessing from margins. --}}
+<div id="page-probe" style="position:absolute; top:0; left:0; width:0; height:100%; visibility:hidden; pointer-events:none;"></div>
+<div class="page">
+
+  {{!-- ══ TITLE ══ --}}
+  <div class="doc-title">PROFORMA INVOICE / الفاتورة الأولية </div>
+  <hr style="border:1px solid #00008b;">
+  {{!-- ══ DOC STRIP ══ --}}
+  <table class="doc-strip">
+    <tr>
+      <td>Doc &nbsp;:&nbsp; {{basicdetails.[0].inv_no}}</td>
+      <td class="r"> رقم الفاتورة &nbsp;:&nbsp;{{basicdetails.[0].inv_no}}</td>
+    </tr>
+  </table>
+
+  {{!-- ══ OUR DETAILS ══ --}}
+
+  <table class="party">
+    <colgroup>
+      <col style="width:11%"><col style="width:20%"><col style="width:8%"><col style="width:11%">
+      <col style="width:11%"><col style="width:8%"><col style="width:20%"><col style="width:11%">
+    </colgroup>
+    <tr>
+      <td colspan="4" class="sec-head" style="font-weight: bold; font-size: 10px; "><u>Our Details:</u></td>
+      <td colspan="4" class="sec-head" style="font-weight: bold; font-size: 10px;text-align:right;"><u>تفاصيل شركتنا </u></td>
+    </tr>
+    <tr>
+      <td class="lbl">Name</td>
+      <td colspan="3"><b>{{branch.[0].name}}</b></td>
+      <td colspan="3" class="val-ar"><b>{{branch_lang2.[0].name}}</b></td>
+      <td class="lbl-ar">الاسم</td>
+    </tr>
+    <tr>
+      <td class="lbl">Address</td>
+      <td colspan="3">{{joinAddress branch.[0] ', '}}</td>
+      <td colspan="3" class="val-ar">{{joinAddress branch_lang2.[0] '، '}}</td>
+      <td class="lbl-ar">العنوان</td>
+    </tr>
+    <tr>
+      <td class="lbl">VAT number</td>
+      <td>{{branch.[0].vat}}</td>
+      <td class="lbl">CRN</td>
+      <td>{{branch.[0].cr_no}}</td>
+      <td class="val-ar">{{branch_lang2.[0].cr_no}}</td>
+      <td class="lbl-ar">معرف آخر</td>
+      <td class="val-ar">{{branch_lang2.[0].vat}}</td>
+      <td class="lbl-ar">رقم الضريبي</td>
+    </tr>
+  </table>
+
+  {{!-- ══ CLIENT DETAILS ══ --}}
+  <table class="party">
+    <colgroup>
+      <col style="width:11%">
+      <col style="width:20%">
+      <col style="width:8%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:8%">
+      <col style="width:20%">
+      <col style="width:11%">
+    </colgroup>
+    <tr>
+      <td colspan="4" class="sec-head" style="font-weight: bold; font-size: 10px; "><u>Client Details:</u></td>
+      <td colspan="4" class="sec-head" style="font-weight: bold; font-size: 10px;text-align:right;"><u>تفاصيل شركة العميل</u></td>
+    </tr>
+    <tr>
+      <td class="lbl">Name</td>
+      <td colspan="3"><b>{{billing_address.[0].name}}</b></td>
+      <td colspan="3" class="val-ar"><b>{{billing_address_lang2.[0].name}}</b></td>
+      <td class="lbl-ar">الاسم</td>
+    </tr>
+    <tr>
+      <td class="lbl">Address</td>
+      <td colspan="3">{{joinAddress billing_address.[0] ', '}}</td>
+      <td colspan="3" class="val-ar">{{joinAddress billing_address_lang2.[0] '، '}}</td>
+      <td class="lbl-ar">العنوان</td>
+    </tr>
+    <tr>
+      <td class="lbl">VAT number</td>
+      <td>{{billing_address.[0].vat}}</td>
+      <td class="lbl">CRN</td>
+      <td>{{customer_details.[0].cr_no}}</td>
+      <td class="val-ar">{{customer_details.[0].cr_no_lang2}}</td>
+      <td class="lbl-ar">معرف آخر</td>
+      <td class="val-ar">{{billing_address_lang2.[0].vat}}</td>
+      <td class="lbl-ar">رقم الضريبي</td>
+    </tr>
+  </table>
+
+  {{!-- ══ META DATES ══ --}}
+  <table class="meta">
+    <thead>
+      <tr>
+        <th><span class="ar">تاريخ الفاتورة</span><span class="en">Date</span></th>
+        <th><span class="ar">تاريخ التوصيل</span><span class="en">Delivery Date</span></th>
+        <th><span class="ar">تاريخ الاستحقاق</span><span class="en">Due Date</span></th>
+        <th><span class="ar">رقم أمر الشراء</span><span class="en">Contract /PO No</span></th>
+        <th><span class="ar">رقم مذكرة التسليم</span><span class="en">Delivery Note Number</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{basicdetails.[0].inv_date}}</td>
+        <td>{{basicdetails.[0].eta_date}}</td>
+        <td>{{basicdetails.[0].due_date}}</td>
+        <td>{{basicdetails.[0].order_no}}</td>
+        <td>{{basicdetails.[0].hbl_no}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {{!-- ══ ITEMS ══ --}}
+  <table class="items">
+    <colgroup>
+      <col style="width:4%"><col style="width:32%"><col style="width:8%"><col style="width:8%">
+      <col style="width:12%"><col style="width:12%"><col style="width:12%"><col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th><span class="ar">وصف الخدمة</span><span class="en">Service Description</span></th>
+        <th><span class="ar">الكمية</span><span class="en">Qty</span></th>
+        <th><span class="ar">وحدة</span><span class="en">Unit</span></th>
+        <th><span class="ar">سعر الوحدة</span><span class="en">Unit Rate</span></th>
+        <th><span class="ar">المبلغ</span><span class="en">Amount</span></th>
+        <th><span class="ar">قيمة الضريبة</span><span class="en">VAT Amount</span></th>
+        <th><span class="ar">المجموع</span><span class="en">Total</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td>{{addOne @index}}</td>
+        <td class="desc">{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
+        <td>{{quantity}}</td>
+        <td>{{unit}}</td>
+        <td class="r">{{formatAmount price ../bcdp}}</td>
+        <td class="r">{{formatAmount taxable ../bcdp}}</td>
+        <td class="r">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="r">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr class="spacer">
+        <td colspan="8"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-block">
+  {{!-- ══ TOTALS ══ --}}
+  <table class="totals">
+    <colgroup>
+      <col style="width:52%">
+      <col style="width:15%">
+      <col style="width:33%">
+    </colgroup>
+    <tr>
+      <td class="t-en">Total excl. VAT({{basicdetails.[0].base_country_isocode}})</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      <td class="t-ar" style="font-weight: bold;">الإجمالي غير شامل ضريبة القيمة المضافة</td>
+    </tr>
+    <tr>
+      <td class="t-en">VAT Amount({{basicdetails.[0].base_country_isocode}})</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+      <td class="t-ar" style="font-weight: bold;">ضريبة القيمة المضافة</td>
+    </tr>
+    <tr class="grand">
+      <td class="t-en">Amount incl.VAT({{basicdetails.[0].base_country_isocode}})</td>
+      <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      <td class="t-ar">المبلغ شامل ضريبة القيمة المضافة</td>
+    </tr>
+    <tr>
+      <td class="" style="border: 1px soild #bfbfbf;" colspan="8">{{bcamountinwords}}<br>{{bcamountinwordsar}}</td>
+    </tr>
+  </table>
+
+  {{!-- ══ BOTTOM ══ --}}
+  <table class="bottom">
+    <colgroup><col style="width:50%"><col style="width:25%"><col style="width:25%"></colgroup>
+    <thead>
+      <tr>
+        <th>Bank Details / التفاصيل المصرفية</th>
+        <th>Company Stamp</th>
+        <th>Received By</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bankcell">
+          <div class="bank-row">ACCOUNT NAME / اسم الحساب{{#if bankdetails.acc_name}} : {{bankdetails.acc_name}}{{/if}}</div>
+          <div class="bank-row">BANK / بنك{{#if bankdetails.name}} : {{bankdetails.name}}{{/if}}</div>
+          <div class="bank-row">ACCOUNT / الحساب{{#if bankdetails.acc_no}} : {{bankdetails.acc_no}}{{/if}}</div>
+          <div class="bank-row">IBAN / آيبان{{#if bankdetails.iban_no}} : {{bankdetails.iban_no}}{{/if}}</div>
+          <div class="bank-row">BRANCH{{#if bankdetails.branch_name}} : {{bankdetails.branch_name}}{{/if}}</div>
+        </td>
+        <td class="stampcell">
+          {{#if Seal}}<img src="{{Seal}}" alt="Company Stamp" onerror="this.style.display='none'"/>{{/if}}
+        </td>
+        <td class="rcvcell">
+          <div class="ar">التوقيع مع الختم</div>
+          <div>Signature with stamp</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+</div>
+
+{{!-- ══════════════════════════════════════════════════════════════════════
+  PIN SCRIPT — measures the real page height (via #page-probe) and decides
+  whether the bank/footer block fits in the space left on its page. If it fits,
+  it is pushed to the bottom of that page; if not, it is moved to the bottom of
+  the NEXT page. Runs inside Puppeteer before page.pdf().
+  NOTE: accurate only when the render viewport matches the PDF page size — see
+  the setViewport note for puppeteer-service.
+═══════════════════════════════════════════════════════════════════════════ --}}
+<script>
+(function () {
+  var probe = document.getElementById('page-probe');   // height:100% => printable page height
+  var fb    = document.querySelector('.footer-block');
+  var sp    = document.querySelector('.items .spacer td');
+  if (!probe || !fb || !sp) return;
+
+  var SAFE = 8;   // stay a hair above the page edge so rounding never wraps it
+
+  function pin() {
+    sp.style.height = '0px';                            // reset before measuring
+    var PAGE_H = probe.getBoundingClientRect().height;  // MEASURED, not guessed from margins
+    if (!(PAGE_H > 0)) return;
+
+    var rect = fb.getBoundingClientRect();
+    var top  = rect.top + window.pageYOffset;           // footer top from doc start
+    var h    = rect.height;                             // footer block height
+    if (h + SAFE >= PAGE_H) return;                     // footer ~ a whole page: leave it
+
+    var startPage = Math.floor(top / PAGE_H);           // page the footer currently lands on
+    var roomLeft  = (startPage + 1) * PAGE_H - top;     // space left on that page
+    var endPage   = (roomLeft >= h + SAFE) ? startPage : startPage + 1;  // move down if it won't fit
+    var targetTop = (endPage + 1) * PAGE_H - h - SAFE;  // pin to the bottom of its page
+    var delta     = targetTop - top;
+    if (delta > 0) sp.style.height = delta + 'px';      // grow spacer to push footer down
+  }
+
+  pin();
+  if (document.readyState !== 'complete') window.addEventListener('load', pin);
+})();
+</script>
+</body>
+</html>

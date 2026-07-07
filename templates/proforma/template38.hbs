@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Proforma invoice - MINU000021INV</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #000;
+    background: #fff;
+  }
+
+  .page {
+    margin: 0 8mm;
+    background: #fff;
+  }
+
+   /* ══════════════════════════════════════
+     TOP SECTION  (two equal halves)
+     LEFT  : Bill To address + VAT/CR
+     RIGHT : QR code (top) + TAX INVOICE title + meta rows
+  ══════════════════════════════════════ */
+  .top-section {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  /* ── LEFT COLUMN ── */
+  .left-col {
+    width: 48%;
+  }
+
+  /* Bill To heading */
+  .bill-to-heading {
+    font-weight: bold;
+    font-size: 11.5px;
+  }
+
+  /* English address block */
+  .addr-en-ar {
+    display: flex;
+    gap: 0;
+  }
+
+  .addr-en {
+    width: 50%;
+    font-size: 11px;
+  }
+
+  .addr-ar {
+    width: 50%;
+    font-size: 11px;
+    text-align: right;
+    direction: ltr;
+  }
+
+  /* Arabic "تمت محاسبته عل" heading */
+  .addr-ar-heading {
+    font-weight: bold;
+    font-size: 11.5px;
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* VAT / CR rows — with top border line separating from address */
+
+  .vat-cr-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+  }
+
+  .vat-cr-en {
+    white-space: nowrap;
+  }
+
+  .vat-cr-ar {
+    direction: rtl;
+    text-align: right;
+    font-size: 11px;
+    color: #000;
+  }
+
+  /* ── RIGHT COLUMN ── */
+  .right-col {
+    margin-left: 10px;
+    width: 52%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  /* QR code sits top-right */
+  .qr-wrap {
+    align-self: flex-end;
+  }
+
+  .qr-wrap img {
+    width: 105px;
+    height: 105px;
+    display: block;
+  }
+
+  /* TAX INVOICE title */
+  .invoice-title {
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    direction: rtl;
+  }
+
+  /* Meta table — sits in right column */
+  .meta-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .meta-table td {
+    padding: 2.5px 4px;
+    font-size: 11px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  /* Col 1: English label */
+  .meta-table td.m-label {
+    font-weight: normal;
+    color: #000;
+  }
+
+  /* Col 2: Value */
+  .meta-table td.m-value {
+    color: #000;
+    padding-right: 3px;
+  }
+
+  /* Col 3: Arabic label */
+  .meta-table td.m-ar {
+    direction: rtl;
+    text-align: right;
+    color: #000;
+    font-size: 11px;
+  }
+
+  /* ─── ITEMS TABLE ─── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+
+  .items-table thead tr th {
+    background-color: #344767;
+    color: #ffffff;
+    text-align: center;
+    padding: 4px 4px;
+    font-size: 9px;
+    font-weight: bold;
+    border: 1px solid #fff;
+    line-height: 1.35;
+  }
+
+  .items-table thead th .ar {
+    display: block;
+    font-size: 8.5px;
+     font-weight: bold;
+    direction: rtl;
+  }
+
+  .items-table tbody td {
+    padding: 4px 5px;
+    text-align: center;
+    font-size: 9.5px;
+    vertical-align: middle;
+  }
+
+  .items-table tbody td.desc {
+    text-align: left;
+    padding-left: 6px;
+  }
+
+  .items-table tbody td.sl {
+    font-weight: 600;
+    width: 22px;
+  }
+
+
+  /* ─── BOTTOM SECTION ─── */
+  .bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 8px;
+    gap: 16px;
+  }
+
+  .terms-col {
+    width: 48%;
+    flex: 1;
+    font-size: 9.5px;
+    line-height: 1.7;
+    padding-top: 2px;
+  }
+
+  .terms-col .terms-heading {
+    font-weight: bold;
+    font-size: 9.5px;
+  }
+
+  /* ─── TOTALS TABLE ─── */
+  .totals-table {
+    width: 53.5%;
+    border-collapse: collapse;
+    flex-shrink: 0;
+  }
+
+  .totals-table td {
+    border: 1px solid #black;
+    padding: 2px 4px;
+    font-size: 9.5px;
+    vertical-align: middle;
+    border:1px solid #000;
+  }
+
+  /* Col 1: label (en) */
+  .totals-table td.t-label {
+    text-align: left;
+  }
+
+  /* Col 2: label (ar) */
+  .totals-table td.t-label-ar {
+    direction: rtl;
+    text-align: right;
+    font-size: 9px;
+  }
+
+  /* Col 3: amount */
+  .totals-table td.t-amount {
+    text-align: right;
+  }
+
+  /* ─── AMOUNT IN WORDS ─── */
+  .words-box {
+    margin-top: 10px;
+    border: 1px solid black;
+  }
+
+  .words-header {
+    background: #344767;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 9.5px;
+  }
+
+  .words-header .ar {
+    direction: rtl;
+    font-size: 9.5px;
+    font-weight: bold;
+
+  }
+
+  .words-body {
+    padding: 6px 10px;
+    font-size: 9.5px;
+    background: #fff;
+  }
+
+
+/* ── Footer : Bank Account + Signature + Stamp ── */
+  .footer-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 5px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .footer-table > tbody > tr > td {
+    border: none;
+    padding: 6px;
+    vertical-align: top;
+    font-size: 10px;
+  }
+
+  .bank-acc-cell {
+    width: 45%;
+  }
+  .bank-acc-cell .bank-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .bank-acc-cell .ba-row {
+    display: table;
+    width: 100%;
+    padding: 1px 0;
+  }
+  .bank-acc-cell .ba-row .lbl {
+    display: table-cell;
+    width: 40%;
+  }
+  .bank-acc-cell .ba-row .val {
+    display: table-cell;
+    width: 60%;
+  }
+
+  .signature-cell {
+    width: 30%;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .stamp-cell {
+    width: 25%;
+    text-align: center;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ TOP: Bill To + QR ══ -->
+  
+  <!-- ══ TOP SECTION ══ -->
+  <div class="top-section">
+
+    <!-- LEFT: Bill To address -->
+    <div class="left-col">
+
+      <!-- Row 1: English heading | Arabic heading -->
+      <div class="addr-en-ar" style="margin-bottom:4px;">
+        <div class="addr-en">
+          <div class="bill-to-heading">Bill To</div>
+        </div>
+        <div class="addr-ar">
+          <div style="font-weight:bold;font-size:11.5px;margin-bottom:5px;">تمت محاسبته عل</div>
+        </div>
+      </div>
+
+      <!-- Row 2: English address lines | Arabic address lines -->
+      <div class="addr-en-ar">
+        <div class="addr-en">
+          Added 1 - cloud EDITED (Id 161)<br>
+          7340<br>
+          AL OLAYA<br>
+          AL OLAYA DIST<br>
+          Dammam<br>
+          Saudi Arabia
+        </div>
+        <div class="addr-ar">
+          عميل الفواتير التجريبي<br>
+          ٧٣٤٠<br>
+          العليا<br>
+          حي العليا<br>
+          الدمام<br>
+          المملكة العربية السعودية
+        </div>
+      </div>
+
+      <!-- VAT / CR rows -->
+      <div class="vat-cr-block">
+        <div class="vat-cr-row">
+          <span class="vat-cr-en">VAT Number : 310588313300003</span>
+          <span class="vat-cr-ar">ضريبة القيمة : ٣١٠٥٨٨٣١٣٣٠٠٠٠٣</span>
+        </div>
+        <div class="vat-cr-row">
+          <span class="vat-cr-en">CR Number &nbsp;: 310588313300003</span>
+          <span class="vat-cr-ar">رقم السجل : ٣١٠٥٨٨٣١٣٣٠٠٠٠٣</span>
+        </div>
+      </div>
+
+    </div><!-- /left-col -->
+
+    <!-- RIGHT: QR + Title + Meta -->
+    <div class="right-col">
+
+      <!-- TAX INVOICE title -->
+      <div class="invoice-title"> فاتورة الأولية&nbsp;&nbsp; PROFORMA INVOICE</div>
+
+      <!-- Meta rows -->
+      <table class="meta-table">
+        <tbody>
+          <tr>
+            <td class="m-label">VAT No</td>
+            <td class="m-value">30008687268326822</td>
+            <td class="m-ar">ضريبة القيمة المضافة</td>
+          </tr>
+          <tr>
+            <td class="m-label" style="width: 24%;"> Number</td>
+            <td class="m-value" style="width: 49%;">MINU000021INV</td>
+            <td class="m-ar" style="width: 27%;">رقم الفاتورة</td>
+          </tr>
+          <tr>
+            <td class="m-label"> Date</td>
+            <td class="m-value">03-Mar-2026</td>
+            <td class="m-ar">تاريخ الفاتورة</td>
+          </tr>
+          <tr>
+            <td class="m-label">P O Number</td>
+            <td class="m-value">ord5454</td>
+            <td class="m-ar">رقم طلب الشراء</td>
+          </tr>
+          <tr>
+            <td class="m-label">P O Date</td>
+            <td class="m-value">06-Mar-2026</td>
+            <td class="m-ar">تاريخ أمر الشراء</td>
+          </tr>
+          <tr>
+            <td class="m-label">Reference No</td>
+            <td class="m-value">12121</td>
+            <td class="m-ar">رقم المرجع</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div><!-- /right-col -->
+
+  </div><!-- /top-section -->
+
+
+  <!-- ══ ITEMS TABLE ══ -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width: 5%;">Sl<br><span class="ar">سرق</span></th>
+        <th style="width: 52%;">Item Description<br><span class="ar">وصف السلعة</span></th>
+        <th style="width: 9%;">Qty<br><span class="ar">كمية</span></th>
+        <th style="width: 8%;">UOM<br><span class="ar">كمية</span></th>
+        <th style="width: 12%;">Unit Rate<br><span class="ar">معدل الوحدة</span></th>
+        <th style="width: 14%;">Grand Total<br><span class="ar">المجموع الإجمالي</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="sl">1</td>
+        <td class="desc">Bolt x<br>lang2 second itemBolt xkklio</td>
+        <td style="text-align: center;">12</td>
+        <td style="text-align: center;">KGS</td>
+        <td style="text-align: right;">30.00</td>
+        <td style="text-align: right;">414.00</td>
+      </tr>
+      
+    </tbody>
+  </table>
+
+  <!-- ══ BOTTOM: Terms + Totals ══ -->
+  <div class="bottom-row">
+
+    <div class="terms-col">
+      <div class="terms-heading">Terms and Conditions :</div>
+      <div>1 - test terms and condition</div>
+    </div>
+
+    <table class="totals-table">
+      <tr>
+        <td class="t-label" style="width:30.33%;">Subtotal</td>
+        <td class="t-label-ar" style="width: 27%;">المجموع الفرعي</td>
+        <td class="t-amount" style="width: 39.67;">8,760.00</td>
+      </tr>
+      <tr>
+        <td class="t-label">Discount</td>
+        <td class="t-label-ar">تخفيض</td>
+        <td class="t-amount">111.50</td>
+      </tr>
+      <tr>
+        <td class="t-label">VAT(15%)</td>
+        <td class="t-label-ar">ضريبة القيمة المضافة</td>
+        <td class="t-amount">1,232.42</td>
+      </tr>
+      <tr>
+        <td class="t-label">Total Amount</td>
+        <td class="t-label-ar">المبلغ الإجمالي</td>
+        <td class="t-amount">9,448.00</td>
+      </tr>
+    </table>
+
+  </div>
+
+  <!-- ══ AMOUNT IN WORDS ══ -->
+  <div class="words-box">
+    <div class="words-header">
+      <span>Total Amount in Words</span>
+      <span class="ar">المبلغ الإجمالي بالكلمات</span>
+    </div>
+    <div class="words-body">
+      UAE Dirham Nine Thousand Four Hundred Forty-Eight
+    </div>
+  </div>
+
+  <!-- Bank Account + Signature + Stamp -->
+  <table class="footer-table">
+    <tr>
+      <td class="bank-acc-cell">
+        <div class="bank-title">Bank Account Details</div>
+        <div class="ba-row"><span class="lbl">Bank Name</span><span class="val">: {{bankdetails.name}}</span></div>
+        <div class="ba-row"><span class="lbl">Account Name</span><span class="val">: {{bankdetails.acc_name}}</span></div>
+        <div class="ba-row"><span class="lbl">Account Number</span><span class="val">: {{bankdetails.acc_no}}</span></div>
+        <div class="ba-row"><span class="lbl">IBAN No</span><span class="val">: {{bankdetails.iban_no}}</span></div>
+        <div class="ba-row"><span class="lbl">SWIFT No</span><span class="val">: {{bankdetails.swift_no}}</span></div>
+        <div class="ba-row"><span class="lbl">Branch Name</span><span class="val">: {{bankdetails.branch_name}}</span></div>
+      </td>
+      <td class="signature-cell">
+        {{#if Signature}}<img src="{{Signature}}" alt="Signature" style="text-align:right;max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+      </td>
+      <td class="stamp-cell">
+        {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+      </td>
+    </tr>
+  </table>
+
+
+</div>
+</body>
+</html>
