@@ -12,7 +12,7 @@
     margin: 0mm 10mm;
     background: #ffffff;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     color: #222;
     line-height: 1.4;
   }
@@ -49,14 +49,12 @@
     border: 1px solid #000;
     padding: 4px 4px;
     vertical-align: middle;
-    font-size: 11px;
+    font-size: 12px;
   }
   .info-table .lbl {
     background: #d3d3d3;
     font-weight: bold;
-    width: 20%;
   }
-  .info-table .val { width: 30%; }
 
   /* ── Scope of Work bar ─────────────────────── */
   .scope-bar {
@@ -74,7 +72,7 @@
     border-bottom: none;
     min-height: 22px;
     padding: 4px 4px;
-    font-size: 11px;
+    font-size: 12px;
   }
 
   /* ── Items table ───────────────────────────── */
@@ -86,7 +84,7 @@
   .items-table th, .items-table td {
     border: 1px solid #000;
     padding: 4px 5px;
-    font-size: 11px;
+    font-size: 12px;
     vertical-align: middle;
   }
   .items-table th {
@@ -98,7 +96,7 @@
     display: block;
     font-weight: bold;
     direction: rtl;
-    font-size: 11px;
+    font-size: 12px;
     margin-bottom: 2px;
   }
   .items-table .center { text-align: center; }
@@ -112,7 +110,7 @@
   .totals-row td {
     border: 1px solid #000;
     padding: 4px 4px;
-    font-size: 11px;
+    font-size: 12px;
   }
   .totals-row .t-label {
     text-align: right;
@@ -129,7 +127,7 @@
     border: 1px solid #000;
     border-bottom: none;
     padding: 4px 4px;
-    font-size: 11px;
+    font-size: 12px;
   }
 
   /* ── Terms / Payment table ─────────────────── */
@@ -141,7 +139,7 @@
     border: 1px solid #000;
     padding: 4px 4px;
     vertical-align: top;
-    font-size: 11px;
+    font-size: 12px;
   }
   .terms-table .t-title {
     font-weight: bold;
@@ -158,7 +156,7 @@
   .sign-row td {
     width: 33.33%;
     padding: 4px 8px;
-    font-size: 11px;
+    font-size: 12px;
     vertical-align: top;
   }
   .sign-row .s-lbl {
@@ -188,45 +186,41 @@
 
   <!-- Top Info Table -->
   <table class="info-table">
+    <colgroup>
+        <col style="width:20%">
+        <col style="width:80%">
+    </colgroup>
     <tr>
       <td class="lbl">Number</td>
-      <td colspan="3">{{basicdetails.[0].inv_no}}</td>
+      <td class="val">{{basicdetails.[0].inv_no}}</td>
     </tr>
     <tr>
       <td class="lbl">Date</td>
-      <td colspan="3">{{basicdetails.[0].inv_date}}</td>
+      <td class="val">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="lbl">LPO No.</td>
+      <td class="val">{{basicdetails.[0].order_no}}</td>
     </tr>
     <tr>
       <td class="lbl">Client / To</td>
-      <td colspan="3">{{billing_address.[0].name}}</td>
+      <td class="val">{{billing_address.[0].name}}</td>
     </tr>
     <tr>
       <td class="lbl">Address</td>
-      <td colspan="3">{{joinAddress billing_address.[0] "، "}}</td>
+      <td class="val">{{joinAddress billing_address.[0] "، "}}</td>
     </tr>
     <tr>
       <td class="lbl">Customer VAT </td>
-      <td colspan="3">{{customer_details.[0].VAT_number}}</td>
-    </tr>
-    <tr>
-      <td class="lbl">Contact Person</td>
-      <td colspan="3">{{basicdetails.[0].contactname}}</td>
-    </tr>
-    <tr>
-      <td class="lbl">Email</td>
-      <td class="val">{{customer_details.[0].email}}</td>
-      <td class="lbl">Contact No :</td>
-      <td class="val">{{customer_details.[0].contact_no1}}</td>
+      <td class="val">{{customer_details.[0].VAT_number}}</td>
     </tr>
     <tr>
       <td class="lbl">Project Name</td>
       <td class="val">{{basicdetails.[0].projectname}}</td>
-      <td class="lbl">Ref No :</td>
-      <td class="val">{{basicdetails.[0].reference_no}}</td>
     </tr>
     <tr>
       <td class="lbl">Attention</td>
-      <td class="val" colspan="3">{{basicdetails.[0].attention}}</td>
+      <td class="val">{{basicdetails.[0].attention}}</td>
     </tr>
   </table>
 
@@ -238,10 +232,11 @@
   <table class="items-table">
     <colgroup>
       <col style="width:6%">
-      <col style="width:52%">
+      <col style="width:42%">
       <col style="width:7%">
       <col style="width:8%">
       <col style="width:12%">
+      <col style="width:10%">
       <col style="width:15%">
     </colgroup>
     <thead>
@@ -251,6 +246,7 @@
         <th><span class="ar">وحدة</span>UOM</th>
         <th><span class="ar">كمية</span>Qty</th>
         <th><span class="ar">السعر الصافي</span>Net Price</th>
+        <th><span class="ar">تخفيض</span>Discount</th>
         <th><span class="ar">السعر الإجمالي</span>Total Price</th>
       </tr>
     </thead>
@@ -267,20 +263,21 @@
           <td class="center">{{unit}}</td>
           <td class="center">{{formatAmount quantity ../bcdp}}</td>
           <td class="right">{{formatAmount price ../bcdp}}</td>
+          <td class="right">{{formatAmount disc_amt ../bcdp}}</td>
           <td class="right">{{formatAmount amount ../bcdp}}</td>
         </tr>
       {{/each}}
 
       <tr class="totals-row">
-        <td colspan="5"  class="t-label">Sub Total</td>
+        <td colspan="6"  class="t-label">Sub Total</td>
         <td class="t-value">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
       </tr>
       <tr class="totals-row">
-        <td colspan="5"  class="t-label">Discount</td>
-        <td class="t-value">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+        <td colspan="6"  class="t-label">Discount</td>
+        <td class="t-value">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
       </tr>
       <tr class="totals-row">
-        <td colspan="5"  class="t-label">Grand Total</td>
+        <td colspan="6"  class="t-label">Grand Total</td>
         <td class="t-value">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
       </tr>
     </tbody>
