@@ -13,42 +13,74 @@
       padding: 0;
     }
 
-    .wrapper { padding: 28px 15px; }
+    .wrapper { padding: 28px 22px; }
 
     /* ── Company Header ─────────────────────────── */
     .co-header {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      padding-bottom: 12px;
-      border-bottom: 2px solid #344767;
-      margin-bottom: 12px;
+      padding-bottom: 14px;
+      border-bottom: 3px solid #344767;
+      margin-bottom: 16px;
     }
-    .co-header .logo img {
-      max-height: 52px;
-      max-width: 140px;
+    .co-header-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .co-logo img {
+      height: 54px;
+      width: auto;
       object-fit: contain;
     }
-    .co-header .co-info { text-align: right; }
-    .co-header .co-info .co-name {
-      font-size: 14px;
+    .co-details { display: flex; flex-direction: column; justify-content: center; }
+    .co-name {
+      font-size: 16px;
       font-weight: 700;
       color: #344767;
       margin: 0 0 2px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
     }
-    .co-header .co-info p { margin: 0; font-size: 10px; color: #666; }
-
-    /* ── Slip Title Bar ─────────────────────────── */
-    .slip-title {
+    .co-reg {
+      font-size: 11px;
+      color: #555;
+      margin: 0 0 2px;
+    }
+    .co-address {
+      font-size: 10px;
+      color: #777;
+      margin: 0 0 2px;
+      max-width: 420px;
+      line-height: 1.4;
+    }
+    .co-meta {
+      font-size: 10px;
+      color: #777;
+      margin: 0;
+    }
+    .co-header-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .slip-badge {
+      display: inline-block;
       background: #344767;
       color: #fff;
-      text-align: center;
-      padding: 7px 0;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      margin-bottom: 14px;
+      padding: 4px 14px;
+      border-radius: 3px;
+      margin-bottom: 5px;
+    }
+    .slip-period {
+      font-size: 12px;
+      font-weight: 600;
+      color: #344767;
+      margin: 0;
     }
 
     /* ── Info Grid ──────────────────────────────── */
@@ -66,15 +98,15 @@
       background: #f0f2f5;
       font-weight: 600;
       color: #555;
-      width: 15%;
+      width: 18%;
       white-space: nowrap;
     }
     .info-table td.val {
       color: #222;
-      width: 35%;
+      width: 32%;
     }
 
-    /* ── Section Tables ─────────────────────────── */
+    /* ── Section Header ─────────────────────────── */
     .section-title {
       font-size: 11px;
       font-weight: 700;
@@ -85,13 +117,14 @@
       padding: 5px 8px;
       border: 1px solid #dee2e6;
       border-bottom: none;
-      margin-top: 14px;
+      margin-top: 16px;
     }
+
+    /* ── Slip Tables ────────────────────────────── */
     .slip-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 11px;
-      margin-bottom: 0;
     }
     .slip-table thead tr th {
       background: #f8f9fa;
@@ -117,35 +150,55 @@
     .text-end { text-align: right; }
     .text-center { text-align: center; }
 
-    /* ── Totals Summary ─────────────────────────── */
-    .totals-wrapper {
+    /* ── Statutory Side-by-Side ─────────────────── */
+    .statutory-wrap {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .statutory-wrap > div { flex: 1; }
+
+    /* ── Net Pay Summary ────────────────────────── */
+    .summary-wrap {
       display: flex;
       justify-content: flex-end;
       margin-top: 16px;
     }
-    .totals-table {
+    .summary-table {
       border-collapse: collapse;
       font-size: 11px;
-      min-width: 300px;
+      min-width: 320px;
     }
-    .totals-table td {
-      padding: 5px 12px;
+    .summary-table td {
+      padding: 5px 14px;
       border: 1px solid #dee2e6;
     }
-    .totals-table td.t-lbl {
+    .summary-table td.s-lbl {
       background: #f0f2f5;
       font-weight: 600;
       color: #555;
     }
-    .totals-table td.t-val { text-align: right; min-width: 100px; }
-    .totals-table tr.net td {
+    .summary-table td.s-val { text-align: right; min-width: 110px; }
+    .summary-table tr.net td {
       background: #344767;
       color: #fff;
       font-weight: 700;
-      font-size: 12px;
+      font-size: 13px;
     }
 
-    /* ── Employer Contributions ─────────────────── */
+    /* ── Amount in Words ────────────────────────── */
+    .amount-words {
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-left: 4px solid #344767;
+      font-size: 11px;
+      color: #333;
+    }
+    .amount-words span { font-weight: 600; color: #344767; }
+
+    /* ── Employer Note ──────────────────────────── */
     .er-note {
       font-size: 9px;
       color: #888;
@@ -155,68 +208,95 @@
 
     /* ── Footer ─────────────────────────────────── */
     .slip-footer {
-      margin-top: 30px;
+      margin-top: 28px;
       padding-top: 10px;
       border-top: 1px solid #dee2e6;
       font-size: 9px;
       color: #999;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
   </style>
 </head>
 <body>
 <div class="wrapper">
 
-  <!-- Company Header -->
+  <!-- ── Company Header ──────────────────────────── -->
   <div class="co-header">
-    <div class="logo">
+    <div class="co-header-left">
+
       {{#if Companylogo}}
+      <div class="co-logo">
         <img src="{{Companylogo}}" alt="Logo" />
+      </div>
       {{/if}}
+
+      <div class="co-details">
+        {{#if company_profile.name}}
+        <p class="co-name">{{company_profile.name}}</p>
+        {{/if}}
+        {{#if company_profile.id_no}}
+        <p class="co-reg">Reg. No: {{company_profile.id_no}}</p>
+        {{/if}}
+        {{#if company_profile.address}}
+        <p class="co-address">{{company_profile.address}}</p>
+        {{/if}}
+        <p class="co-meta">
+          {{#if company_profile.contact_no1}}Tel: {{company_profile.contact_no1}}{{/if}}
+          {{#if company_profile.email}}&nbsp;&nbsp;|&nbsp;&nbsp;{{company_profile.email}}{{/if}}
+          {{#if company_profile.tin}}&nbsp;&nbsp;|&nbsp;&nbsp;TIN: {{company_profile.tin}}{{/if}}
+        </p>
+      </div>
     </div>
-    <div class="co-info">
-      {{#if company_name}}<p class="co-name">{{company_name}}</p>{{/if}}
+
+    <div class="co-header-right">
+      <div class="slip-badge">Salary Slip</div>
+      <p class="slip-period">{{formatMonthYear slip.period_from}}</p>
     </div>
   </div>
 
-  <!-- Title Bar -->
-  <div class="slip-title">Salary Slip</div>
-
-  <!-- Employee Info -->
+  <!-- ── Employee Details ─────────────────────────── -->
   <table class="info-table">
     <tbody>
       <tr>
-        <td class="lbl">Employee</td>
+        <td class="lbl">Employee Name</td>
         <td class="val">
           {{slip.employee_name}}
-          {{#if slip.profile_code}}<span style="color:#888;font-size:10px;">({{slip.profile_code}})</span>{{/if}}
+          {{#if slip.profile_code}}<span style="color:#888;font-size:10px;">&nbsp;({{slip.profile_code}})</span>{{/if}}
         </td>
         <td class="lbl">Pay Period</td>
         <td class="val">{{formatDate slip.period_from}} &mdash; {{formatDate slip.period_to}}</td>
       </tr>
       <tr>
-        <td class="lbl">Date</td>
+        <td class="lbl">IC / Passport No</td>
+        <td class="val">{{default slip.ic_no '-'}}</td>
+        <td class="lbl">Pay Date</td>
         <td class="val">{{formatDate slip.date}}</td>
-        <td class="lbl">Reference No</td>
-        <td class="val">{{default slip.reference_no '-'}}</td>
       </tr>
       <tr>
-        <td class="lbl">Basic Pay</td>
-        <td class="val">RM {{formatAmount slip.basic_pay}}</td>
-        <td class="lbl">Description</td>
-        <td class="val">{{default slip.description '-'}}</td>
+        <td class="lbl">EPF (KWSP) No</td>
+        <td class="val">{{default slip.epf_no '-'}}</td>
+        <td class="lbl">SOCSO (PERKESO) No</td>
+        <td class="val">{{default slip.socso_no '-'}}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Income Tax No</td>
+        <td class="val">{{default slip.income_tax_no '-'}}</td>
+        <td class="lbl">Reference No</td>
+        <td class="val">{{default slip.reference_no '-'}}</td>
       </tr>
     </tbody>
   </table>
 
-  <!-- Earnings -->
+  <!-- ── Earnings ─────────────────────────────────── -->
   <div class="section-title">Earnings</div>
   <table class="slip-table">
     <thead>
       <tr>
-        <th style="width:35%;">Category</th>
-        <th style="width:30%;">Description</th>
-        <th class="text-end" style="width:12%;">Unit</th>
+        <th style="width:38%;">Category</th>
+        <th style="width:28%;">Description</th>
+        <th class="text-end" style="width:11%;">Unit</th>
         <th class="text-end" style="width:12%;">Rate (RM)</th>
         <th class="text-end" style="width:11%;">Amount (RM)</th>
       </tr>
@@ -242,14 +322,14 @@
     </tfoot>
   </table>
 
-  <!-- Deductions -->
-  <div class="section-title">Deductions</div>
+  <!-- ── Deductions ───────────────────────────────── -->
+  <div class="section-title">Deductions (Employee)</div>
   <table class="slip-table">
     <thead>
       <tr>
-        <th style="width:35%;">Category</th>
-        <th style="width:30%;">Description</th>
-        <th class="text-end" style="width:12%;">Unit</th>
+        <th style="width:38%;">Category</th>
+        <th style="width:28%;">Description</th>
+        <th class="text-end" style="width:11%;">Unit</th>
         <th class="text-end" style="width:12%;">Rate (RM)</th>
         <th class="text-end" style="width:11%;">Amount (RM)</th>
       </tr>
@@ -275,10 +355,13 @@
     </tfoot>
   </table>
 
-  <!-- Employer Contributions (if any) -->
+  <!-- ── Employer Contributions ───────────────────── -->
   {{#if employer_contributions.length}}
   {{#if_gt employer_contributions.length 0}}
-  <div class="section-title">Employer Contributions <span class="er-note">(not deducted from employee)</span></div>
+  <div class="section-title">
+    Employer Contributions
+    <span class="er-note">(not deducted from employee salary)</span>
+  </div>
   <table class="slip-table">
     <thead>
       <tr>
@@ -298,29 +381,35 @@
   {{/if_gt}}
   {{/if}}
 
-  <!-- Net Pay Summary -->
-  <div class="totals-wrapper">
-    <table class="totals-table">
+  <!-- ── Net Pay Summary ──────────────────────────── -->
+  <div class="summary-wrap">
+    <table class="summary-table">
       <tbody>
         <tr>
-          <td class="t-lbl">Total Earnings</td>
-          <td class="t-val">RM {{formatAmount slip.total_earnings}}</td>
+          <td class="s-lbl">Total Earnings</td>
+          <td class="s-val">RM {{formatAmount slip.total_earnings}}</td>
         </tr>
         <tr>
-          <td class="t-lbl">Total Deductions</td>
-          <td class="t-val">RM {{formatAmount slip.total_deductions}}</td>
+          <td class="s-lbl">Total Deductions</td>
+          <td class="s-val">RM {{formatAmount slip.total_deductions}}</td>
         </tr>
         <tr class="net">
-          <td class="t-lbl">Net Pay</td>
-          <td class="t-val">RM {{formatAmount slip.total}}</td>
+          <td class="s-lbl">Net Pay (Gaji Bersih)</td>
+          <td class="s-val">RM {{formatAmount slip.total}}</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Footer -->
+  <!-- ── Amount in Words ──────────────────────────── -->
+  <div class="amount-words">
+    Amount in Words: <span>{{amountInWords slip.total}}</span>
+  </div>
+
+  <!-- ── Footer ───────────────────────────────────── -->
   <div class="slip-footer">
-    This is a computer-generated salary slip and does not require a signature.
+    <span>This is a computer-generated salary slip and does not require a signature.</span>
+    <span style="color:#bbb;">CONFIDENTIAL</span>
   </div>
 
 </div>

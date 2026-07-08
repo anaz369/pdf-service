@@ -431,6 +431,45 @@ class TemplateService {
     Handlebars.registerHelper('formatNumber', function (val) {
       return parseFloat(val || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     });
+
+    Handlebars.registerHelper('formatMonthYear', function (dateStr) {
+      if (!dateStr) return '';
+      try {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-MY', { month: 'long', year: 'numeric' });
+      } catch {
+        return dateStr;
+      }
+    });
+    Handlebars.registerHelper('amountInWords', function (amount) {
+      const num = parseFloat(String(amount || 0).replace(/,/g, '')) || 0;
+      const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+        'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen',
+        'Seventeen', 'Eighteen', 'Nineteen'];
+      const tensW = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+      function convertHundreds(n) {
+        if (n === 0) return '';
+        if (n < 20) return ones[n];
+        if (n < 100) return tensW[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + ones[n % 10] : '');
+        return ones[Math.floor(n / 100)] + ' Hundred' + (n % 100 !== 0 ? ' and ' + convertHundreds(n % 100) : '');
+      }
+
+      function toWords(n) {
+        if (n === 0) return 'Zero';
+        let result = '';
+        if (n >= 1000000) { result += convertHundreds(Math.floor(n / 1000000)) + ' Million '; n %= 1000000; }
+        if (n >= 1000) { result += convertHundreds(Math.floor(n / 1000)) + ' Thousand '; n %= 1000; }
+        if (n > 0) result += convertHundreds(n);
+        return result.trim();
+      }
+
+      const intPart = Math.floor(num);
+      const cents = Math.round((num - intPart) * 100);
+      let words = 'Ringgit Malaysia ' + toWords(intPart);
+      if (cents > 0) words += ' and ' + toWords(cents) + ' Cents';
+      return words + ' Only';
+    });
     // ✅ END OF ADDED LINES
 
   }
