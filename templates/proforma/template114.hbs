@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>PROFORMA INVOICE - {{basicdetails.[0].inv_no}}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #000;
+    background: #fff;
+  }
+
+  .page { margin: 0 8mm; background: #fff; }
+
+  /* ── TOP SECTION ── */
+  .top-section { display: flex; align-items: flex-start; width: 100%; }
+
+  .left-col { width: 48%; }
+  .bill-to-heading { font-weight: bold; font-size: 11.5px; margin-bottom: 6px; }
+  .bill-to-body { font-size: 11px; line-height: 1.5; }
+
+  .right-col { margin-left: 10px; width: 52%; display: flex; flex-direction: column; align-items: flex-end; }
+  .qr-wrap { align-self: flex-end; }
+  .qr-wrap img { width: 105px; height: 105px; display: block; }
+
+  .invoice-title { width: 100%; text-align: left; font-size: 17px; font-weight: bold;  margin: 10px 0 8px; }
+
+  .meta-table { width: 100%; border-collapse: collapse; }
+  .meta-table td { padding: 2px 4px; font-size: 11px; vertical-align: middle; }
+  .meta-table td.m-label { color: #000; }
+  .meta-table td.m-value { color: #000; }
+
+  /* ── ITEMS TABLE ── */
+  .items-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  .items-table thead tr th {
+    background-color: #344767; color: #fff; text-align: center;
+    padding: 5px 4px; font-size: 9px; font-weight: bold; border: 1px solid #fff;
+  }
+  .items-table tbody td {
+    padding: 4px 5px; text-align: center; font-size: 9.5px; vertical-align: top;
+  }
+  .items-table tbody td.desc { text-align: left; }
+  .items-table tbody td.r { text-align: right; }
+
+  /* ── MIDDLE : TERMS | BANK + TOTALS ── */
+  .mid { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 12px; }
+  .mid > tbody > tr > td { vertical-align: top; padding: 0; border: none; }
+
+  .terms-heading { display: flex; justify-content: space-between; font-weight: bold; font-size: 10px; }
+  .terms-heading .ar { direction: rtl; }
+  .terms-body { font-size: 9.5px; margin-top: 4px; }
+
+  .bank-box { border: 1px solid #000; padding: 6px 8px; font-size: 10px; }
+  .bank-box .bank-title { font-weight: bold; margin-bottom: 6px; }
+  .bank-box .bank-line { line-height: 1.4; }
+
+  .totals-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .totals-table td { border: 1px solid #000000; padding: 4px 8px; font-size: 9.5px; }
+  .totals-table .t-lbl { width: 68%; }
+  .totals-table .t-val { text-align: right; }
+
+  /* ── AMOUNT IN WORDS ── */
+  .words-box { margin-top: 12px; border: 1px solid #000; }
+  .words-header {
+    background: #344767; color: #fff; display: flex; justify-content: space-between;
+    align-items: center; padding: 5px 10px; font-weight: bold; font-size: 9.5px;
+  }
+  .words-header .ar { direction: rtl; }
+  .words-body { display: flex; justify-content: space-between; padding: 6px 10px; font-size: 9.5px; }
+  .words-body .ar { direction: rtl; }
+
+  /* ── SIGN / STAMP ── */
+  .sign-row { display: flex; align-items: flex-start; gap: 30px; margin-top: 14px; }
+  .sign-row img { max-height: 90px; max-width: 130px; }
+
+  .footer-block { page-break-inside: avoid; break-inside: avoid; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ TOP : BILL TO + QR + META ══ -->
+  <div class="top-section">
+    <div class="left-col">
+      <div class="bill-to-heading">Bill To</div>
+      <div class="bill-to-body">
+        {{billing_address.[0].name}}<br>
+        {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}<br>{{/if}}
+        {{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}<br>{{/if}}
+        {{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}<br>{{/if}}
+        {{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}<br>{{/if}}
+        {{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}<br>{{/if}}
+        Customer VAT Number : {{billing_address.[0].vat}}<br>
+        CR Number : {{customer_details.[0].cr_no}}
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="qr-wrap"></div>
+
+      <div class="invoice-title">PROFORMA INVOICE</div>
+
+      <table class="meta-table">
+        <tr><td class="m-label">Doc Number</td><td class="m-value">{{basicdetails.[0].inv_no}}</td></tr>
+        <tr><td class="m-label">Date</td><td class="m-value">{{basicdetails.[0].inv_date}}</td></tr>
+        <tr><td class="m-label">PO Number</td><td class="m-value">{{basicdetails.[0].order_no}}</td></tr>
+        <tr><td class="m-label">PO Date</td><td class="m-value">{{basicdetails.[0].sup_date}}</td></tr>
+        <tr><td class="m-label">Reference No</td><td class="m-value">{{basicdetails.[0].reference_no}}</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ ITEMS ══ -->
+  <table class="items-table">
+    <colgroup>
+      <col style="width:4%">
+      <col style="width:35%">
+      <col style="width:7%">
+      <col style="width:8%">
+      <col style="width:10%">
+      <col style="width:13%">
+      <col style="width:10%">
+      <col style="width:13%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Sl</th>
+        <th>Item Description</th>
+        <th>Qty</th>
+        <th>UOM</th>
+        <th>Unit Rate</th>
+        <th>Total</th>
+        <th>Tax(15%)</th>
+        <th>Grand Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td>{{addOne @index}}</td>
+        <td class="desc">{{item_name}}{{name_lang2}}{{#if description}} {{description}}{{/if}}</td>
+        <td>{{formatAmount quantity ../bcdp}}</td>
+        <td>{{unit}}</td>
+        <td class="r">{{formatAmount price ../bcdp}}</td>
+        <td class="r">{{formatAmount taxable ../bcdp}}</td>
+        <td class="r">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="r">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- ══ TERMS | BANK + TOTALS ══ -->
+  <table class="mid">
+    <colgroup><col style="width:45%"><col style="width:3%"><col style="width:52%"></colgroup>
+    <tr>
+      <td>
+        <div class="terms-heading">
+          <span>Terms and Conditions</span>
+          <span class="ar">الأحكام والشروط</span>
+        </div>
+        <div class="terms-body">{{basicdetails.[0].terms_and_condition}}</div>
+      </td>
+      <td></td>
+      <td>
+        <div class="bank-box">
+          <div class="bank-title">Bank Account Details:</div>
+          <div class="bank-line">{{bankdetails.name}}</div>
+          <div class="bank-line">{{bankdetails.acc_name}}</div>
+          <div class="bank-line">{{bankdetails.acc_no}}</div>
+        </div>
+
+        <table class="totals-table">
+          <tr><td class="t-lbl">Subtotal</td><td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td></tr>
+          <tr><td class="t-lbl">Discount</td><td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td></tr>
+          <tr><td class="t-lbl">TAX (15%)</td><td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td></tr>
+          <tr><td class="t-lbl">Total Amount In {{basicdetails.[0].base_country_isocode}}</td><td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <div class="footer-block">
+  <!-- ══ AMOUNT IN WORDS ══ -->
+  <div class="words-box">
+    <div class="words-header">
+      <span>Total Amount in Words</span>
+      <span class="ar">المبلغ الإجمالي بالكلمات</span>
+    </div>
+    <div class="words-body">
+      <span>{{bcamountinwords}}</span>
+      <span class="ar">{{bcamountinwordsar}}</span>
+    </div>
+  </div>
+
+  <!-- ══ SIGN / STAMP ══ -->
+  <div class="sign-row">
+    {{#if Signature}}<img src="{{Signature}}" alt="Signature" onerror="this.style.display='none'"/>{{/if}}
+    {{#if Seal}}<img src="{{Seal}}" alt="Seal" onerror="this.style.display='none'"/>{{/if}}
+  </div>
+  </div><!-- /footer-block -->
+
+</div>
+</body>
+</html>

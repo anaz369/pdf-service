@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>PROFORMA INVOICE - {{basicdetails.[0].inv_no}}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9.5px;
+    color: #000;
+    background: #fff;
+    margin: 0 6mm;
+  }
+
+  .ar { direction: rtl; }
+  table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+  .blue { color: #00008B; }
+
+  /* ── TITLE ── */
+  .doc-title { text-align: center; font-size: 15px; font-weight: bold; color: #c00000; margin-bottom: 6px; }
+  .doc-title .ar { color: #333; }
+
+  /* ── TOP BOXES ── */
+  .naked { border: none; }
+  .naked > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+  .gap { width: 2%; }
+
+  .party td { border: 1px solid #000; padding: 3px 5px; font-size: 9.5px; vertical-align: middle; }
+  .party .lbl { font-weight: bold; color: #00008B; }
+  .party .arl { font-weight: bold; color: #00008B; direction: rtl; text-align: right; }
+
+  /* ── ITEMS ── */
+  .items { border: 1px solid #000; }
+  .items thead th {
+    border: 1px solid #000; color: #00008B; text-align: center;
+    padding: 3px 4px; font-size: 9px; line-height: 1.25;
+  }
+  .items thead th .ar { display: block; direction: rtl; font-weight: bold; }
+  .items thead th .en { display: block; font-weight: bold; }
+  .items tbody td { border-left: 1px solid #000; border-right: 1px solid #000; padding: 3px 5px; font-size: 9px; vertical-align: top; text-align: center; }
+  .items tbody td.desc { text-align: left; }
+  .items tbody td.r { text-align: right; }
+  .items tbody tr.spacer td { height: 180px; }
+
+  /* ── BOTTOM : TERMS | TOTALS ── */
+  .bottom td { border: 1px solid #000; vertical-align: top; }
+  .terms-cell { padding: 5px 6px; }
+  .terms-cell .th { font-weight: bold; margin-bottom: 4px; }
+
+  .totals { border-collapse: collapse; width: 100%; table-layout: fixed; }
+  .totals td { border: 1px solid #000; padding: 3px 6px; font-size: 9px; }
+  .totals .t-en { color: #00008B; font-weight: bold; width: 36%; }
+  .totals .t-ar { color: #00008B; direction: rtl; text-align: right; width: 34%; }
+  .totals .t-val { text-align: right; width: 30%; }
+  .totals tr.grand td { font-weight: bold; }
+
+  /* ── WORDS ── */
+  .words td { border: 1px solid #000; padding: 4px 6px; font-size: 9px; }
+  .words .en { width: 55%; }
+  .words .arw { width: 45%; direction: rtl; text-align: right; }
+
+  /* ── SIGN ── */
+  .sign { margin-top: 30px; }
+  .sign td { text-align: center; color: #00008B; font-size: 10px; padding: 0 20px; }
+  .sign .line { margin-top: 34px; border-top: 1px solid #000; width: 70%; margin-left: auto; margin-right: auto; }
+
+  .footer-block { page-break-inside: avoid; break-inside: avoid; }
+</style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="doc-title">PROFORMA INVOICE / <span class="ar">الفاتورة الأولية</span></div>
+
+  <!-- TOP : CUSTOMER | DOC -->
+  <table class="naked">
+    <colgroup><col style="width:52%"><col class="gap"><col style="width:46%"></colgroup>
+    <tr>
+      <td>
+        <table class="party">
+          <colgroup><col style="width:26%"><col style="width:49%"><col style="width:25%"></colgroup>
+          <tr>
+            <td class="lbl">Customer Name</td>
+            <td>{{billing_address.[0].name}}</td>
+            <td class="arl">اسم العميل</td>
+          </tr>
+          <tr>
+            <td class="lbl">Address</td>
+            <td>{{joinAddress billing_address.[0] ', '}}</td>
+            <td class="arl">العنوان</td>
+          </tr>
+          <tr>
+            <td class="lbl">Phone</td>
+            <td>{{customer_details.[0].contact_no1}}</td>
+            <td class="arl">هاتف</td>
+          </tr>
+          <tr>
+            <td class="lbl">Customer VAT No</td>
+            <td>{{billing_address.[0].vat}}</td>
+            <td class="arl">رقم ضريبة العميل</td>
+          </tr>
+        </table>
+      </td>
+      <td></td>
+      <td>
+        <table class="party">
+          <colgroup><col style="width:30%"><col style="width:40%"><col style="width:30%"></colgroup>
+          <tr>
+            <td class="lbl">Customer No</td>
+            <td>{{customer_details.[0].profile_code}}</td>
+            <td class="arl">رقم العميل</td>
+          </tr>
+          <tr>
+            <td class="lbl">Doc No</td>
+            <td>{{basicdetails.[0].inv_no}}</td>
+            <td class="arl">رقم المستند</td>
+          </tr>
+          <tr>
+            <td class="lbl">Doc Date</td>
+            <td>{{basicdetails.[0].inv_date}}</td>
+            <td class="arl">تاريخ الوثيقة</td>
+          </tr>
+          <tr>
+            <td class="lbl"><span class="arl" style="display:block;">رقم امر الشراء</span>P O Number</td>
+            <td colspan="2" style="text-align:center;">{{basicdetails.[0].order_no}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items" style="margin-top:6px;">
+    <colgroup>
+      <col style="width:4%"><col style="width:33%"><col style="width:8%"><col style="width:8%">
+      <col style="width:12%"><col style="width:12%"><col style="width:11%"><col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th><span class="ar">م</span><span class="en">S.N</span></th>
+        <th><span class="ar">الوصف</span><span class="en">Description</span></th>
+        <th><span class="ar">الكمية</span><span class="en">QTY</span></th>
+        <th><span class="ar">الوحدة</span><span class="en">Unit</span></th>
+        <th><span class="ar">سعر الوحدة</span><span class="en">U.Rate</span></th>
+        <th><span class="ar">مبلغ</span><span class="en">Amount</span></th>
+        <th><span class="ar">قيمة الضريبة</span><span class="en">VAT Value</span></th>
+        <th><span class="ar">القيمة الاجمالي</span><span class="en">Total Price</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td>{{addOne @index}}</td>
+        <td class="desc">{{item_name}}{{name_lang2}}{{#if description}} {{description}}{{/if}}</td>
+        <td>{{formatAmount quantity ../bcdp}}</td>
+        <td>{{unit}}</td>
+        <td class="r">{{formatAmount price ../bcdp}}</td>
+        <td class="r">{{formatAmount taxable ../bcdp}}</td>
+        <td class="r">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="r">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr class="spacer">
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-block">
+  <!-- BOTTOM : TERMS | TOTALS -->
+  <table class="bottom">
+    <colgroup><col style="width:58%"><col style="width:42%"></colgroup>
+    <tr>
+      <td class="terms-cell">
+        <div class="th">Terms &amp; Conditions</div>
+        <div>{{basicdetails.[0].terms_and_condition}}</div>
+      </td>
+      <td style="padding:0;">
+        <table class="totals">
+          <tr>
+            <td class="t-en">Total Amount</td>
+            <td class="t-ar">المبلغ الإجمالي</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="t-en">Discount</td>
+            <td class="t-ar">الخصم</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="t-en">Net Amount</td>
+            <td class="t-ar">صافي المجموع</td>
+            <td class="t-val">{{formatAmount (divide (subtract basicdetails.[0].subtotal basicdetails.[0].discount) ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="t-en">{{default datasettingstextvalue.d828 'VAT'}}</td>
+            <td class="t-ar">ضريبة القيمة المضافة</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+          </tr>
+          <tr class="grand">
+            <td class="t-en">Grand Total</td>
+            <td class="t-ar">المبلغ الإجمالي</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- AMOUNT IN WORDS -->
+  <table class="words">
+    <tr>
+      <td class="en">{{bcamountinwords}}</td>
+      <td class="arw">{{bcamountinwordsar}}</td>
+    </tr>
+  </table>
+
+  <!-- SIGN -->
+  <table class="sign naked">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td>
+        Accountant/<span class="ar">محاسب</span>
+        <div class="line">-------------------</div>
+      </td>
+      <td>
+        Received by/<span class="ar">المتلقي</span>
+        <div class="line"></div>
+      </td>
+    </tr>
+  </table>
+  </div><!-- /footer-block -->
+
+</body>
+</html>

@@ -1,0 +1,269 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PROFORMA INVOICE - {{basicdetails.[0].inv_no}}</title>
+    <style>
+      *,
+      *::before,
+      *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: "IBM Plex Sans Arabic", Arial, sans-serif;
+        font-size: 9px;
+        line-height: 1.3;
+        color: #000;
+        margin: 0 4mm;
+      }
+
+      .ar { direction: rtl; }
+
+      table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+      /* ── TITLE ─────────────────────────────── */
+      .doc-title {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 800;
+        color: #202940;
+        margin-bottom: 6px;
+      }
+
+      /* ── GENERIC BORDERED TABLE ────────────── */
+      .bx { border-collapse: collapse; width: 100%; table-layout: fixed; }
+      .bx td { border: 1px solid #ccc; padding: 3px 5px; font-size: 9px; vertical-align: top; }
+      .hd { text-align: center; }
+      .c { text-align: center; }
+      .r { text-align: right; }
+      .mt { margin-top: 6px; }
+
+      .naked { border: none; }
+      .naked > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+      .gap { width: 1%; }
+
+      /* ── ITEMS ─────────────────────────────── */
+      .items td, .items th { border: 1px solid #ccc; padding: 3px 5px; font-size: 9px; vertical-align: top; }
+      .items thead th { background: #f2f2f2; text-align: center; font-weight: 700; }
+      .items td.num { text-align: center; }
+      .items td.r { text-align: right; }
+      .items td.desc { color: #545355; }
+
+      /* ── BANK / TOTALS ─────────────────────── */
+      .kv td { border: 1px solid #bfbfbf; padding: 3px 6px; font-size: 9px; vertical-align: middle; }
+      .kv .k { width: 25%; }
+      .kv .v { text-align: left; }
+      .kv .vr { text-align: right; }
+
+      /* ── SIGNATURE ─────────────────────────── */
+      .sign td { border: 1px solid #bfbfbf; font-size: 9px; vertical-align: top; padding: 4px 6px; }
+      .sign .sbody { text-align: center; vertical-align: middle; }
+      .sign .slbl .en { font-weight: 700; display: block; }
+      .sign .slbl .ar { direction: rtl; display: block; }
+
+      /* ── FOOTER NOTE ───────────────────────── */
+      .footer-note { border: 1px solid #bfbfbf; border-top: none; }
+      .footer-note td { text-align: center; font-weight: 700; font-size: 9px; padding: 5px 8px; }
+
+      .footer-block { page-break-inside: avoid; break-inside: avoid; }
+    </style>
+  </head>
+  <body>
+
+    <!-- TITLE -->
+    <div class="doc-title">PROFORMA INVOICE / <span class="ar">الفاتورة الأولية</span></div>
+
+    <!-- TOP META STRIP -->
+    <table class="bx">
+      <colgroup>
+        <col style="width:16.66%"><col style="width:16.66%"><col style="width:16.66%">
+        <col style="width:16.66%"><col style="width:16.66%"><col style="width:16.7%">
+      </colgroup>
+      <tr>
+        <td class="hd ar">تاريخ الإصدار</td>
+        <td class="hd ar">رقم الفاتورة</td>
+        <td class="hd ar">شروط الدفع</td>
+        <td class="hd ar">شروط التوصيل</td>
+        <td class="hd ar">رقم طلب البيع</td>
+        <td class="hd ar">مذكرة التسليم</td>
+      </tr>
+      <tr>
+        <td class="hd">Issue Date</td>
+        <td class="hd">Doc No</td>
+        <td class="hd">Payment Terms</td>
+        <td class="hd">Terms Of Delivery</td>
+        <td class="hd">Sales Order No</td>
+        <td class="hd">Delivery Note</td>
+      </tr>
+      <tr>
+        <td class="c">{{basicdetails.[0].inv_date}}</td>
+        <td class="c">{{basicdetails.[0].inv_no}}</td>
+        <td class="c">{{basicdetails.[0].payment_terms}}</td>
+        <td class="c">{{basicdetails.[0].shipment_term}}</td>
+        <td class="c">{{basicdetails.[0].reference_no}}</td>
+        <td class="c">{{basicdetails.[0].deliverynote_no}}</td>
+      </tr>
+    </table>
+
+    <!-- CUSTOMER PO / CURRENCY -->
+    <table class="bx" style="margin-top:3px;">
+      <colgroup>
+        <col style="width:35%">
+        <col style="width:35%">
+        <col style="width:15%">
+        <col style="width:15%">
+      </colgroup>
+      <tr>
+        <td>Customer P.O No :{{basicdetails.[0].order_no}}</td>
+        <td>Customer P.O Date :{{basicdetails.[0].inv_date}}</td>
+        <td class="lbl">Currency</td>
+        <td class="r">{{basicdetails.[0].base_country_isocode}}</td>
+      </tr>
+    </table>
+
+    <!-- BUYER IDENTIFICATION -->
+    <table class="bx" style="margin-top: 3px;">
+      <colgroup>
+        <col style="width:50%">
+        <col style="width:50%">
+      </colgroup>
+      <tr>
+        <td class="lbl">Buyer Identification</td>
+        <td class="r ar" style="font-weight:700;">تحديد هوية العميل</td>
+      </tr>
+      <tr>
+        <td>
+          <div style="font-weight:700;">{{billing_address.[0].name}}</div>
+          {{billing_address.[0].address_line1}}{{billing_address.[0].address_line2}}{{#if billing_address.[0].address_line3}} {{billing_address.[0].address_line3}}{{/if}}<br>
+          {{billing_address.[0].address_line4}}{{billing_address.[0].address_line5}}
+          {{#if billing_address.[0].vat}}<br>VAT No: {{billing_address.[0].vat}}{{/if}}
+          {{#if billing_address.[0].vat}}<br>CR No: {{customer_details.[0].cr_no}}{{/if}}
+        </td>
+        <td class="r ar">
+          <div style="font-weight:700;">{{billing_address_lang2.[0].name}}</div>
+          {{billing_address_lang2.[0].address_line1}}{{billing_address_lang2.[0].address_line2}}{{#if billing_address_lang2.[0].address_line3}} {{billing_address_lang2.[0].address_line3}}{{/if}}<br>
+          {{billing_address_lang2.[0].address_line4}}{{billing_address_lang2.[0].address_line5}}
+          {{#if billing_address_lang2.[0].vat}}<br>{{billing_address_lang2.[0].vat}} : رقم ضريبة {{/if}}
+          {{#if customer_details.[0].cr_no_lang2}}<br>{{customer_details.[0].cr_no_lang2}} : رقم ضريبة {{/if}}
+        </td>
+      </tr>
+    </table>
+
+    <!-- ITEMS -->
+    <table class="items mt">
+      <colgroup>
+        <col style="width:5%">
+        <col style="width:41%">
+        <col style="width:10%">
+        <col style="width:8%">
+        <col style="width:12%">
+        <col style="width:12%">
+        <col style="width:12%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Product&amp;Service Description</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+          <th>Unit Price</th>
+          <th>VAT(10%)</th>
+          <th>Gross Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each itemdetails}}
+        <tr>
+          <td class="num">{{addOne @index}}</td>
+          <td class="desc">{{item_name}}{{name_lang2}}{{#if description}} {{description}}{{/if}}</td>
+          <td class="num">{{formatAmount quantity ../bcdp}}</td>
+          <td class="num">{{unit}}</td>
+          <td class="r">{{formatAmount price ../bcdp}}</td>
+          <td class="r">{{formatAmount vat_amt ../bcdp}}</td>
+          <td class="r">{{formatAmount taxable ../bcdp}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <div class="footer-block">
+    <!-- BANK | TOTALS -->
+    <table class="naked mt">
+      <colgroup>
+        <col style="width:46%">
+        <col class="gap">
+        <col style="width:53%">
+      </colgroup>
+      <tr>
+        <td>
+          <table class="kv">
+            <colgroup>
+              <col style="width:25%">
+              <col style="width:75%">
+            </colgroup>
+            <tr><td class="k">Beneficiary</td><td class="v">{{bankdetails.acc_name}}</td></tr>
+            <tr><td class="k">Bank Name</td><td class="v">{{bankdetails.name}}</td></tr>
+            <tr><td class="k">Account No</td><td class="v">{{bankdetails.acc_no}}</td></tr>
+            <tr><td class="k">IBAN</td><td class="v">{{bankdetails.iban_no}}</td></tr>
+            <tr><td class="k">SWIFT</td><td class="v">{{bankdetails.swift_no}}</td></tr>
+          </table>
+        </td>
+        <td></td>
+        <td>
+          <table class="kv">
+            <colgroup><col style="width:55%"><col style="width:45%"></colgroup>
+            <tr><td class="k">Gross Total</td><td class="vr">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td></tr>
+            <tr><td class="k">Amount Before VAT</td><td class="vr">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td></tr>
+            <tr><td class="k">VAT Amount</td><td class="vr">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td></tr>
+            <tr><td class="k">Amount After VAT</td><td class="vr">{{formatAmount (divide (add basicdetails.[0].subtotal basicdetails.[0].vatamt) ccrate) bcdp}}</td></tr>
+            <tr><td class="k">Net Payable Amount</td><td class="vr">{{formatAmount (divide (add basicdetails.[0].subtotal basicdetails.[0].vatamt) ccrate) bcdp}}</td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- AMOUNT IN WORDS -->
+    <table class="bx" style="width:52%;margin-top:5px;">
+      <tr><td style=""><u><b>Amount In Words</b></u><br>{{bcamountinwords}}</td></tr>
+    </table>
+
+    <!-- SIGNATURE -->
+    <table class="sign mt">
+      <colgroup><col style="width:34%"><col style="width:33%"><col style="width:33%"></colgroup>
+      <tr>
+        <td class="sbody"></td>
+        <td class="sbody">
+          {{#if Signature}}
+              <img src="{{Signature}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>
+          {{/if}}
+        </td>
+        <td class="sbody">
+           {{#if Seal}}
+              <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/>
+          {{/if}}
+        </td>
+      </tr>
+      <tr>
+        <td class="slbl">
+          <span class="en"><u>Declaraion</u></span>
+          We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.
+        </td>
+        <td class="slbl">
+          <span class="en" style="text-align: center;">Customers Seal and Signature</span>
+          <span class="ar" style="text-align:center;">ختم العملاء وتوقيعهم</span>
+        </td>
+        <td class="slbl">
+          <span class="en" style="text-align:center;">For{{branch.[0].name}}</span>
+        </td>
+      </tr>
+    </table>
+
+    <!-- FOOTER NOTE -->
+    <table class="footer-note">
+      <tr>
+        <td>Elecronically Approved Document / <span class="ar">وثيقة معتمدة إلكترونيا</span></td>
+      </tr>
+    </table>
+    </div><!-- /footer-block -->
+
+  </body>
+</html>
