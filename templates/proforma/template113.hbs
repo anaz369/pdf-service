@@ -1,0 +1,184 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PROFORMA INVOICE - {{basicdetails.[0].inv_no}}</title>
+    <style>
+      *,
+      *::before,
+      *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: "IBM Plex Sans Arabic", Arial, sans-serif;
+        font-size: 9.5px;
+        line-height: 1.35;
+        color: #000;
+        margin: 0 4mm;
+      }
+
+      .ar { direction: rtl; }
+      table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+      .mt { margin-top: 8px; }
+
+      /* ── TOP BOXES ─────────────────────────── */
+      .naked { border: none; }
+      .naked > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+      .gap { width: 3%; }
+
+      .party { border-collapse: collapse; width: 100%; table-layout: fixed; }
+      .party td { font-weight: 600; border: 1px solid #000; padding: 3px 6px; font-size: 9.5px; vertical-align: top; }
+      .bold { font-weight: 700; }
+      .red { color: red; }
+
+      /* ── TITLE ─────────────────────────────── */
+      .doc-title {
+        text-align: center;
+        font-size: 16px;
+        font-weight: 800;
+        color: red;
+        margin: 8px 0;
+      }
+
+      /* ── ITEMS ─────────────────────────────── */
+      .items { border-collapse: collapse; width: 100%; table-layout: fixed; }
+      .items th, .items td { border: 1px solid #000000; padding: 4px 6px; font-size: 9.5px; vertical-align: top; }
+      .items thead th { background: #1aa39a; color: #fff; text-align: center; font-weight: 700; }
+      .items td.num { text-align: center; }
+      .items td.r { text-align: right; }
+      .items .subject td { font-weight: 700; }
+      .items .tot td { font-weight: 700; }
+      .items .tot .tlbl { text-align: right; }
+      .items .tot .tval { text-align: right; }
+      .items .words td { font-weight: 700; }
+
+      /* ── BANK ──────────────────────────────── */
+      .bank-banner {
+        background: #c00000; color: #fff; font-weight: 700;
+        padding: 4px 8px; font-size: 9.5px;
+      }
+      .bank-lines { border-collapse: collapse; width: 60%; table-layout: fixed; margin-top: 6px; }
+      .bank-lines td { border: none; padding: 2px 4px; font-size: 9.5px; }
+      .bank-lines .bl { width: 30%; }
+      .bank-lines .bc { width: 5%; }
+
+      .thanks { text-align: center; font-weight: 700; color: #000000; font-size: 13px; margin-top: 10px; }
+
+      .footer-block { page-break-inside: avoid; break-inside: avoid; }
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP : TO | COMPANY -->
+    <table class="naked">
+      <colgroup><col style="width:49%"><col class="gap"><col style="width:48%"></colgroup>
+      <tr>
+        <td>
+          <table class="party">
+            <tr><td>To:<br><span class="bold">{{billing_address.[0].name}}</span></td></tr>
+            <tr><td>{{billing_address.[0].address_line1}}&nbsp;&nbsp;{{billing_address.[0].address_line2}}</td></tr>
+            <tr><td>{{billing_address.[0].address_line3}}&nbsp;&nbsp;{{billing_address.[0].address_line4}}&nbsp;&nbsp;{{billing_address.[0].address_code}}</td></tr>
+            <tr><td>TRN : {{billing_address.[0].vat}}</td></tr>
+          </table>
+        </td>
+        <td></td>
+        <td>
+          <table class="party">
+            <tr><td><span class="bold">{{branch.[0].name}}</span><br>{{joinAddress branch.[0] '  '}}</td></tr>
+            <tr><td class="bold red">Invoice Number : {{basicdetails.[0].inv_no}}</td></tr>
+            <tr><td class="bold">Invoice Date : {{basicdetails.[0].inv_date}} {{basicdetails.[0].inv_time}}</td></tr>
+            <tr><td class="bold">LPO Date : {{basicdetails.[0].po_date}}</td></tr>
+            <tr><td class="bold">LPO No : {{basicdetails.[0].order_no}}</td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- TITLE -->
+    <div class="doc-title"><u>PROFORMA INVOICE</u></div>
+
+    <!-- ITEMS -->
+    <table class="items">
+      <colgroup>
+        <col style="width:8%"><col style="width:46%"><col style="width:12%">
+        <col style="width:14%"><col style="width:20%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Sl No</th>
+          <th>Description</th>
+          <th>QTY</th>
+          <th>Unit/ price</th>
+          <th>Total Amount (excluding tax)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="subject"><td colspan="5"><u>Subject: {{basicdetails.[0].subject}}</u></td></tr>
+        {{#each itemdetails}}
+        <tr>
+          <td class="num">{{addOne @index}}</td>
+          <td>{{item_name}}{{name_lang2}}{{#if description}} {{description}}{{/if}}</td>
+          <td class="num">{{formatAmount quantity ../bcdp}}</td>
+          <td class="r">{{formatAmount price ../bcdp}}</td>
+          <td class="r">{{formatAmount taxable ../bcdp}}</td>
+        </tr>
+        {{/each}}
+        <tr class="tot">
+          <td colspan="4" class="tlbl">Total Amount</td>
+          <td class="tval">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+        </tr>
+        <tr class="tot">
+          <td colspan="4" class="tlbl">Vat @ 5%</td>
+          <td class="tval">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+        </tr>
+        <tr class="tot">
+          <td colspan="4" class="tlbl">Total Amount ({{basicdetails.[0].base_country_isocode}})</td>
+          <td class="tval">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+        </tr>
+        <tr class="words">
+          <td colspan="5">Amount in Word (Including Tax):{{bcamountinwords}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer-block">
+    <!-- FOR COMPANY -->
+    <div class="bold mt">For {{branch.[0].name}}</div>
+
+    <!-- BANK DETAILS -->
+    <div class="bank-banner mt">OUR BANK DETAILS:</div>
+    <table class="bank-lines">
+      <tr><td class="bl">Account Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
+      <tr><td class="bl">Account No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
+      <tr><td class="bl">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
+      <tr><td class="bl">Swift Code</td><td class="bc">:</td><td>{{bankdetails.branch_name}}</td></tr>
+      <tr><td class="bl">IBAN No</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
+    </table>
+
+    <!-- SIGNATURE -->
+    <div class="bold mt">Yours Faithfully</div>
+    <div class="bold" style="margin-top: 5px;">{{basicdetails.[0].salesman_name}}</div>
+
+    <table class="naked" style="margin-top:4px;">
+      <colgroup><col style="width:10%"><col style="width:20%"><col style="width:70%"></colgroup>
+      <tr>
+        <td style="y
+        vertical-align:top;">
+          {{#if Signature}}
+              <img src="{{Signature}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>
+          {{/if}}
+        </td>
+        <td style="text-align:left;vertical-align:left;">
+          {{#if Seal}}
+              <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/>
+          {{/if}}
+        </td>
+        <td></td>
+      </tr>
+    </table>
+
+    <!-- THANK YOU -->
+    <div class="thanks">Thank You For Your Business !</div>
+    </div><!-- /footer-block -->
+
+  </body>
+</html>

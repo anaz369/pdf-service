@@ -373,8 +373,6 @@
                     <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td>
                   </tr>
                 {{else}}
-
-                  {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
                   <tr style="border-bottom: 1px solid#000000;">
                     <td class="tl" style="border-right: 1px solid#000000;">Discount<br><span class="ar">الخصم</span></td>
                     <td class="tv">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
@@ -383,7 +381,6 @@
                     <td class="tl" style="border-right: 1px solid#000000;">Net Amount<br><span class="ar">صافي المجموع</span></td>
                     <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
                   </tr>
-                  {{/if}}
               {{/if}}
               <tr style="border-bottom: 1px solid#000000;">
                 <td class="tl" style="border-right: 1px solid#000000;">{{datasettingstextvalue.d828}}<br><span class="ar">ضريبة القيمة</span></td>
