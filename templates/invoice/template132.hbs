@@ -30,7 +30,7 @@
         table-layout: fixed;
       }
 
-      /* ── TITLE ────────────────────────────────────── */
+      /* ── TITLE ────────────────── */
       .doc-title {
         text-align: center;
         font-size: 20px;
@@ -109,6 +109,10 @@
       }
       .items-table td.right {
         text-align: right;
+      }
+      .items-table tbody tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
       }
 
       /* ── MID : QR | TOTALS ────────────────────────── */
@@ -241,9 +245,10 @@
 
       }
 
-      /* ── FOOTER BLOCK : keep together, else move to next page ── */
+      /* ── FOOTER BLOCK : kept together, pushed to next page if needed ── */
 
-      .footer-block{
+      .footer-block {
+          overflow: hidden;
           page-break-inside: avoid;
           break-inside: avoid;
       }
@@ -410,8 +415,6 @@
         <td class="words-ar">{{bcamountinwordsar}}</td>
       </tr>
     </table>
-
-<div style="page-break-before: always;"></div>
 
     <!-- FOOTER BLOCK : bank/signatures (kept together) -->
     <div class="footer-block">
