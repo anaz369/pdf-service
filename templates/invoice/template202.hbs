@@ -148,10 +148,8 @@
 {{!-- ── PAGE 1 ─────────────────────────────────── --}}
 <div class="page">
 
-    {{!-- Background letterhead image --}}
-    {{#if LetterheadImageUrl}}
-    <img class="page-bg" src="{{LetterheadImageUrl}}" alt="">
-    {{/if}}
+    {{!-- Pre-printed stationery: letterhead is already on the physical paper,
+         so the background letterhead image is intentionally NOT rendered here. --}}
     <div class="f-div-full">
         {{!-- Meta fields — root scope, no prefix needed --}}
         <div class="f f-blnk"></div>
@@ -238,11 +236,8 @@
 {{#each extraPages}}
 <div class="page">
 
-    {{!-- Background letterhead image --}}
-    {{#if ../LetterheadImageUrl}}
-    <img class="page-bg" src="{{../LetterheadImageUrl}}" alt="">
-    {{/if}}
-    
+    {{!-- Pre-printed stationery: letterhead already on the physical paper,
+         so the background letterhead image is intentionally NOT rendered here. --}}
 
     {{!-- Meta fields repeat on every page — use ../ to reach root --}}
     {{!-- <div class="f f-inv">{{../basicdetails.[0].inv_no}}</div>

@@ -30,7 +30,7 @@
         table-layout: fixed;
       }
 
-      /* ── TITLE ─────────────────*/
+      /* ── TITLE ────────────────────────────────────── */
       .doc-title {
         text-align: center;
         font-size: 20px;
@@ -109,10 +109,6 @@
       }
       .items-table td.right {
         text-align: right;
-      }
-      .items-table tbody tr {
-        page-break-inside: avoid;
-        break-inside: avoid;
       }
 
       /* ── MID : QR | TOTALS ────────────────────────── */
@@ -245,10 +241,9 @@
 
       }
 
-      /* ── FOOTER BLOCK : kept together, pushed to next page if needed ── */
+      /* ── FOOTER BLOCK : keep together, else move to next page ── */
 
-      .footer-block {
-          overflow: hidden;
+      .footer-block{
           page-break-inside: avoid;
           break-inside: avoid;
       }
@@ -266,7 +261,7 @@
   <body>
 
     <!-- TITLE -->
-    <div class="doc-title">TAX INVOICE / <span class="ar">فاتورة ضريبية</span></div>
+    <div class="doc-title">PROFORMA INVOICE / <span class="ar">فاتورة أولية</span></div>
 
     <!-- TOP : BUYER | INFO -->
     <table class="top-wrap">
@@ -317,11 +312,9 @@
           </colgroup>
             <tr><td class="lbl">Invoice No</td><td style="text-align: center;">{{basicdetails.[0].inv_no}}</td><td class="arl">رقم الفاتورة</td></tr>
             <tr><td class="lbl">Invoice Date</td><td style="text-align: center;">{{basicdetails.[0].inv_date}}</td><td class="arl">تاريخ الفاتورة</td></tr>
-            <tr><td class="lbl">DN No</td><td style="text-align: center;">{{basicdetails.[0].deliverynote_no}}</td><td class="arl">رقم الإشعار</td></tr>
-            <tr><td class="lbl">DN Date</td><td style="text-align: center;">{{basicdetails.[0].deliverynote_date}}</td><td class="arl">تاريخ الإشعار</td></tr>
-            <tr><td class="lbl">Mode of Pay</td style="text-align: center;"><td>{{basicdetails.[0].modeofpayment}}</td><td class="arl">طريقة الدفع</td></tr>
             <tr><td class="lbl">PO No</td><td style="text-align: center;">{{basicdetails.[0].order_no}}</td><td class="arl">رقم أمر الشراء</td></tr>
             <tr><td class="lbl">PO Date</td><td style="text-align: center;">{{basicdetails.[0].po_date}}</td><td class="arl">تاريخ أمر الشراء</td></tr>
+            <tr><td class="lbl">Delivery Terms</td style="text-align: center;"><td></td><td class="arl">شروط التسليم</td></tr>
             <tr><td class="lbl">Payment Terms</td><td style="text-align: center;">{{basicdetails.[0].payment_terms}}</td><td class="arl">شروط الدفع</td></tr>
           </table>
         </td>
@@ -332,13 +325,14 @@
     <table class="items-table">
       <thead>
         <tr>
-          <th style="width:5%"><span class="ar">م</span><span class="en">S.N</span></th>
-          <th style="width:35%"><span class="ar">الوصف</span><span class="en">Description</span></th>
+          <th style="width:4%"><span class="ar">م</span><span class="en">S.N</span></th>
+          <th style="width:10%"><span class="ar">رمز العنصر</span><span class="en">Itemcode</span></th>
+          <th style="width:27%"><span class="ar">الوصف</span><span class="en">Description</span></th>
           <th style="width:8%"><span class="ar">الكمية</span><span class="en">QTY</span></th>
           <th style="width:8%"><span class="ar">الوحدة</span><span class="en">Unit</span></th>
           <th style="width:10%"><span class="ar">سعر الوحدة</span><span class="en">U.Rate</span></th>
           <th style="width:10%"><span class="ar">مبلغ</span><span class="en">Amount</span></th>
-          <th style="width:12%"><span class="ar">قيمة الضريبة</span><span class="en">VAT Value</span></th>
+          <th style="width:11%"><span class="ar">قيمة الضريبة</span><span class="en">VAT Value</span></th>
           <th style="width:12%"><span class="ar">القيمة الاجمالي</span><span class="en">Total Price</span></th>
         </tr>
       </thead>
@@ -346,6 +340,7 @@
         {{#each itemdetails}}
         <tr>
           <td class="num">{{addOne @index}}</td>
+          <td class="num">{{item_code}}</td>
           <td>{{item_name}}{{name_lang2}}{{description}}</td>
           <td class="num">{{formatAmount quantity ../bcdp}}</td>
           <td class="num">{{unit}}</td>
@@ -358,16 +353,33 @@
       </tbody>
     </table>
 
-    <!-- MID : QR | TOTALS -->
+    <!-- MID : BANK DETAILS | TOTALS -->
     <table class="mid">
       <tr>
-        <td class="qrcell" style="width:40%">
-          <div class="qr-wrap">{{{qrDataUri qrCodeBase64}}}</div>
+        <td style="width:50%;padding:0;vertical-align:top;padding-right:8px;">
+          <table style="border-collapse:collapse;width:100%;table-layout:fixed;border:1px solid #bfbfbf;">
+            <tr>
+              <td style="border-bottom:1px solid #bfbfbf;padding:5px 8px;font-weight:700;">
+                Bank Details <span class="ar" style="float:right;">تفاصيل البنك</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:5px 8px;">
+                <table class="bank-lines">
+                  <tr><td class="bl">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
+                  <tr><td class="bl">A/C Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
+                  <tr><td class="bl">A/C No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
+                  <tr><td class="bl">IBAN</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
+                  <tr><td class="bl">SWIFT</td><td class="bc">:</td><td>{{bankdetails.swift_no}}</td></tr>
+                </table>
+              </td>
+            </tr>
+          </table>
         </td>
-        <td style="width:60%;padding:0;vertical-align:top">
+        <td style="width:50%;padding:0;vertical-align:top">
           <table class="totals2">
             <tr>
-              <td class="tl">Total Amount / <span>المبلغ الإجمالي</span></td>
+              <td class="tl">Total Amount Excl. VAT / <span>المجموع الفرعي</span></td>
               <td class="tv">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
             </tr>
             {{#if zatcadiscount.[0]}}
@@ -378,7 +390,7 @@
                 </tr>
                 {{/each}}
                 <tr class="b">
-                  <td class="tl">Net Amount / <span>صافي المجموع</span></td>
+                  <td class="tl">Total Amount Excl. VAT / <span>صافي المجموع</span></td>
                   <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td>
                 </tr>
             {{else}}
@@ -389,18 +401,18 @@
                 <td class="tv">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
               </tr>
               <tr class="b">
-                <td class="tl">Net Amount / <span>صافي المجموع</span></td>
+                <td class="tl">Total Amount Excl. VAT / <span>المبلغ الإجمالي بدون ضريبة القيمة</span></td>
                 <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
               </tr>
               {{/if}}
 
           {{/if}}
             <tr>
-              <td class="tl">{{datasettingstextvalue.d828}} / <span>ضريبة القيمة المضافة</span></td>
+              <td class="tl">VAT / <span>ضريبة القيمة المضافة</span></td>
               <td class="tv">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
             </tr>
             <tr class="b">
-              <td class="tl">Grand Total / <span>المبلغ الإجمالي</span></td>
+              <td class="tl">Total Amount Incl. VAT / <span>المبلغ الإجمالي شامل ضريبة القيمة</span></td>
               <td class="tv">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
             </tr>
           </table>
@@ -415,6 +427,8 @@
         <td class="words-ar">{{bcamountinwordsar}}</td>
       </tr>
     </table>
+
+<div style="page-break-before: always;"></div>
 
     <!-- FOOTER BLOCK : bank/signatures (kept together) -->
     <div class="footer-block">
@@ -485,8 +499,8 @@
           </td>
 
           <td class="rb">
-              <div style="margin-bottom:20px;">Name :<br><span class="ar">الاسم</span></div>
-              <div style="margin-bottom:20px;">Signature :<br><span class="ar">التوقيع</span></div>
+              <div style="margin-bottom:28px;">Name :<br><span class="ar">الاسم</span></div>
+              <div style="margin-bottom:28px;">Signature :<br><span class="ar">التوقيع</span></div>
               <div>Date :<br><span class="ar">التاريخ</span></div>
           </td>
 

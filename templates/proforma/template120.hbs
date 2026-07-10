@@ -1,0 +1,231 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PROFORMA INVOICE - {{basicdetails.[0].inv_no}}</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: "IBM Plex Sans Arabic", Arial, sans-serif;
+        font-size: 9px;
+        line-height: 1.3;
+        color: #000;
+        margin: 0 4mm;
+      }
+
+      table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+      .doc-title { text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+
+      /* generic bordered table */
+      .bx td { border: 1px solid #ccc; padding: 3px 6px; font-size: 9px; vertical-align: top; }
+      .lbl { font-weight: 400; }
+      .hd { font-weight: 700; }
+      .mt { margin-top: 5px; }
+      .r { text-align: right; }
+      .c { text-align: center; }
+
+      /* items */
+      .items td, .items th { border: 1px solid #ccc; padding: 3px 4px; font-size: 8.5px; vertical-align: top; }
+      .items thead th { font-weight: 700; text-align: center; }
+      .items td.num { text-align: center; }
+      .items td.rt { text-align: right; }
+      .items .perc { font-size: 8px; color: #333; }
+      .items .iname { font-weight: 700; }
+      .items .tot td { font-weight: 700; }
+      .items .tot .nob { border: none; }
+      .items .tot .tlbl { text-align: left; }
+      .items .tot .tval { text-align: right; }
+
+      /* bank */
+      .bank-hd { text-align: center; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+
+    <!-- TITLE -->
+    <div class="doc-title">PROFORMA INVOICE</div>
+
+    <!-- INVOICE NO / DATE / PO -->
+    <table class="bx">
+      <colgroup><col style="width:34%"><col style="width:33%"><col style="width:33%"></colgroup>
+      <tr>
+        <td class="hd">Invoice No</td>
+        <td class="hd">Invoice Date</td>
+        <td class="hd">PO Number</td>
+      </tr>
+      <tr>
+        <td>{{basicdetails.[0].inv_no}}</td>
+        <td>{{basicdetails.[0].inv_date}}</td>
+        <td>{{basicdetails.[0].order_no}}</td>
+      </tr>
+    </table>
+
+    <!-- SELLER DETAILS -->
+    <table class="bx mt">
+      <tr>
+        <td>
+          <div class="lbl" style="font-weight: bold;">Seller Details :-</div>
+          {{branch.[0].name}}<br>
+          {{joinAddress branch.[0] ' '}}<br>
+          GST : {{branch.[0].vat}}
+        </td>
+      </tr>
+    </table>
+
+    <!-- BILLED TO | SHIPPED TO -->
+    <table class="bx mt">
+      <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+      <tr>
+        <td>
+          <div class="lbl" style="font-weight: bold;">Billed To :-</div>
+          {{billing_address.[0].name}}<br>
+          {{joinAddress billing_address.[0] '  '}}<br>
+          GST : {{billing_address.[0].vat}}
+        </td>
+        <td>
+          <div class="lbl" style="font-weight: bold;">Shipped To :-</div>
+          {{shipping_address.[0].name}}<br>
+          {{joinAddress shipping_address.[0] '  '}}<br>
+          GST : {{shipping_address.[0].vat}}
+        </td>
+      </tr>
+    </table>
+
+    <!-- ITEMS -->
+    <table class="items mt">
+      <colgroup>
+        {{#if (gt basicdetails.[0].igst 0)}}
+        <col style="width:4%"><col style="width:9%"><col style="width:27%"><col style="width:6%"><col style="width:8%"><col style="width:9%"><col style="width:9%"><col style="width:10%"><col style="width:8%"><col style="width:10%">
+        {{else}}
+        <col style="width:4%"><col style="width:9%"><col style="width:19%"><col style="width:6%"><col style="width:8%"><col style="width:9%"><col style="width:9%"><col style="width:10%"><col style="width:8%"><col style="width:8%"><col style="width:10%">
+        {{/if}}
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Sl</th>
+          <th>HSN</th>
+          <th>Description</th>
+          <th>Qty</th>
+          <th>UOM</th>
+          <th>Unit Price</th>
+          <th>Discount</th>
+          <th>Taxable</th>
+          {{#if (gt basicdetails.[0].igst 0)}}
+          <th>IGST</th>
+          {{else}}
+          <th>CGST</th>
+          <th>SGST</th>
+          {{/if}}
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each itemdetails}}
+        <tr>
+          <td class="num">{{addOne @index}}</td>
+          <td>{{hsn}}</td>
+          <td>
+            <div class="iname">{{item_name}}{{name_lang2}}</div>
+            {{#if description}}<div>{{description}}</div>{{/if}}
+          </td>
+          <td class="num">{{formatAmount quantity ../bcdp}}</td>
+          <td class="num">{{unit}}</td>
+          <td class="rt">{{formatAmount price ../bcdp}}</td>
+          <td class="rt">{{formatAmount disc_amt ../bcdp}}<div class="perc">{{default disc_perc '0'}} %</div></td>
+          <td class="rt">{{formatAmount taxable ../bcdp}}</td>
+          {{#if (gt ../basicdetails.[0].igst 0)}}
+          <td class="rt">{{formatAmount igst_amt ../bcdp}}<div class="perc">{{default igst_perc '0'}} %</div></td>
+          {{else}}
+          <td class="rt">{{formatAmount cgst_amt ../bcdp}}<div class="perc">{{default cgst_perc '0'}} %</div></td>
+          <td class="rt">{{formatAmount sgst_amt ../bcdp}}<div class="perc">{{default sgst_perc '0'}} %</div></td>
+          {{/if}}
+          <td class="rt">{{formatAmount amount ../bcdp}}</td>
+        </tr>
+        {{/each}}
+        <tr class="tot">
+          <td colspan="6" class="nob"></td>
+          <td colspan="{{#if (gt basicdetails.[0].igst 0)}}3{{else}}4{{/if}}" class="tlbl">Total</td>
+          <td class="tval">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+        </tr>
+        {{#if (gt basicdetails.[0].discount 0)}}
+        <tr class="tot">
+          <td colspan="6" class="nob"></td>
+          <td colspan="{{#if (gt basicdetails.[0].igst 0)}}3{{else}}4{{/if}}" class="tlbl">Discount</td>
+          <td class="tval">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+        </tr>
+        <tr class="tot">
+          <td colspan="6" class="nob"></td>
+          <td colspan="{{#if (gt basicdetails.[0].igst 0)}}3{{else}}4{{/if}}" class="tlbl">Total After Discount</td>
+          <td class="tval">{{formatAmount (divide (subtract basicdetails.[0].subtotal basicdetails.[0].discount) ccrate) bcdp}}</td>
+        </tr>
+        {{/if}}
+        {{#if (gt basicdetails.[0].igst 0)}}
+        <tr class="tot">
+          <td colspan="6" class="nob"></td>
+          <td colspan="3" class="tlbl">IGST Amount</td>
+          <td class="tval">{{formatAmount (divide basicdetails.[0].igst ccrate) bcdp}}</td>
+        </tr>
+        {{else}}
+        <tr class="tot">
+          <td colspan="6" class="nob"></td>
+          <td colspan="4" class="tlbl">CGST Amount</td>
+          <td class="tval">{{formatAmount (divide basicdetails.[0].cgst ccrate) bcdp}}</td>
+        </tr>
+        <tr class="tot">
+          <td colspan="6" class="nob"></td>
+          <td colspan="4" class="tlbl">SGST Amount</td>
+          <td class="tval">{{formatAmount (divide basicdetails.[0].sgst ccrate) bcdp}}</td>
+        </tr>
+        {{/if}}
+        <tr class="tot">
+          <td colspan="6" class="nob"></td>
+          <td colspan="{{#if (gt basicdetails.[0].igst 0)}}3{{else}}4{{/if}}" class="tlbl">Grand Amount</td>
+          <td class="tval">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- AMOUNT IN WORDS -->
+    <table class="bx mt">
+      <tr><td><span class="lbl" style="font-weight: bold;">Amount In Words:</span> {{bcamountinwords}}</td></tr>
+    </table>
+
+    <!-- CHEQUE NOTE -->
+    <table class="bx mt">
+      <tr><td>Cheque should be crossed and made payable to: {{branch.[0].name}}</td></tr>
+    </table>
+
+    <!-- BANK DETAILS -->
+    <table class="bx mt">
+      <colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup>
+      <tr><td class="bank-hd" colspan="4">BANK DETAILS</td></tr>
+      <tr>
+        <td class="lbl">Beneficiary A/C Name</td>
+        <td>{{bankdetails.acc_name}}</td>
+        <td class="lbl">Beneficiary Bank</td>
+        <td>{{bankdetails.name}}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Beneficiary Bank Branch</td>
+        <td>{{bankdetails.branch_name}}</td>
+        <td class="lbl">Beneficiary A/C No</td>
+        <td>{{bankdetails.acc_no}}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Swift Code</td>
+        <td>{{bankdetails.swift_no}}</td>
+        <td class="lbl">IFSC CODE</td>
+        <td>{{bankdetails.iban_no}}</td>
+      </tr>
+    </table>
+
+    <!-- TERMS -->
+    <table class="bx mt">
+      <tr><td class="lbl" style="border-bottom:none;font-weight:bold;">Terms And Conditions</td></tr>
+      <tr><td style="border-top:none;">{{basicdetails.[0].terms_and_condition}}</td></tr>
+    </table>
+
+  </body>
+</html>
