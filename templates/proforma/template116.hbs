@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>PROFORMA INVOICE - {{basicdetails.[0].inv_no}}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "IBM Plex Sans Arabic", Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #000;
+    background: #fff;
+    margin: 0 8mm;
+  }
+
+  table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+  .teal { color: #000000; }
+  .bold { font-weight: 700; }
+  .r { text-align: right; }
+
+  /* ── HEADER ── */
+  .head { width: 100%; }
+  .head > tbody > tr > td { vertical-align: top; border: none; padding: 0; }
+  .company .cname { font-weight: 700; font-size: 11px; }
+  .company .caddr { font-size: 10px; line-height: 1.5; margin-top: 3px; }
+  .title { text-align: right; font-size: 26px; color: #000000; font-weight: 600; letter-spacing: 0.5px; }
+  .title-no { text-align: right; font-size: 11px; margin-top: 3px; }
+
+  .balance-lbl { text-align: right; font-size: 10px; margin-top: 14px; }
+  .balance-val { text-align: right; font-size: 15px; font-weight: 700; margin-top: 2px; }
+
+  /* ── BILL TO / DATES ── */
+  .bt { width: 100%; margin-top: 12px; }
+  .bt > tbody > tr > td { vertical-align: top; border: none; padding: 0; }
+  .bt .billto-lbl { font-size: 10px; }
+  .bt .billto-name { font-weight: 700; font-size: 11px; }
+  .bt .dates { text-align: right; font-size: 10px; line-height: 1.9; }
+  .bt .dates .dlbl { color: #000000; }
+
+  .supply { margin-top: 12px; font-size: 10px; }
+
+  /* ── ITEMS ── */
+  .items { width: 100%; margin-top: 8px; }
+  .items thead th {
+    background: #3d3d3d; color: #fff; font-weight: 600; font-size: 10px;
+    padding: 6px 8px; text-align: left;
+  }
+  .items thead th.rt { text-align: right; }
+  .items thead th.ct { text-align: center; }
+  .items tbody td { padding: 8px; font-size: 10px; vertical-align: top; border-bottom: 1px solid #e2e2e2; }
+  .items tbody td.ct { text-align: center; }
+  .items tbody td.rt { text-align: right; }
+  .items .iname { font-weight: 700; }
+  .items .idesc { color: #6b6b6b; font-size: 9.5px; margin-top: 2px; }
+  .items .perc { color: #6b6b6b; font-size: 8.5px; margin-top: 1px; }
+
+  /* ── TOTALS ── */
+  .totals { width: 35%; margin-left: 65%; margin-top: 10px; }
+  .totals td { padding: 5px 8px; font-size: 10px; }
+  .totals .tl { text-align: right; color: #000000; }
+  .totals .tv { text-align: right; }
+  .totals tr.grand td { font-weight: 700; color: #000; }
+
+  .words { text-align: right; margin-top: 12px; font-size: 10px; }
+  .words b { font-style: italic; }
+
+  /* ── THANK YOU ── */
+  .thankyou { font-family: "Segoe Script", "Brush Script MT", cursive; font-size: 22px; color: #333; margin-top: 16px; }
+
+  /* ── PAYMENT / TERMS ── */
+  .pay { margin-top: 14px; }
+  .pay .h { font-weight: 700; font-size: 10.5px; margin-bottom: 4px; }
+  .pay table { width: 46%; }
+  .pay td { border: none; padding: 1px 0; font-size: 10px; }
+  .pay td.k { width: 42%; }
+  .pay td.c { width: 5%; }
+
+  .terms { margin-top: 14px; }
+  .terms .h { font-weight: 700; font-size: 10.5px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+  <!-- HEADER : COMPANY | TITLE -->
+  <table class="head">
+    <colgroup><col style="width:55%"><col style="width:45%"></colgroup>
+    <tr>
+      <td class="company">
+        <div class="cname">{{branch.[0].name}}</div>
+        <div class="caddr">
+          {{#if branch.[0].address_line1}}
+            {{branch.[0].address_line1}}{{#if branch.[0].address_line2}}, {{branch.[0].address_line2}}{{/if}}<br>
+            {{else}}
+            {{#if branch.[0].address_line2}}
+            {{branch.[0].address_line2}}<br>
+            {{/if}}
+            {{/if}}
+
+            {{#if branch.[0].address_line3}}
+            {{branch.[0].address_line3}}
+            {{#if branch.[0].address_line4}}, {{branch.[0].address_line4}}{{/if}}
+            {{#if branch.[0].address_code}}, {{branch.[0].address_code}}{{/if}}<br>
+            {{else}}
+                {{#if branch.[0].address_line4}}
+                {{branch.[0].address_line4}}
+                {{#if branch.[0].address_code}}, {{branch.[0].address_code}}{{/if}}<br>
+                {{else}}
+                    {{#if branch.[0].address_code}}
+                    {{branch.[0].address_code}}<br>
+                    {{/if}}
+                {{/if}}
+            {{/if}}
+
+            {{#if branch.[0].address_line5}}
+            {{branch.[0].address_line5}}<br>
+            {{/if}}
+
+            {{#if branch.[0].vat}}
+            GSTIN: {{branch.[0].vat}}<br>
+            {{/if}}
+        </div>
+      </td>
+      <td>
+        <div class="title">PROFORMA INVOICE</div>
+        <div class="title-no">{{basicdetails.[0].inv_no}}</div>
+        <div class="balance-lbl teal">Balance Due</div>
+        <div class="balance-val"><span style="font-size: 10px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- BILL TO | DATES -->
+  <table class="bt">
+    <colgroup><col style="width:55%"><col style="width:45%"></colgroup>
+    <tr>
+      <td>
+        <div class="billto-lbl">Bill To</div>
+        <div class="billto-name">{{billing_address.[0].name}}</div>
+      </td>
+      <td>
+        <div class="dates">
+          <span class="dlbl">Document Date :</span>&nbsp;&nbsp;{{basicdetails.[0].inv_date}}<br>
+          {{#if basicdetails.[0].payment_terms}}
+              <span class="dlbl">Terms :</span>&nbsp;&nbsp;{{basicdetails.[0].payment_terms}}<br>
+          {{/if}}
+          <span class="dlbl">Due Date :</span>&nbsp;&nbsp;{{basicdetails.[0].due_date}}
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="supply">Place of supply:</div>
+
+  <!-- ITEMS -->
+  <table class="items">
+    <colgroup>
+      {{#if (gt basicdetails.[0].igst 0)}}
+      <col style="width:6%"><col style="width:40%"><col style="width:10%"><col style="width:12%"><col style="width:20%"><col style="width:12%">
+      {{else if (gt basicdetails.[0].sgst 0)}}
+      <col style="width:6%"><col style="width:40%"><col style="width:10%"><col style="width:12%"><col style="width:10%"><col style="width:10%"><col style="width:12%">
+      {{else}}
+      <col style="width:6%"><col style="width:54%"><col style="width:12%"><col style="width:14%"><col style="width:14%">
+      {{/if}}
+    </colgroup>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Item &amp; Description</th>
+        <th class="ct">Qty</th>
+        <th class="rt">Rate</th>
+        {{#if (gt basicdetails.[0].igst 0)}}
+        <th class="rt">IGST</th>
+        {{else if (gt basicdetails.[0].sgst 0)}}
+        <th class="rt">CGST</th>
+        <th class="rt">SGST</th>
+        {{/if}}
+        <th class="rt">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="ct">{{addOne @index}}</td>
+        <td>
+          <div class="iname">{{item_name}}{{name_lang2}}</div>
+          {{#if description}}<div class="idesc">{{description}}</div>{{/if}}
+        </td>
+        <td class="ct">{{formatAmount quantity ../bcdp}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        {{#if (gt ../basicdetails.[0].igst 0)}}
+        <td class="rt">{{formatAmount igst_amt ../bcdp}}<div class="perc">{{igst_perc}}%</div></td>
+        {{else if (gt ../basicdetails.[0].sgst 0)}}
+        <td class="rt">{{formatAmount cgst_amt ../bcdp}}<div class="perc">{{cgst_perc}}%</div></td>
+        <td class="rt">{{formatAmount sgst_amt ../bcdp}}<div class="perc">{{sgst_perc}}%</div></td>
+        {{/if}}
+        <td class="rt">{{formatAmount taxable ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- TOTALS -->
+  <table class="totals">
+    <colgroup>
+        <col style="width: 10%;">
+        <col style="width: 50%;">
+        <col style="width: 40%;">
+    </colgroup>
+    <tr>
+      <td class="tl"></td>
+      <td class="tl">Sub Total</td>
+      <td class="tv"><span style="font-size: 10px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span> {{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="tl"></td>
+      <td class="tl">Discount</td>
+      <td class="tv"><span style="font-size: 10px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span> {{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="tl"></td>
+      <td class="tl">Total Tax</td>
+      <td class="tv"><span style="font-size: 10px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span> {{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+    </tr>
+    {{#if (gt basicdetails.[0].igst 0)}}
+    <tr>
+      <td class="tl"></td>
+      <td class="tl">IGST (18%)</td>
+      <td class="tv"><span style="font-size: 10px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span> {{formatAmount (divide basicdetails.[0].igst ccrate) bcdp}}</td>
+    </tr>
+    {{else if (gt basicdetails.[0].sgst 0)}}
+    <tr>
+      <td class="tl"></td>
+      <td class="tl">CGST (9%)</td>
+      <td class="tv"><span style="font-size: 10px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span> {{formatAmount (divide basicdetails.[0].cgst ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="tl"></td>
+      <td class="tl">SGST (9%)</td>
+      <td class="tv"><span style="font-size: 10px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span> {{formatAmount (divide basicdetails.[0].sgst ccrate) bcdp}}</td>
+    </tr>
+    {{/if}}
+    <tr class="grand">
+      <td></td>
+      <td class="tl" style="color:#000;background: #ededed;">Grand Total</td>
+      <td class="tv" style="background: #ededed;"><span style="font-size: 10px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span> {{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+    </tr>
+  </table>
+
+  <div class="words">Total In Words: <b>{{bcamountinwords}}</b></div>
+
+  <!-- THANK YOU -->
+  <div class="thankyou">Thank You</div>
+
+  <!-- PAYMENT OPTIONS -->
+  <div class="pay">
+    <div class="h">Payment Options</div>
+    <table>
+      <tr><td class="k">Account Name</td><td class="c">:</td><td>{{bankdetails.acc_name}}</td></tr>
+      <tr><td class="k">Account Number</td><td class="c">:</td><td>{{bankdetails.acc_no}}</td></tr>
+      <tr><td class="k">Bank Name</td><td class="c">:</td><td>{{bankdetails.name}}</td></tr>
+      <tr><td class="k">IBAN</td><td class="c">:</td><td>{{bankdetails.iban_no}}</td></tr>
+      <tr><td class="k">SWIFT</td><td class="c">:</td><td>{{bankdetails.swift_no}}</td></tr>
+    </table>
+  </div>
+
+  <!-- TERMS -->
+  <div class="terms">
+    <div class="h">Terms And Conditions</div>
+    <div>{{basicdetails.[0].terms_and_condition}}</div>
+  </div>
+
+</body>
+</html>
