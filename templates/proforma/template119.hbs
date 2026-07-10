@@ -218,21 +218,18 @@
       }
 
       .bank-lines{
+          font-size:9.5px;
           width:100%;
           border-collapse:collapse;
       }
 
       .bank-lines td{
+        font-size:9.5px;
           border:none;
           padding:3px 2px;
       }
 
-      .bank-lines .bl{
-          width:38%;
-      }
-
       .bank-lines .bc{
-          width:6%;
           text-align:center;
       }
 
@@ -305,11 +302,6 @@
         <!-- INFO -->
         <td style="width:42%">
           <table class="info">
-            <colgroup>
-              <col style="width:29%;">
-              <col style="width:44%;">
-              <col style="width:27%;">
-          </colgroup>
             <tr><td class="lbl">Invoice No</td><td style="text-align: center;">{{basicdetails.[0].inv_no}}</td><td class="arl">رقم الفاتورة</td></tr>
             <tr><td class="lbl">Invoice Date</td><td style="text-align: center;">{{basicdetails.[0].inv_date}}</td><td class="arl">تاريخ الفاتورة</td></tr>
             <tr><td class="lbl">PO No</td><td style="text-align: center;">{{basicdetails.[0].order_no}}</td><td class="arl">رقم أمر الشراء</td></tr>
@@ -359,18 +351,23 @@
         <td style="width:50%;padding:0;vertical-align:top;padding-right:8px;">
           <table style="border-collapse:collapse;width:100%;table-layout:fixed;border:1px solid #bfbfbf;">
             <tr>
-              <td style="border-bottom:1px solid #bfbfbf;padding:5px 8px;font-weight:700;">
+              <td style="border-bottom:1px solid #bfbfbf;padding:5px 8px;font-weight:700;font-size:9.5px;">
                 Bank Details <span class="ar" style="float:right;">تفاصيل البنك</span>
               </td>
             </tr>
             <tr>
               <td style="padding:5px 8px;">
-                <table class="bank-lines">
-                  <tr><td class="bl">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
-                  <tr><td class="bl">A/C Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
-                  <tr><td class="bl">A/C No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
-                  <tr><td class="bl">IBAN</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
-                  <tr><td class="bl">SWIFT</td><td class="bc">:</td><td>{{bankdetails.swift_no}}</td></tr>
+                <table class="bank-lines" style="font-size:9.5px;">
+                    <colgroup>
+                        <col style="width:29%;">
+                        <col style="width:2%;">
+                        <col style="width:69%;">
+                    </colgroup>
+                  <tr><td class="bl" style="padding:5px 2px;">Bank Name</td><td class="bc" style="padding:5px 2px;">:</td><td style="padding:5px 2px;">{{bankdetails.name}}</td></tr>
+                  <tr><td class="bl" style="padding:5px 2px;">A/C Name</td><td class="bc" style="padding:5px 2px;">:</td><td style="padding:5px 2px;">{{bankdetails.acc_name}}</td></tr>
+                  <tr><td class="bl" style="padding:5px 2px;">A/C No</td><td class="bc" style="padding:5px 2px;">:</td><td style="padding:5px 2px;">{{bankdetails.acc_no}}</td></tr>
+                  <tr><td class="bl" style="padding:5px 2px;">IBAN</td><td class="bc" style="padding:5px 2px;">:</td><td style="padding:5px 2px;">{{bankdetails.iban_no}}</td></tr>
+                  <tr><td class="bl" style="padding:5px 2px;">SWIFT</td><td class="bc" style="padding:5px 2px;">:</td><td style="padding:5px 2px;">{{bankdetails.swift_no}}</td></tr>
                 </table>
               </td>
             </tr>
@@ -422,93 +419,16 @@
 
     <!-- AMOUNT IN WORDS -->
     <table class="words-bar">
-      <tr>
-        <td class="words-en">{{bcamountinwords}}</td>
-        <td class="words-ar">{{bcamountinwordsar}}</td>
-      </tr>
+        <tr>
+            <td class="words-en">{{bcamountinwords}}</td>
+            <td class="words-ar">{{bcamountinwordsar}}</td>
+        </tr>
+        <tr>
+            <td class="words-en" style="font-weight: bold;" colspan="2">Terms and Conditions :-</td>
+        </tr>
+        <tr>
+            <td class="words-ar" colspan="2">{{basicdetails.[0].terms_and_condition}}</td>
+        </tr>
     </table>
-
-<div style="page-break-before: always;"></div>
-
-    <!-- FOOTER BLOCK : bank/signatures (kept together) -->
-    <div class="footer-block">
-
-    <!-- FOOTER : BANK | SIGNATURES -->
-    <table class="footer" cellpadding="0" cellspacing="0">
-      <tr>
-          <td class="fhd" style="width:31%;">
-              <table width="100%">
-                  <tr>
-                      <td style="border:none;padding:0;font-weight:bold;">Bank Details</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;font-weight:bold;">تفاصيل البنك</td>
-                  </tr>
-              </table>
-          </td>
-
-          <td class="fhd" style="width:23%;">
-              <table width="100%">
-                  <tr>
-                      <td style="border:none;padding:0;font-weight:bold;">Prepared By</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;font-weight:bold;">أعدت بواسطة</td>
-                  </tr>
-              </table>
-          </td>
-
-          <td class="fhd" style="width:23%;">
-              <table width="100%">
-                  <tr>
-                      <td style="border:none;padding:0;font-weight:bold;">Approved By</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;font-weight:bold;">تمت بواسطة</td>
-                  </tr>
-              </table>
-          </td>
-
-          <td class="fhd" style="width:23%;">
-              <table width="100%">
-                  <tr>
-                      <td style="border:none;padding:0;font-weight:bold;">Received By</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;font-weight:bold;">الاستلام</td>
-                  </tr>
-              </table>
-          </td>
-
-      </tr>
-
-      <tr>
-
-          <td class="bankcell">
-              <table class="bank-lines">
-                  <tr><td class="bl">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
-                  <tr><td class="bl">A/C Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
-                  <tr><td class="bl">A/C No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
-                  <tr><td class="bl">IBAN</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
-                  <tr><td class="bl">SWIFT</td><td class="bc">:</td><td>{{bankdetails.swift_no}}</td></tr>
-              </table>
-          </td>
-
-          <td class="sig">
-              {{#if Seal}}
-              <img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '120'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>
-              {{/if}}
-          </td>
-
-          <td class="sig">
-              {{#if Signature}}
-              <img src="{{Signature}}" alt="Signature" style="text-align:right;max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>
-              {{/if}}
-          </td>
-
-          <td class="rb">
-              <div style="margin-bottom:28px;">Name :<br><span class="ar">الاسم</span></div>
-              <div style="margin-bottom:28px;">Signature :<br><span class="ar">التوقيع</span></div>
-              <div>Date :<br><span class="ar">التاريخ</span></div>
-          </td>
-
-      </tr>
-
-  </table>
-
-    </div><!-- /footer-block -->
-
   </body>
 </html>
