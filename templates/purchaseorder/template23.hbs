@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #000000;
+      background: #fff;
+      margin: 0 5mm;
+    }
+
+    .ar { direction: rtl; }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .mt { margin-top: 7px; }
+
+    /* ── TITLE ── */
+    .doc-title { text-align: center; font-size: 20px; font-weight: 800; color: #000; margin-bottom: 8px; }
+    .doc-title .ar { color: #000; }
+
+    /* ── BOXES ── */
+    .split > tbody > tr > td { vertical-align: top; border: none; padding: 0; }
+    .gap { width: 2%; }
+    .box { border: 1px solid #ccc; }
+    .box .boxhd { background: #f5f5f5; padding: 4px 8px; overflow: hidden; }
+    .box .boxhd .ar { float: right; }
+    .box .bd { padding: 2px 8px; }
+    .box .bd2 { padding: 2px 8px; min-height: 70px; }
+
+    .kv { width: 100%; border-collapse: collapse; }
+    .kv td { padding: 3px 4px; font-size: 10px; vertical-align: top; }
+    .kv .k { width: 34%; }
+    .kv .c { width: 4%; }
+    .kv .arl { text-align: right; direction: rtl; width: 22%; }
+    .kv .ac { width: 4%; text-align: center; }
+
+    /* ── ITEMS ── */
+    .items td, .items th { border: 1px solid #ccc; padding: 4px 6px; font-size: 9.5px; vertical-align: top; }
+    .items thead th { background: #f5f5f5; text-align: center; line-height: 1.25; }
+    .items thead th .ar { display: block; font-weight: 100; }
+    .items thead th .en { display: block; font-weight: 100; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .tot-lbl { text-align: center; font-weight: 700; }
+    .items .tot-val { text-align: right; font-weight: 700; }
+    .items .words { text-align: center; }
+
+    /* ── TERMS / SIGN ── */
+    .h { font-weight: 700; }
+    .sign td { padding: 6px; font-size: 10px; border: none; vertical-align: top; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="doc-title">PURCHASE ORDER / <span class="ar">أمر شراء</span></div>
+
+  <!-- BUYER DETAILS | INFORMATION -->
+  <table class="split">
+    <colgroup><col style="width:49%"><col class="gap"><col style="width:49%"></colgroup>
+    <tr>
+      <td>
+        <div class="box">
+          <div class="boxhd" style="border-bottom: 1px solid #ccc;">Buyer Details <span class="ar">تفاصيل المشتري</span></div>
+          <div class="bd">
+            <table class="kv">
+              <tr><td class="k">Buyer</td><td class="c">:</td><td>{{compprof.name}}</td></tr>
+              <tr><td class="k">Address</td><td class="c">:</td><td>{{joinAddress branch.[0] ', '}}</td></tr>
+              <tr><td class="k">Buyer Email</td><td class="c">:</td><td>{{compprof.email}}</td></tr>
+              <tr><td class="k">Buyer Tel</td><td class="c">:</td><td>{{compprof.contact_no1}}</td></tr>
+              <tr><td class="k">VAT Number</td><td class="c">:</td><td>{{compprof.gstin}}</td></tr>
+            </table>
+          </div>
+        </div>
+      </td>
+      <td></td>
+      <td>
+        <div class="box">
+          <div class="boxhd" style="border-bottom: 1px solid #ccc;">Information <span class="ar">المعلومات</span></div>
+          <div class="bd">
+            <table class="kv">
+              <tr><td class="k">Purchase Order</td><td class="c">:</td><td>{{basicdetails.[0].inv_no}}</td><td class="ac">:</td><td class="arl">رقم الطلب</td></tr>
+              <tr><td class="k">Order Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td><td class="ac">:</td><td class="arl">تاريخ الطلب</td></tr>
+              <tr><td class="k">Vendor Number</td><td class="c">:</td><td>{{vendor_details.[0].profile_code}}</td><td class="ac">:</td><td class="arl">رقم المورد</td></tr>
+              <tr><td class="k">Quotation Ref</td><td class="c">:</td><td>{{basicdetails.[0].reference_no}}</td><td class="ac">:</td><td class="arl">رقم المرجع</td></tr>
+              <tr><td class="k">Currency</td><td class="c">:</td><td>{{basicdetails.[0].base_country_isocode}}</td><td class="ac">:</td><td class="arl">العملة</td></tr>
+            </table>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- SUPPLIER | DELIVER TO -->
+  <table class="split mt">
+    <colgroup><col style="width:49%"><col class="gap"><col style="width:49%"></colgroup>
+    <tr>
+      <td>
+        <div class="box">
+          <div class="boxhd" style="border-bottom: 1px solid #ccc;">Supplier Name &amp; Address <span class="ar">تفاصيل المورد</span></div>
+          <div class="bd2">{{#if billing_address_lang2.[0].name}}{{billing_address_lang2.[0].name}}{{/if}}
+            {{#if vendor_details.[0].name}}<br>{{vendor_details.[0].name}}{{/if}}
+            {{#if billing_address.[0]}}{{joinAddress billing_address.[0] ', '}}{{/if}}
+          </div>
+        </div>
+      </td>
+      <td></td>
+      <td>
+        <div class="box">
+          <div class="boxhd" style="border-bottom: 1px solid #ccc;">Deliver To <span class="ar">تسليم إلى</span></div>
+          <div class="bd2"></div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items mt">
+    <colgroup>
+      <col style="width:5%"><col style="width:29%"><col style="width:13%"><col style="width:10%"><col style="width:9%">
+      <col style="width:11%"><col style="width:10%"><col style="width:13%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th><span class="ar">غرض</span><span class="en">Item</span></th>
+        <th><span class="ar">الوصف</span><span class="en">Description</span></th>
+        <th><span class="ar">تاريخ التسليم</span><span class="en">Delivery Date</span></th>
+        <th><span class="ar">الوحدة</span><span class="en">Unit</span></th>
+        <th><span class="ar">الكمية</span><span class="en">Quantity</span></th>
+        <th><span class="ar">سعر الوحدة</span><span class="en">Unit Price</span></th>
+        <th><span class="ar">تخفيض</span><span class="en">Discount</span></th>
+        <th><span class="ar">المبلغ الصافي</span><span class="en">Net Amount</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_name}}{{#if description}}<div>{{description}}</div>{{/if}}</td>
+        <td></td>
+        <td class="num">{{unit}}</td>
+        <td class="num">{{formatAmount quantity ../bcdp}}</td>
+        <td class="rt"><span style="font-size: 14px;">{{currencySymbol ../basicdetails.[0].base_country_isocode}}</span>{{formatAmount price ../bcdp}}</td>
+        <td class="rt"><span style="font-size: 14px;">{{currencySymbol ../basicdetails.[0].base_country_isocode}}</span>{{formatAmount disc_amt ../bcdp}}</td>
+        <td class="rt"><span style="font-size: 14px;">{{currencySymbol ../basicdetails.[0].base_country_isocode}}</span>{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td class="tot-lbl" colspan="7">Total Value (Excl. VAT) / <span class="ar">إجمالي القيمة (بدون ضريبة)</span></td>
+        <td class="tot-val"><span style="font-size: 14px;">{{currencySymbol ../basicdetails.[0].base_country_isocode}}</span>{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
+      </tr>
+      <tr>
+        <td class="words" colspan="8"><span class="h">Amount in Words :</span> {{bcamountinwords}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TERMS -->
+  <div class="mt"><u class="h">Terms and Condition / <span class="ar">الشروط والأحكام</span></u></div>
+  <div style="margin-top:4px;">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+
+  <!-- SIGN -->
+  <table class="sign" style="margin-top:30px;">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td style="text-align:center;">Approved By / <span class="ar">تمت الموافقة من قبل</span></td>
+      <td style="text-align:center;">Agreed &amp; Accepted By / <span class="ar">تم الاتفاق والقبول من قبل</span></td>
+    </tr>
+  </table>
+
+</body>
+</html>

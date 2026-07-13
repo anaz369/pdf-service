@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #000;
+      background: #fff;
+      margin: 0 6mm;
+    }
+
+    .ar { direction: rtl; }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .mt { margin-top: 8px; }
+
+    /* ── TITLE ── */
+    .title-bar {
+      background: #d1eeee; text-align: center; color: #000000;
+      font-size: 14px; font-weight: bold; padding: 5px;
+    }
+    .date-line { text-align: right; font-size: 10px; margin-top: 6px; }
+
+    /* ── FROM / TO ── */
+    .split{
+      border: 1px solid #bfbfbf;
+    }
+    .split > tbody > tr > td { vertical-align: top; border: none; padding: 0; padding: 2px 8px;}
+    .cellL { border: 1px solid #bfbfbf; padding: 8px 10px; }
+    .cellR { border: 1px solid #bfbfbf; border-left: none; padding: 8px 10px; }
+    .hd { font-weight: 700; margin-bottom: 4px; }
+    .kv { width: 100%; border-collapse: collapse; }
+    .kv td { padding: 3px 4px; font-size: 10px; vertical-align: top; }
+    .kv .k { width: 22%; }
+    .kv .c { width: 4%; }
+
+    /* ── ITEMS ── */
+    .items td, .items th { border: 1px solid #bfbfbf; padding: 4px 6px; font-size: 10px; vertical-align: top; }
+    .items th { font-weight: 700; text-align: center; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+
+    /* ── TOTALS ── */
+    .sum > tbody > tr > td { vertical-align: top; border: none; padding: 0; }
+    .sum .stbl { width: 100%; border-collapse: collapse; }
+    .sum .stbl td { padding: 2px 6px; font-size: 10px; }
+    .sum .stbl .sl { text-align: right; }
+    .sum .stbl .sv { text-align: right; width: 34%; }
+
+    /* ── TERMS ── */
+    .h { font-weight: 700; }
+    .terms-txt { color: #2a4b8d; }
+
+    /* ── SIGN ── */
+    .sign td { text-align: center; vertical-align: top; padding: 6px; font-size: 10px; border: none; }
+    .sign .sa { direction: rtl; }
+    .sign .simg img { max-height: 90px; max-width: 130px; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="title-bar">PURCHASE ORDER</div>
+  <div class="date-line">Date : {{basicdetails.[0].inv_date}}</div>
+
+  <!-- FROM | TO -->
+  <table class="split mt">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td class="cellL">
+        <div class="hd" style="padding-left:4px;">From,</div>
+        <table class="kv">
+          <tr><td class="k">Name</td><td class="c">:</td><td>{{compprof.name}}</td></tr>
+          <tr><td class="k">Address</td><td class="c">:</td><td>{{joinAddress branch.[0] ', '}}</td></tr>
+          <tr><td class="k">CR.No</td><td class="c">:</td><td>{{compprof.cr_no}}</td></tr>
+        </table>
+      </td>
+      <td class="cellR" style="border-left: 1px solid #bfbfbf;">
+        <div class="hd" style="padding-left:4px;">To,</div>
+        <table class="kv">
+          <tr><td class="k">PO No</td><td class="c">:</td><td>{{basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="k">Ref.No</td><td class="c">:</td><td>{{basicdetails.[0].reference_no}}</td></tr>
+          <tr><td class="k">Name</td><td class="c">:</td><td>{{vendor_details.[0].name}}</td></tr>
+          <tr><td class="k">Address</td><td class="c">:</td><td>{{#if billing_address.[0]}}{{joinAddress billing_address.[0] ', '}}{{/if}}</td></tr>
+          <tr><td class="k">CR.No</td><td class="c">:</td><td>{{vendor_details.[0].cr_no}}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items mt">
+    <colgroup>
+      <col style="width:6%">
+      <col style="width:50%">
+      <col style="width:10%">
+      <col style="width:10%">
+      <col style="width:12%">
+      <col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>S.N</th>
+        <th>Description</th>
+        <th>UOM</th>
+        <th>QTY</th>
+        <th>Rate</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_name}}{{#if name_lang2}}<div class="idesc">{{name_lang2}}</div>{{/if}}{{#if description}}<div class="idesc">{{description}}</div>{{/if}}</td>
+        <td class="num">{{unit}}</td>
+        <td class="num">{{formatAmount quantity ../bcdp}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- IN WORDS | TOTALS -->
+  <table class="sum mt">
+    <colgroup><col style="width:55%"><col style="width:45%"></colgroup>
+    <tr>
+      <td style="padding-top:4px;"><span class="h">In Words :</span> {{bcamountinwords}}</td>
+      <td>
+        <table class="stbl">
+          <tr><td class="sl">Gross Amount</td><td class="sv">{{formatAmount basicdetails.[0].subtotal bcdp}}</td></tr>
+          <tr><td class="sl">Discount</td><td class="sv">{{formatAmount basicdetails.[0].discount bcdp}}</td></tr>
+          <tr><td class="sl">Net Amount</td><td class="sv">{{formatAmount basicdetails.[0].grand_total bcdp}}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- TERMS -->
+  <div class="mt"><span class="h">Terms and Conditions</span></div>
+  <div class="terms-txt">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+
+  <!-- SIGNATURE -->
+  <table class="sign" style="margin-top:30px;">
+    <colgroup><col style="width:33%"><col style="width:34%"><col style="width:33%"></colgroup>
+    <tr>
+      <td>
+        <div class="sh">Prepared By</div>
+        <div class="sa">أعدت بواسطة</div>
+        <div style="margin-top:6px;">{{basicdetails.[0].salesman_name}}</div>
+      </td>
+      <td>
+        <div class="sh">Company Stamp</div>
+        <div class="sa">ختم الشركة</div>
+        <div class="simg">{{#if Seal}}<img src="{{Seal}}" alt="Seal" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>{{/if}}</div>
+      </td>
+      <td>
+        <div class="sh">Authorized Signature</div>
+        <div class="sa">توقيع معتمد</div>
+        <div class="simg"></div>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
