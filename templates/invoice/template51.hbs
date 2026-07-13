@@ -201,19 +201,19 @@
       }
 
       .totals td.lbl {
+        
           font-weight: 600;
-          width: 32%;
       }
 
       .totals td.arl {
           text-align: right;
           direction: rtl;
-          width: 47%;
+
       }
 
       .totals td.val {
           text-align: right;
-          width: 21%;
+
       }
 
       .totals .due td {
@@ -405,9 +405,9 @@
           <td class="num">{{addOne @index}}</td>
           <td>{{item_name}}{{name_lang2}}{{description}}</td>
           <td class="num">{{formatAmount quantity ../bcdp}}</td>
-          <td class="right"><span style="font-size: 12px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount price ../bcdp}}</td>
-          <td class="right"><span style="font-size: 12px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount vat_amt ../bcdp}}</td>
-          <td class="right"><b><span style="font-size: 12px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span></b>{{formatAmount amount ../bcdp}}</td>
+          <td class="right"><span style="font-size: 12px;">{{currencySymbol ../basicdetails.[0].base_country_isocode}}</span>{{formatAmount price ../bcdp}}</td>
+          <td class="right"><span style="font-size: 12px;">{{currencySymbol ../basicdetails.[0].base_country_isocode}}</span>{{formatAmount vat_amt ../bcdp}}</td>
+          <td class="right"><b><span style="font-size: 12px;">{{currencySymbol ../basicdetails.[0].base_country_isocode}}</span></b>{{formatAmount amount ../bcdp}}</td>
         </tr>
         {{/each}}
       </tbody>
@@ -467,6 +467,11 @@
         <td style="width:58%;">
             <table class="totals">
 
+              <colgroup>
+                  <col style="width:32%;">
+                  <col style="width:47%;">
+                  <col style="width:21%;">
+              </colgroup>
                 <tr>
                     <td class="lbl">Sub Total</td>
                     <td class="arl">المبلغ الفرعي</td>
@@ -533,10 +538,9 @@
                     <td colspan="2">{{bcamountinwords}}</td>
                 </tr>
 
-                <tr>
-                    <td colspan="3" class="arl">
-                        {{bcamountinwordsar}}
-                    </td>
+                <tr class="words-en">
+                    <td class="lbl">إجمالي المبلغ بالكلمات</td>
+                    <td colspan="2">{{bcamountinwordsar}}</td>
                 </tr>
 
             </table>
