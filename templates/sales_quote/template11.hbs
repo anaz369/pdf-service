@@ -206,11 +206,11 @@
         <table class="ref-head-table">
           <tr>
             <td class="ref-hdr" style="border-bottom:1px solid #ccc; width:40%; text-align:left; padding-left:12px;">Reference</td>
-            <td class="ref-val" style="border-bottom:1px solid #ccc;">{{basicdetails.[0].inv_no}}</td>
+            <td class="ref-val" style="border-bottom:1px solid #ccc;">{{basicdetails.[0].reference_no}}</td>
           </tr>
           <tr>
             <td class="ref-hdr" style="border-bottom:1px solid #ccc; text-align:left; padding-left:12px;">Doc No</td>
-            <td class="ref-val" style="border-bottom:1px solid #ccc;">{{basicdetails.[0].order_no}}</td>
+            <td class="ref-val" style="border-bottom:1px solid #ccc;">{{basicdetails.[0].inv_no}}</td>
           </tr>
           <tr>
             <td class="ref-hdr" style="text-align:left; padding-left:12px;">Date</td>
@@ -330,7 +330,7 @@
               <div class="signoff-cell">
                 <div  style="border-bottom: 1px solid #000; padding-bottom:10px;">For {{#if compprof.name}}{{compprof.name}}{{else}}{{basicdetails.[0].branchname}}{{/if}}</div>
                 <div class="sign-imgs">
-                  {{#if Signature}}<img class="sig-img" src="{{Signature}}" alt="signature"/>{{/if}}
+                  {{#if Signature}}<img class="sig-img" src="{{Signature}}" alt="signature" style="max-height:{{default datasettings.d458 '100'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
                   {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
                 </div>
               </div>
