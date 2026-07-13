@@ -48,7 +48,6 @@
   .top-head {
     text-align: center;
     padding: 10px;
-    border-bottom: 1px solid #000;
     font-size: 12px;
   }
 
@@ -107,10 +106,13 @@
   .items-table td {
     font-size: 11px;
     vertical-align: middle;
-    padding: 8px 6px;
     border: 1px solid #ccc;
   }
+   .items-table td {
+     padding: 4px 6px;
+   }
   .items-table thead th {
+     padding: 8px 6px;
     text-align: center;
     font-weight: bold;
     background: #0d1676;
@@ -223,7 +225,6 @@
       <td style="width:45%; padding:0;" rowspan="1">
         <div class="addr-cell">
           <div class="addr-line"><strong>To,</strong> {{billing_address.[0].name}}</div>
-          <div style="height:10px;"></div>
           {{#if billing_address.[0].address_line1}}<div class="addr-line">{{billing_address.[0].address_line1}}</div>{{/if}}
           {{#if billing_address.[0].address_line2}}<div class="addr-line">{{billing_address.[0].address_line2}}</div>{{/if}}
           {{#if billing_address.[0].address_line3}}<div class="addr-line">{{billing_address.[0].address_line3}}</div>{{/if}}
@@ -316,12 +317,12 @@
       <td colspan="4" style="padding:0; border-top:1px solid #000;">
         <table class="items-table">
           <colgroup>
-            <col style="width:5%">
-            <col style="width:43%">
+            <col style="width:4%">
+            <col style="width:47%">
             <col style="width:8%">
             <col style="width:8%">
-            <col style="width:13%">
             <col style="width:11%">
+            <col style="width:10%">
             <col style="width:12%">
           </colgroup>
           <thead>
@@ -341,8 +342,8 @@
               <td class="center">{{addOne @index}}</td>
               <td class="left">
                 {{item_name}}
-                {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
-                {{#if description}}<div>{{description}}</div>{{/if}}
+                {{#if name_lang2}}{{name_lang2}}{{/if}}
+                {{#if description}}{{description}}{{/if}}
               </td>
               <td class="center">{{formatAmount quantity ../bcdp}}</td>
               <td class="center">{{unit}}</td>
@@ -386,7 +387,7 @@
                   <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
                 </tr>
                 <tr class="total-row" style="border-bottom: 1px dashed #ccc;">
-                  <td class="t-lbl">Total Amount in{{basicdetails.[0].base_country_isocode}}</td>
+                  <td class="t-lbl">Total Amount in {{basicdetails.[0].base_country_isocode}}</td>
                   <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
                 </tr>
               </table>
@@ -397,7 +398,7 @@
     </tr>
 
     <!-- Terms & Conditions + Signature block -->
-    <tr style="border-top:1px solid #bfbfbf;border-bottom:#bfbfbf;">
+    <tr style="border-top:1px solid #bfbfbf;padding-top:4px;">
       <td colspan="4" style="padding:0; ">
         <div class="tc-block">
           <div class="tc-title">Terms &amp; Condition</div>

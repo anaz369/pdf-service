@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+      margin: 0 5mm;
+    }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+    .teal { background: #2e9e95; color: #fff; }
+    .tl td, .tl th { border: 1px solid #000000; padding: 5px 6px; vertical-align: middle; }
+    .hdr { background: #2e9e95; color: #fff; font-weight: 700; text-align: center; }
+    .lbl { background: #2e9e95; color: #fff; font-weight: 700; text-align: center; }
+    .lbl1{
+      font-weight: bold;
+    }
+    .val { text-align: center; }
+    .vbold { text-align: center; font-weight: 700; }
+
+    /* title */
+    .title-bar { background: #2e9e95; color: #000000; text-align: center; font-weight: 700; font-size: 15px; padding: 8px; border: 1px solid #000000; }
+
+    /* items */
+    .items td, .items th { border: 1px solid #000000; padding: 5px 6px; vertical-align: top; }
+    .items thead th { background: #2e9e95; color: #fff; font-weight: 700; text-align: center; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .tlbl { font-weight: 700; }
+    .items .tval { text-align: right; font-weight: 700; }
+
+    /* terms */
+    .terms-bar { background: #cc0000; color: #fff; font-weight: 700; padding: 5px 8px; border: 1px solid #cc0000; }
+    .terms-row { border: 1px solid #000000; border-top: none; padding: 5px 8px; font-weight: 700; }
+
+    /* footer */
+    .foot { margin-top: 20px; }
+    .foot > tbody > tr > td { border: none; text-align: center; vertical-align: top; }
+    .foot img { max-height: 90px; max-width: 130px; }
+    .thanks { text-align: center; font-weight: 700; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="title-bar" style="margin-bottom: 2px;">PURCHASE ORDER</div>
+
+  <!-- INFO GRID -->
+  <table class="tl" style="margin-top:-1px;margin-bottom:2.8px;">
+    <colgroup>
+      <col style="width:13%">
+      <col style="width:11%">
+      <col style="width:16%">
+      <col style="width:11%">
+      <col style="width:20%">
+      <col style="width:12%">
+      <col style="width:17%">
+    </colgroup>
+    <tr>
+      <td class="hdr">Supplier Name</td>
+      <td class="hdr">Location</td>
+      <td class="hdr">Bill To Location</td>
+      <td class="hdr">PO No</td>
+      <td class="hdr">{{basicdetails.[0].inv_no}}</td>
+      <td class="hdr">Date</td>
+      <td class="hdr">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+    <tr>
+      <td class="vbold" rowspan="3">{{vendor_details.[0].name}}</td>
+      <td class="val" rowspan="3">{{billing_address.[0].address_line3}}&nbsp;&nbsp;{{billing_address.[0].address_line4}}</td>
+      <td class="vbold" rowspan="3">{{compprof.name}}{{branch.[0].address_line3}}&nbsp;&nbsp;{{branch.[0].address_line4}}&nbsp;&nbsp;{{branch.[0].address_code}}</td>
+      <td class="lbl1">PO Type</td>
+      <td class="val" colspan="3"></td>
+    </tr>
+    <tr>
+      <td class="lbl1">Purchaser</td>
+      <td class="vbold">{{basicdetails.[0].salesman_name}}</td>
+      <td class="lbl1">TRN:</td>
+      <td class="vbold">{{compprof.gstin}}</td>
+    </tr>
+    <tr>
+      <td class="lbl1">Qtn Ref No:</td>
+      <td class="vbold">{{basicdetails.[0].reference_no}}</td>
+      <td class="lbl1">Starting Date</td>
+      <td class="val"></td>
+    </tr>
+  </table>
+
+  <!-- SUPPLIER TRN / CURRENCY / TEL / PAYMENT -->
+  <table class="tl" style="margin-top:-1px;">
+    <colgroup><col style="width:24%"><col style="width:24%"><col style="width:18%"><col style="width:34%"></colgroup>
+    <tr>
+      <td class="vbold">Supplier TRN No</td>
+      <td class="val">{{vendor_details.[0].VAT_number}}</td>
+      <td class="vbold">Currency</td>
+      <td class="vbold">{{basicdetails.[0].base_country_isocode}}</td>
+    </tr>
+    <tr>
+      <td class="vbold">Tel:</td>
+      <td class="val">{{compprof.phone}}</td>
+      <td class="vbold">Payment Terms</td>
+      <td class="val">{{basicdetails.[0].payment_terms}}</td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items" style="margin-top:2px;">
+    <colgroup>
+      <col style="width:7%"><col style="width:41%"><col style="width:13%"><col style="width:13%"><col style="width:26%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>SI No</th>
+        <th>Description</th>
+        <th>QTY</th>
+        <th>Unit Rate</th>
+        <th>Total Amount Including tax</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_name}}{{description}}</td>
+        <td class="num">{{formatAmount quantity ../bcdp}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td colspan="2" rowspan="3"></td>
+        <td class="tlbl" colspan="2">Total Amount ({{basicdetails.[0].base_country_isocode}})</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      </tr>
+      <tr>
+        <td class="tlbl" colspan="2">Vat @ 15%</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+      </tr>
+      <tr>
+        <td class="tlbl" colspan="2">Total Amount in ({{basicdetails.[0].base_country_isocode}})</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TERMS -->
+  <div class="terms-bar">Terms &amp; Conditions</div>
+  <div class="terms-row">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+    {{#ifFlag datasettings "d339"}}
+  <div class="terms-row"></div>
+{{/ifFlag}}
+
+  <!-- FOOTER : SIGN | STAMP -->
+  <table class="foot">
+    <colgroup><col style="width:33%"><col style="width:34%"><col style="width:33%"></colgroup>
+    <tr>
+      <td>{{#if Signature}}<img src="{{Signature}}" alt="Signature" style="text-align:center;max-height:{{ datasettings.d458 }}px; max-width:{{ datasettings.d458}}px;" onerror="this.style.display='none'"/>{{/if}}</td>
+      <td>{{#if Seal}}<img src="{{Seal}}" alt="Seal" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>{{/if}}</td>
+      <td></td>
+    </tr>
+  </table>
+  <div class="thanks">Thank You!</div>
+
+</body>
+</html>
