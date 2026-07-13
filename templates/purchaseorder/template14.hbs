@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12px;
+      color: #000;
+      background: #fff;
+      margin: 0 6mm;
+    }
+
+    .ar { direction: rtl; }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+    /* ── TITLE ── */
+    .doc-title { text-align: center; font-size: 20px; margin: 6px 0 12px; }
+
+    /* ── PO NO / DATE ── */
+    .po-bar td { border: 1px solid #000; padding: 5px 8px; font-size: 12px; text-align: center; }
+    .po-bar .lbl { font-weight: normal; }
+    .po-bar .val { font-weight: normal; }
+
+    /* ── PARTIES ── */
+    .parties td { border: 1px solid #000; padding: 6px 8px; font-size: 12px; vertical-align: top; }
+    .crow { display: flex; justify-content: space-between; }
+    .crow .ar { text-align: right; }
+
+    /* ── ITEMS ── */
+    .items td, .items th { border: 1px solid #000; padding: 4px 5px; font-size: 11px; vertical-align: top; }
+    .items th { font-weight: bold; text-align: center; line-height: 1.15; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items td.lft { text-align: left; }
+    .items .twords { vertical-align: top; text-align: left; }
+    .items .twords .h { font-weight: normal; }
+    .items .tlbl { text-align: left; }
+    .items .tval { text-align: right; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="doc-title">Purchase Order</div>
+
+  <!-- PO NO / DATE -->
+  <table class="po-bar">
+    <colgroup><col style="width:70%"><col style="width:30%"></colgroup>
+    <tr>
+      <td class="lbl">Purchase Order No</td>
+      <td class="lbl">Date</td>
+    </tr>
+    <tr>
+      <td class="val">{{basicdetails.[0].inv_no}}</td>
+      <td class="val">{{basicdetails.[0].inv_date}}</td>
+    </tr>
+  </table>
+
+  <!-- COMPANY | VENDOR -->
+  <table class="parties">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td>
+        <div class="crow"><span>{{compprof.name}}</span><span class="ar">{{branch_lang2.[0].name}}</span></div>
+        <div class="crow"><span>{{branch.[0].address_line1}}</span><span class="ar">{{branch_lang2.[0].address_line1}}</span></div>
+        <div class="crow"><span>{{branch.[0].address_line2}}</span><span class="ar">{{branch_lang2.[0].address_line2}}</span></div>
+        <div class="crow"><span>{{branch.[0].address_line3}}</span><span class="ar">{{branch_lang2.[0].address_line3}}</span></div>
+        <div>VAT: {{compprof.gstin}}</div>
+        <div>Phone: {{compprof.contact_no1}}</div>
+        <div>Email: {{compprof.email}}</div>
+      </td>
+      <td>
+        <div>{{vendor_details.[0].name}}</div>
+        <div>&nbsp;</div>
+        <div>&nbsp;</div>
+        <div>VAT: {{vendor_details.[0].VAT_number}}</div>
+        <div>Phone: {{vendor_details.[0].contact_no1}}</div>
+        <div>Email: {{vendor_details.[0].email}}</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items" style="margin-top:8px;">
+    <colgroup>
+      <col style="width:4%"><col style="width:30%"><col style="width:10%"><col style="width:6%"><col style="width:8%">
+      <col style="width:12%"><col style="width:9%"><col style="width:9%"><col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Description</th>
+        <th>Rate</th>
+        <th>Qty</th>
+        <th>Unit</th>
+        <th>Amount</th>
+        <th>VAT Rate</th>
+        <th>VAT Amount</th>
+        <th>Item Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td class="lft">{{item_name}}{{#if description}} {{description}}{{/if}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="num">{{formatAmount quantity ../bcdp}}</td>
+        <td class="num">{{unit}}</td>
+        <td class="rt">{{formatAmount taxable ../bcdp}}</td>
+        <td class="num">{{vat_perc}} %</td>
+        <td class="rt">{{formatAmount tax ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+
+      <!-- WORDS + TOTALS -->
+      <tr>
+        <td class="twords" colspan="5" rowspan="3" style="vertical-align:top;text-align:left;">
+          <div>Amount chargeable in words</div>
+          <div>{{bcamountinwords}}</div>
+          <div>VAT Amount in words :</div>
+        </td>
+        <td class="tlbl" colspan="3">Total (Excluding VAT)</td>
+        <td class="tval">{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
+      </tr>
+      <tr>
+        <td class="tlbl" colspan="3">VAT</td>
+        <td class="tval">{{itemdetails.[0].vat_perc}} %</td>
+      </tr>
+      <tr>
+        <td class="tlbl" colspan="3">Amount Chargeable</td>
+        <td class="tval">{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
+      </tr>
+
+      <!-- BLANK BOX -->
+      <tr>
+        <td colspan="9" style="height:45px;"></td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+</html>
