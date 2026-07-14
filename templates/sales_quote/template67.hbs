@@ -227,12 +227,12 @@
   <!-- Items Table -->
   <table class="items-table">
     <colgroup>
-      <col style="width:6%">
+      <col style="width:4%">
       <col style="width:42%">
       <col style="width:7%">
       <col style="width:8%">
       <col style="width:12%">
-      <col style="width:10%">
+      <col style="width:12%">
       <col style="width:15%">
     </colgroup>
     <thead>
@@ -265,19 +265,19 @@
       {{/each}}
 
       <tr class="totals-row">
-        <td colspan="5"  class="t-label">Sub Total</td>
+        <td colspan="6"  class="t-label">Sub Total</td>
         <td class="t-value">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
       </tr>
       <tr class="totals-row">
-        <td colspan="5"  class="t-label">Discount</td>
+        <td colspan="6"  class="t-label">Discount</td>
         <td class="t-value">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
       </tr>
       <tr class="totals-row">
-        <td colspan="5"  class="t-label">VAT</td>
+        <td colspan="6"  class="t-label">VAT</td>
         <td class="t-value">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
       </tr>
       <tr class="totals-row">
-        <td colspan="5"  class="t-label">Grand Total</td>
+        <td colspan="6"  class="t-label">Grand Total</td>
         <td class="t-value">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
       </tr>
     </tbody>
