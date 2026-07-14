@@ -228,10 +228,11 @@
   <table class="items-table">
     <colgroup>
       <col style="width:6%">
-      <col style="width:52%">
+      <col style="width:42%">
       <col style="width:7%">
       <col style="width:8%">
       <col style="width:12%">
+      <col style="width:10%">
       <col style="width:15%">
     </colgroup>
     <thead>
@@ -241,6 +242,7 @@
         <th><span class="ar">وحدة</span>UOM</th>
         <th><span class="ar">كمية</span>Qty</th>
         <th><span class="ar">السعر الصافي</span>Net Price</th>
+        <th><span class="ar"> مبلغ ضريبة</span>VAT Amount</th>
         <th><span class="ar">السعر الإجمالي</span>Total Price</th>
       </tr>
     </thead>
@@ -257,6 +259,7 @@
           <td class="center">{{unit}}</td>
           <td class="center">{{formatAmount quantity ../bcdp}}</td>
           <td class="right">{{formatAmount price ../bcdp}}</td>
+          <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
           <td class="right">{{formatAmount amount ../bcdp}}</td>
         </tr>
       {{/each}}
