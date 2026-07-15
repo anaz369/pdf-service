@@ -228,10 +228,9 @@
   <table class="items-table">
     <colgroup>
       <col style="width:4%">
-      <col style="width:42%">
+      <col style="width:54%">
       <col style="width:7%">
       <col style="width:8%">
-      <col style="width:12%">
       <col style="width:12%">
       <col style="width:15%">
     </colgroup>
@@ -242,7 +241,6 @@
         <th><span class="ar">وحدة</span>UOM</th>
         <th><span class="ar">كمية</span>Qty</th>
         <th><span class="ar">السعر الصافي</span>Net Price</th>
-        <th><span class="ar"> مبلغ ضريبة</span>VAT Amount</th>
         <th><span class="ar">السعر الإجمالي</span>Total Price</th>
       </tr>
     </thead>
@@ -259,25 +257,24 @@
           <td class="center">{{unit}}</td>
           <td class="center">{{formatAmount quantity ../bcdp}}</td>
           <td class="right">{{formatAmount price ../bcdp}}</td>
-          <td class="right">{{formatAmount vat_amt ../bcdp}}</td>
-          <td class="right">{{formatAmount amount ../bcdp}}</td>
+          <td class="right">{{formatAmount taxable ../bcdp}}</td>
         </tr>
       {{/each}}
 
       <tr class="totals-row">
-        <td colspan="6"  class="t-label">Sub Total</td>
+        <td colspan="5"  class="t-label">Sub Total</td>
         <td class="t-value">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
       </tr>
       <tr class="totals-row">
-        <td colspan="6"  class="t-label">Discount</td>
+        <td colspan="5"  class="t-label">Discount</td>
         <td class="t-value">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
       </tr>
       <tr class="totals-row">
-        <td colspan="6"  class="t-label">VAT</td>
+        <td colspan="5"  class="t-label">VAT</td>
         <td class="t-value">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
       </tr>
       <tr class="totals-row">
-        <td colspan="6"  class="t-label">Grand Total</td>
+        <td colspan="5"  class="t-label">Grand Total</td>
         <td class="t-value">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
       </tr>
     </tbody>
