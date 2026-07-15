@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      color: #48432b;
+      background: #fff;
+      margin: 0 6mm;
+    }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .mt { margin-top: 8px; }
+    .yellow { background: #ffd85d; }
+
+    /* top PO box */
+    .naked { border: none; }
+    .naked > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+
+    .pobox { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .pobox td { border: 1px solid #48432b; padding: 5px 8px; font-size: 11px; }
+    .pohdr { background: #ffd85d; text-align: center; font-size: 20px; font-weight: 700; border: 1px solid #48432b; }
+    .ponote { color: #48432b; font-size: 9px; }
+    .pono { text-align: center; font-weight: 700; }
+    .pcell { text-align: center; }
+
+    /* address columns */
+    .addr th { background: #ffd85d; border: 1px solid #48432b; text-align: center; font-weight: 700; padding: 6px; }
+    .addr td { text-align: center; padding: 6px 8px; color:#48432b; vertical-align: top; line-height: 1.6; }
+    .addr .nm { font-weight: 700; }
+
+    /* shipping strip */
+    .ship th { background: #ffd85d; border: 1px solid #48432b; text-align: center; font-weight: 700; padding: 5px; }
+    .ship td { color:#48432b; text-align: center; padding: 5px; }
+
+    /* items — only horizontal lines; left edge on first col, right edge on last col */
+    .items th { background: #ffd85d; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 6px; text-align: left; font-weight: 700; }
+    .items td { color:#48432b; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 6px; font-size: 11px; vertical-align: middle; }
+    .items th:first-child, .items td:first-child { border-left: 1px solid #000; }
+    .items th:last-child, .items td:last-child { border-right: 1px solid #000; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .idesc { font-size: 10px; }
+
+    /* totals */
+    .totals{
+    width:100%;
+    margin:0;
+    border-collapse:collapse;
+    table-layout:fixed;
+}
+    .totals td { padding: 4px 6px; font-size: 11px; color: #48432b; }
+    .totals .l { }
+    .totals .v { text-align: right; }
+    .totals tr.b td { font-weight: 700; font-size: 13px; }
+    .totals tr.mid td.l { color: #48432b; }
+    .totals tr.top td { border-top: 1px solid #000; }
+
+    /* bottom */
+    .h { font-weight: 700; }
+    .cmt-title { text-decoration: underline; font-weight: 700; }
+    .bottom-section td{
+    vertical-align:top;
+}
+
+.sign-cell{
+    display:flex;
+    align-items:flex-end;         /* Adjust this value as needed */
+}
+
+.sign-table{
+    width:100%;
+}
+
+.sig-line{
+    width:90%;
+    margin:0 auto;
+    border-top:1px solid #000;
+    text-align:center;
+    padding-bottom:3px;
+}
+  </style>
+</head>
+<body>
+
+  <!-- TOP : PO BOX (right) -->
+  <table class="naked">
+    <colgroup><col style="width:62%"><col style="width:38%"></colgroup>
+    <tr>
+      <td></td>
+      <td>
+        <table class="pobox">
+          <tr><td colspan="2" class="pohdr" style="font-size: 20px;">Purchase Order</td></tr>
+          <tr><td colspan="2" class="ponote">This number should appear on all packing slips, shipping documents, packages and invoices</td></tr>
+          <tr><td colspan="2" class="pono" style="font-size: 14px;">{{basicdetails.[0].inv_no}}</td></tr>
+          <tr>
+            <td class="pcell">Page Number<br>1 of 1</td>
+            <td class="pcell">Purchase Order Date<br><b>{{basicdetails.[0].inv_date}}</b></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- SUPPLIER | BILL TO | DELIVER TO -->
+  <table class="addr mt">
+    <colgroup><col style="width:34%"><col style="width:33%"><col style="width:33%"></colgroup>
+    <thead>
+      <tr>
+        <th>SUPPLIER</th>
+        <th>BILL TO</th>
+        <th>DELIVER TO</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="nm">{{vendor_details.[0].name}}</div>
+          {{billing_address.[0].address_line1}}<br>
+          {{billing_address.[0].address_line2}} {{billing_address.[0].address_line3}} {{billing_address.[0].address_line4}}<br>
+          {{billing_address.[0].address_code}}<br>
+          {{vendor_details.[0].contact_no1}}
+        </td>
+        <td>
+          <div class="nm">{{branch.[0].name}}</div>
+          {{branch.[0].address_line1}}<br>
+          {{branch.[0].address_line2}} {{branch.[0].address_line4}} {{branch.[0].address_line3}}<br>
+          {{branch.[0].address_code}} {{branch.[0].address_line5}}<br>
+          {{compprof.phone}}
+        </td>
+        <td>
+          <div class="nm">{{branch.[0].name}}</div>
+          {{branch.[0].address_line1}}<br>
+          {{branch.[0].address_line2}} {{branch.[0].address_line3}} {{branch.[0].address_line4}}<br>
+          {{branch.[0].address_code}} {{branch.[0].address_line5}}<br>
+          {{compprof.phone}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SHIPPING STRIP -->
+  <table class="ship mt">
+    <colgroup><col style="width:20%"><col style="width:20%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
+    <thead>
+      <tr>
+        <th>Shipping Mode</th>
+        <th>Delivery time</th>
+        <th>Payment Terms</th>
+        <th>Currency</th>
+        <th>Supplier Ref</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td></td>
+        <td>{{basicdetails.[0].payment_terms}}</td>
+        <td>{{basicdetails.[0].base_country_isocode}}</td>
+        <td>{{basicdetails.[0].reference_no}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items mt">
+    <colgroup>
+      <col style="width:4%"><col style="width:12%"><col style="width:36%"><col style="width:7%">
+      <col style="width:13%"><col style="width:13%"><col style="width:15%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th style="text-align: center;">#</th>
+        <th>Part No</th>
+        <th>Description</th>
+        <th style="text-align: center;">Qty</th>
+        <th style="text-align: center;">Unit price</th>
+        <th style="text-align: center;">Discount</th>
+        <th style="text-align: center;">Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_code}}</td>
+        <td>{{item_name}}{{#if description}}<div class="idesc">{{description}}</div>{{/if}}</td>
+        <td class="num">{{quantity}}</td>
+        <td class="num">{{formatAmount price ../bcdp}}</td>
+        <td class="num">{{formatAmount disc_amt ../bcdp}}</td>
+        <td class="num">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- TOTALS -->
+  <table style="width:100%; margin-top:8px;">
+    <tr>
+        <td style="width:69%;"></td>
+
+        <td style="width:31%; vertical-align:top;">
+          <table class="totals">
+            <tr class="mid">
+                <td class="l"><b>Subtotal</b></td>
+                <td class="v"><b>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</b></td>
+            </tr>
+            <tr class="mid">
+                <td class="l">Discount</td>
+                <td class="v">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+            </tr>
+            <tr class="mid">
+                <td class="l">Taxes</td>
+                <td class="v">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+            </tr>
+            <tr class="mid">
+              <td class="l">Others</td>
+              <td class="v">{{formatAmount (divide basicdetails.[0].othervalue ccrate) bcdp}}</td>
+            </tr>
+            <tr class="b top">
+                <td class="l">Total Order</td>
+                <td class="v">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+            </tr>
+          </table>
+   </td>
+    </tr>
+</table>
+
+  <!-- BOTTOM : COMMENTS | AUTH -->
+ <table class="naked bottom-section" style="margin-top:24px;">
+    <colgroup>
+        <col style="width:50%">
+        <col style="width:50%">
+    </colgroup>
+
+    <tr>
+        <td>
+            <div class="cmt-title" style="color:#002060;">
+                Other Comments / Special Instructions:
+            </div>
+
+            <div style="margin-top:6px;color:#002060;">
+                {{#if basicdetails.[0].terms_and_condition}}
+                    {{{nl2br basicdetails.[0].terms_and_condition}}}
+                {{/if}}
+            </div>
+        </td>
+
+        <td class="sign-cell">
+            <table class="naked sign-table">
+                <colgroup>
+                    <col style="width:46%">
+                    <col style="width:8%">
+                    <col style="width:46%">
+                </colgroup>
+
+                <tr>
+                    <td><div></div></td>
+                    <td></td>
+                    <td style="text-align: center;"><div>{{basicdetails.[0].inv_date}}</div></td>
+                </tr>
+
+                <tr>
+                    <td class="sig-line" style="text-align:center;border-top:1px solid #000;padding-top:4px;">Authorized By</td>
+                    <td></td>
+                    <td class="sig-line" style="text-align:center;border-top:1px solid #000;padding-top:4px;">Date</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

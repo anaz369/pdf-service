@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #000;
+      background: #fff;
+      margin: 0 6mm;
+    }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .mt { margin-top: 10px; }
+
+    .doc-title { text-align: center; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+
+    /* top boxes */
+    .naked { border: none; }
+    .naked > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+    .gap { width: 1%; }
+
+    .supbox { border-collapse: collapse; width: 100%; table-layout: fixed; height: 100%; }
+    .supbox td { border: 1px solid #000; padding: 8px 10px; line-height: 1.6; vertical-align: top; }
+    .supbox u { font-weight: 700; }
+
+    .pobox { border-collapse: collapse; width: 100%; table-layout: fixed; height: 100%; }
+    .pobox td { border: 1px solid #000; padding: 7px 10px; font-size: 10px; vertical-align: top; }
+    .pobox .k { width: 38%; }
+
+    /* items */
+    .items th, .items td { border: 1px solid #000; padding: 5px 6px; font-size: 10px; vertical-align: top; }
+    .items thead th { background: #e2e2e2; font-weight: 700; text-align: center; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .words { font-weight: 700; vertical-align: middle; }
+    .items .tlbl { text-align: right; font-weight: 700; }
+    .items .tval { text-align: right; font-weight: 700; }
+
+    /* footer */
+    .footrow td { background: #f2f2f2; border: 1px solid #fff; text-align: center; font-weight: 700; padding: 8px; font-size: 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="doc-title">PURCHASE ORDER</div>
+
+  <!-- SUPPLIER/BILL TO | P.O DETAILS -->
+  <table class="naked">
+    <colgroup><col style="width:50%"><col class="gap"><col style="width:49%"></colgroup>
+    <tr>
+      <td style="padding:0;vertical-align:top;">
+        <table class="supbox">
+          <tr>
+            <td>
+              <u>Supplier</u><br>
+              <b>{{vendor_details.[0].name}}</b><br>
+              {{#if billing_address.[0]}}{{joinAddress billing_address.[0] ','}}{{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <u>Bill To</u><br>
+              <b>{{compprof.name}}</b><br>
+              {{joinAddress branch.[0] ','}},{{compprof.gstin}}
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td></td>
+      <td style="padding:0;vertical-align:top;">
+        <table class="pobox">
+          <tr><td class="k">P.O #</td><td>{{basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="k">DATE</td><td>{{basicdetails.[0].inv_date}}</td></tr>
+          <tr><td class="k">Vendor Vat ID</td><td>{{compprof.gstin}}</td></tr>
+          <tr><td class="k">TERMS</td><td>{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items mt">
+    <colgroup>
+      <col style="width:5%">
+      <col style="width:10%">
+      <col style="width:29%">
+      <col style="width:12%">
+      <col style="width:7%">
+      <col style="width:9%">
+      <col style="width:8%">
+      <col style="width:8%">
+      <col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Item Code</th>
+        <th>Description</th>
+        <th>Short Item No</th>
+        <th>QTY</th>
+        <th>Unit Price</th>
+        <th>Discount</th>
+        <th>VAT Amt</th>
+        <th>Net Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_code}}</td>
+        <td>{{item_name}}{{description}}</td>
+        <td class="num">{{short_item_no}}</td>
+        <td class="num">{{formatAmount quantity ../bcdp}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="rt">{{formatAmount disc_amt ../bcdp}}</td>
+        <td class="rt">{{formatAmount tax ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td class="words" colspan="6" rowspan="2">{{basicdetails.[0].base_country_isocode}}({{bcamountinwords}})</td>
+        <td class="tlbl" colspan="2">VAT Amount</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+      </tr>
+      <tr>
+        <td class="tlbl" colspan="2">Total</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- FOOTER -->
+  <table class="mt" style="margin-top:40px;">
+    <tr class="footrow">
+      <td style="width:33%">Approved By</td>
+      <td style="width:34%">Confirmed by</td>
+      <td style="width:33%">Verified By</td>
+    </tr>
+  </table>
+
+</body>
+</html>

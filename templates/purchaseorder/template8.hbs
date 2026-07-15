@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #000;
+      background: #fff;
+      margin: 0 6mm;
+    }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .mt { margin-top: 8px; }
+
+    .doc-title { text-align: center; font-size: 16px; font-weight: 700; color: red; padding: 6px 0; }
+    .rule { border-bottom: 1px solid #000; }
+
+    /* top */
+    .naked { border: none; }
+    .naked > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+    .lbl { color: #000; }
+    .kv { width: 100%; border-collapse: collapse; }
+    .kv td { border: none; padding: 3px 4px; font-size: 10px; vertical-align: top; }
+    .kv .k { width: 42%; color: #000; }
+    .kv .c { width: 4%; color: #000; }
+
+    /* items */
+    .items td, .items th { border: 1px solid #000000; padding: 5px 6px; font-size: 10px; vertical-align: middle; }
+    .items th { font-weight: 100; text-align: center; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .tot td { color: red; font-weight: 700; }
+    .items .tot .tlbl { text-align: right; }
+    .items .tot .tval { text-align: right; }
+
+    /* bottom */
+    .words { color: red; font-weight: 700; margin-top: 6px; }
+    .u { text-decoration: underline; font-weight: 700; }
+    .link { color: #2a5db0; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="doc-title rule">PURCHASE ORDER</div>
+
+  <!-- ISSUED TO | INFO -->
+  <table class="naked rule" style="padding-bottom:8px;">
+    <colgroup><col style="width:45%"><col style="width:55%"></colgroup>
+    <tr>
+      <td style="padding-top:8px;">
+        <div class="lbl">ISSUED TO :</div>
+        <div style="margin-top:18px;font-weight:700;">{{vendor_details.[0].name}}</div>
+        <div>{{#if billing_address.[0]}}{{joinAddress billing_address.[0] ''}}{{/if}}</div>
+      </td>
+      <td style="padding-top:8px;">
+        <table class="kv">
+          <tr><td class="k">PO NO</td><td class="c">:</td><td>{{basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="k">ENQUIRY REFERENCE</td><td class="c">:</td><td></td></tr>
+          <tr><td class="k">VESSEL NAME</td><td class="c">:</td><td>{{basicdetails.[0].vessel_name}}</td></tr>
+          <tr><td class="k">DATE</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
+          <tr><td class="k">PERSON</td><td class="c">:</td><td>{{basicdetails.[0].contactname}}</td></tr>
+          <tr><td class="k">CONTACT</td><td class="c">:</td><td>{{basicdetails.[0].contactno}}</td></tr>
+          <tr><td class="k">EMAIL</td><td class="c">:</td><td></td></tr>
+          <tr><td class="k">DELIVERY PORT</td><td class="c">:</td><td>{{basicdetails.[0].delivery_port}}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- SALUTATION -->
+  <div class="mt" style="border-top: 1px solid #000000;padding-top:10px;">Dear Sir,</div>
+  <div>We are pleased to confirm your offer as per the tariff send to us:</div>
+
+  <!-- ITEMS -->
+  <table class="items mt">
+    <colgroup>
+      <col style="width:6%">
+      <col style="width:36%">
+      <col style="width:9%">
+      <col style="width:9%">
+      <col style="width:10%">
+      <col style="width:9%">
+      <col style="width:10%">
+      <col style="width:11%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>S NO.</th>
+        <th>DESCRIPTION</th>
+        <th>QTY</th>
+        <th>UNIT</th>
+        <th>UNIT PRICE</th>
+        <th>VAT (%)</th>
+        <th>DISCOUNT %</th>
+        <th>TOTAL PRICE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_name}}{{description}}</td>
+        <td class="num">{{quantity}}</td>
+        <td class="num">{{unit}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="num">{{vat_perc}}</td>
+        <td class="num">{{disc_perc}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr class="tot">
+        <td colspan="7" class="tlbl">SUB TOTAL</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot">
+        <td colspan="7" class="tlbl">DISCOUNT</td>
+        <td class="tval">{{formatAmount (sumProperty itemdetails 'disc_amt') bcdp}}</td>
+      </tr>
+      <tr class="tot">
+        <td colspan="7" class="tlbl">TOTAL PRICE IN {{basicdetails.[0].base_country_isocode}}</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+      {{#if (eq basicdetails.[0].doc_country_isocode "AED")}}
+      <tr class="tot">
+        <td colspan="7" class="tlbl">TOTAL PRICE IN {{basicdetails.[0].doc_country_isocode}}</td>
+        <td class="tval">{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
+      </tr>
+      {{/if}}
+    </tbody>
+  </table>
+
+  <!-- WORDS -->
+  <div class="words">TOTAL PRICE IN WORDS : {{upper bcamountinwords}}</div>
+
+  <!-- PAYMENT TERMS -->
+  <div class="mt"><span class="u">PAYMENT TERMS:</span> {{vendor_details.[0].credit_period}} DAYS CREDIT</div>
+
+  <!-- INVOICE TO -->
+  <div class="mt"><span class="link">Invoice to be issued to</span></div>
+
+  <!-- COMPANY -->
+  <div class="cco mt">
+    <div class="nm">{{compprof.name}}</div>
+    <div>{{joinAddress branch.[0] ' '}}</div>
+    <div>TRN : {{branch.[0].vat}}</div>
+    <table class="kv" style="width:40%;margin-top:4px;">
+      <tr><td class="k" style="width:20%;color:#000;">Attn</td><td class="c" style="color:#000;">:</td><td>{{basicdetails.[0].contactname}}</td></tr>
+      <tr><td class="k" style="width:20%;color:#000;">EMAIL</td><td class="c" style="color:#000;">:</td><td></td></tr>
+    </table>
+  </div>
+
+</body>
+</html>
