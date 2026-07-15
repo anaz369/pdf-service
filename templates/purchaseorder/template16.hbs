@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #000;
+      background: #fff;
+      margin: 0 6mm;
+    }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .mt { margin-top: 10px; }
+
+    /* title */
+    .title-bar {
+      background: #6d6daf; color: #fff; font-weight: 700; font-size: 14px;
+      text-align: center; padding: 8px; width: 260px; margin: 0 auto 12px; border-radius: 4px;
+    }
+
+    /* top boxes */
+    .naked { border: none; }
+    .naked > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+
+    .box { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .box td { border: 1px solid #000000; padding: 4px 8px; font-size: 10px; vertical-align: top; }
+    .phdr { background: #6d6daf; color: #fff; font-weight: 700; text-align: center; }
+    .plbl { color: #00000; font-weight: 700; }
+    .poval { text-align: center; font-weight: 700; }
+
+    /* items */
+    .items th, .items td { border: 1px solid #000000; padding: 5px 6px; font-size: 10px; vertical-align: middle; }
+    .items thead th { background: #6d6daf; color: #fff; font-weight: 700; text-align: center; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    /* item rows: no horizontal lines between them; only the last product gets a bottom border */
+    .items tbody tr.item-row td { border-top: none; border-bottom: none; }
+    .items tbody tr.item-row.item-last td { border-bottom: 1px solid #000000; }
+
+    .ptot { background: #6d6daf; color: #fff; font-weight: 700; text-align: right; }
+    .ptot-v { background: #6d6daf; color: #fff;  font-weight: 700; text-align: right; }
+    .ydisc { background: #ffff00; color: #000; font-weight: 700; text-align: right; }
+    .ydisc-v { background: #ffff00; font-weight: 700; text-align: right; }
+    .words td { font-weight: 700; }
+
+    /* bottom */
+    .terms-box { border: 1px solid #000000; padding: 5px 8px; margin-top: 5px; min-height: 22px; }
+    .stamp { text-align: right; margin-top: 10px; }
+    .stamp img { max-height: 110px; max-width: 140px; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="title-bar">PURCHASE ORDER</div>
+
+  <!-- SUPPLIER | PO NUMBER -->
+  <table class="naked">
+    <colgroup>
+    <col style="width:33%">
+    <col style="width:34%">
+    <col style="width:33%"></colgroup>
+    <tr>
+      <td>
+        <table class="box">
+          <colgroup>
+            <col style="width:37%">
+            <col style="width:63%">
+          </colgroup>
+          <tr><td colspan="2" class="phdr">Supplier Name &amp; Address</td></tr>
+          <tr>
+            <td colspan="2" style="">
+              {{vendor_details.[0].name}}<br>
+              {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}<br>{{/if}}
+              {{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}<br>{{/if}}
+              {{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}<br>{{/if}}
+              {{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}<br>{{/if}}
+              VAT: {{billing_address.[0].vat}}
+            </td>
+          </tr>
+          <tr>
+            <td class="plbl" style="width:45%; background: #6d6daf; color: #fff; ">Contact Name</td>
+            <td>{{vendor_details.[0].contact_no1}}</td>
+          </tr>
+        </table>
+      </td>
+      <td></td>
+      <td>
+        <table class="box">
+          <tr><td colspan="2" class="phdr">Purchase Order Number</td></tr>
+          <tr><td colspan="2" class="poval">{{basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="plbl" style="width:48%">Order Date</td><td>{{basicdetails.[0].inv_date}}</td></tr>
+          <tr><td class="plbl">Delivery Date</td><td>{{basicdetails.[0].delivery_date}}</td></tr>
+          <tr><td class="plbl">Currency</td><td>{{basicdetails.[0].base_country_isocode}}</td></tr>
+          <tr><td class="plbl">PR Number</td><td></td></tr>
+          <tr><td class="plbl">Department</td><td></td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items mt">
+    <colgroup>
+      <col style="width:6%"><col style="width:7%"><col style="width:14%"><col style="width:39%"><col style="width:17%"><col style="width:17%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>SI No</th>
+        <th>Qty</th>
+        <th>Part No</th>
+        <th>Part Description</th>
+        <th>Unit Pric in {{basicdetails.[0].base_country_isocode}}</th>
+        <th>Total Price in {{basicdetails.[0].base_country_isocode}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr class="item-row{{#if @last}} item-last{{/if}}">
+        <td class="num">{{addOne @index}}</td>
+        <td class="num">{{formatAmount quantity ../bcdp}}</td>
+        <td>{{item_code}}</td>
+        <td>{{item_name}}{{description}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td colspan="5" class="ptot">Total in {{basicdetails.[0].base_country_isocode}}</td>
+        <td class="ptot-v">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="ydisc">Discount {{basicdetails.[0].base_country_isocode}}</td>
+        <td class="ydisc-v">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="ptot">Net amount {{basicdetails.[0].base_country_isocode}}</td>
+        <td class="ptot-v">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+      <tr class="words">
+        <td colspan="6">Amount in Words :{{bcamountinwords}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TERMS -->
+  <div class="terms-box">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+
+  <!-- STAMP -->
+  <div class="stamp">{{#if Seal}}<img src="{{Seal}}" alt="Seal" style="max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>{{/if}}</div>
+
+</body>
+</html>

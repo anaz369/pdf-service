@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+      margin: 0 6mm;
+    }
+    .ar { direction: rtl; }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .mt { margin-top: 8px; }
+
+    /* title */
+    .title-box { border: 1px solid #000; text-align: center; padding: 5px; }
+    .title-box .t { font-family: "Times New Roman", Times, serif; font-size: 20px; }
+
+    /* top boxes */
+    .top td { border: 1px solid #ccc; vertical-align: top; padding: 8px 10px; }
+    .kv { width: 100%; border-collapse: collapse; }
+    .kv td { border: none; padding: 2px 2px; font-size: 11px; vertical-align: top; }
+    .kv .k { width: 26%; }
+    .kv .c { width: 4%; }
+    .hd { font-weight: 700; margin-bottom: 6px; }
+    .po .k, .po .c, .po td { color: #000000; }
+
+    /* items */
+    .items td, .items th { border: 1px solid #ccc; padding: 4px 6px; font-size: 11px; vertical-align: middle; }
+    .items th { font-weight: 700; text-align: center; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .words { vertical-align: top; }
+    .items .words .h { font-weight: 700; }
+    .items .words .arw { direction: rtl; margin-top: 22px; }
+    .items .tlbl { text-align: right; }
+    .items .tval { text-align: right; }
+
+    /* bottom */
+    .h { font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="title-box">
+    <span class="t">------------ PURCHASE ORDER ------------</span>
+  </div>
+
+  <!-- TO | PO DETAILS -->
+  <table class="top mt">
+    <colgroup><col style="width:60%"><col style="width:40%"></colgroup>
+    <tr>
+      <td>
+        <div class="hd">To</div>
+        <table class="kv">
+          <tr><td class="k">Name</td><td class="c">:</td><td>{{billing_address.[0].name}}</td></tr>
+          <tr><td class="k">VAT No</td><td class="c">:</td><td>{{billing_address.[0].vat}}</td></tr>
+          <tr><td class="k">Address</td><td class="c">:</td><td>
+            {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}<br>{{/if}}
+            {{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}<br>{{/if}}
+            {{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}<br>{{/if}}
+            {{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}<br>{{/if}}
+            {{billing_address.[0].address_code}}
+          </td></tr>
+          <tr><td class="k">Attention</td><td class="c">:</td><td>{{basicdetails.[0].attention}}</td></tr>
+        </table>
+      </td>
+      <td>
+        <table class="kv po">
+          <tr><td class="k">Po No</td><td class="c">:</td><td>{{basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="k">PO Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
+          <tr><td class="k">Your Ref</td><td class="c">:</td><td>{{basicdetails.[0].reference_no}}</td></tr>
+          <tr><td class="k">RFQ No</td><td class="c">:</td><td></td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items mt">
+    <colgroup>
+      <col style="width:5%"><col style="width:50%"><col style="width:11%"><col style="width:11%"><col style="width:12%"><col style="width:11%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>S.N</th>
+        <th>Description</th>
+        <th>UOM</th>
+        <th>QTY</th>
+        <th>Rate</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_name}}{{description}}</td>
+        <td class="num">{{unit}}</td>
+        <td class="num">{{quantity}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td class="words" colspan="3" rowspan="4">
+          <div class="h">{{basicdetails.[0].isocode}} : {{bcamountinwords}}</div>
+          <div class="arw">{{bcamountinwordsar}}</div>
+        </td>
+        <td class="tlbl" colspan="2">Gross Amount</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      </tr>
+      <tr>
+        <td class="tlbl" colspan="2">Discount</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+      </tr>
+      <tr>
+        <td class="tlbl" colspan="2">VAT Amount</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+      </tr>
+      <tr>
+        <td class="tlbl" colspan="2">Net Amount</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- BOTTOM : TERMS | ADMIN -->
+  <table class="naked mt" style="margin-top:14px;">
+    <colgroup><col style="width:60%"><col style="width:40%"></colgroup>
+    <tr>
+      <td style="border:none;vertical-align:top;">
+        <div class="h">Terms and Conditions</div>
+        <div>{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+      </td>
+      <td style="border:none;text-align:center;vertical-align:bottom;">
+        <div class="h">Administrator</div>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
