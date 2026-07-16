@@ -20,7 +20,7 @@
     .doc-title { text-align: center; font-size: 20px; font-weight: bold; margin: 6px 0 10px; }
 
     .po-line { border: none; margin-bottom: 6px; }
-    .po-line td { border: none; font-weight: bold; font-size: 13px; }
+    .po-line td { border: none; font-size: 13px; }
     .po-line .rr { text-align: right; }
 
     /* section tables share the boxed look */
@@ -29,26 +29,57 @@
     .gray { background: #d9d9d9; }
     .hdc { text-align: center; font-weight: bold; padding: 4px; border: 1px solid #000; }
 
-    .addrcell { border: 1px solid #000; padding: 6px 8px; vertical-align: top; height: 120px; line-height: 1.5; }
+.addrcell {
+  font-size: 10px;
+    border: 1px solid #000;
+    padding: 6px 8px;
+    vertical-align: top;
+    height: 120px;
+    line-height: 1.5;
+}
+
+.addrcell .info {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.addrcell .info td {
+    border: none;
+    padding: 1px 0;
+    vertical-align: top;
+    line-height: 1.5;
+}
+
+.addrcell .lbl {
+    width: 72px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.addrcell .sep {
+    width: 10px;
+    text-align: center;
+}
 
     /* items */
-    .items th, .items td { border: 1px solid #000; padding: 3px 5px; font-size: 11px; vertical-align: top; }
+    .items th, .items td { border: 1px solid #000; padding: 3px 5px; font-size: 10px; vertical-align: top; }
     .items th { text-align: center; font-weight: bold; }
     .items td.num { text-align: center; }
     .items td.rt { text-align: right; }
 
     /* totals */
-    .tot td { border: 1px solid #000; padding: 3px 6px; font-size: 11px; vertical-align: top; }
+    .tot td { border: 1px solid #000; padding: 3px 6px; font-size: 10px; vertical-align: top; }
     .tot .wordscell { vertical-align: top; }
     .tot .totlbl { text-align: center; font-weight: bold; }
     .tot .totval { text-align: right; }
 
     /* delivery terms */
-    .dt th, .dt td { border: 1px solid #000; padding: 4px 6px; font-size: 11px; text-align: center; }
+    .dt th, .dt td { border: 1px solid #000; padding: 4px 6px; font-size: 10px; text-align: center; }
     .dt th { font-weight: bold; }
 
     /* terms + sign */
-    .foot td { border: 1px solid #000; vertical-align: top; padding: 6px 8px; font-size: 11px; }
+    .foot td { border: 1px solid #000; vertical-align: top; padding: 6px 8px; font-size: 10px; }
     .pa { text-align: center; }
     .pa u { font-weight: bold; }
   </style>
@@ -75,18 +106,77 @@
     </tr>
     <tr>
       <td class="addrcell">
-        Vendor No: {{vendor_details.[0].profile_code}}<br>
-        {{vendor_details.[0].name}}<br>
-        Address:{{#if billing_address.[0]}}{{joinAddress billing_address.[0] ''}}{{/if}}<br>VAT No: {{vendor_details.[0].VAT_number}}<br>
-        Attn: {{vendor_details.[0].contact_no2}}<br>
-        Email : {{vendor_details.[0].email}}<br>
-        Your Reference:{{basicdetails.[0].reference_no}}
+          <table class="vendor-info">
+              <tr>
+                  <td class="lbl">Vendor No</td>
+                  <td class="sep">:</td>
+                  <td>{{vendor_details.[0].profile_code}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Name</td>
+                  <td class="sep">:</td>
+                  <td>{{vendor_details.[0].name}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Address</td>
+                  <td class="sep">:</td>
+                  <td>{{#if billing_address.[0]}}{{joinAddress billing_address.[0] ''}}{{/if}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">{{tax_label}}</td>
+                  <td class="sep">:</td>
+                  <td>{{vendor_details.[0].VAT_number}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Attn</td>
+                  <td class="sep">:</td>
+                  <td>{{vendor_details.[0].contact_no2}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Email</td>
+                  <td class="sep">:</td>
+                  <td>{{vendor_details.[0].email}}</td>
+              </tr>
+
+              <tr>
+                  <td class="lbl">Reference</td>
+                  <td class="sep">:</td>
+                  <td>{{basicdetails.[0].reference_no}}</td>
+              </tr>
+          </table>
       </td>
       <td class="addrcell">
-        <b>{{compprof.name}}</b><br>
-        Address:{{joinAddress branch.[0] ''}}<br>
-        Phone: {{compprof.phone}}
-      </td>
+        <table class="info">
+            <tr>
+                <td class="lbl">Name</td>
+                <td class="sep">:</td>
+                <td><b>{{compprof.name}}</b></td>
+            </tr>
+
+            <tr>
+                <td class="lbl">Address</td>
+                <td class="sep">:</td>
+                <td>{{joinAddress branch.[0] ''}}</td>
+            </tr>
+
+            <tr>
+                <td class="lbl">VAT Number</td>
+                <td class="sep">:</td>
+                <td>{{branch.[0].vat}}</td>
+            </tr>
+
+            <tr>
+                <td class="lbl">Phone</td>
+                <td class="sep">:</td>
+                <td>{{compprof.phone}}</td>
+            </tr>
+        </table>
+    </td>
     </tr>
   </table>
 
@@ -110,16 +200,16 @@
     </thead>
     <tbody>
       {{#each itemdetails}}
-      <tr>
-        <td class="num">{{addOne @index}}</td>
-        <td>{{item_code}}</td>
-        <td>{{item_name}}{{description}}</td>
-        <td class="num">{{formatAmount quantity 0}}</td>
-        <td class="num">{{unit}}</td>
-        <td class="rt">{{formatAmount price 3}}</td>
-        <td class="rt">{{formatAmount tax 3}}</td>
-        <td class="rt">{{formatAmount amount 3}}</td>
-      </tr>
+        <tr>
+          <td class="num">{{addOne @index}}</td>
+          <td>{{item_code}}</td>
+          <td>{{item_name}}{{description}}</td>
+          <td class="num">{{formatAmount quantity ../bcdp}}</td>
+          <td class="num">{{unit}}</td>
+          <td class="rt">{{formatAmount price ../bcdp}}</td>
+          <td class="rt">{{formatAmount tax ../bcdp}}</td>
+          <td class="rt">{{formatAmount amount ../bcdp}}</td>
+        </tr>
       {{/each}}
     </tbody>
   </table>
@@ -149,7 +239,7 @@
     </tr>
     <tr>
       <td class="totlbl">Others</td>
-      <td class="totval"></td>
+      <td class="totval">{{formatAmount (divide basicdetails.[0].othervalue ccrate) bcdp}}</td>
     </tr>
     <tr>
       <td class="totlbl">Net Amount</td>
@@ -167,8 +257,8 @@
       <th>Currency</th>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
+      <td>{{basicdetails.[0].delivery_terms}}</td>
+      <td>{{basicdetails.[0].lead_time}}</td>
       <td>{{basicdetails.[0].payment_terms}}</td>
       <td>{{basicdetails.[0].base_country_isocode}}</td>
     </tr>
@@ -185,17 +275,16 @@
     </tr>
     {{#ifFlag datasettings "d339"}}
     <tr>
-      <td colspan="2" style="">
-      </td>
+      <td colspan="2" style="text-align:center;">{{datasettingstextvalue.d340}}</td>
     </tr>
     {{/ifFlag}}
   </table>
-  <table class="stack" style="vertical-align: top; padding: 6px 8px; font-size: 11px;">
+  <table class="stack" style="vertical-align: top; padding: 6px 8px; font-size: 10px;">
     <tr>
       <td class="pa">
         <u>Prepared By</u><br>
-        {{basicdetails.[0].salesman_name}}<br>
-        {{basicdetails.[0].salesman_no}}
+        {{basicdetails.[0].created_user}}<br>
+        {{basicdetails.[0].created_user_contact_no1}}
       </td>
       <td class="pa">
         <u>Approved By</u>
