@@ -169,7 +169,13 @@
                 <td class="sep">:</td>
                 <td>{{branch.[0].vat}}</td>
             </tr>
-
+          {{#if branch.[0].cr_no}}
+            <tr>
+                <td class="lbl">CR Number</td>
+                <td class="sep">:</td>
+                <td>{{branch.[0].cr_no}}</td>
+            </tr>
+          {{/if}}
             <tr>
                 <td class="lbl">Phone</td>
                 <td class="sep">:</td>
