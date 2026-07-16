@@ -617,12 +617,16 @@
       <tr>
         <td>
           <div class="sig-lbl">Issued By</div>
+          {{#ifFlag datasettings "d146"}}
           {{#if Seal}}
             <img class="seal-img" src="{{Seal}}" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '120'}}px;" onerror="this.style.display='none'">
           {{/if}}
+          {{/ifFlag}}
+          {{#ifFlag datasettings "d165"}}
           {{#if Signature}}
             <img class="sig-img"  src="{{Signature}}" style="max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '120'}}px;" onerror="this.style.display='none'">
           {{/if}}
+          {{/ifFlag}}
         </td> 
         <td>
           <div class="sig-lbl">Received By</div>
