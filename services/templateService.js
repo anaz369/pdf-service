@@ -42,7 +42,7 @@ function findSvgPath(filename) {
   );
 }
 
-function loadCurrencySvg(filename, fallbackText) {
+function loadCurrencySvg(filename, fallbackText, height = "0.75em") {
   const svgPath = findSvgPath(filename);
   const result = { inline: "", dataUri: "" };
 
@@ -65,7 +65,7 @@ function loadCurrencySvg(filename, fallbackText) {
         const cleaned = attrs
           .replace(/\s*width\s*=\s*["'][^"']*["']/gi, "")
           .replace(/\s*height\s*=\s*["'][^"']*["']/gi, "");
-        return `<svg${cleaned} style="height:0.75em;width:auto;vertical-align:middle;display:inline-block;margin-right:2px;">`;
+        return `<svg${cleaned} style="height:${height};width:auto;vertical-align:middle;display:inline-block;margin-right:2px;">`;
       });
 
     result.dataUri = `data:image/svg+xml;base64,${Buffer.from(raw).toString("base64")}`;
@@ -82,7 +82,7 @@ function loadCurrencySvg(filename, fallbackText) {
 
 // ── Load SAR + AED SVGs at startup ────────────────────────
 let sarSvg = loadCurrencySvg("sar.svg", "﷼");
-let aedSvg = loadCurrencySvg("aed.svg", "د.إ");
+let aedSvg = loadCurrencySvg("aed.svg", "د.إ", "0.62em");
 
 // Map iso → svg object for easy lookup
 const SVG_CURRENCY_MAP = {
