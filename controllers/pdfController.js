@@ -59,18 +59,24 @@ class PdfController {
 
       // ── Task 1: QR Code ──────────────────────────────────
       // Skip QR for thermal and pre-print templates
-      // pdfRequest.qrcode is a ZATCA TLV base64 string → converted to PNG QR image
+      // The QR TLV string is a ZATCA TLV base64 string → converted to PNG QR image.
+      // Source priority: cleared_qr (ZATCA-cleared) → reported_inv_qr (reported) → qrcode (basic).
       const needsQr = ![201, 202, 211].includes(pdfRequest.template_no);
 
-      if (
-        needsQr &&
-        pdfRequest.qrcode &&
-        String(pdfRequest.qrcode).length > 0
-      ) {
+      const bd0 = pdfRequest.basicdetails?.[0] || {};
+      const qrNotEmpty = (v) =>
+        v !== undefined && v !== null && String(v).trim() !== "";
+      const qrSource = qrNotEmpty(bd0.cleared_qr)
+        ? bd0.cleared_qr
+        : qrNotEmpty(bd0.reported_inv_qr)
+          ? bd0.reported_inv_qr
+          : pdfRequest.qrcode;
+
+      if (needsQr && qrNotEmpty(qrSource)) {
         console.log("↻ Generating QR image from ZATCA TLV string...");
         preprocessingTasks.push(
           qrCodeService
-            .generateQrCodeBase64(pdfRequest.qrcode)
+            .generateQrCodeBase64(qrSource)
             .then((base64) => {
               pdfRequest.qrCodeBase64 = base64;
               console.log(
