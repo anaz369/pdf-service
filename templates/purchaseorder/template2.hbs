@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+      margin: 0 6mm;
+    }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+    .doc-title { text-align: center; color:#1f3a6b; font-weight: 600; font-size: 25px;}
+
+    /* top */
+    .top { border: 1px solid #3c3c3c;border-bottom: none; }
+    .top > tbody > tr > td { border: 1px solid #3c3c3c;border-bottom: none; vertical-align: top; padding: 8px 10px; }
+    .co-name { }
+    .co-line { line-height: 1.55; }
+
+    .inv-grid { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .inv-grid td { border: 1px solid #3c3c3c; padding: 4px 6px; text-align: center; }
+    .inv-grid .g-lbl { border: 1px solid #3c3c3c; border-top:none; border-left:none;font-weight: bold; }
+    .cust { padding-top: 8px; padding-left: 10px; line-height: 1.55; }
+    .cust .c-name { }
+
+    /* items */
+    .items { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .items th, .items td { border: 1px solid #3c3c3c; padding: 3px 5px; font-size: 11px; vertical-align: middle; }
+    .items th { text-align: center; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items td.lft { text-align: left; }
+    .items .idesc { font-size: 10px; }
+
+    /* terms */
+    .terms { border: 1px solid #3c3c3c; border-bottom: none; border-top: none; padding: 4px 8px; min-height: 34px; }
+    .terms .th { }
+
+    /* totals */
+    .tot { border: 1px solid #3c3c3c;border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .tot td {  border-top: none; padding: 4px 8px; font-size: 11px; }
+    .tot .w { width: 50%; }
+    .tot .tl { width: 35%; text-align: right; }
+    .tot .tv { width: 15%; text-align: right; }
+
+    /* seal */
+    .seal { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .seal td { border: 1px solid #3c3c3c; border-top: none; padding: 6px 8px; vertical-align: top; height: 70px; }
+    .seal .auth { text-align: right; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="doc-title">PURCHASE ORDER</div>
+
+  <!-- TOP : COMPANY | INVOICE + CUSTOMER -->
+  <table class="top">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td>
+        <div class="co-name">{{branch.[0].name}}</div>
+        {{#if branch.[0].address_line1}}<div class="co-line">{{branch.[0].address_line1}}</div>{{/if}}
+        {{#if branch.[0].address_line2}}<div class="co-line">{{branch.[0].address_line2}}</div>{{/if}}
+        {{#if branch.[0].address_line3}}<div class="co-line">{{branch.[0].address_line3}}</div>{{/if}}
+        {{#if branch.[0].address_line4}}<div class="co-line">{{branch.[0].address_line4}}</div>{{/if}}
+        {{#if branch.[0].address_code}}<div class="co-line">{{branch.[0].address_code}}</div>{{/if}}
+        {{#if branch.[0].vat}}<div class="co-line">{{tax_label}}:{{branch.[0].vat}}</div>{{/if}}
+        {{#if branch.[0].cr_no}}<div class="co-line">CR No:{{branch.[0].cr_no}}</div>{{/if}}
+      </td>
+      <td style="padding:0;">
+        <table class="inv-grid">
+          <tr>
+            <td class="g-lbl">Document Number</td>
+            <td class="g-lbl" style="border-right:none;">Document Date</td>
+          </tr>
+          <tr>
+            <td style="border-left:none;">{{basicdetails.[0].inv_no}}</td>
+            <td style="border-right:none;">{{basicdetails.[0].inv_date}}</td>
+          </tr>
+        </table>
+        <div class="cust">
+          <div class="c-name">{{vendor_details.[0].name}}</div>
+          {{#if billing_address.[0].address_line2}}<div>{{billing_address.[0].address_line2}}</div>{{/if}}
+          {{#if billing_address.[0].address_line3}}<div>{{billing_address.[0].address_line3}}</div>{{/if}}
+          {{#if billing_address.[0].address_line4}}<div>{{billing_address.[0].address_line4}}</div>{{/if}}
+          {{#if billing_address.[0].vat}}<div>{{tax_label}} : {{billing_address.[0].vat}}</div>{{/if}}
+          {{#if vendor_details.[0].cr_no}}<div>CR No : {{vendor_details.[0].cr_no}}</div>{{/if}}
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items" style="border-top:none;">
+    <colgroup>
+      <col style="width:4%"><col style="width:29%"><col style="width:12%"><col style="width:8%">
+      <col style="width:14%"><col style="width:9%"><col style="width:11%"><col style="width:13%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th style="text-align:left;">Description</th>
+        <th>Rate</th>
+        <th>Quantity</th>
+        <th>Taxable Amount</th>
+        <th>
+          {{#if (eq basicdetails.[0].base_country_isocode "AED")}}
+              VAT Rate
+              {{else}}
+              {{#if (eq basicdetails.[0].base_country_isocode "SAR")}}
+                VAT Rate
+              {{else}}
+                Tax Rate
+              {{/if}}
+          {{/if}}
+        </th>
+        <th>
+          {{#if (eq basicdetails.[0].base_country_isocode "AED")}}
+            VAT Amount
+            {{else}}
+            {{#if (eq basicdetails.[0].base_country_isocode "SAR")}}
+              VAT Amount
+            {{else}}
+              Tax Amount
+            {{/if}}
+          {{/if}}
+        </th>
+        <th>Item Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td class="lft">{{item_name}}{{#if name_lang2}}<div class="idesc">{{name_lang2}}</div>{{/if}}{{#if description}}<div class="idesc">{{description}}</div>{{/if}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="num">{{quantity}}</td>
+        <td class="rt">{{formatAmount taxable ../bcdp}}</td>
+        <td class="num">{{vat_perc}}%</td>
+        <td class="rt">{{formatAmount tax ../bcdp}}</td>
+        <td class="rt">{{multiply amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- TERMS -->
+  <div class="terms">
+    <div class="th" style="font-weight: bold;">Terms And Conditions</div>
+    <div>{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+  </div>
+
+  <!-- TOTALS -->
+  <table class="tot">
+    <tr>
+      <td class="w">Amount chargeable in words</td>
+      <td class="tl">
+        {{#if (eq basicdetails.[0].base_country_isocode "AED")}}
+          Total (Excluding VAT ) 
+          {{else}}
+          {{#if (eq basicdetails.[0].base_country_isocode "SAR")}}
+          Total (Excluding VAT ) 
+          {{else}}
+          Total (Excluding TAX ) 
+          {{/if}}
+        {{/if}}
+      </td>
+      <td class="tv">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="w">{{bcamountinwords}}</td>
+      <td class="tl">
+        {{#if (eq basicdetails.[0].base_country_isocode "AED")}}
+            Total VAT
+            {{else}}
+            {{#if (eq basicdetails.[0].base_country_isocode "SAR")}}
+            Total VAT
+            {{else}}
+            Total Tax
+            {{/if}}
+        {{/if}}
+      </td>
+      <td class="tv">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+    </tr>
+    <tr>
+      <td class="w">VAT Amount in words</td>
+      <td class="tl">Amount Chargeable</td>
+      <td class="tv">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+    </tr>
+  </table>
+
+  <!-- SEAL / SIGNATURE -->
+  <table class="seal">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td style="text-align: center;">Seal and Signature</td>
+      <td style="text-align: center;" class="auth">
+        <div>For {{branch.[0].name}}</div>
+        <div>{{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '120'}}px; max-width:{{default datasettings.d459 '120'}}px;" onerror="this.style.display='none'"/>{{/if}}</div>
+        <div style="">Authorised Signatory</div>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
