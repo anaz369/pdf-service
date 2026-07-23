@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invoice - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: ibmplexsansarabic, Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #000;
+      background: #fff;
+      margin: 0 5mm;
+    }
+    .ar { direction: rtl; }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+    /* title */
+    .title { color:rgb(85, 56, 56); text-align: center; font-size: 20px; font-weight: 700; }
+    .taxreg { color:rgb(85, 56, 56); text-align: center; font-size: 11px; font-weight: 700; margin-top: 2px; }
+    .taxreg .rn { color: #c00000; }
+
+    /* header */
+    .hdr { width: 100%; margin-top: 8px; }
+    .hdr > tbody > tr > td { border: none; vertical-align: top; font-size: 10px; }
+    .hdr .lbl { font-weight: 400; }
+    .credit { text-align: center; font-weight: 700;}
+    .kv { width: 100%; border-collapse: collapse; }
+    .kv td { border: none; padding: 1px 2px; font-size: 10px; }
+    .kv .k { width: 40%; }
+    .kv .c { width: 4%; }
+
+    /* items */
+    .items td, .items th { border: 1px solid #000; padding: 3px 4px; font-size: 9px; vertical-align: top; }
+    .items thead th { text-align: center; font-weight: 700; line-height: 1.2; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .tlbl { text-align: right; font-weight: 400; }
+    .items .tval { text-align: right; font-weight: 400; }
+    .items .words td { text-align: center; font-weight: 700; }
+    .items .noline { border-left: none; border-right: none; }
+
+    /* totals: border only on top (first row) and bottom (last row), none between */
+    .items .tot-first .tlbl, .items .tot-first .tval { border-top: 1px solid #000; border-bottom: none; }
+    .items .tot-mid .tlbl, .items .tot-mid .tval { border-top: none; border-bottom: none; }
+    .items .tot-last .tlbl, .items .tot-last .tval { border-top: none; border-bottom: 1px solid #000; }
+
+    /* bank details shown in the left cell of the totals section */
+    .bank-inner { width: 100%; border-collapse: collapse; }
+    .bank-inner td { border: none; padding: 2px 4px; font-size: 10px; }
+    .bank-inner .bhd td { font-weight: 700; }
+    /* bank */
+    .bank { border-collapse: collapse; width: 100%; table-layout: fixed; margin-top: 8px; border: 1px solid #000; }
+    .bank .bhd td { font-weight: 700; padding: 4px 6px; border-bottom: 1px solid #000; }
+    .bank .brow td { border: none; padding: 2px 6px; font-size: 10px; }
+    .bank .bk { width: 22%; }
+    .bank .bc { width: 3%; }
+
+    /* signature */
+    .sign { border-collapse: collapse; width: 100%; table-layout: fixed; margin-top: 3px; }
+    .sign td { border: 1px solid #000; padding: 2px 8px; height: 75px; vertical-align: top; font-size: 10px; }
+    .sign .slbl { text-align: center; font-weight: 700; }
+    .sign .auth { text-align: center; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="title">TAX INVOICE</div>
+  <div class="taxreg">Tax Reg No. <span class="rn">{{branch.[0].vat}}</span></div>
+
+  <!-- HEADER -->
+  <table class="hdr">
+    <colgroup>
+      <col style="width:33%">
+      <col style="width:32%">
+      <col style="width:35%">
+    </colgroup>
+    <tr>
+      <td>
+        <table class="kv">
+          <colgroup>
+            <col style="width:20%">
+            <col style="width:5%">
+            <col style="width:75%">
+          </colgroup>
+          <tr>
+            <td class=""><b>To</b></td>
+            <td class=""><b>:</b></td>
+            <td style="text-align: left;">{{billing_address.[0].name}}</td>
+          </tr>
+          <tr>
+            <td class=""><b>Address</b></td>
+            <td class=""><b>:</b></td>
+            <td style="text-align: left;">{{joinAddress billing_address.[0] '، '}}</td>
+          </tr>
+        </table>
+      </td>
+      <td class="credit"><span class="ar">الائتمان فاتورة</span> / CREDIT BILL</td>
+      <td>
+        <table class="kv">
+          <tr><td class="k lbl">Invoice No</td><td class="c">:</td><td>{{basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="k lbl">Invoice Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
+          <tr><td class="k lbl">Supply Date</td><td class="c">:</td><td>{{basicdetails.[0].sup_date}}</td></tr>
+          <tr><td class="k lbl">LPO No.</td><td class="c">:</td><td>{{basicdetails.[0].order_no}}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items" style="margin-top:6px;">
+    <colgroup>
+      <col style="width:4%">
+      <col style="width:30%">
+      <col style="width:5%">
+      <col style="width:10%">
+      <col style="width:6%">
+      <col style="width:8%">
+      <col style="width:10%">
+      <col style="width:6%">
+      <col style="width:10%">
+      <col style="width:11%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Sr. No.</th>
+        <th>Description of Goods</th>
+        <th>Qty</th>
+        <th>Rate<br> ({{basicdetails.[0].base_country_isocode}})</th>
+        <th>Unit</th>
+        <th>Discount ({{basicdetails.[0].base_country_isocode}})</th>
+        <th>Taxable Amount ({{basicdetails.[0].base_country_isocode}})</th>
+        <th>VAT Rate</th>
+        <th>VAT Amount ({{basicdetails.[0].base_country_isocode}})</th>
+        <th>Total Amount ({{basicdetails.[0].base_country_isocode}})</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
+        <td class="num">{{quantity}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="num">{{unit}}</td>
+        <td class="rt">{{formatAmount disc_amt ../bcdp}}</td>
+        <td class="rt">{{formatAmount taxable ../bcdp}}</td>
+        <td class="num">{{vat_perc}}%</td>
+        <td class="rt">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+
+      <!-- TOTALS (left: bank details | right: totals) -->
+      <tr class="tot-first">
+        <td class="noline" colspan="5" rowspan="5" style="vertical-align:top; border-left:1px solid #000;">
+          <table class="bank-inner">
+          <colgroup>
+            <col style="width:24%">
+            <col style="width:4%">
+            <col style="width:72%">
+          </colgroup>
+            <tr class="bhd"><td colspan="3">BANK DETAILS</td></tr>
+            <tr><td class="bk">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
+            <tr><td class="bk">Account Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
+            <tr><td class="bk">Bank Branch</td><td class="bc">:</td><td>{{bankdetails.branch_name}}</td></tr>
+            <tr><td class="bk">A/c No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
+            <tr><td class="bk">IBAN No</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
+          </table>
+        </td>
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Subtotal</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-mid">
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Discount</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-mid">
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Total Taxable</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-mid">
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Total VAT Amount</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-last">
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Total Including VAT ({{basicdetails.[0].base_country_isocode}})</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+
+      <!-- AMOUNT IN WORDS -->
+      <tr class="words">
+        <td colspan="10">{{bcamountinwords}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SIGNATURE -->
+  <table class="sign">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td class="slbl">Customer's Signature</td>
+      <td class="auth">
+        <div class="slbl">For {{compprof.name}}</div>
+        {{#if Seal}}<img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '60'}}px; max-width:{{default datasettings.d458 '120'}}px;" onerror="this.style.display='none'"/>{{/if}}
+        <div>Authorised Signatory</div>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

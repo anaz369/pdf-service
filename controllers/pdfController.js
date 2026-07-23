@@ -450,6 +450,15 @@ class PdfController {
               right: "0px",
             };
             break;
+             case 6:
+            // Purchase 
+            pdfOptions.margin = {
+              top: withUnit(ds.d932, "120px"),
+              bottom: withUnit(ds.d814, "5px"),
+              left: "0px",
+              right: "0px",
+            };
+            break;
           case 1:
           default:
             // Invoice (and fallback)
