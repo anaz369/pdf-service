@@ -131,6 +131,59 @@ if (!bootstrapCss) {
   console.warn("[Bootstrap] Tried paths:", bootstrapCandidates);
 }
 
+// ── IBM Plex Sans Arabic fonts — loaded once at startup ────
+// Embedded as base64 @font-face so `font-family: ibmplexsansarabic` works in
+// Puppeteer/Lambda (no system font install needed, no external request).
+function loadFontBase64(filename) {
+  const p = findSvgPath(filename); // searches assets/ (and other candidates)
+  if (!p) {
+    console.warn(`[Fonts] ✗ ${filename} not found`);
+    return "";
+  }
+  try {
+    return fsSync.readFileSync(p).toString("base64");
+  } catch (err) {
+    console.warn(`[Fonts] ✗ Could not read ${filename}: ${err.message}`);
+    return "";
+  }
+}
+
+const ibmRegularB64 = loadFontBase64("IBMPlexSansArabic-Regular.ttf");
+const ibmBoldB64 = loadFontBase64("IBMPlexSansArabic-Bold.ttf");
+
+let fontFaceCss = "";
+{
+  const faces = [];
+  if (ibmRegularB64) {
+    faces.push(
+      `@font-face{font-family:'ibmplexsansarabic';font-style:normal;font-weight:400;` +
+        `src:url(data:font/ttf;base64,${ibmRegularB64}) format('truetype');}`,
+    );
+  }
+  if (ibmBoldB64) {
+    faces.push(
+      `@font-face{font-family:'ibmplexsansarabic';font-style:normal;font-weight:700;` +
+        `src:url(data:font/ttf;base64,${ibmBoldB64}) format('truetype');}`,
+    );
+  }
+  fontFaceCss = faces.join("");
+  if (fontFaceCss) {
+    console.log(
+      `[Fonts] ✓ IBM Plex Sans Arabic loaded (reg:${ibmRegularB64.length}, bold:${ibmBoldB64.length} b64 chars)`,
+    );
+  } else {
+    console.warn("[Fonts] ✗ IBM Plex Sans Arabic not loaded — check assets/");
+  }
+}
+
+// Inject the @font-face CSS into a rendered HTML string's <head>.
+function injectFonts(html) {
+  if (!fontFaceCss) return html;
+  const style = `<style>${fontFaceCss}</style>`;
+  if (html.includes("</head>")) return html.replace("</head>", `${style}</head>`);
+  return style + html;
+}
+
 class TemplateService {
   constructor() {
     this.compiledTemplates = new Map();
@@ -525,6 +578,9 @@ class TemplateService {
 
       let html = this.compiledTemplates.get(cacheKey)(templateData);
 
+      // ── Font injection (IBM Plex Sans Arabic @font-face) ──
+      html = injectFonts(html);
+
       // ── Bootstrap CSS injection ──────────────────────────
       // Replaces CDN link with inline styles — no network call needed
       if (bootstrapCss && html.includes("cdn.jsdelivr.net")) {
@@ -562,6 +618,8 @@ class TemplateService {
       }
 
       let html = this.compiledTemplates.get(cacheKey)(data);
+
+      html = injectFonts(html);
 
       if (bootstrapCss && html.includes("cdn.jsdelivr.net")) {
         html = html.replace(
