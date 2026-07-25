@@ -249,9 +249,12 @@
         <tr class="item-row">
           <td class="center">{{addOne @index}}</td>
           <td class="left">
-            {{item_name}} {{description}}
+            {{item_name}}
             {{#if name_lang2}}
               <div style="direction:rtl;">{{name_lang2}}</div>
+            {{/if}}
+             {{#if description}}
+              <div style="white-space:pre-line;">{{{nl2br description}}}</div>
             {{/if}}
           </td>
           <td class="center">{{unit}}</td>
