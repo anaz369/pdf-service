@@ -26,7 +26,7 @@
     .vbold { text-align: center; font-weight: 700; }
 
     /* title */
-    .title-bar { background: #2e9e95; color: #000000; text-align: center; font-weight: 700; font-size: 15px; padding: 8px; border: 1px solid #000000; }
+    .title-bar { background: #2e9e95; color: #000000; text-align: center; font-weight: 700; font-size: 15px; padding: 5px 8px; border: 1px solid #000000;margin-bottom: 5px; }
 
     /* items */
     .items td, .items th { border: 1px solid #000000; padding: 5px 6px; vertical-align: top; }
@@ -38,7 +38,7 @@
 
     /* terms */
     .terms-bar { background: #cc0000; color: #fff; font-weight: 700; padding: 5px 8px; border: 1px solid #cc0000; }
-    .terms-row { border: 1px solid #000000; border-top: none; padding: 5px 8px; font-weight: 700; }
+    .terms-row { border: 1px solid #000000; border-top: none; padding: 3px 8px; font-weight: 700; }
 
     /* footer */
     .foot { margin-top: 20px; }
@@ -53,7 +53,7 @@
   <div class="title-bar" style="margin-bottom: 2px;">PURCHASE ORDER</div>
 
   <!-- INFO GRID -->
-  <table class="tl" style="margin-top:-1px;margin-bottom:2.8px;">
+  <table class="tl" style="margin-top:3px;margin-bottom:2.8px;">
     <colgroup>
       <col style="width:13%">
       <col style="width:11%">
@@ -74,14 +74,14 @@
     </tr>
     <tr>
       <td class="vbold" rowspan="3">{{vendor_details.[0].name}}</td>
-      <td class="val" rowspan="3">{{billing_address.[0].address_line3}}&nbsp;&nbsp;{{billing_address.[0].address_line4}}</td>
+      <td class="vbold" rowspan="3">{{billing_address.[0].address_line3}}&nbsp;&nbsp;{{billing_address.[0].address_line4}}</td>
       <td class="vbold" rowspan="3">{{compprof.name}}{{branch.[0].address_line3}}&nbsp;&nbsp;{{branch.[0].address_line4}}&nbsp;&nbsp;{{branch.[0].address_code}}</td>
       <td class="lbl1">PO Type</td>
-      <td class="val" colspan="3"></td>
+      <td class="val" colspan="3">{{basicdetails.[0].po_type}}</td>
     </tr>
     <tr>
       <td class="lbl1">Purchaser</td>
-      <td class="vbold">{{basicdetails.[0].salesman_name}}</td>
+      <td class="vbold">{{basicdetails.[0].created_user}}</td>
       <td class="lbl1">TRN:</td>
       <td class="vbold">{{compprof.gstin}}</td>
     </tr>
@@ -98,15 +98,15 @@
     <colgroup><col style="width:24%"><col style="width:24%"><col style="width:18%"><col style="width:34%"></colgroup>
     <tr>
       <td class="vbold">Supplier TRN No</td>
-      <td class="val">{{vendor_details.[0].VAT_number}}</td>
+      <td class="vbold">{{vendor_details.[0].VAT_number}}</td>
       <td class="vbold">Currency</td>
       <td class="vbold">{{basicdetails.[0].base_country_isocode}}</td>
     </tr>
     <tr>
       <td class="vbold">Tel:</td>
-      <td class="val">{{compprof.phone}}</td>
+      <td class="vbold">{{basicdetails.[0].contactno}}</td>
       <td class="vbold">Payment Terms</td>
-      <td class="val">{{basicdetails.[0].payment_terms}}</td>
+      <td class="vbold">{{basicdetails.[0].payment_terms}}</td>
     </tr>
   </table>
 
@@ -140,7 +140,7 @@
         <td class="tval">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
       </tr>
       <tr>
-        <td class="tlbl" colspan="2">Vat @ 15%</td>
+        <td class="tlbl" colspan="2">VAT @ {{#if (eq basicdetails.[0].base_country_isocode "SAR")}}15{{else}}{{#if (or (eq basicdetails.[0].base_country_isocode "AED") (eq basicdetails.[0].base_country_isocode "OMR"))}}5{{else}}{{#if (eq basicdetails.[0].base_country_isocode "BHD")}}10{{/if}}{{/if}}{{/if}}%</td>
         <td class="tval">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
       </tr>
       <tr>
@@ -154,19 +154,21 @@
   <div class="terms-bar">Terms &amp; Conditions</div>
   <div class="terms-row">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
     {{#ifFlag datasettings "d339"}}
-  <div class="terms-row"></div>
+  <div class="terms-row" style="text-align: center;">{{datasettingstextvalue.d340}}</div>
 {{/ifFlag}}
 
   <!-- FOOTER : SIGN | STAMP -->
+  {{#ifFlag datasettings "d292"}}
   <table class="foot">
     <colgroup><col style="width:33%"><col style="width:34%"><col style="width:33%"></colgroup>
     <tr>
-      <td>{{#if Signature}}<img src="{{Signature}}" alt="Signature" style="text-align:center;max-height:{{ datasettings.d458 }}px; max-width:{{ datasettings.d458}}px;" onerror="this.style.display='none'"/>{{/if}}</td>
-      <td>{{#if Seal}}<img src="{{Seal}}" alt="Seal" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>{{/if}}</td>
+      <td>{{#if Signature}}<img src="{{Signature}}" alt="Signature" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>{{/if}}</td>
+      <td>{{#if Seal}}<img src="{{Seal}}" alt="Seal" style="text-align:center;max-height:{{ datasettings.d458 }}px; max-width:{{ datasettings.d458}}px;" onerror="this.style.display='none'"/>{{/if}}</td>
       <td></td>
     </tr>
   </table>
   <div class="thanks">Thank You!</div>
+  {{/ifFlag}}
 
 </body>
 </html>
