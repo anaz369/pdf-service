@@ -465,9 +465,11 @@
 
   <!-- LEFT : QR -->
   <div class="fin-left">
+    {{#ifFlag datasettings "d53"}}
     <div class="qr-wrapper">
       {{{qrDataUri qrCodeBase64}}}
     </div>
+    {{/ifFlag}}
   </div>
 
   <!-- RIGHT : TOTALS -->
@@ -477,7 +479,7 @@
       <span class="f-lbl">Total</span>
       <span class="f-ar">السعر الإجمالي</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}}
+        {{basicdetails.[0].base_country_isocode}}
         {{formatAmount basicdetails.[0].subtotal bcdp}}
       </span>
     </div>
@@ -486,7 +488,7 @@
       <span class="f-lbl">Total Discount</span>
       <span class="f-ar">إجمالي الخصم</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}}
+        {{basicdetails.[0].base_country_isocode}}
         {{formatAmount basicdetails.[0].total_discount bcdp}}
       </span>
     </div>
@@ -496,7 +498,7 @@
       <span class="f-lbl">Discount</span>
       <span class="f-ar">خصم</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}}
+        {{basicdetails.[0].base_country_isocode}}
         {{formatAmount basicdetails.[0].discount bcdp}}
       </span>
     </div>
@@ -506,7 +508,7 @@
       <span class="f-lbl">Additional Discount</span>
       <span class="f-ar">خصم إضافي</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}}
+        {{basicdetails.[0].base_country_isocode}}
         {{formatAmount basicdetails.[0].additional_discount bcdp}}
       </span>
     </div>
@@ -515,7 +517,7 @@
       <span class="f-lbl">Total Amount (Excluding VAT)</span>
       <span class="f-ar">المبلغ الإجمالي بدون ضريبة</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}}
+        {{basicdetails.[0].base_country_isocode}}
         {{formatAmount basicdetails.[0].grand_total bcdp}}
       </span>
     </div>
@@ -524,7 +526,7 @@
       <span class="f-lbl">VAT</span>
       <span class="f-ar">ضريبة القيمة المضافة</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}}
+        {{basicdetails.[0].base_country_isocode}}
         {{formatAmount basicdetails.[0].vatamt bcdp}}
       </span>
     </div>
@@ -533,39 +535,39 @@
       <span class="f-lbl">Total Amount (With VAT)</span>
       <span class="f-ar">المبلغ الإجمالي شامل الضريبة</span>
       <span class="f-amt">
-        {{basicdetails.[0].isocode}}
+        {{basicdetails.[0].base_country_isocode}}
         {{formatAmount basicdetails.[0].balance bcdp}}
       </span>
     </div> --}}
 
     <div class="fin-row">
         <span class="f-lbl">Total</span>
-        <span class="f-amt">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</span>
+        <span class="f-amt">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</span>
       </div>
 
       <div class="fin-row">
         <span class="f-lbl orange">{{basicdetails.[0].ap}}% Advance Recovery</span>
-        <span class="f-amt deduct">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].aa ccrate) bcdp}}</span>
+        <span class="f-amt deduct">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].aa ccrate) bcdp}}</span>
       </div>
 
       <div class="fin-row">
         <span class="f-lbl orange">{{basicdetails.[0].rp}}% Retention</span>
-        <span class="f-amt deduct">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].ra ccrate) bcdp}}</span>
+        <span class="f-amt deduct">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].ra ccrate) bcdp}}</span>
       </div>
 
       <div class="fin-row">
         <span class="f-lbl bold">Total Amount Claimed (Without 5% VAT)</span>
-        <span class="f-amt bold">{{basicdetails.[0].isocode}} {{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].aa basicdetails.[0].ra)) ccrate) bcdp}}</span>
+        <span class="f-amt bold">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].aa basicdetails.[0].ra)) ccrate) bcdp}}</span>
       </div>
 
       <div class="fin-row">
         <span class="f-lbl">VAT 5%</span>
-        <span class="f-amt add">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</span>
+        <span class="f-amt add">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</span>
       </div>
 
       <div class="fin-row-dark">
         <span>Total Amount Claimed (With 5% VAT)</span>
-        <span class="f-amt">{{basicdetails.[0].isocode}} {{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</span>
+        <span class="f-amt">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</span>
       </div>
   </div>
 </div>
