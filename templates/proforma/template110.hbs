@@ -9,7 +9,7 @@
       *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
       body {
-        font-family: "IBM Plex Sans Arabic", Arial, sans-serif;
+        font-family: ibmplexsansarabic;
         font-size: 9px;
         line-height: 1.3;
         color: #000;
@@ -44,9 +44,10 @@
       /* ── ITEMS ─────────────────────────────── */
       .items td, .items th { border: 1px solid #ccc; padding: 3px 5px; font-size: 9px; vertical-align: top; }
       .items thead th { background: #f2f2f2; text-align: center; font-weight: 700; }
-      .items td.num { text-align: center; }
-      .items td.r { text-align: right; }
+      .items td.num { text-align: center;color: #545355; }
+      .items td.r { text-align: right;color: #545355; }
       .items td.desc { color: #545355; }
+      .items td {color: #545355;}
 
       /* ── BANK / TOTALS ─────────────────────── */
       .kv td { border: 1px solid #bfbfbf; padding: 3px 6px; font-size: 9px; vertical-align: middle; }
@@ -114,7 +115,7 @@
       </colgroup>
       <tr>
         <td>Customer P.O No :{{basicdetails.[0].order_no}}</td>
-        <td>Customer P.O Date :{{basicdetails.[0].inv_date}}</td>
+        <td>Customer P.O Date :</td>
         <td class="lbl">Currency</td>
         <td class="r">{{basicdetails.[0].base_country_isocode}}</td>
       </tr>
@@ -133,17 +134,15 @@
       <tr>
         <td>
           <div style="font-weight:700;">{{billing_address.[0].name}}</div>
-          {{billing_address.[0].address_line1}}{{billing_address.[0].address_line2}}{{#if billing_address.[0].address_line3}} {{billing_address.[0].address_line3}}{{/if}}<br>
-          {{billing_address.[0].address_line4}}{{billing_address.[0].address_line5}}
+          {{joinAddress billing_address.[0] '  '}}
           {{#if billing_address.[0].vat}}<br>VAT No: {{billing_address.[0].vat}}{{/if}}
           {{#if billing_address.[0].vat}}<br>CR No: {{customer_details.[0].cr_no}}{{/if}}
         </td>
         <td class="r ar">
           <div style="font-weight:700;">{{billing_address_lang2.[0].name}}</div>
-          {{billing_address_lang2.[0].address_line1}}{{billing_address_lang2.[0].address_line2}}{{#if billing_address_lang2.[0].address_line3}} {{billing_address_lang2.[0].address_line3}}{{/if}}<br>
-          {{billing_address_lang2.[0].address_line4}}{{billing_address_lang2.[0].address_line5}}
-          {{#if billing_address_lang2.[0].vat}}<br>{{billing_address_lang2.[0].vat}} : رقم ضريبة {{/if}}
-          {{#if customer_details.[0].cr_no_lang2}}<br>{{customer_details.[0].cr_no_lang2}} : رقم ضريبة {{/if}}
+          {{joinAddress billing_address_lang2.[0] '  '}}
+          {{#if billing_address_lang2.[0].vat}}<br> رقم ضريبة  : {{billing_address_lang2.[0].vat}} {{/if}}
+          {{#if customer_details.[0].cr_no_lang2}}<br> السجل التجاري : {{customer_details.[0].cr_no_lang2}} {{/if}}
         </td>
       </tr>
     </table>
@@ -166,7 +165,7 @@
           <th>Quantity</th>
           <th>Unit</th>
           <th>Unit Price</th>
-          <th>VAT(10%)</th>
+          <th>{{#if (eq basicdetails.[0].base_country_isocode 'SAR')}}VAT(15%){{else if (eq basicdetails.[0].base_country_isocode 'AED')}}VAT(5%){{else if (eq basicdetails.[0].base_country_isocode 'OMR')}}VAT(5%){{else if (eq basicdetails.[0].base_country_isocode 'BHD')}}VAT(10%){{else}}VAT{{/if}}</th>
           <th>Gross Amount</th>
         </tr>
       </thead>
@@ -179,7 +178,7 @@
           <td class="num">{{unit}}</td>
           <td class="r">{{formatAmount price ../bcdp}}</td>
           <td class="r">{{formatAmount vat_amt ../bcdp}}</td>
-          <td class="r">{{formatAmount taxable ../bcdp}}</td>
+          <td class="r">{{formatAmount amount ../bcdp}}</td>
         </tr>
         {{/each}}
       </tbody>
@@ -211,11 +210,22 @@
         <td>
           <table class="kv">
             <colgroup><col style="width:55%"><col style="width:45%"></colgroup>
-            <tr><td class="k">Gross Total</td><td class="vr">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td></tr>
-            <tr><td class="k">Amount Before VAT</td><td class="vr">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td></tr>
-            <tr><td class="k">VAT Amount</td><td class="vr">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td></tr>
-            <tr><td class="k">Amount After VAT</td><td class="vr">{{formatAmount (divide (add basicdetails.[0].subtotal basicdetails.[0].vatamt) ccrate) bcdp}}</td></tr>
-            <tr><td class="k">Net Payable Amount</td><td class="vr">{{formatAmount (divide (add basicdetails.[0].subtotal basicdetails.[0].vatamt) ccrate) bcdp}}</td></tr>
+            <tr><td class="k">Gross Total</td><td class="vr">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td></tr>
+             {{#if zatcadiscount.[0]}}
+                {{#each zatcadiscount}}
+                    <tr><td class="k">{{reason_name}}</td><td class="vr">{{formatAmount (divide dld ../ccrate) ../bcdp}}</td></tr>
+                  {{/each}}
+                  <tr><td class="k">Amount After Discount</td><td class="vr">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td></tr>
+            {{else}}
+
+              {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
+              <tr><td class="k">Total Discount</td><td class="vr">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td></tr>
+              <tr><td class="k">Amount After Discount</td><td class="vr">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td></tr>
+              {{/if}}
+
+          {{/if}}
+              <tr><td class="k">VAT Amount </td><td class="vr">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td></tr>
+            <tr><td class="k">Grand Total Amount </td><td class="vr">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td></tr>
           </table>
         </td>
       </tr>
@@ -230,15 +240,16 @@
     <table class="sign mt">
       <colgroup><col style="width:34%"><col style="width:33%"><col style="width:33%"></colgroup>
       <tr>
-        <td class="sbody"></td>
         <td class="sbody">
-          {{#if Signature}}
-              <img src="{{Signature}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>
+          {{#if Seal}}
+              <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/>
           {{/if}}
         </td>
         <td class="sbody">
-           {{#if Seal}}
-              <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/>
+        </td>
+        <td class="sbody">
+          {{#if Signature}}
+              <img src="{{Signature}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>
           {{/if}}
         </td>
       </tr>
@@ -252,7 +263,7 @@
           <span class="ar" style="text-align:center;">ختم العملاء وتوقيعهم</span>
         </td>
         <td class="slbl">
-          <span class="en" style="text-align:center;">For{{branch.[0].name}}</span>
+          <span class="en" style="text-align:center;">For {{branch.[0].name}}</span>
         </td>
       </tr>
     </table>
