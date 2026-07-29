@@ -1,366 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <title>Final Invoice - {{MyInvoisDocument.document.inv_no}}</title>
+  <meta charset="UTF-8" />
+  <title>Invoice - {{basicdetails.[0].inv_no}}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: Arial, sans-serif;
-      font-size: 11px;
+      font-family: ibmplexsansarabic, Arial, Helvetica, sans-serif;
+      font-size: 10px;
       color: #000;
       background: #fff;
+      margin: 0 5mm;
     }
+    .ar { direction: rtl; }
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
 
-    .page {
-      width: 750px;
-      margin: 0 auto;
-      padding: 15px 30px;
-    }
+    /* page wrapper: thead repeats the top section on every printed page */
+    .pagewrap > thead { display: table-header-group; }
+    .pagewrap > tbody { display: table-row-group; }
+    .pagewrap > thead > tr > td,
+    .pagewrap > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+    .pagewrap > thead > tr > td { padding-bottom: 4px; }
 
-    /* ── Title ──────────────────────────────────── */
-    .invoice-title {
-      text-align: center;
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      text-decoration: underline;
-    }
+    /* title */
+    .title { color:rgb(85, 56, 56); text-align: center; font-size: 20px; font-weight: 700; }
+    .taxreg { color:rgb(85, 56, 56); text-align: center; font-size: 11px; font-weight: 700; margin-top: 2px; }
+    .taxreg .rn { color: #c00000; }
 
-    /* ── Header layout ─────────────────────────── */
-    .header-wrap {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    .header-left {
-      flex: 0 0 55%;
-    }
-    .header-right {
-      flex: 0 0 42%;
-    }
+    /* header */
+    .hdr { width: 100%; margin-top: 8px; }
+    .hdr > tbody > tr > td { border: none; vertical-align: top; font-size: 10px; }
+    .hdr .lbl { font-weight: 400; }
+    .credit { text-align: center; font-weight: 700;}
+    .kv { width: 100%; border-collapse: collapse; }
+    .kv td { border: none; padding: 1px 2px; font-size: 10px; }
+    .kv .k { width: 40%; }
+    .kv .c { width: 4%; }
 
-    /* ── Field rows ────────────────────────────── */
-    .field-row {
-      display: flex;
-      align-items: baseline;
-      margin-bottom: 2px;
-      font-size: 11px;
-      line-height: 1.6;
-    }
-    .field-lbl {
-      font-weight: bold;
-      min-width: 140px;
-      flex-shrink: 0;
-      font-size: 11px;
-    }
-    .field-val {
-      font-size: 11px;
-      color: #000;
-    }
+    /* items */
+    .items td, .items th { border: 1px solid #000; padding: 3px 4px; font-size: 9px; vertical-align: middle; }
+    .items thead th { text-align: center; font-weight: 700; line-height: 1.2;}
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .tlbl { text-align: right; font-weight: 400; }
+    .items .tval { text-align: right; font-weight: 400; }
+    .items .words td { text-align: center; font-weight: 700; }
+    .items .noline { border-left: none; border-right: none; }
 
-    /* ── Shipping row ──────────────────────────── */
-    .shipping-wrap {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      margin-top: 8px;
-    }
-    .shipping-wrap .ship-col {
-      flex: 1;
-    }
-    .shipping-wrap .field-lbl {
-      min-width: 120px;
-    }
+    /* totals: border only on top (first row) and bottom (last row), none between */
+    .items .tot-first .tlbl, .items .tot-first .tval { border-top: 1px solid #000; border-bottom: none; }
+    .items .tot-mid .tlbl, .items .tot-mid .tval { border-top: none; border-bottom: none; }
+    .items .tot-last .tlbl, .items .tot-last .tval { border-top: none; border-bottom: 1px solid #000; }
 
-    /* ── Items table ───────────────────────────── */
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-    }
-    .items-table th {
-      background: #fff;
-      font-size: 10px;
-      font-weight: bold;
-      padding: 4px 4px;
-      text-align: center;
-      border: 0.5px solid #000;
-    }
-    .items-table td {
-      padding: 3px 4px;
-      font-size: 10px;
-      border: 0.5px solid #000;
-      text-align: center;
-      vertical-align: middle;
-    }
-    .items-table td.td-desc { text-align: left; }
-    .items-table td.td-right { text-align: right; }
+    /* bottom section (totals + bank + words + signature): never split across
+       pages — if it doesn't fit, the whole block moves to the next page */
+    .bottom { break-inside: avoid; page-break-inside: avoid; }
+    .bottom table { break-inside: avoid; page-break-inside: avoid; }
+    .bottom tr { break-inside: avoid; page-break-inside: avoid; }
+    .totals-block { margin-top: -1px; }   /* sit flush on the items table border */
+    /* blank rows the script appends to run the grid down to the page foot */
+    .items tr.filler td { height: inherit; }
 
-    /* ── Footer totals ─────────────────────────── */
-    .footer-wrap {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0;
-    }
-    .footer-left {
-      flex: 0 0 50%;
-    }
-    .footer-right {
-      flex: 0 0 45.2%;
-    }
+    /* bank details shown in the left cell of the totals section */
+    .bank-inner { width: 100%; border-collapse: collapse; }
+    .bank-inner td { border: none; padding: 2px 4px; font-size: 10px; }
+    .bank-inner .bhd td { font-weight: 700; }
+    /* bank */
+    .bank { border-collapse: collapse; width: 100%; table-layout: fixed; margin-top: 8px; border: 1px solid #000; }
+    .bank .bhd td { font-weight: 700; padding: 4px 6px; border-bottom: 1px solid #000; }
+    .bank .brow td { border: none; padding: 2px 6px; font-size: 10px; }
+    .bank .bk { width: 22%; }
+    .bank .bc { width: 3%; }
 
-    .totals-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 10px;
-    }
-    .totals-table td {
-      padding: 3px 5px;
-      border: 1px solid #000;
-      font-size: 10px;
-    }
-    .totals-table td.t-lbl {
-      font-weight: bold;
-      text-align: right;
-    }
-    .totals-table td.t-val {
-      text-align: right;
-    }
-
-    /* ── Bank + Signature ──────────────────────── */
-    .bank-sig-wrap {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-    }
-    .bank-col {
-      flex: 0 0 48%;
-      font-size: 10px;
-      line-height: 1.6;
-    }
-    .sig-col {
-      flex: 0 0 48%;
-      text-align: center;
-    }
-    .sig-line {
-      border-top: 1px solid #000;
-      margin-top: 40px;
-      padding-top: 4px;
-      font-weight: bold;
-      font-size: 11px;
-      text-align: center;
-    }
+    /* signature */
+    .sign { border-collapse: collapse; width: 100%; table-layout: fixed; margin-top: 3px; }
+    .sign td { border: 1px solid #000; padding: 2px 8px; height: 75px; vertical-align: top; font-size: 10px; }
+    .sign .slbl { text-align: center; font-weight: 700; }
+    .sign .auth { text-align: center; }
   </style>
 </head>
 <body>
-<div class="page">
 
-  {{!-- ══ TITLE ══ --}}
-  <div class="invoice-title">FINAL INVOICE</div>
+  <table class="pagewrap">
+  <thead>
+  <tr>
+  <td>
 
-  {{!-- ══ HEADER: Invoice To (left) | Details (right) ══ --}}
-  <div class="header-wrap">
+  <!-- TITLE (repeated on every page) -->
+  <div class="title">TAX INVOICE</div>
+  <div class="taxreg">Tax Reg No. <span class="rn">{{branch.[0].vat}}</span></div>
 
-    {{!-- LEFT — Invoice To (Buyer) --}}
-    <div class="header-left">
-      <div class="field-row">
-        <span class="field-lbl">INVOICE TO</span>
-      </div>
-      <div class="field-row">
-        <span class="field-val" style="font-weight: bold;">{{MyInvoisDocument.buyer.name}}</span>
-      </div>
-      {{#if MyInvoisDocument.buyer.address_formatted}}
-      <div class="field-row">
-        <span class="field-val">{{{nl2br MyInvoisDocument.buyer.address_formatted}}}</span>
-      </div>
-      {{/if}}
-      <div class="field-row">
-        <span class="field-lbl">ATTN :</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">PHONE NO</span>
-        <span class="field-val">; {{#if MyInvoisDocument.buyer.contact_no}}{{MyInvoisDocument.buyer.contact_no}}{{/if}}</span>
-      </div>
-    </div>
+  <!-- HEADER -->
+  <table class="hdr">
+    <colgroup>
+      <col style="width:33%">
+      <col style="width:32%">
+      <col style="width:35%">
+    </colgroup>
+    <tr>
+      <td>
+        <table class="kv">
+          <colgroup>
+            <col style="width:20%">
+            <col style="width:5%">
+            <col style="width:75%">
+          </colgroup>
+          <tr>
+            <td class=""><b>To</b></td>
+            <td class=""><b>:</b></td>
+            <td style="text-align: left;">{{billing_address.[0].name}}</td>
+          </tr>
+          <tr>
+            <td class=""><b>Address</b></td>
+            <td class=""><b>:</b></td>
+            <td style="text-align: left;">{{joinAddress billing_address.[0] '، '}}</td>
+          </tr>
+        </table>
+      </td>
+      <td class="credit"> CREDIT BILL / <span class="ar">الائتمان فاتورة</span></td>
+      <td>
+        <table class="kv">
+          <tr><td class="k lbl">Invoice No</td><td class="c">:</td><td>{{basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="k lbl">Invoice Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
+          <tr><td class="k lbl">Supply Date</td><td class="c">:</td><td>{{basicdetails.[0].sup_date}}</td></tr>
+          <tr><td class="k lbl">LPO No.</td><td class="c">:</td><td>{{basicdetails.[0].order_no}}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 
-    {{!-- RIGHT — Invoice Details --}}
-    <div class="header-right">
-      <div class="field-row">
-        <span class="field-lbl">PORT NAME</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">INVOICE NO</span>
-        <span class="field-val">{{MyInvoisDocument.document.inv_no}}</span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">INVOICE DATE</span>
-        <span class="field-val">{{formatDate MyInvoisDocument.myinvois.issuance_date}}</span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">PO NO</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">DUE DATE</span>
-        <span class="field-val">{{#if MyInvoisDocument.doc_details.due_date}}{{MyInvoisDocument.doc_details.due_date}}{{/if}}</span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">PAYMENT TERM</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">CURRENCY</span>
-        <span class="field-val">{{MyInvoisDocument.doc_details.currency_code}}</span>
-      </div>
-    </div>
+  </td>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>
 
-  </div>
-
-  {{!-- ══ SHIPPING DETAILS ══ --}}
-  <div class="shipping-wrap">
-    <div class="ship-col">
-      <div class="field-row">
-        <span class="field-lbl">VESSEL NAME :</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">VOY NO :</span>
-        <span class="field-val"></span>
-      </div>
-    </div>
-    <div class="ship-col">
-      <div class="field-row">
-        <span class="field-lbl">ARRIVED :</span>
-        <span class="field-val"></span>
-      </div>
-      <div class="field-row">
-        <span class="field-lbl">ACTIVITY :</span>
-        <span class="field-val"></span>
-      </div>
-    </div>
-    <div class="ship-col">
-      <div class="field-row">
-        <span class="field-lbl">SAILED</span>
-        <span class="field-val"></span>
-      </div>
-    </div>
-  </div>
-
-  {{!-- ══ ITEMS TABLE ══ --}}
-  <table class="items-table">
+  <!-- ITEMS -->
+  <table class="items" style="margin-top:6px;">
+    <colgroup>
+      <col style="width:4%">
+      <col style="width:30%">
+      <col style="width:5%">
+      <col style="width:10%">
+      <col style="width:6%">
+      <col style="width:8%">
+      <col style="width:10%">
+      <col style="width:6%">
+      <col style="width:10%">
+      <col style="width:11%">
+    </colgroup>
     <thead>
       <tr>
-        <th style="width:5%;">NO</th>
-        <th style="width:50%;">DESCRIPTION</th>
-        <th style="width:12%;">TOTAL IN MYR</th>
-        <th style="width:10%;">SST</th>
-        <th style="width:10%;">DISCOUNT</th>
-        <th style="width:13%;">TOTAL IN USD</th>
+        <th>Sr. No.</th>
+        <th>Description of Goods</th>
+        <th>Qty</th>
+        <th>Rate<br> ({{basicdetails.[0].base_country_isocode}})</th>
+        <th>Unit</th>
+        <th>Discount ({{basicdetails.[0].base_country_isocode}})</th>
+        <th>Taxable Amount ({{basicdetails.[0].base_country_isocode}})</th>
+        <th>VAT Rate</th>
+        <th>VAT Amount ({{basicdetails.[0].base_country_isocode}})</th>
+        <th>Total Amount ({{basicdetails.[0].base_country_isocode}})</th>
       </tr>
     </thead>
     <tbody>
-      {{#each MyInvoisDocument.items}}
+      {{#each itemdetails}}
       <tr>
-        <td>{{inc @index}}</td>
-        <td class="td-desc">
-            {{item_name}}
-            {{#if description}}<br><span style="direction:rtl; font-size:9px;">{{description}}</span>{{/if}}
-        </td>
-        <td class="td-right">{{formatCurrency taxable}}</td>
-        <td class="td-right">{{formatCurrency vat_amt}}</td>
-        <td class="td-right">{{formatCurrency disc_amt}}</td>
-        <td class="td-right">{{formatCurrency total_price}}</td>
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
+        <td class="num">{{quantity}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="num">{{unit}}</td>
+        <td class="rt">{{formatAmount disc_amt ../bcdp}}</td>
+        <td class="rt">{{formatAmount taxable ../bcdp}}</td>
+        <td class="num">{{vat_perc}}%</td>
+        <td class="rt">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
     </tbody>
   </table>
 
-  {{!-- ══ FOOTER: Words + Totals ══ --}}
-  <div class="footer-wrap">
+  </td>
+  </tr>
+  <tr>
+  <td>
 
-    {{!-- LEFT — In Words --}}
-    <div class="footer-left">
-      <div style="font-weight: bold; font-size: 11px; margin-top: 4px;">IN WORDS:</div>
-      <div style="font-size: 10px; margin-top: 2px;">{{bcamountinwords}}</div>
-    </div>
+  <!-- BOTTOM SECTION — kept together: moves to the next page if it doesn't fit -->
+  <div class="bottom">
+  <table class="items totals-block">
+    <colgroup>
+      <col style="width:4%">
+      <col style="width:30%">
+      <col style="width:5%">
+      <col style="width:10%">
+      <col style="width:6%">
+      <col style="width:8%">
+      <col style="width:10%">
+      <col style="width:6%">
+      <col style="width:10%">
+      <col style="width:11%">
+    </colgroup>
+    <tbody>
+      <!-- TOTALS (left: bank details | right: totals) -->
+      <tr class="tot-first">
+        <td class="noline" colspan="5" rowspan="5" style="vertical-align:top; border-left:1px solid #000;">
+          <table class="bank-inner">
+          <colgroup>
+            <col style="width:24%">
+            <col style="width:4%">
+            <col style="width:72%">
+          </colgroup>
+            <tr class="bhd"><td colspan="3">BANK DETAILS</td></tr>
+            <tr><td class="bk">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
+            <tr><td class="bk">Account Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
+            <tr><td class="bk">Bank Branch</td><td class="bc">:</td><td>{{bankdetails.branch_name}}</td></tr>
+            <tr><td class="bk">A/c No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
+            <tr><td class="bk">IBAN No</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
+          </table>
+        </td>
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Subtotal</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-mid">
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Discount</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-mid">
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Total Taxable</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-mid">
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Total VAT Amount</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+      </tr>
+      <tr class="tot-last">
+        <td class="tlbl" colspan="4" style="font-weight: 700;">Total Including VAT ({{basicdetails.[0].base_country_isocode}})</td>
+        <td class="tval" style="font-weight: 700;">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
 
-    {{!-- RIGHT — Totals --}}
-    <div class="footer-right">
-      <table class="totals-table">
-        <tr>
-          <td class="t-lbl" style="width: 6.7%;border-top:none;text-align:center;" rowspan="2">SUB TOTAL</td>
-          <td class="t-val" style="width: 23%;border-top:none;text-align:center;">{{default MyInvoisDocument.doc_details.currency_code}}</td>
-          <td class="t-val" style="width: 14.8%;border-top:none;text-align:center;">USD</td>
-        </tr>
-        <tr>
-          <td class="t-val" style="width: 23%;border-top:none;">{{formatCurrency MyInvoisDocument.document.total}}</td>
-          <td class="t-val" style="width: 14.8%;border-top:none;">{{formatCurrency (divide MyInvoisDocument.document.total MyInvoisDocument.doc_details.exchange_rate)}}</td>
-        </tr>
-        <tr>
-          <td class="t-lbl" style="text-align:center;">SST</td>
-          <td class="t-val">{{formatCurrency MyInvoisDocument.document.vat}}</td>
-          <td class="t-val">{{#if MyInvoisDocument.doc_details.exchange_rate}}{{formatCurrency (divide MyInvoisDocument.document.vat MyInvoisDocument.doc_details.exchange_rate)}}{{/if}}</td>
-        </tr>
-        <tr>
-          <td class="t-lbl" style="text-align:center;">DISCOUNT</td>
-          <td class="t-val">{{#if MyInvoisDocument.document.dld}}{{formatCurrency MyInvoisDocument.document.dld}}{{/if}}</td>
-          <td class="t-val">{{#if MyInvoisDocument.doc_details.exchange_rate}}{{#if MyInvoisDocument.document.dld}}{{formatCurrency (divide MyInvoisDocument.document.dld MyInvoisDocument.doc_details.exchange_rate)}}{{/if}}{{/if}}</td>
-        </tr>
-        <tr>
-          <td class="t-lbl" style="text-align:center;">ADVANCE</td>
-          <td class="t-val">{{#if basicdetails.[0].aa}}{{formatAmount basicdetails.[0].aa bcdp}}{{/if}}</td>
-          <td class="t-val"></td>
-        </tr>
-        <tr>
-          <td class="t-lbl" style="font-weight: bold;text-align:center;">TOTAL AMOUNT</td>
-          <td class="t-val" style="font-weight: bold;">{{formatCurrency MyInvoisDocument.document.grand_total}}</td>
-          <td class="t-val" style="font-weight: bold;">{{formatCurrency (divide MyInvoisDocument.document.grand_total MyInvoisDocument.doc_details.exchange_rate)}}</td>
-        </tr>
-      </table>
-    </div>
+      <!-- AMOUNT IN WORDS -->
+      <tr class="words">
+        <td colspan="10">{{bcamountinwords}}</td>
+      </tr>
+    </tbody>
+  </table>
 
+  <!-- SIGNATURE -->
+  <table class="sign">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td class="slbl">Customer's Signature</td>
+      <td class="auth">
+        <div class="slbl">For {{compprof.name}}</div>
+        {{#if Seal}}<img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '60'}}px; max-width:{{default datasettings.d458 '120'}}px;" onerror="this.style.display='none'"/>{{/if}}
+        <div>Authorised Signatory</div>
+      </td>
+    </tr>
+  </table>
   </div>
 
-  {{!-- ══ BANK DETAILS + SIGNATURE ══ --}}
-  <div class="bank-sig-wrap">
+  </td>
+  </tr>
+  </tbody>
+  </table>
 
-    {{!-- LEFT — Bank Details --}}
-    <div class="bank-col">
-      <div style="font-weight: bold; margin-bottom: 4px;">BANK ACCOUNT DETAILS</div>
-      {{#if bankdetails.acc_name}}<div>{{bankdetails.acc_name}}</div>{{/if}}
-      {{#if bankdetails.acc_no}}<div>{{bankdetails.acc_no}}</div>{{/if}}
-      {{#if bankdetails.iban_no}}<div>{{bankdetails.iban_no}}</div>{{/if}}
-      {{#if bankdetails.swift_no}}<div>{{bankdetails.swift_no}}</div>{{/if}}
+  <script>
+  /* Runs the item table down to the foot of the page with empty ruled rows, so
+     the bottom section sits at the page foot and no blank patch is left above it.
+     Page height = A4 minus the PDF margins the service applies for invoices
+     (controllers/pdfController.js -> datasettings.d74 / d75). */
+  (function () {
+    var SLACK = 45;   // Chrome's usable height runs under A4-minus-margins; stopping
+                      // this far short is what keeps the fill off the next page
+    function run() {
+      var mt = parseFloat('{{#if UseHeaderFooter}}{{datasettings.d74}}{{else}}10{{/if}}') || 0;
+      var mb = parseFloat('{{#if UseHeaderFooter}}{{datasettings.d75}}{{else}}10{{/if}}') || 0;
+      var page = 1122.5 - mt - mb;            // A4 height at 96dpi, less the margins
+      var h = function (sel) { var e = typeof sel === 'string' ? document.querySelector(sel) : sel;
+                               return e ? e.getBoundingClientRect().height : 0; };
 
-      {{#if bankdetails.name}}<div style="margin-top: 8px;">{{bankdetails.name}}</div>{{/if}}
-      {{#if bankdetails.branch_name}}<div>{{bankdetails.branch_name}}</div>{{/if}}
-    </div>
+      // measure at the printed width, or rows wrap differently here than on paper
+      document.documentElement.style.width =
+        (794.5 - {{#if UseHeaderFooter}}0{{else}}20{{/if}}) + 'px';
 
-    {{!-- RIGHT — For Company + Signature --}}
-    <div class="sig-col">
-      <div style="font-weight: bold; font-size: 11px; margin-top: 10px;">FOR {{MyInvoisDocument.supplier.name}}</div>
+      var body = document.querySelector('.items > tbody');
+      if (!body) return;
 
-      {{#if Seal}}
-      <div style="margin-top: 8px;">
-        <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '50'}}px; max-width:{{default datasettings.d458 '80'}}px;" onerror="this.style.display='none'"/>
-      </div>
-      {{/if}}
+      var old = body.querySelectorAll('tr.filler');       // start from a clean slate
+      for (var k = 0; k < old.length; k++) body.removeChild(old[k]);
 
-      {{#if Signature}}
-      <div style="margin-top: 5px;">
-        <img src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d459 '50'}}px; max-width:{{default datasettings.d459 '80'}}px;" onerror="this.style.display='none'"/>
-      </div>
-      {{/if}}
+      function fill(px) {                                  // empty row, columns ruled through
+        if (px < 4) return;
+        var tr = document.createElement('tr');
+        tr.className = 'filler';
+        tr.style.height = px + 'px';
+        for (var c = 0; c < 10; c++) tr.appendChild(document.createElement('td'));
+        body.appendChild(tr);
+      }
 
-      <div class="sig-line">AUTHORISED SIGNATURE</div>
-    </div>
+      var cap  = page - SLACK;                                   // usable height per page
+      var head = h('.pagewrap > thead') + h('.items > thead');   // repeated on every page
+      var used = head + 6;                                       // 6px = items table margin-top
+      var rows = body.querySelectorAll('tr');
+      for (var i = 0; i < rows.length; i++) {
+        var rh = h(rows[i]);
+        if (used + rh > cap) used = head;     // row does not fit: starts a new page
+        used += rh;
+      }
 
-  </div>
+      var block = h('.bottom');
+      var free = cap - used;
+      if (block <= free) {
+        fill(free - block);                   // bottom section stays on this page
+      } else {
+        fill(free);                           // run this page out ...
+        var next = cap - head;                // ... and continue on the next one
+        if (block <= next) fill(next - block);
+      }
+    }
+    run();
+    window.addEventListener('load', run);     // re-run once the seal image / fonts are in
+  })();
+  </script>
 
-</div>
 </body>
 </html>
