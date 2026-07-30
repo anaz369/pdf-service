@@ -128,7 +128,7 @@
       {{#each itemdetails}}
       <tr>
         <td class="num">{{addOne @index}}</td>
-        <td>{{item_name}}{{description}}</td>
+        <td>{{item_name}}{{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}{{#if description}}<div>{{nl2br description}}</div>{{/if}}</td>
         <td class="num">{{formatAmount quantity ../bcdp}}</td>
         <td class="rt">{{formatAmount price ../bcdp}}</td>
         <td class="rt">{{formatAmount amount ../bcdp}}</td>
