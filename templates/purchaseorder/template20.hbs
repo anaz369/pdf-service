@@ -59,9 +59,9 @@
       <col style="width:16%">
       <col style="width:11%">
       <col style="width:18%">
-      <col style="width:10%">
+      <col style="width:11%">
       <col style="width:18%">
-      <col style="width:12%">
+      <col style="width:11%">
       <col style="width:15%">
     </colgroup>
     <tr>
@@ -74,9 +74,9 @@
       <td class="hdr">{{basicdetails.[0].inv_date}}</td>
     </tr>
     <tr>
-      <td class="vbold" rowspan="3">{{vendor_details.[0].name}}</td>
-      <td class="vbold" rowspan="3">{{billing_address.[0].address_line3}}&nbsp;&nbsp;{{billing_address.[0].address_line4}}</td>
-      <td class="vbold" rowspan="3">{{compprof.name}}{{branch.[0].address_line3}}&nbsp;&nbsp;{{branch.[0].address_line4}}&nbsp;&nbsp;{{branch.[0].address_code}}</td>
+      <td class="vbold" rowspan="3" style="font-size: 10px;">{{vendor_details.[0].name}}</td>
+      <td class="vbold" rowspan="3" style="font-size: 10px;">{{billing_address.[0].address_line3}}&nbsp;&nbsp;{{billing_address.[0].address_line4}}</td>
+      <td class="vbold" rowspan="3" style="font-size: 10px;">{{compprof.name}}{{branch.[0].address_line3}}&nbsp;&nbsp;{{branch.[0].address_line4}}&nbsp;&nbsp;{{branch.[0].address_code}}</td>
       <td class="lbl1">PO Type</td>
       <td class="val" colspan="3">{{#if basicdetails.[0].po_type}}{{basicdetails.[0].po_type}}{{else}}Standard{{/if}}</td>
     </tr>
