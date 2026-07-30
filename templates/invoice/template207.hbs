@@ -32,7 +32,7 @@
     .hdr { width: 100%; margin-top: 8px; }
     .hdr > tbody > tr > td { border: none; vertical-align: top; font-size: 10px; }
     .hdr .lbl { font-weight: 400; }
-    .credit { text-align: center; font-weight: 700;}
+    .credit { text-align: left; font-weight: 700;}
     .kv { width: 100%; border-collapse: collapse; }
     .kv td { border: none; padding: 1px 2px; font-size: 10px; }
     .kv .k { width: 40%; }
@@ -75,9 +75,8 @@
 
     /* signature */
     .sign { border-collapse: collapse; width: 100%; table-layout: fixed; margin-top: 3px; }
-    .sign td { border: 1px solid #000; padding: 2px 8px; height: 75px; vertical-align: top; font-size: 10px; }
+    .sign td { padding: 2px 8px; vertical-align: top; font-size: 10px; }
     .sign .slbl { text-align: center; font-weight: 700; }
-    .sign .auth { text-align: center; }
   </style>
 </head>
 <body>
@@ -89,25 +88,25 @@
 
   <!-- TITLE (repeated on every page) -->
   <div class="title">TAX INVOICE</div>
-  <div class="taxreg">Tax Reg No. <span class="rn">{{branch.[0].vat}}</span></div>
+  {{!-- <div class="taxreg">Tax Reg No. <span class="rn">{{branch.[0].vat}}</span></div> --}}
 
   <!-- HEADER -->
   <table class="hdr">
     <colgroup>
-      <col style="width:33%">
-      <col style="width:32%">
-      <col style="width:35%">
+      <col style="width:42%">
+      <col style="width:28%">
+      <col style="width:30%">
     </colgroup>
     <tr>
       <td>
         <table class="kv">
           <colgroup>
-            <col style="width:20%">
-            <col style="width:5%">
-            <col style="width:75%">
+            <col style="width:28%">
+            <col style="width:4%">
+            <col style="width:68%">
           </colgroup>
           <tr>
-            <td class=""><b>To</b></td>
+            <td class=""><b>Customer Name</b></td>
             <td class=""><b>:</b></td>
             <td style="text-align: left;">{{billing_address.[0].name}}</td>
           </tr>
@@ -115,6 +114,11 @@
             <td class=""><b>Address</b></td>
             <td class=""><b>:</b></td>
             <td style="text-align: left;">{{joinAddress billing_address.[0] '، '}}</td>
+          </tr>
+          <tr>
+            <td class=""><b>TRN</b></td>
+            <td class=""><b>:</b></td>
+            <td style="text-align: left;">{{billing_address.[0].vat}}</td>
           </tr>
         </table>
       </td>
@@ -125,6 +129,7 @@
           <tr><td class="k lbl">Invoice Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
           <tr><td class="k lbl">Supply Date</td><td class="c">:</td><td>{{basicdetails.[0].sup_date}}</td></tr>
           <tr><td class="k lbl">LPO No.</td><td class="c">:</td><td>{{basicdetails.[0].order_no}}</td></tr>
+          <tr><td class="k lbl">DN No</td><td class="c">:</td><td>{{basicdetails.[0].deliverynote_no}}</td></tr>
         </table>
       </td>
     </tr>
@@ -143,8 +148,8 @@
       <col style="width:4%">
       <col style="width:30%">
       <col style="width:5%">
-      <col style="width:10%">
       <col style="width:6%">
+      <col style="width:10%">
       <col style="width:8%">
       <col style="width:10%">
       <col style="width:6%">
@@ -156,8 +161,8 @@
         <th>Sr. No.</th>
         <th>Description of Goods</th>
         <th>Qty</th>
-        <th>Rate<br> ({{basicdetails.[0].base_country_isocode}})</th>
         <th>Unit</th>
+        <th>Rate<br> ({{basicdetails.[0].base_country_isocode}})</th>
         <th>Discount ({{basicdetails.[0].base_country_isocode}})</th>
         <th>Taxable Amount ({{basicdetails.[0].base_country_isocode}})</th>
         <th>VAT Rate</th>
@@ -171,8 +176,8 @@
         <td class="num">{{addOne @index}}</td>
         <td>{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
         <td class="num">{{quantity}}</td>
-        <td class="rt">{{formatAmount price ../bcdp}}</td>
         <td class="num">{{unit}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
         <td class="rt">{{formatAmount disc_amt ../bcdp}}</td>
         <td class="rt">{{formatAmount taxable ../bcdp}}</td>
         <td class="num">{{vat_perc}}%</td>
@@ -243,7 +248,7 @@
 
       <!-- AMOUNT IN WORDS -->
       <tr class="words">
-        <td colspan="10">{{bcamountinwords}}</td>
+        <td colspan="10">Total Amount : {{bcamountinwords}}</td>
       </tr>
     </tbody>
   </table>
@@ -252,12 +257,16 @@
   <table class="sign">
     <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
     <tr>
-      <td class="slbl">Customer's Signature</td>
-      <td class="auth">
-        <div class="slbl">For {{compprof.name}}</div>
-        {{#if Seal}}<img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '60'}}px; max-width:{{default datasettings.d458 '120'}}px;" onerror="this.style.display='none'"/>{{/if}}
-        <div>Authorised Signatory</div>
+      <td class="slbl" style="height: 30px;">Receiver's Sign.</td>
+      <td class="slbl" style="height: 30px;">For {{compprof.name}}
+        {{!-- <div class="slbl">For {{compprof.name}}</div> --}}
+        {{!-- {{#if Seal}}<img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '60'}}px; max-width:{{default datasettings.d458 '120'}}px;" onerror="this.style.display='none'"/>{{/if}}
+        <div>Authorised Signatory</div> --}}
       </td>
+    </tr>
+    <tr>
+      <td class="slbl">..................................................</td>
+      <td class="slbl">..................................................</td>
     </tr>
   </table>
   </div>
