@@ -384,13 +384,13 @@
           {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
           {{#if description}}<div>{{description}}</div>{{/if}}
         </td>
-        <td class="center"><span style="font-size:14px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount price ../bcdp}}</td>
+        <td class="center"><span style="font-size:12px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount price ../bcdp}}</td>
         <td class="center">{{formatAmount quantity ../bcdp}}</td>
-        <td class="right"><span style="font-size:14px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount disc_amt ../bcdp}}</td>
-        <td class="right"><span style="font-size:14px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount taxable ../bcdp}}</td>
+        <td class="right"><span style="font-size:12px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount disc_amt ../bcdp}}</td>
+        <td class="right"><span style="font-size:12px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount taxable ../bcdp}}</td>
         <td class="center">{{vat_perc}}%</td>
-        <td class="right"><span style="font-size:14px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount tax ../bcdp}}</td>
-        <td class="right"><span style="font-size:14px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount amount ../bcdp}}</td>
+        <td class="right"><span style="font-size:12px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount tax ../bcdp}}</td>
+        <td class="right"><span style="font-size:12px;">{{currencySymbol ../basicdetails.[0].isocode}}</span>{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
     </tbody>
@@ -415,19 +415,19 @@
           <tr>
             <td class="t-en">Subtotal</td>
             <td class="t-ar">المجموع الفرعي</td>
-            <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+            <td class="t-val"><span style="font-size:12px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
           </tr>
           {{!-- {{#if (gt basicdetails.[0].discount 0)}} --}}
             <tr>
             <td class="t-en">Total Discount</td>
             <td class="t-ar">مجموع الخصومات</td>
-            <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+            <td class="t-val"><span style="font-size:12px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
           </tr>
           {{!-- {{/if}} --}}
           <tr>
             <td class="t-en">Total Taxable Amount</td>
             <td class="t-ar">إجمالي المبلغ الخاضع للضريبة</td>
-            <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide (subtract basicdetails.[0].subtotal basicdetails.[0].discount) ccrate) bcdp}}</td>
+            <td class="t-val"><span style="font-size:12px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide (subtract basicdetails.[0].subtotal basicdetails.[0].discount) ccrate) bcdp}}</td>
           </tr>
           <tr>
             <td class="t-en">
@@ -440,22 +440,22 @@
               {{else}}{{#if (eq basicdetails.[0].base_country_isocode "SAR")}}ضريبة القيمة المضافة
               {{else}}قيمة الضريبة{{/if}}{{/if}}
             </td>
-            <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+            <td class="t-val"><span style="font-size:12px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
           </tr>
           <tr>
             <td class="t-en">Total Amount</td>
             <td class="t-ar">إجمالي المبلغ</td>
-            <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+            <td class="t-val"><span style="font-size:12px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
           </tr>
           <tr>
             <td class="t-en">Paid</td>
             <td class="t-ar">مدفوع</td>
-            <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].received ccrate) bcdp}}</td>
+            <td class="t-val"><span style="font-size:12px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].received ccrate) bcdp}}</td>
           </tr>
           <tr>
             <td class="t-en">Balance</td>
             <td class="t-ar">الرصيد</td>
-            <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].balance ccrate) bcdp}}</td>
+            <td class="t-val"><span style="font-size:12px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].balance ccrate) bcdp}}</td>
           </tr>
         </table>
       </td>
