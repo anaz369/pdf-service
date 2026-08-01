@@ -228,6 +228,16 @@
             line-height: 1.6;
         }
 
+        /* ── QR ────────────────────────────────── */
+        .qr-block {
+            text-align: center;
+            padding: 6px 0 4px;
+        }
+
+        .qr-block img {
+            margin: 0 auto;
+        }
+
         /* ── Footer ────────────────────────────── */
         .footer {
             text-align: center;
@@ -298,15 +308,26 @@
     <table class="items-table">
         <thead>
             <tr>
-                {{#if itemdetails.[0].disc_amt}}
-                <th style="width:36%;">ITEM</th>
-                {{else}} 
-                 <th class="c" style="width:49%;">ITEM</th>
+                {{#if (gt (sumProperty itemdetails "disc_amt") 0)}}
+                    {{#if (gt (sumProperty itemdetails "tax") 0)}}
+                    <th style="width:23%;">ITEM</th>
+                    {{else}}
+                    <th style="width:36%;">ITEM</th>
+                    {{/if}}
+                {{else}}
+                    {{#if (gt (sumProperty itemdetails "tax") 0)}}
+                    <th style="width:36%;">ITEM</th>
+                    {{else}}
+                    <th class="c" style="width:49%;">ITEM</th>
+                    {{/if}}
                 {{/if}}
                 <th class="c" style="width:9%;">QTY</th>
                 <th class="r" style="width:18%;">RATE</th>
-                {{#if itemdetails.[0].disc_amt}}
-                <th class="r" style="width:13%;">DISCOUNT</th>
+                {{#if (gt (sumProperty itemdetails "disc_amt") 0)}}
+                <th class="r" style="width:13%;">DISC</th>
+                {{/if}}
+                {{#if (gt (sumProperty itemdetails "tax") 0)}}
+                <th class="r" style="width:13%;">TAX</th>
                 {{/if}}
                 <th class="r" style="width:24%;">AMOUNT</th>
             </tr>
@@ -324,8 +345,11 @@
                 </td>
                 <td class="c">{{formatAmount quantity bcdp}}</td>
                 <td class="r">{{formatAmount price bcdp}}</td>
-                {{#if disc_amt}}
+                {{#if (gt (sumProperty ../itemdetails "disc_amt") 0)}}
                 <td class="r">{{formatAmount disc_amt bcdp}}</td>
+                {{/if}}
+                {{#if (gt (sumProperty ../itemdetails "tax") 0)}}
+                <td class="r">{{formatAmount tax bcdp}}</td>
                 {{/if}}
                 <td class="r">{{formatAmount amount bcdp}}</td>
             </tr>
@@ -341,24 +365,24 @@
                 <span class="en">Total Taxable Amount / </span> <span class="ar">إجمالي المبلغ الخاضع للضريبة</span>
                 {{!-- <span class="ar">إجمالي المبلغ الخاضع للضريبة</span> --}}
             </td>
-            <td class="amt">{{{currencyImg  ../isocode}}} {{formatAmount (divide subtotal ccrate) bcdp}}</td>
+            <td class="amt"><span style="font-size: 13.5px;">{{{currencySymbol ../basicdetails.[0].isocode}}}</span>{{formatAmount (divide subtotal ccrate) bcdp}}</td>
         </tr>
-        {{#if basicdetails.[0].vatamt}}
-        <tr>
-            <td class="lbl">
-                <span class="en">VAT / </span> <span class="ar">إجمالي ضريبة القيمة المضافة</span>
-                {{!-- <span class="ar">إجمالي ضريبة القيمة المضافة</span> --}}
-            </td>
-            <td class="amt">{{{currencyImg  ../isocode}}} {{formatAmount (divide vatamt ccrate) bcdp}}</td>
-        </tr>
-        {{/if}}
-        {{#if basicdetails.[0].discount}}
+        {{#if discount}}
         <tr>
             <td class="lbl">
                 <span class="en">Discount / </span> <span class="ar">الخصم</span>
                 {{!-- <span class="ar">الخصم</span> --}}
             </td>
-            <td class="amt">{{{currencyImg  ../isocode}}} {{formatAmount (divide discount ccrate) bcdp}}</td>
+            <td class="amt"><span style="font-size: 13.5px;">{{{currencySymbol ../basicdetails.[0].isocode}}}</span>{{formatAmount (divide discount ccrate) bcdp}}</td>
+        </tr>
+        {{/if}}
+        {{#if vatamt}}
+        <tr>
+            <td class="lbl">
+                <span class="en">TAX / </span> <span class="ar">إجمالي ضريبة القيمة المضافة</span>
+                {{!-- <span class="ar">إجمالي ضريبة القيمة المضافة</span> --}}
+            </td>
+            <td class="amt"><span style="font-size: 13.5px;">{{{currencySymbol ../basicdetails.[0].isocode}}}</span>{{formatAmount (divide vatamt ccrate) bcdp}}</td>
         </tr>
         {{/if}}
         {{!-- {{/neq}} --}}
@@ -367,7 +391,7 @@
                 <span class="en">Total / </span> <span class="ar">اجمالي المبلغ المستحق</span>
                 {{!-- <span class="ar">اجمالي المبلغ المستحق</span> --}}
             </td>
-            <td class="amt">{{{currencyImg ../isocode}}} {{formatAmount (divide grand_total ccrate) bcdp}}</td>
+            <td class="amt"><span style="font-size: 13.5px;">{{{currencySymbol ../basicdetails.[0].isocode}}}</span>{{formatAmount (divide grand_total ccrate) bcdp}}</td>
         </tr>
     </table>
     {{/with}}
@@ -382,6 +406,9 @@
         {{/if}}
 
     </div>
+
+    {{!-- ── QR Code ───────────────────────────────── --}}
+    <div class="qr-block">{{{qrDataUri qrCodeBase64}}}</div>
 
     {{!-- ── Footer ────────────────────────────────── --}}
     <div class="footer">Thank you !</div>
