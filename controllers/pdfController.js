@@ -61,7 +61,7 @@ class PdfController {
       // Skip QR for thermal and pre-print templates
       // The QR TLV string is a ZATCA TLV base64 string → converted to PNG QR image.
       // Source priority: cleared_qr (ZATCA-cleared) → reported_inv_qr (reported) → qrcode (basic).
-      const needsQr = ![201, 202, 211].includes(pdfRequest.template_no);
+      const needsQr = ![202, 211].includes(pdfRequest.template_no);
 
       const bd0 = pdfRequest.basicdetails?.[0] || {};
       const qrNotEmpty = (v) =>
