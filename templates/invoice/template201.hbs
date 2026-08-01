@@ -327,7 +327,7 @@
                 <th class="r" style="width:13%;">DISC</th>
                 {{/if}}
                 {{#if (gt (sumProperty itemdetails "tax") 0)}}
-                <th class="r" style="width:13%;">TAX</th>
+                <th class="r" style="width:13%;">VAT</th>
                 {{/if}}
                 <th class="r" style="width:24%;">AMOUNT</th>
             </tr>
@@ -379,7 +379,7 @@
         {{#if vatamt}}
         <tr>
             <td class="lbl">
-                <span class="en">TAX / </span> <span class="ar">إجمالي ضريبة القيمة المضافة</span>
+                <span class="en">VAT / </span> <span class="ar">إجمالي ضريبة القيمة المضافة</span>
                 {{!-- <span class="ar">إجمالي ضريبة القيمة المضافة</span> --}}
             </td>
             <td class="amt"><span style="font-size: 13.5px;">{{{currencySymbol ../basicdetails.[0].isocode}}}</span>{{formatAmount (divide vatamt ccrate) bcdp}}</td>
