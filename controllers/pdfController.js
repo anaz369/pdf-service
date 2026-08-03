@@ -459,6 +459,42 @@ class PdfController {
               right: "0px",
             };
             break;
+            case 7:
+            // Credit note 
+            pdfOptions.margin = {
+              top: withUnit(ds.d936, "120px"),
+              bottom: withUnit(ds.d818, "5px"),
+              left: "0px",
+              right: "0px",
+            };
+            break;
+            case 8:
+            // Purchase Return
+            pdfOptions.margin = {
+              top: withUnit(ds.d933, "120px"),
+              bottom: withUnit(ds.d815, "5px"),
+              left: "0px",
+              right: "0px",
+            };
+            break;
+            case 9:
+            // Sales Return 
+            pdfOptions.margin = {
+              top: withUnit(ds.d934, "120px"),
+              bottom: withUnit(ds.d816, "5px"),
+              left: "0px",
+              right: "0px",
+            };
+            break;
+            case 10:
+            // Deliverynote 
+            pdfOptions.margin = {
+              top: withUnit(ds.d803, "120px"),
+              bottom: withUnit(ds.d810, "5px"),
+              left: "0px",
+              right: "0px",
+            };
+            break;
           case 1:
           default:
             // Invoice (and fallback)
