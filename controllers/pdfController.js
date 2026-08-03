@@ -529,11 +529,7 @@ class PdfController {
         if (pdfRequest.FooterImageUrl) {
           headerFooterTasks.push(
             pdfService
-              .footerGenerate(
-                pdfRequest.FooterImageUrl
-                // null,
-                // pdfOptions.margin.bottom,   // never let the footer exceed its band
-              )
+              .footerGenerate(pdfRequest.FooterImageUrl)
               .then((footerHtml) => {
                 pdfOptions.footerTemplate = footerHtml;
               }),
