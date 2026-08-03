@@ -13,21 +13,30 @@
       }
 
       body {
-        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+        font-family: ibmplexsansarabic;
         font-size: 10px;
         line-height: 1.4;
         color: #000;
         margin: 0 4mm;
       }
 
+      /* grey shading hugs the text only; the rule runs the full page width */
       .invoice-title {
         text-align: center;
+        padding: 4px 0 10px;
+        border-bottom: 1px solid #000;
+      }
+      .invoice-title .chip {
+        display: inline-block;
         background-color:#dbe0e5;
         font-size: 15px;
         font-weight: 800;
         letter-spacing: 0.4px;
-        padding: 8px 0 6px;
-        border-bottom: 1px solid #000;
+        padding: 5px 16px;
+      }
+      .invoice-title .ar {
+        direction: rtl;
+        unicode-bidi: isolate;
       }
 
       .invoice-no-bar {
@@ -37,8 +46,8 @@
         padding: 5px 6px;
         font-size: 10.5px;
         font-weight: 600;
-        margin-top: 4px;
-        margin-bottom: 4px;
+        margin-top: 2px;
+        margin-bottom: 2px;
         background-color:#dbe0e5;
       }
       .invoice-no-bar .ar { direction: rtl; }
@@ -48,7 +57,6 @@
         justify-content: space-between;
         margin-top: 6px;
         padding: 3px 4px;
-        font-weight: 700;
         font-size: 10.5px;
         border: 1px solid #bfbfbf;
         border-bottom: none;
@@ -77,19 +85,12 @@
       .details-table col.c8 { width: 7%; }
 
       .details-table .lbl {
-        
-        color: #333;
-        white-space: nowrap;
         font-size: 9px;
-        font-weight: 700;
       }
       .details-table .lbl-ar {
-        color: #333;
         text-align: right;
         direction: rtl;
-        white-space: nowrap;
         font-size: 9px;
-        font-weight: 700;
       }
       .details-table .val-ar {
         text-align: right;
@@ -176,7 +177,7 @@
         table-layout: fixed;
       }
       .totals-table td {
-        padding: 8px 10px;
+        padding: 5px 10px;
         border: 1px solid #bfbfbf;
         vertical-align: middle;
       }
@@ -187,21 +188,23 @@
         padding: 6px !important;
       }
       .totals-table .qr-total-cell .qr-placeholder {
-        width: 95px;
+        width: 100px;
         height: 95px;
         margin: 0 auto;
       }
       .totals-table .tot-lbl-en {
-        width: 28%;
+        width: 25%;
         font-weight: 700;
         background-color:#dbe0e5;
       }
       .totals-table .tot-lbl-ar {
+        font-weight: 700;
         width: 44%;
         text-align: right;
         direction: rtl;
       }
       .totals-table .tot-val {
+        font-weight: 700;
         width: 12%;
         text-align: right;
       }
@@ -256,23 +259,29 @@
         padding: 0;
         border: 1px solid #bfbfbf;
       }
+      /* a definite (tiny) height on the cell is what lets the nested table's
+         height:100% resolve — the cell itself still grows to the row */
+      .bank-outer-table td.bank-cell {
+        height: 1px;
+      }
       .bank-inner-table {
         width: 100%;
+        height: 100%;              /* fill the cell — no blank strip under the last row */
         border-collapse: collapse;
         font-size: 9px;
       }
       .bank-inner-table td {
         border: 1px solid #bfbfbf;
         padding: 5px 6px;
-        vertical-align: top;
+        vertical-align: middle;
       }
       .bank-inner-table .bk-lbl {
-        width: 46%;
+        width: 40%;
         font-weight: 700;
         line-height: 1.35;
       }
       .bank-inner-table .bk-val {
-        width: 54%;
+        width: 60%;
         direction: ltr;
         text-align: left;
         line-height: 1.35;
@@ -283,27 +292,53 @@
         text-align: center;
         vertical-align: bottom !important;
         padding: 6px !important;
-        height: 110px;
+        height: 122px;
       }
       .sig-area {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        align-items: center;
+        align-items: stretch;   /* children span the cell, so % sizes resolve */
         height: 100%;
-        gap: 6px;
+        gap: 4px;
       }
       .stamp-circle img { object-fit: contain; }
+      /* Fixed slot above the caption: keeps all three columns the same height
+         whether or not the seal / signature is switched on. width/height are
+         both definite so the image's max-width/max-height percentages have a
+         box to resolve against — without that the slot shrink-wraps the image
+         and the artwork spills out and gets clipped. */
+      .sig-img-slot {
+        width: 100%;
+        /* dynamic: follows the seal/signature size settings (d459 / d458), but
+           clamped so a large value can't blow the row out or a tiny one
+           collapse it. All three columns share one height, so the captions
+           stay on the same baseline. */
+        height: clamp(46px, max({{default datasettings.d459 '70'}}px, {{default datasettings.d458 '70'}}px), 110px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      /* contain (never cover) so the whole stamp/signature is always visible,
+         whatever its aspect ratio — it scales down to fit, never crops */
+      .sig-img-slot img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+      }
       .sig-label {
         font-size: 9px;
         color: #000;
         text-align: center;
-        line-height: 1.5;
+        line-height: 1.25;
         font-weight: 600;
       }
       .sig-label .ar-line {
         direction: rtl;
-        display: block;
+        display: block;   /* block already breaks the line — no <br/> needed */
       }
 
       .qr-cell {
@@ -330,7 +365,7 @@
 
     <!-- TITLE -->
     <div class="invoice-title">
-      SIMPLIFIED TAX INVOICE&nbsp; / &nbsp;فاتورة ضريبية مبسطة
+      <span class="chip">{{basicdetails.[0].documentheader}}&nbsp;/&nbsp;<span class="ar"> {{basicdetails.[0].documentheader_lang2}}</span></span>
     </div>
     </br>
     <!-- INVOICE NO BAR -->
@@ -340,9 +375,10 @@
     </div>
 
     <!-- FROM (COMPANY) SECTION -->
+    {{#ifFlag datasettings "d570"}}
     <div class="section-label">
-      <span>From :</span>
-      <span class="ar">من :</span>
+      <span><u>From :</u></span>
+      <span class="ar"><u>من :</u></span>
     </div>
     <table class="details-table">
       <colgroup>
@@ -354,7 +390,7 @@
           <td class="lbl" style="background-color:#dbe0e5;">Name</td>
           <td colspan="3" style="background-color:#dbe0e5;"><b>{{branch.[0].name}}</b></td>
           <td colspan="3" style="background-color:#dbe0e5;" class="val-ar"><b>{{branch_lang2.[0].name}}</b></td>
-          <td class="lbl-ar" style="background-color:#dbe0e5;">الاسم</td>
+          <td class="lbl-ar" style="background-color:#dbe0e5;"><b>الاسم</b></td>
         </tr>
         <tr>
           <td class="lbl">Street Name</td>
@@ -394,21 +430,23 @@
         </tr>
         <tr>
           <td class="lbl">VAT Number</td>
-          <td><b>{{branch.[0].vat}}</b></td>
+          <td>{{branch.[0].vat}}</td>
           <td class="lbl">CRN</td>
           <td>{{branch.[0].cr_no}}</td>
           <td class="val-ar">{{branch_lang2.[0].cr_no}}</td>
           <td class="lbl-ar">السجل التجاري</td>
-          <td class="val-ar"><b>{{branch_lang2.[0].vat}}</b></td>
+          <td class="val-ar">{{branch_lang2.[0].vat}}</td>
           <td class="lbl-ar">رقم ضريبة</td>
         </tr>
       </tbody>
     </table>
+    {{/ifFlag}}
+
 
     <!-- CLIENT DETAILS SECTION -->
     <div class="section-label">
-      <span>Client Details :</span>
-      <span class="ar"> تفاصيل العميل  :</span>
+      <span><u>Client Details :</u></span>
+      <span class="ar"><u> تفاصيل العميل  :</u></span>
     </div>
     <table class="details-table">
       <colgroup>
@@ -426,7 +464,7 @@
           <td class="lbl" style="background-color:#dbe0e5;">Name</td>
           <td colspan="3" style="background-color:#dbe0e5;"><b>{{billing_address.[0].name}}</b></td>
           <td colspan="3" style="background-color:#dbe0e5;" class="val-ar"><b>{{billing_address_lang2.[0].name}}</b></td>
-          <td class="lbl-ar" style="background-color:#dbe0e5;">الاسم</td>
+          <td class="lbl-ar" style="background-color:#dbe0e5;"><b>الاسم</b></td>
         </tr>
         <tr>
           <td class="lbl">Street Name</td>
@@ -466,12 +504,12 @@
         </tr>
         <tr>
           <td class="lbl">VAT Number</td>
-          <td><b>{{billing_address.[0].vat}}</b></td>
+          <td>{{billing_address.[0].vat}}</td>
           <td class="lbl">CRN</td>
           <td>{{customer_details.[0].cr_no}}</td>
           <td class="val-ar">{{customer_details.[0].cr_no_lang2}}</td>
           <td class="lbl-ar">السجل التجاري</td>
-          <td class="val-ar"><b>{{billing_address_lang2.[0].vat}}</b></td>
+          <td class="val-ar">{{billing_address_lang2.[0].vat}}</td>
           <td class="lbl-ar">رقم ضريبة</td>
         </tr>
       </tbody>
@@ -496,10 +534,12 @@
             <span class="en">Due Date</span></br>
             <span>{{basicdetails.[0].due_date}}</span>
           </td>
-          <td>شروط الدفع </br>
-            <span class="en">Payment terms</span></br>
-            <span>{{basicdetails.[0].payment_terms}}</span>
+          {{#ifFlag datasettings "d515"}}
+          <td>رقم المرجع </br>
+            <span class="en">Reference No</span></br>
+            <span>{{basicdetails.[0].reference_no}}</span>
           </td>
+          {{/ifFlag}}
           <td>مندوب المبيعات </br>
             <span class="en">Sales Person</span></br>
             <span>{{basicdetails.[0].salesman_name}}</span>
@@ -537,7 +577,7 @@
           </th>
           <th style="width:12%">
             <span class="ar">الإجمالي بدون ضريبة</span>
-            <span class="en">Amount Excl VAT</span>
+            <span class="en">Amount Excl. VAT</span>
           </th>
           <th style="width:7%">
             <span class="ar"> ضريبةالمضاف</span>
@@ -549,7 +589,7 @@
           </th>
           <th style="width:12%">
             <span class="ar"> المبلغ الإجمالي</span>
-            <span class="en">Amount Incl VAT</span>
+            <span class="en">Amount Incl. VAT</span>
           </th>
         </tr>
       </thead>
@@ -557,7 +597,7 @@
         {{#each itemdetails}}
         <tr>
           <td style="text-align:center;">{{addOne @index}}</td>
-          <td style="text-align:center;">{{item_code}}</td>
+          <td style="text-align:left;">{{item_code}}</td>
           <td class="desc-cell">
             {{item_name}}
             {{#if name_lang2}}<div class="sub-ar">{{name_lang2}}</div>{{/if}}
@@ -579,7 +619,7 @@
     <table class="totals-table">
       <tbody>
         <tr>
-          <td rowspan="4" class="qr-total-cell">
+          <td rowspan="{{#if (gt basicdetails.[0].received 0)}}6{{else}}4{{/if}}" class="qr-total-cell">
             <div class="qr-placeholder">{{{qrDataUri qrCodeBase64}}}</div>
           </td>
           <td class="tot-lbl-en">Total Excl. VAT ({{basicdetails.[0].base_country_isocode}})</td>
@@ -614,6 +654,18 @@
           <td class="tot-lbl-ar">المبلغ بما في ذلك ضريبة القيمة المضافة </td>
           <td class="tot-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
         </tr>
+        {{#if (gt basicdetails.[0].received 0)}}
+        <tr>
+          <td class="tot-lbl-en">Payment Made</td>
+          <td class="tot-lbl-ar">تم الدفع</td>
+          <td class="tot-val">{{formatAmount (divide basicdetails.[0].received ccrate) bcdp}}</td>
+        </tr>
+        <tr>
+          <td class="tot-lbl-en">Balance Due</td>
+          <td class="tot-lbl-ar">الرصيد المستحق</td>
+          <td class="tot-val">{{formatAmount (divide basicdetails.[0].balance ccrate) bcdp}}</td>
+        </tr>
+        {{/if}}
       </tbody>
     </table>
     <table class="amount-table" style="border: 1px solid #bfbfbf;">
@@ -629,17 +681,17 @@
     <table class="bank-outer-table">
       <thead>
         <tr>
-          <th class="bank-head" style="width: 40%;">
+          <th class="bank-head" style="width: 45%;">
             Bank Details&nbsp;/&nbsp;<span class="ar">التفاصيل المصرفية</span>
           </th>
-          <th style="width: 20%;">Prepared By</th>
-          <th style="width: 20%;">Approved By</th>
-          <th style="width: 20%;">Received By</th>
+          <th style="width: 19%;">Prepared By</th>
+          <th style="width: 19%;">Approved By</th>
+          <th style="width: 17%;">Received By</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>
+          <td class="bank-cell">
             <table class="bank-inner-table">
               <tr>
                 <td class="bk-lbl">Account Name / إسم الحساب</td>
@@ -665,26 +717,29 @@
           </td>
           <td class="sig-cell">
             <div class="sig-area">
-              <div style="height:70px;"></div>
+              <div class="sig-img-slot">
+                {{#ifFlag datasettings "d146"}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:min({{default datasettings.d458 '120'}}px,100%); max-width:min({{default datasettings.d458 '120'}}px,100%);" onerror="this.style.display='none'"/>{{/ifFlag}}
+              </div>
                 <div class="sig-label">
-                  <span class="ar-line">التوقيع مع الختم</span><br/>Signature with stamp
+                  {{#ifFlag datasettings "d146"}}<span class="ar-line">الختم</span>Stamp{{else}}<span class="ar-line">التوقيع مع الختم</span>Signature with stamp{{/ifFlag}}
                 </div>
             </div>
           </td>
           <td class="sig-cell">
             <div class="sig-area">
-              <div style="height:70px;"></div>
+              <div class="sig-img-slot">
+                {{#ifFlag datasettings "d165"}}<img class="Signature" src="{{Signature}}" alt="Signature" style="max-height:min({{default datasettings.d459 '120'}}px,100%); max-width:min({{default datasettings.d459 '120'}}px,100%);" onerror="this.style.display='none'"/>{{/ifFlag}}
+              </div>
               <div class="sig-label">
-                <span class="ar-line">التوقيع مع الختم</span><br/>
-                Signature with stamp
+                {{#ifFlag datasettings "d165"}}<span class="ar-line">التوقيع</span>Signature{{else}}<span class="ar-line">التوقيع مع الختم</span>Signature with stamp{{/ifFlag}}
               </div>
             </div>
           </td>
           <td class="sig-cell">
             <div class="sig-area">
-              <div style="height:70px;"></div>
+              <div class="sig-img-slot"></div>
               <div class="sig-label">
-                <span class="ar-line">التوقيع مع الختم</span><br/>
+                <span class="ar-line">التوقيع مع الختم</span>
                 Signature with stamp
               </div>
             </div>

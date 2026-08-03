@@ -201,9 +201,14 @@ class PdfService {
   /**
    * Generate footer HTML with image and page numbers
    */
-  async footerGenerate(imageUrl, pdfRequest = null) {
+  async footerGenerate(imageUrl, pdfRequest = null, maxHeight = null) {
     try {
-      const cacheKey = `footer_${this.getUrlHash(imageUrl)}`;
+      // Chrome reserves exactly margin.bottom for the footer box. A taller
+      // image paints upward over the page content, so cap it to that band.
+      const cap = /^[\d.]+(px)?$/.test(String(maxHeight ?? ""))
+        ? `${parseFloat(maxHeight)}px`
+        : null;
+      const cacheKey = `footer_${this.getUrlHash(imageUrl)}_${cap || "uncapped"}`;
       const cachedFooter = this.cache.get(cacheKey);
       if (cachedFooter) return cachedFooter;
 
@@ -231,7 +236,7 @@ class PdfService {
           .footer-container { width: 210mm; margin: 0; padding: 0; position: relative; background: transparent; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .page-number-bar { position: absolute; top: 0; right: 0; z-index: 20; background: rgba(255, 255, 255, 0.95); padding: 4px 12px; font-family: Arial, sans-serif; font-size: 9px; font-weight: bold; color: #333; border-radius: 0 0 0 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: 1px solid #e0e0e0; border-top: none; border-right: none; }
           .footer-image-wrapper { width: 100%; margin: 0; padding: 0; overflow: hidden; }
-          .footer-img { width: 100%; height: auto; display: block; margin: 0; padding: 0; object-fit: cover; max-width: none; }
+          .footer-img { width: 100%; height: auto; display: block; margin: 0; padding: 0; object-fit: cover; max-width: none;${cap ? ` max-height: ${cap};` : ""} }
           .footer-note { width: 100%; text-align: center; font-family: Arial, sans-serif; font-size: 7px; color: #666; font-style: italic; padding: 3px 0; background: rgba(255, 255, 255, 0.9); border-top: 1px solid #e0e0e0; margin-top: 2px; }
         </style>
 
