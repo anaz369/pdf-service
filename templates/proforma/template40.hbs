@@ -8,7 +8,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: ibmplexsansarabic;
     font-size: 9px;
     color: #000;
     background: #fff;
@@ -50,16 +50,27 @@
 
   /* ── Items ─────────────────────────────────── */
   .items { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 6px; }
-  .items th, .items td { border: 1px solid #bfbfbf; padding: 3px 4px; font-size: 9px; }
+  /* trimmed padding/leading: shorter item rows leave more room, so the totals
+     and bank block sit higher and clear the footer artwork */
+  .items th, .items td { border: 1px solid #bfbfbf; padding: 2px 4px; font-size: 9px; line-height: 1.25; }
+  /* reprint the column headings at the top of every page the table spans */
+  .items thead { display: table-header-group; }
   .items thead th { background-color:#ccc; text-align: center; line-height: 1.3; }
   .items thead th .ar { display: block; direction: rtl; }
   .items thead th .en { display: block; }
-  .items tbody td { text-align: center; vertical-align: top; }
+  /* Keep an item row whole. A tall row (long bilingual description) that
+     straddles a page break gets sliced, and the part past the edge is clipped
+     away — text silently disappears. This moves the whole row to the next page
+     instead. The spacer is exempt: it is meant to be cut by the page edge. */
+  .items tbody tr:not(.spacer) { page-break-inside: avoid; break-inside: avoid; }
+  .items tbody td { text-align: center; vertical-align: middle; }
   .items tbody td.desc { text-align: left; }
   .items tbody td.r { text-align: right; }
   /* Spacer height is set by the pin script below (0 by default). It grows the
-     items box down so the bank block lands at the bottom of its page. */
-  .items .spacer td { height: 0; border-top: none; }
+     items box down so the bank block lands at the bottom of its page. It keeps
+     the normal cell borders, so the column rules carry on down the empty part
+     of the grid instead of stopping at the last item. */
+  .items .spacer td { height: 0; }
 
   /* Never split the totals + amount-in-words + bank across a page. If it can't
      fit in the space left, this pushes the whole block to the next page. */
@@ -81,17 +92,23 @@
   .bottom { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 8px; }
   .bottom th, .bottom td { border: 1px solid #808080; font-size: 9px; vertical-align: top; }
   .bottom thead th {  background-color:#bfbfbf; text-align: center; padding: 4px; }
-  .bottom .bankcell { padding: 6px; }
-  .bottom .bank-row { padding: 2px 0; }
-  .bottom .stampcell { text-align: center; vertical-align: middle; padding: 6px; }
-  .bottom .stampcell img { max-height: 95px; max-width: 120px; }
-  .bottom .rcvcell { text-align: center; vertical-align: bottom; padding: 6px; height: 120px; }
+  /* Row height is driven by .rcvcell/.stampcell. Kept trim so the block's foot
+     clears the footer artwork — the caption used to sit in the last few px and
+     was painted over by the footer band. */
+  .bottom .bankcell { padding: 6px 8px; vertical-align: middle; }
+  .bottom .bank-row { padding: 1.5px 0; }
+  .bottom .stampcell { text-align: center; vertical-align: middle; padding: 4px; }
+  .bottom .stampcell img { max-height: 110px; max-width: 110px; }
+  .bottom .rcvcell { text-align: center; vertical-align: bottom; padding: 6px 6px 8px; height: 92px; }
 </style>
 </head>
 <body>
-{{!-- Probe: height:100% resolves to page.pdf's real printable content box, so the
-     pin script below measures the true page height instead of guessing from margins. --}}
-<div id="page-probe" style="position:absolute; top:0; left:0; width:0; height:100%; visibility:hidden; pointer-events:none;"></div>
+{{!-- NOTE: there used to be a #page-probe div here (position:absolute;
+     height:100%) used to measure the page. It is gone for two reasons: its
+     percentage height resolved against the VIEWPORT, not the page box, so it
+     measured wrong; and being 100% tall it stretched the document past the
+     page bottom, which made Chrome emit a trailing blank page on documents
+     that otherwise fitted. Page height is now computed in the pin script. --}}
 <div class="page">
 
   {{!-- ══ TITLE ══ --}}
@@ -194,10 +211,10 @@
     <tbody>
       <tr>
         <td>{{basicdetails.[0].inv_date}}</td>
-        <td>{{basicdetails.[0].eta_date}}</td>
+        <td></td>
         <td>{{basicdetails.[0].due_date}}</td>
         <td>{{basicdetails.[0].order_no}}</td>
-        <td>{{basicdetails.[0].hbl_no}}</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -205,8 +222,14 @@
   {{!-- ══ ITEMS ══ --}}
   <table class="items">
     <colgroup>
-      <col style="width:4%"><col style="width:32%"><col style="width:8%"><col style="width:8%">
-      <col style="width:12%"><col style="width:12%"><col style="width:12%"><col style="width:12%">
+      <col style="width:4%">
+      <col style="width:34%">
+      <col style="width:8%">
+      <col style="width:7%">
+      <col style="width:11%">
+      <col style="width:12%">
+      <col style="width:11%">
+      <col style="width:13%">
     </colgroup>
     <thead>
       <tr>
@@ -224,7 +247,7 @@
       {{#each itemdetails}}
       <tr>
         <td>{{addOne @index}}</td>
-        <td class="desc">{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
+        <td class="desc">{{item_name}}{{#if name_lang2}} <br>{{name_lang2}}{{/if}}{{#if description}} <br>{{description}}{{/if}}</td>
         <td>{{quantity}}</td>
         <td>{{unit}}</td>
         <td class="r">{{formatAmount price ../bcdp}}</td>
@@ -233,8 +256,9 @@
         <td class="r">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
+      {{!-- one cell per column, so the vertical rules run down the empty grid --}}
       <tr class="spacer">
-        <td colspan="8"></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
       </tr>
     </tbody>
   </table>
@@ -287,10 +311,14 @@
           <div class="bank-row">BRANCH{{#if bankdetails.branch_name}} : {{bankdetails.branch_name}}{{/if}}</div>
         </td>
         <td class="stampcell">
-          {{#if Seal}}<img src="{{Seal}}" alt="Company Stamp" onerror="this.style.display='none'"/>{{/if}}
+          {{!-- guard must be `Seal` (capital S): pdfController converts
+                pdfRequest.Seal to base64; a lowercase `seal` key is not
+                guaranteed to exist, so `{{#if seal}}` silently hid the stamp --}}
+          {{#if seal}}<img src="{{Seal}}" alt="Seal" style="height:{{datasettings.d458}}px; width:{{datasettings.d458}}px;" onerror="this.style.display='none'"/>{{/if}}
         </td>
         <td class="rcvcell">
           <div class="ar">التوقيع مع الختم</div>
+
           <div>Signature with stamp</div>
         </td>
       </tr>
@@ -310,33 +338,119 @@
 ═══════════════════════════════════════════════════════════════════════════ --}}
 <script>
 (function () {
-  var probe = document.getElementById('page-probe');   // height:100% => printable page height
-  var fb    = document.querySelector('.footer-block');
-  var sp    = document.querySelector('.items .spacer td');
-  if (!probe || !fb || !sp) return;
+  var fb = document.querySelector('.footer-block');
+  var sp = document.querySelector('.items .spacer td');
+  if (!fb || !sp) return;
 
-  var SAFE = 8;   // stay a hair above the page edge so rounding never wraps it
+  // Clearance kept between the block's foot and the page edge. It covers print
+  // rounding AND the footer artwork overrunning its reserved band: the footer
+  // image is drawn width:100%/height:auto, so if it is taller than the bottom
+  // margin (d882) it paints upward over the content — which was cutting the
+  // "Signature with stamp" caption. Setting d882 >= the footer's rendered
+  // height is the proper fix; this keeps the block clear meanwhile.
+  var SAFE = 20;
+
+  // Printable page height = A4 at 96dpi, less the margins page.pdf() applies
+  // for proforma (controllers/pdfController.js -> datasettings.d881 / d882).
+  //
+  // This used to read #page-probe (height:100%), but a percentage height
+  // resolves against the VIEWPORT, and no viewport is ever set — the only
+  // setViewport call (puppeteer-service/index.js:151) is conditional on
+  // options.viewport and nothing supplies it, and launch() sets no
+  // defaultViewport. So the probe returned Chrome's default 600px instead of
+  // ~998px, and the script pushed the block off a page that still had room.
+  var MT = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d881 "130"}}{{else}}10{{/if}}') || 0;
+  var MB = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d882 "55"}}{{else}}10{{/if}}') || 0;
+
+  function h(el) { return el ? el.getBoundingClientRect().height : 0; }
 
   function pin() {
     sp.style.height = '0px';                            // reset before measuring
-    var PAGE_H = probe.getBoundingClientRect().height;  // MEASURED, not guessed from margins
+
+    // Measure at the width page.pdf() will lay out at. The browser viewport is
+    // whatever Chrome defaults to (800px — nothing calls setViewport), so long
+    // item descriptions wrap differently here than on paper and every row is
+    // measured at the wrong height.
+   document.documentElement.style.width =
+    (794.5 - {{#if UseHeaderFooter}}0{{else}}20{{/if}}) + 'px';
+
+void document.body.offsetHeight;
+
+var table = document.querySelector('.items');
+
+    var PAGE_H = 1095 - MT - MB;
     if (!(PAGE_H > 0)) return;
 
-    var rect = fb.getBoundingClientRect();
-    var top  = rect.top + window.pageYOffset;           // footer top from doc start
-    var h    = rect.height;                             // footer block height
-    if (h + SAFE >= PAGE_H) return;                     // footer ~ a whole page: leave it
+    // The items <thead> is a header group, so Chrome reprints it at the top of
+    // every page the table spans. That reprint costs page space but does NOT
+    // exist in this continuous DOM, so a continuation page only holds
+    // (PAGE_H - head) of document flow. Ignoring that is what made the earlier
+    // flat top/PAGE_H arithmetic overshoot by one header height per break.
+    var table = document.querySelector('.items');
+    var head   = table ? h(table.querySelector('thead')) : 0;
+    var stride = PAGE_H - head;                         // doc flow per continuation page
+    if (!(stride > 0)) return;
 
-    var startPage = Math.floor(top / PAGE_H);           // page the footer currently lands on
-    var roomLeft  = (startPage + 1) * PAGE_H - top;     // space left on that page
-    var endPage   = (roomLeft >= h + SAFE) ? startPage : startPage + 1;  // move down if it won't fit
-    var targetTop = (endPage + 1) * PAGE_H - h - SAFE;  // pin to the bottom of its page
-    var delta     = targetTop - top;
-    if (delta > 0) sp.style.height = delta + 'px';      // grow spacer to push footer down
+    var rect   = fb.getBoundingClientRect();
+    var top    = rect.top + window.pageYOffset;         // block top from doc start
+    var bottom = rect.bottom + window.pageYOffset;      // block bottom, as laid out
+    if (rect.height + SAFE >= stride) return;           // block ~ a whole page: leave it
+
+    // document-space bottom edge of page k
+    function pageBottom(k) { return PAGE_H + k * stride; }
+
+    var k = (top < PAGE_H) ? 0 : 1 + Math.floor((top - PAGE_H) / stride);
+
+    // Test the block's REAL bottom against the page edge. Adding SAFE to this
+    // test (rather than only to the pin target) made it over-conservative: on a
+    // document clearing the page by ~20px it decided the block did not fit and
+    // pushed it to a second page, turning a one-page invoice into two.
+    if (bottom > pageBottom(k)) k++;                    // genuinely overflows: next page
+
+    // grow spacer to push footer down
+    // Current page start position in document coordinates
+var pageStart = (k === 0)
+    ? 0
+    : PAGE_H + ((k - 1) * stride);
+
+// Bottom of current page
+var currentPageBottom = pageBottom(k);
+
+// Footer position relative to current page
+var footerBottom = bottom - pageStart;
+
+// Remaining printable space
+var remaining = PAGE_H - footerBottom;
+
+// Grow spacer only when footer fits
+if (remaining > SAFE) {
+    sp.style.height = (remaining - SAFE) + 'px';
+} else {
+    sp.style.height = '0px';
+}
   }
 
-  pin();
-  if (document.readyState !== 'complete') window.addEventListener('load', pin);
+  // Measure only once the webfont is actually applied. ibmplexsansarabic is
+  // injected as a base64 @font-face (services/templateService.js), and font
+  // loading is asynchronous even from a data URI — neither parse time nor
+  // window 'load' guarantees it. Measuring early takes row heights in the
+  // fallback font, so the spacer is computed for a layout that never gets
+  // printed and the block lands in the wrong place.
+function runPin() {
+    requestAnimationFrame(function () {
+        requestAnimationFrame(pin);
+    });
+}
+
+runPin();
+
+if (document.readyState !== 'complete') {
+    window.addEventListener('load', runPin);
+}
+
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(runPin);
+}
 })();
 </script>
 </body>
