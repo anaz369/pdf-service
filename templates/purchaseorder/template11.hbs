@@ -31,7 +31,7 @@
     /* address columns */
     .addr th { background: #ffd85d; color:#000; border: 1px solid #48432b; text-align: center; font-weight: 700; padding: 6px; }
     .addr td { text-align: center; padding: 4px 8px; color:#48432b; vertical-align: top; line-height: 1.6; }
-    .addr .nm { font-weight: 700;  font-size: 10.5px;}
+    .addr .nm { font-weight: 700;  font-size: 10px;}
 
     /* shipping strip */
     .ship th { background: #ffd85d; color: #000; border: 1px solid #48432b; text-align: center; font-weight: 700; padding: 5px; }
@@ -98,7 +98,7 @@
           <tr><td colspan="2" class="ponote">This number should appear on all packing slips, shipping documents, packages and invoices</td></tr>
           <tr><td colspan="2" class="pono" style="font-size: 14px;">{{basicdetails.[0].inv_no}}</td></tr>
           <tr>
-            <td class="pcell">Page Number<br>1 of 1</td>
+            <td class="pcell">Page Number<br>1 of <span id="po-total-pages">1</span></td>
             <td class="pcell">Purchase Order Date<br><b>{{basicdetails.[0].inv_date}}</b></td>
           </tr>
         </table>
@@ -133,11 +133,11 @@
           {{compprof.phone}}
         </td>
         <td>
-          <div class="nm">{{branch.[0].name}}</div>
-          {{branch.[0].address_line1}}<br>
-          {{branch.[0].address_line2}} {{branch.[0].address_line3}} {{branch.[0].address_line4}}<br>
-          {{branch.[0].address_code}} {{branch.[0].address_line5}}<br>
-          {{compprof.phone}}
+          <div class="nm">{{basicdetails.[0].dtoname}}</div>
+          {{basicdetails.[0].dtobuilding_no}}<br>
+          {{basicdetails.[0].dtostreet_name}} {{basicdetails.[0].dtodistrict}} {{basicdetails.[0].dtocity}}<br>
+          {{basicdetails.[0].dtoaddress_code}} {{basicdetails.[0].dtocountry}}<br>
+          {{basicdetails.[0].dtocontact_no1}}
         </td>
       </tr>
     </tbody>
@@ -158,9 +158,9 @@
     <tbody>
       <tr>
         <td>{{basicdetails.[0].shipping_mode_name}}</td>
-        <td></td>
+        <td>{{basicdetails.[0].delivery_time}}</td>
         <td>{{basicdetails.[0].payment_terms}}</td>
-        <td>{{basicdetails.[0].base_country_isocode}}</td>
+        <td>{{basicdetails.[0].isocode}}</td>
         <td>{{basicdetails.[0].reference_no}}</td>
       </tr>
     </tbody>
@@ -169,14 +169,15 @@
   <!-- ITEMS -->
   <table class="items mt">
     <colgroup>
-      <col style="width:4%"><col style="width:12%"><col style="width:36%"><col style="width:7%">
-      <col style="width:13%"><col style="width:13%"><col style="width:15%">
+      <col style="width:4%"><col style="width:11%"><col style="width:32%"><col style="width:7%"><col style="width:7%">
+      <col style="width:13%"><col style="width:13%"><col style="width:14%">
     </colgroup>
     <thead>
       <tr>
         <th style="text-align: center;">#</th>
         <th>Part No</th>
         <th>Description</th>
+        <th style="text-align: center;">Unit</th>
         <th style="text-align: center;">Qty</th>
         <th style="text-align: center;">Unit price</th>
         <th style="text-align: center;">Discount</th>
@@ -189,6 +190,7 @@
         <td class="num">{{addOne @index}}</td>
         <td>{{item_code}}</td>
         <td>{{item_name}}{{#if description}}<div class="idesc">{{description}}</div>{{/if}}</td>
+        <td class="num">{{unit}}</td>
         <td class="num">{{quantity}}</td>
         <td class="num">{{formatAmount price ../bcdp}}</td>
         <td class="num">{{formatAmount disc_amt ../bcdp}}</td>
@@ -274,5 +276,61 @@
     </tr>
 </table>
 
+{{!-- ══════════════════════════════════════════════════════════════════════
+  PAGE COUNT — fills the "1 of N" in the PO box.
+
+  This box is plain body content at the top of the document, so it prints on
+  page 1 only; "1 of N" is the only meaningful value there. Per-page numbering
+  in body content is not possible: CSS counter(page)/counter(pages) resolve to
+  nothing outside @page margin boxes in Chrome (they render blank, which is
+  what they already do in sales_quote/template29, 33 and 53). Exact per-page
+  numbers are available in Puppeteer's footerTemplate, which pdfService's
+  footerGenerate already prints as "Page X of Y".
+
+  N is derived from the laid-out height, allowing for the <thead> Chrome
+  reprints at the top of every page a table spans — that reprint costs page
+  space but does not exist in this continuous DOM, so it is added back per
+  break and the count re-solved until it settles.
+═══════════════════════════════════════════════════════════════════════════ --}}
+<script>
+(function () {
+  var el = document.getElementById('po-total-pages');
+  if (!el) return;
+
+  // A4 at 96dpi, less the margins page.pdf() applies for a purchase order
+  // (controllers/pdfController.js -> datasettings.d931 / d813).
+  var MT = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d931 "120"}}{{else}}10{{/if}}') || 0;
+  var MB = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d813 "5"}}{{else}}10{{/if}}') || 0;
+  var PAGE_H = 1122.5 - MT - MB;
+
+  function count() {
+    if (!(PAGE_H > 0)) return;
+
+    // measure at the width page.pdf() lays out at, not the browser viewport
+    document.documentElement.style.width =
+      (794.5 - {{#if UseHeaderFooter}}0{{else}}20{{/if}}) + 'px';
+
+    var head = 0;
+    var theads = document.querySelectorAll('table thead');
+    for (var i = 0; i < theads.length; i++) {
+      head = Math.max(head, theads[i].getBoundingClientRect().height);
+    }
+
+    var docH = document.body.scrollHeight;
+    var n = 1;
+    for (var j = 0; j < 6; j++) {
+      var np = Math.max(1, Math.ceil((docH + (n - 1) * head) / PAGE_H));
+      if (np === n) break;
+      n = np;
+    }
+    el.textContent = n;
+  }
+
+  count();
+  if (document.readyState !== 'complete') window.addEventListener('load', count);
+  // remeasure once the webfont is applied — it changes every row's height
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(count);
+})();
+</script>
 </body>
 </html>
