@@ -436,11 +436,12 @@
   <table class="items-table">
     <thead>
       <tr>
-        <th style="width:5%;">S.N<span class="ar">الرقم</span></th>
-        <th class="th-desc" style="width:41%;">DESCRIPTION<span class="ar"> الوصف</span></th>
-        <th style="width:11%;">QTY<span class="ar">الكمية</span></th>
-        <th style="width:14%;">RATE<span class="ar">الوحدة</span></th>
-        <th style="width:15%;">TOTAL PRICE<span class="ar">القيمه الإجمالي</span></th>
+        <th style="width:4%;">S.N<span class="ar">الرقم</span></th>
+        <th class="th-desc" style="width:46%;">DESCRIPTION<span class="ar"> الوصف</span></th>
+        <th style="width:10%;">QTY<span class="ar">الكمية</span></th>
+        <th style="width:13%;">RATE<span class="ar">الوحدة</span></th>
+        <th style="width:13%;">VAT<span class="ar">ضريبة </span></th>
+        <th style="width:14%;">TOTAL PRICE<span class="ar">القيمه الإجمالي</span></th>
       </tr>
     </thead>
     <tbody>
@@ -454,6 +455,7 @@
         </td>
         <td>{{formatAmount quantity ../bcdp}}</td>
         <td>{{formatAmount price ../bcdp}}</td>
+        <td>{{formatAmount vat_amt ../bcdp}}</td>
         <td class="td-total">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
@@ -545,19 +547,34 @@
         <span class="f-amt">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</span>
       </div>
 
+      {{#if (gt basicdetails.[0].uaeadvclamedamt 0)}}
+      <div class="fin-row">
+        <span class="f-lbl orange">Advance Claim</span>
+        <span class="f-amt deduct">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].uaeadvclamedamt ccrate) bcdp}}</span>
+      </div>
+      {{/if}}
+      
+
+      {{!-- shown only when an advance was actually recovered --}}
+      {{#if (gt basicdetails.[0].aa 0)}}
       <div class="fin-row">
         <span class="f-lbl orange">{{basicdetails.[0].ap}}% Advance Recovery</span>
         <span class="f-amt deduct">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].aa ccrate) bcdp}}</span>
       </div>
+      {{/if}}
 
+      {{#if (gt basicdetails.[0].ra 0)}}
       <div class="fin-row">
         <span class="f-lbl orange">{{basicdetails.[0].rp}}% Retention</span>
         <span class="f-amt deduct">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].ra ccrate) bcdp}}</span>
       </div>
+      {{/if}}
 
       <div class="fin-row">
         <span class="f-lbl bold">Total Amount Claimed (Without 5% VAT)</span>
-        <span class="f-amt bold">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].aa basicdetails.[0].ra)) ccrate) bcdp}}</span>
+        {{!-- subtotal less advance recovery + advance claim + retention; a missing
+              uaeadvclamedamt counts as 0, so the figure is unchanged without it --}}
+        <span class="f-amt bold">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide (subtract basicdetails.[0].subtotal (add (add basicdetails.[0].aa basicdetails.[0].ra) basicdetails.[0].uaeadvclamedamt)) ccrate) bcdp}}</span>
       </div>
 
       <div class="fin-row">
