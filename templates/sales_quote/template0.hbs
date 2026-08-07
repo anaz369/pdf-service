@@ -32,12 +32,12 @@
     .dbox .dlbl .ar { display: block; }
 
     /* seller / buyer */
-    .party { border-collapse: collapse; width: 100%; height: 100%; table-layout: fixed; }
-    .party td { border: 1px solid #bfbfbf; padding: 4px 8px; font-size: 10px; vertical-align: middle; }
+    .party { border-collapse: collapse; width: 100%; height: 100%;font-size: 10px; table-layout: fixed; }
+    .party td { border: 1px solid #bfbfbf; padding: 4px 8px; font-size: 9px; vertical-align: middle; }
     .party .phead { background-color:#e8ecef;}
     .party .phead .ar { float: right; }
-    .party .plbl { width: 20%; background-color:#e8ecef; }
-    .party .par { width: 20%; direction: rtl; text-align: right; background-color:#e8ecef;  }
+    .party .plbl { background-color:#e8ecef; }
+    .party .par {direction: rtl; text-align: right; background-color:#e8ecef;  }
 
     /* items */
     .items td, .items th { border: 1px solid #bfbfbf; padding: 4px 5px; font-size: 9px; vertical-align: middle; }
@@ -101,7 +101,11 @@
     <tr>
       <td>
         <table class="party">
-          <colgroup><col style="width:20%"><col style="width:60%"><col style="width:20%"></colgroup>
+          <colgroup>
+            <col style="width:20%">
+            <col style="width:60%">
+            <col style="width:20%">
+          </colgroup>
           <tr class="phead"><td colspan="3">Seller <span class="ar">البائع</span></td></tr>
           <tr><td class="plbl">Name</td><td>{{branch.[0].name}}</td><td class="par">الاسم</td></tr>
           <tr><td class="plbl">Building No.</td><td>{{branch.[0].address_line1}}</td><td class="par">رقم المبنى</td></tr>
@@ -116,7 +120,11 @@
       <td></td>
       <td>
         <table class="party">
-          <colgroup><col style="width:20%"><col style="width:60%"><col style="width:20%"></colgroup>
+          <colgroup>
+            <col style="width:20%">
+            <col style="width:64%">
+            <col style="width:16%">
+          </colgroup>
           <tr class="phead"><td colspan="3">Buyer <span class="ar">العميل</span></td></tr>
           <tr><td class="plbl">Name</td><td>{{billing_address.[0].name}}</td><td class="par">الاسم</td></tr>
           <tr><td class="plbl">Building No.</td><td>{{billing_address.[0].address_line1}}</td><td class="par">رقم المبنى</td></tr>
