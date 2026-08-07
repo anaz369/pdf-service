@@ -9,7 +9,7 @@
 
   body {
     font-family: ibmplexsansarabic, Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     color: #212529;
     background: #fff;
     line-height: 1.4;
@@ -35,7 +35,7 @@
     padding: 4px 6px;
     vertical-align: middle;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
   }
   .details .lbl    { background: #c6e1f2; }
   .details .lbl-ar { background: #c6e1f2; direction: rtl; }
@@ -52,7 +52,7 @@
   }
 
   /* ── Items table ───────────────────────────── */
-  .items { table-layout: fixed; margin-top: 11px; }
+  .items { table-layout: fixed; margin-top: 5px; }
   .items th, .items td { border: 1px solid #000; padding: 4px; }
   /* reprint the column headings at the top of every page the table spans */
   .items thead { display: table-header-group; }
@@ -61,7 +61,7 @@
     color: #fff;
     font-weight: bold;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 1.4;
   }
   .items thead .r-ar th { direction: rtl; }
@@ -69,20 +69,20 @@
   /* a tall bilingual row sliced by a page break loses the clipped half —
      move the whole row to the next page instead */
   .items tbody tr { page-break-inside: avoid; break-inside: avoid; }
-  .items tbody td { text-align: center; vertical-align: middle; font-size: 12px; line-height: 1.2; }
+  .items tbody td { text-align: center; vertical-align: middle; font-size: 11px; line-height: 1.2; }
   .items tbody td.desc .ar { direction: rtl; }
 
   /* ── Totals ────────────────────────────────── */
-  .totals { table-layout: fixed; margin-top: 10px; }
-  .totals td { border: 1px solid #000; padding: 4px 8px; font-size: 13px; line-height: 1.3; }
-  .totals .t-blank  { background: #fff; }
+  .totals { table-layout: fixed; margin-top: 5px; }
+  .totals td { border: 1px solid #000; padding: 4px 8px; font-size: 12px; line-height: 1.3; }
+  .totals .t-blank  { background: #fff;border:none; }
   .totals .t-lbl    { background: #504d73; color: #fff; font-weight: bold; text-align: left; }
   /* the Arabic caption fills its cell edge to edge in the reference layout —
      tight padding keeps it on one line instead of wrapping and doubling the row */
   .totals .t-lbl-ar {
     background: #504d73; color: #fff; font-weight: bold;
     direction: rtl; text-align: right;
-    padding: 4px 2px; white-space: nowrap;
+    padding: 4px 4px; white-space: nowrap;
   }
   .totals .t-val    { background: #fff; text-align: right; font-weight: bold; }
   .totals .words    { background: #fff; text-align: center; font-weight: bold; padding: 2px 8px; }
@@ -94,12 +94,12 @@
     padding: 2px 6px;
     text-align: center;
     vertical-align: middle;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 1.2;
   }
-  .bank .hd     { background: #504d73; color: #fff; font-weight: bold; font-size: 13px; padding: 4px 6px; line-height: 1.3; }
-  .bank .lbl    { background: #c6e1f2; }
-  .bank .lbl-ar { background: #c6e1f2; direction: rtl; }
+  .bank .hd     { background: #504d73; color: #fff; font-weight: bold; font-size: 12px; padding: 4px 6px; line-height: 1.3; }
+  .bank .lbl    { background: #c6e1f2; padding: 4px 6px; }
+  .bank .lbl-ar { background: #c6e1f2; padding: 4px 6px; direction: rtl; }
 
   /* keep totals + bank block whole — never split across a page */
   .footer-block { page-break-inside: avoid; break-inside: avoid; }
@@ -116,13 +116,13 @@
         separated by the borderless .gap column --}}
   <table class="details">
     <colgroup>
-      <col style="width:18.7%">
-      <col style="width:27.9%">
-      <col style="width:14.6%">
-      <col style="width:2.7%">
-      <col style="width:11.5%">
-      <col style="width:12%">
-      <col style="width:12.6%">
+      <col style="width:13%">
+      <col style="width:36%">
+      <col style="width:10%">
+      <col style="width:1%">
+      <col style="width:10%">
+      <col style="width:20%">
+      <col style="width:11%">
     </colgroup>
     <tr>
       <td class="lbl" rowspan="2">Customer Name</td>
@@ -141,7 +141,7 @@
     <tr>
       <td class="lbl">Customer's Address</td>
       <td class="val">{{billing_address.[0].address_line1}}  {{billing_address.[0].address_line2}}  {{billing_address.[0].address_line4}}  {{billing_address.[0].address_line3}}  {{billing_address.[0].address_line5}}  {{billing_address_lang2.[0].address_line1}}  {{billing_address_lang2.[0].address_line2}}  {{billing_address_lang2.[0].address_line4}}  {{billing_address_lang2.[0].address_line3}}  {{billing_address_lang2.[0].address_line5}}{{#if billing_address.[0].address_code}}<br><br>ZIP/Postal Code: {{billing_address.[0].address_code}}{{/if}}</td>
-      <td class="lbl-ar">العنوان الوطني للعميل</td>
+      <td class="lbl-ar">عنوان العميل</td>
       <td class="lbl">Due Date</td>
       <td class="val">{{basicdetails.[0].due_date}}</td>
       <td class="lbl-ar">تاريخ الاستحقاق</td>
@@ -175,34 +175,25 @@
   {{!-- ══ ITEMS ══ --}}
   <table class="items">
     <colgroup>
-      <col style="width:2.6%">
-      <col style="width:30%">
-      <col style="width:5.2%">
-      <col style="width:5.5%">
-      <col style="width:8.1%">
-      <col style="width:14.8%">
-      <col style="width:13.7%">
-      <col style="width:20.1%">
+      <col style="width:3%">
+      <col style="width:33%">
+      <col style="width:7%">
+      <col style="width:7%">
+      <col style="width:10%">
+      <col style="width:12%">
+      <col style="width:11%">
+      <col style="width:16%">
     </colgroup>
     <thead>
-      <tr class="r-ar">
-        <th class="idx" rowspan="2">#</th>
-        <th>الاسم والوصف</th>
-        <th>الكمية</th>
-        <th>الوحدة</th>
-        <th>سعرالوحدة</th>
-        <th>المبلغ بدون ضريبة</th>
-        <th>قيمة الضريبة</th>
-        <th>المجموع شامل الضريبة</th>
-      </tr>
       <tr class="r-en">
-        <th>Item &amp; Description</th>
-        <th>Qty</th>
-        <th>Unit</th>
-        <th>Price</th>
-        <th>Without VAT</th>
-        <th>VAT Amount</th>
-        <th>Total inc. VAT</th>
+        <th><span>م</span><br>#</th>
+        <th><span>الاسم والوصف</span><br>Item &amp; Description </th>
+        <th><span>الكمية</span><br>Qty</th>
+        <th><span>الوحدة</span><br>Unit</th>
+        <th><span>سعرالوحدة</span><br>Price</th>
+        <th><span>المبلغ بدون ضريبة</span><br>Without VAT</th>
+        <th><span>قيمة الضريبة</span><br>VAT Amount</th>
+        <th><span>المجموع شامل الضريبة</span><br>Total inc. VAT</th>
       </tr>
     </thead>
     <tbody>
@@ -230,10 +221,10 @@
   {{!-- ══ TOTALS ══ --}}
   <table class="totals">
     <colgroup>
-      <col style="width:32%">
-      <col style="width:34.6%">
-      <col style="width:15.5%">
-      <col style="width:17.9%">
+      <col style="width:30%">
+      <col style="width:30%">
+      <col style="width:24">
+      <col style="width:16%">
     </colgroup>
     <tr>
       <td class="t-blank" rowspan="5"></td>
@@ -241,11 +232,25 @@
       <td class="t-lbl-ar">الاجمالي بدون ضريبة</td>
       <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
     </tr>
-    <tr>
-      <td class="t-lbl">Discount</td>
-      <td class="t-lbl-ar">الخصومات</td>
-      <td class="t-val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
-    </tr>
+    {{#if zatcadiscount.[0]}}
+        {{#each zatcadiscount}}
+          <tr>
+            <td class="t-lbl">{{reason_name}}</td>
+            <td class="t-lbl-ar">الخصومات</td>
+            <td class="t-val">{{formatAmount (divide dld ../ccrate) ../bcdp}}</td>
+          </tr>
+        {{/each}}
+    {{else}}
+
+        {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
+        <tr>
+          <td class="t-lbl">Discount</td>
+          <td class="t-lbl-ar">الخصومات</td>
+          <td class="t-val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+        </tr>
+        {{/if}}
+
+    {{/if}}
     <tr>
       <td class="t-lbl">VAT Total {{itemdetails.[0].vat_perc}}%</td>
       <td class="t-lbl-ar">ضريبة القيمة المضافة</td>
