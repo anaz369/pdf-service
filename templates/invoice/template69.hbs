@@ -28,7 +28,6 @@
       }
       .invoice-title .chip {
         display: inline-block;
-        background-color:#EEE9E9;
         font-size: 15px;
         font-weight: 800;
         letter-spacing: 0.4px;
@@ -46,9 +45,6 @@
         padding: 5px 6px;
         font-size: 10.5px;
         font-weight: 600;
-        margin-top: 2px;
-        margin-bottom: 2px;
-        background-color:#EEE9E9;
       }
       .invoice-no-bar .ar { direction: rtl; }
 
@@ -374,11 +370,10 @@
     <div class="invoice-title">
       <span class="chip">{{basicdetails.[0].documentheader}}&nbsp;/&nbsp;<span class="ar"> {{basicdetails.[0].documentheader_lang2}}</span></span>
     </div>
-    </br>
     <!-- INVOICE NO BAR -->
-    <div class="invoice-no-bar">
-      <span><strong>Invoice No:</strong>&nbsp; {{basicdetails.[0].inv_no}}</span>
-      <span class="ar"><strong>رقم الفاتورة :</strong>&nbsp; {{#if basicdetails.[0].inv_no_arabic}}{{basicdetails.[0].inv_no_arabic}}{{/if}}</span>
+    <div class="invoice-no-bar" style="margin-top: 2px;">
+      <span><strong>Invoice No:</strong>&nbsp; {{basicdetails.[0].inv_no}}&nbsp;: رقم الفاتورة </span>
+      <span class="ar"><strong>رقم ضريبة :</strong>&nbsp; {{#if branch.[0].vat}}{{branch.[0].vat}}{{/if}}&nbsp;: VAT Number </span>
     </div>
 
     <!-- FROM (COMPANY) SECTION -->
@@ -574,9 +569,9 @@
             <span class="ar">م</span>
             <span class="en">#</span>
           </th>
-          <th style="width:37%">
-            <span class="ar">طبيعة السلعة/الخدمة</span>
-            <span class="en">Nature of Goods / Services</span>
+          <th style="width:35%">
+            <span class="ar">الوصف</span>
+            <span class="en">Description</span>
           </th>
           <th style="width:6%">
             <span class="ar">الوحدة</span>
@@ -586,19 +581,19 @@
             <span class="ar">الكمية</span>
             <span class="en">QTY</span>
           </th>
-          <th style="width:8%">
+          <th style="width:10%">
             <span class="ar">السعر</span>
             <span class="en">Price</span>
           </th>
-          <th style="width:12%">
-            <span class="ar">الإجمالي بدون ضريبة</span>
-            <span class="en">Amount Excl. VAT</span>
-          </th>
           <th style="width:7%">
-            <span class="ar"> ضريبةالمضاف</span>
-            <span class="en">VAT %</span>
+            <span class="ar"> خصومات</span>
+            <span class="en">Discount</span>
           </th>
-          <th style="width:8%">
+          <th style="width:11%">
+            <span class="ar">المبلغ</span>
+            <span class="en">Amount</span>
+          </th>
+          <th style="width:9%">
             <span class="ar"> قيمة الضريبة</span>
             <span class="en">VAT Amount</span>
           </th>
@@ -620,37 +615,38 @@
           <td style="text-align:center;">{{unit}}</td>
           <td style="text-align:center;">{{formatAmount quantity ../bcdp}}</td>
           <td style="text-align:right;">{{formatAmount price ../bcdp}}</td>
+          <td style="text-align:center;">{{formatAmount disc_amt ../bcdp}}</td>
           <td style="text-align:right;">{{formatAmount taxable ../bcdp}}</td>
-          <td style="text-align:center;">{{vat_perc}} %</td>
           <td style="text-align:right;">{{formatAmount vat_amt ../bcdp}}</td>
           <td style="text-align:right;">{{formatAmount amount ../bcdp}}</td>
         </tr>
         {{/each}}
-        <tr>
-          <td colspan="10" style="text-align:center;">***** لا شيء يبدأ *****</td>
-        </tr>
       </tbody>
     </table>
     
 <table class="totals-table" style="border-collapse:collapse;width:100%;margin-top:4px;font-size:11px;">
     <tr style="text-align: center;background-color:#EEE9E9;font-weight:bold;">
-        <td width="20%">
+        <td width="16%">
             <div>المجموع الفرعي</div>
             <div>SubTotal</div>
         </td>
-        <td width="20%">
+        <td width="17%">
             <div>ضريبة القيمة المضافة</div>
             <div>{{datasettingstextvalue.d828}}</div>
         </td>
-        <td width="20%">
+        <td width="17%">
             <div>المجموع</div>
             <div>Total</div>          
         </td>
-        <td width="20%">
+        <td width="17%">
             <div>تم الدفع</div>
             <div>Payment Made</div>
         </td>
-        <td width="20%">
+        <td width="16%">
+            <div> خصومات</div>
+            <div>Discount</div>
+        </td>
+        <td width="17%">
             <div>الرصيد المستحق</div>
             <div>Balance Due</div>
         </td>
@@ -660,13 +656,15 @@
         <td>{{formatAmount basicdetails.[0].vatamt bcdp}}</td>
         <td>{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
         <td>{{formatAmount basicdetails.[0].received bcdp}}</td>
+        <td>{{formatAmount basicdetails.[0].paymentslist bcdp}}</td>
         <td>{{formatAmount basicdetails.[0].balance bcdp}}</td>
     </tr>
     <tr>
-        <td colspan="5" style="text-align: center;background-color:#EEE9E9;">Total In words :{{bcamountinwords}}</td>
+        <td colspan="6" style="text-align: center;background-color:#EEE9E9;">Total In words :{{bcamountinwords}}</td>
     </tr>
 </table>
     
+
 
     <!-- BANK / SIGNATURES -->
     <table class="bank-outer-table">
@@ -676,8 +674,8 @@
             Bank Details&nbsp;/&nbsp;<span class="ar">التفاصيل المصرفية</span>
           </th>
           <th style="width: 19%;">Prepared By<br>أُعدت بواسطة</th>
-          <th style="width: 19%;">Received By</th>
-          <th style="width: 17%;"></th>
+          <th style="width: 17%;">Received By<br>تم الاستلام من قِبَل</th>
+          <th style="width: 19%;">QR</th>
         </tr>
       </thead>
       <tbody>
@@ -709,7 +707,7 @@
           <td class="sig-cell">
             <div class="sig-area">
               <div class="sig-img-slot">
-                {{#ifFlag datasettings "d146"}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:min({{default datasettings.d458 '120'}}px,100%); max-width:min({{default datasettings.d458 '120'}}px,100%);" onerror="this.style.display='none'"/>{{/ifFlag}}
+                {{#ifFlag datasettings "d146"}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{datasettings.d458}}px; max-width:{{datasettings.d458}}px;" onerror="this.style.display='none'"/>{{/ifFlag}}
               </div>
                 <div class="sig-label">
                   {{#ifFlag datasettings "d146"}}<span class="ar-line">الختم</span>Stamp{{else}}<span class="ar-line">التوقيع مع الختم</span>Signature with stamp{{/ifFlag}}
@@ -727,11 +725,7 @@
           </td>
           <td class="sig-cell">
             <div class="sig-area">
-              <div class="sig-img-slot"></div>
-              <div class="sig-label">
-                <span class="ar-line">التوقيع مع الختم</span>
-                Signature with stamp
-              </div>
+              {{{qrDataUri qrCodeBase64}}}
             </div>
           </td>
         </tr>
