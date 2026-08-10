@@ -384,8 +384,8 @@ TAX INVOICE / الفاتورة الضريبية
                 <div>Account Name <span class="label-ar">/ إسم الحساب</span></div>
             </td>
             <td width="28%" style="padding: 5px 2px;">{{bankdetails.acc_name}}</td>
-           <td width="18%" rowspan="5" style="vertical-align:bottom;text-align:center;padding-bottom:6px;height:90px;">
-                <div style="">{{#ifFlag datasettings "d165"}}<img class="Signature" src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '120'}}px;" onerror="this.style.display='none'"/>{{/ifFlag}}</div>
+           <td width="18%" rowspan="5" style="text-align:center;padding-bottom:6px;">
+            <div style="">{{#ifFlag datasettings "d146"}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '100'}}px; max-width:{{default datasettings.d458 '120'}}px;" onerror="this.style.display='none'"/>{{/ifFlag}}</div>
                 <div>Signature with Stamp</div>
             </td>
             <td width="18%" rowspan="5" style="vertical-align:bottom;text-align:center;padding-bottom:6px;height:90px;">
@@ -393,7 +393,7 @@ TAX INVOICE / الفاتورة الضريبية
                 <div>Signature with Stamp</div>
             </td>
             <td width="18%" rowspan="5" style="vertical-align:bottom;text-align:center;padding-bottom:6px;height:90px;">
-                <div style="">{{#ifFlag datasettings "d146"}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '100'}}px; max-width:{{default datasettings.d458 '120'}}px;" onerror="this.style.display='none'"/>{{/ifFlag}}</div>
+                <div style="height:60px;"></div>
                 <div>Signature with Stamp</div>
             </td>
         </tr>
