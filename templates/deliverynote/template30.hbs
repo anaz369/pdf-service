@@ -139,9 +139,9 @@
       <td class="credit"></td>
       <td>
         <table class="kv">
-          <tr><td class="k lbl">DN No</td><td class="c">:</td><td>{{default basicdetails.[0].deliverynote_no basicdetails.[0].inv_no}}</td></tr>
-          <tr><td class="k lbl">DN Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
-          <tr><td class="k lbl">Reference</td><td class="c">:</td><td>{{basicdetails.[0].reference}}</td></tr>
+          <tr><td class="k lbl">Document No</td><td class="c">:</td><td>{{default basicdetails.[0].deliverynote_no basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="k lbl">Document Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
+          <tr><td class="k lbl">Reference No</td><td class="c">:</td><td>{{basicdetails.[0].reference_no}}</td></tr>
           <tr><td class="k lbl">Due Date</td><td class="c">:</td><td>{{basicdetails.[0].due_date}}</td></tr>
           {{#if basicdetails.[0].order_no}}
           <tr><td class="k lbl">LPO No.</td><td class="c">:</td><td>{{basicdetails.[0].order_no}}</td></tr>
@@ -161,29 +161,19 @@
   <!-- ITEMS -->
   <table class="items" style="margin-top:6px;">
     <colgroup>
-      <col style="width:4%">
-      <col style="width:30%">
       <col style="width:5%">
-      <col style="width:6%">
+      <col style="width:60%">
       <col style="width:10%">
-      <col style="width:8%">
       <col style="width:10%">
-      <col style="width:6%">
-      <col style="width:10%">
-      <col style="width:11%">
+      <col style="width:15%">
     </colgroup>
     <thead>
       <tr>
-        <th>Sr. No.</th>
-        <th>Description of Goods</th>
-        <th>Qty</th>
-        <th>Unit</th>
-        <th>Rate<br> ({{default basicdetails.[0].isocode basicdetails.[0].base_country_isocode}})</th>
-        <th>Discount ({{default basicdetails.[0].isocode basicdetails.[0].base_country_isocode}})</th>
-        <th>Taxable Amount ({{default basicdetails.[0].isocode basicdetails.[0].base_country_isocode}})</th>
-        <th>VAT Rate</th>
-        <th>VAT Amount ({{default basicdetails.[0].isocode basicdetails.[0].base_country_isocode}})</th>
-        <th>Total Amount ({{default basicdetails.[0].isocode basicdetails.[0].base_country_isocode}})</th>
+        <th style="padding: 7px 4px;">Sr. No.</th>
+        <th style="padding: 7px 4px;">Description of Goods</th>
+        <th style="padding: 7px 4px;">Qty</th>
+        <th style="padding: 7px 4px;">Unit</th>
+        <th style="padding: 7px 4px;">Remark</th>
       </tr>
     </thead>
     <tbody>
@@ -193,12 +183,7 @@
         <td>{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
         <td class="num">{{quantity}}</td>
         <td class="num">{{unit}}</td>
-        <td class="rt">{{formatAmount price ../bcdp}}</td>
-        <td class="rt">{{formatAmount disc_amt ../bcdp}}</td>
-        <td class="rt">{{formatAmount taxable ../bcdp}}</td>
-        <td class="num">{{#if vat_perc}}{{vat_perc}}{{else}}{{formatAmount (multiply (divide (default vat_amt tax) taxable) 100) 0}}{{/if}}%</td>
-        <td class="rt">{{formatAmount (default vat_amt tax) ../bcdp}}</td>
-        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+        <td class="rt"></td>
       </tr>
       {{/each}}
     </tbody>
@@ -211,80 +196,21 @@
 
   <!-- BOTTOM SECTION — kept together: moves to the next page if it doesn't fit -->
   <div class="bottom">
-  <table class="items totals-block">
-    <colgroup>
-      <col style="width:4%">
-      <col style="width:30%">
-      <col style="width:5%">
-      <col style="width:10%">
-      <col style="width:6%">
-      <col style="width:8%">
-      <col style="width:10%">
-      <col style="width:6%">
-      <col style="width:10%">
-      <col style="width:11%">
-    </colgroup>
-    <tbody>
-      <!-- TOTALS (left: bank details | right: totals) -->
-      <tr class="tot-first">
-        <td class="noline" colspan="5" rowspan="5" style="vertical-align:top; border-left:1px solid #000;">
-          {{#if bankdetails.name}}
-          <table class="bank-inner">
-          <colgroup>
-            <col style="width:24%">
-            <col style="width:4%">
-            <col style="width:72%">
-          </colgroup>
-            <tr class="bhd"><td colspan="3">BANK DETAILS</td></tr>
-            <tr><td class="bk">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
-            <tr><td class="bk">Account Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
-            <tr><td class="bk">Bank Branch</td><td class="bc">:</td><td>{{bankdetails.branch_name}}</td></tr>
-            <tr><td class="bk">A/c No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
-            <tr><td class="bk">IBAN No</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
-          </table>
-          {{/if}}
-        </td>
-        <td class="tlbl" colspan="4" style="font-weight: 700;">Subtotal</td>
-        <td class="tval" style="font-weight: 700;">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
-      </tr>
-      <tr class="tot-mid">
-        <td class="tlbl" colspan="4" style="font-weight: 700;">Discount</td>
-        <td class="tval" style="font-weight: 700;">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
-      </tr>
-      <tr class="tot-mid">
-        <td class="tlbl" colspan="4" style="font-weight: 700;">Total Taxable</td>
-        <td class="tval" style="font-weight: 700;">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
-      </tr>
-      <tr class="tot-mid">
-        <td class="tlbl" colspan="4" style="font-weight: 700;">Total VAT Amount</td>
-        <td class="tval" style="font-weight: 700;">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
-      </tr>
-      <tr class="tot-last">
-        <td class="tlbl" colspan="4" style="font-weight: 700;">Total Including VAT ({{default basicdetails.[0].isocode basicdetails.[0].base_country_isocode}})</td>
-        <td class="tval" style="font-weight: 700;">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
-      </tr>
-
-      <!-- AMOUNT IN WORDS -->
-      {{#if bcamountinwords}}
-      <tr class="words">
-        <td colspan="10">Total Amount : {{bcamountinwords}}</td>
-      </tr>
-      {{/if}}
-    </tbody>
-  </table>
 
   <!-- SIGNATURE -->
   <table class="sign">
-    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <colgroup><col style="width:33%"><col style="width:34%"><col style="width:33%"></colgroup>
     <tr>
-      <td class="slbl" style="height: 60px;">Receiver's Sign.</td>
-      <td class="slbl" style="height: 60px;">For {{default compprof.name basicdetails.[0].branchname}}
+      <td class="slbl" style="height: 33px;">Receiver's Sign.</td>
+      <td class="slbl" style="height: 34px;">Prepared By
         {{!-- <div class="slbl">For {{compprof.name}}</div> --}}
         {{!-- {{#if Seal}}<img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '60'}}px; max-width:{{default datasettings.d458 '120'}}px;" onerror="this.style.display='none'"/>{{/if}}
         <div>Authorised Signatory</div> --}}
       </td>
+      <td class="slbl" style="height: 33px;">Approved By</td>
     </tr>
     <tr>
+      <td class="slbl">..................................................</td>
       <td class="slbl">..................................................</td>
       <td class="slbl">..................................................</td>
     </tr>
