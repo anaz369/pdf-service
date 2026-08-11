@@ -232,8 +232,14 @@
     </table>
 
     <!-- AMOUNT IN WORDS -->
-    <table class="bx" style="width:52%;margin-top:5px;">
+    
+    <table class="bx" style="width:100%;margin-top:5px;">
+      {{#if bcamountinwords}}
       <tr><td style=""><u><b>Amount In Words</b></u><br>{{bcamountinwords}}</td></tr>
+      {{/if}}
+      {{#if basicdetails.[0].terms_and_condition}}
+      <tr><td style=""><u><b>Terms and Condution</b></u><br>{{basicdetails.[0].terms_and_condition}}</td></tr>
+      {{/if}}
     </table>
 
     <!-- SIGNATURE -->
