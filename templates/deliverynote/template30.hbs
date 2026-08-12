@@ -139,7 +139,7 @@
       <td class="credit"></td>
       <td>
         <table class="kv">
-          <tr><td class="k lbl">Document No</td><td class="c">:</td><td>{{default basicdetails.[0].deliverynote_no basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="k lbl">Document No</td><td class="c">:</td><td>{{basicdetails.[0].inv_no}}</td></tr>
           <tr><td class="k lbl">Document Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
           <tr><td class="k lbl">Reference No</td><td class="c">:</td><td>{{basicdetails.[0].reference_no}}</td></tr>
           <tr><td class="k lbl">Due Date</td><td class="c">:</td><td>{{basicdetails.[0].due_date}}</td></tr>
@@ -162,10 +162,10 @@
   <table class="items" style="margin-top:6px;">
     <colgroup>
       <col style="width:5%">
-      <col style="width:60%">
+      <col style="width:55%">
       <col style="width:10%">
       <col style="width:10%">
-      <col style="width:15%">
+      <col style="width:20%">
     </colgroup>
     <thead>
       <tr>
@@ -183,7 +183,7 @@
         <td>{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
         <td class="num">{{quantity}}</td>
         <td class="num">{{unit}}</td>
-        <td class="rt"></td>
+        <td class="left">{{txtf2}}</td>
       </tr>
       {{/each}}
     </tbody>

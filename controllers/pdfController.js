@@ -510,7 +510,7 @@ class PdfController {
         console.log(
           `✓ Margins for doc_type=${pdfRequest.doc_type}:`,
           pdfOptions.margin,
-          `| raw d783=${ds.d783}, d811=${ds.d811}, d9813=${ds.d813}, d931=${ds.d931}, d935=${ds.d935}, d817=${ds.d817}, d74=${ds.d74}, d75=${ds.d75}`,
+          `| raw d783=${ds.d783}, d811=${ds.d811}, d9813=${ds.d813}, d931=${ds.d931}, d935=${ds.d935}, d817=${ds.d817}, d931=${ds.d931}, d813=${ds.d813}, d932=${ds.d932}, d814=${ds.d814}, d936=${ds.d936}, d818=${ds.d818}, d933=${ds.d933}, d815=${ds.d815}, d934=${ds.d934}, d816=${ds.d816}, d803=${ds.d803}, d810=${ds.d810}, d74=${ds.d74}, d75=${ds.d75}`,
         );
         // pdfOptions.margin = { top: '120px', bottom: '5px', left: '15px', right: '15px' };
 
