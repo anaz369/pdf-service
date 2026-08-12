@@ -231,8 +231,8 @@
     var SLACK = 45;   // Chrome's usable height runs under A4-minus-margins; stopping
                       // this far short is what keeps the fill off the next page
     function run() {
-      var mt = parseFloat('{{#if UseHeaderFooter}}{{datasettings.d74}}{{else}}10{{/if}}') || 0;
-      var mb = parseFloat('{{#if UseHeaderFooter}}{{datasettings.d75}}{{else}}10{{/if}}') || 0;
+      var mt = parseFloat('{{#if UseHeaderFooter}}{{datasettings.d803}}{{else}}10{{/if}}') || 0;
+      var mb = parseFloat('{{#if UseHeaderFooter}}{{datasettings.d810}}{{else}}10{{/if}}') || 0;
       var page = 1122.5 - mt - mb;            // A4 height at 96dpi, less the margins
       var h = function (sel) { var e = typeof sel === 'string' ? document.querySelector(sel) : sel;
                                return e ? e.getBoundingClientRect().height : 0; };

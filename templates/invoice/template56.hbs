@@ -540,10 +540,18 @@
             <span>{{basicdetails.[0].reference_no}}</span>
           </td>
           {{/ifFlag}}
+          {{#ifFlag datasettings "d517"}}
           <td>مندوب المبيعات </br>
             <span class="en">Sales Person</span></br>
             <span>{{basicdetails.[0].salesman_name}}</span>
           </td>
+          {{/ifFlag}}
+          {{#ifFlag datasettings "d617"}}
+          <td> طريقة الدفع </br>
+            <span class="en">Mode Of Payment</span></br>
+            <span>{{basicdetails.[0].doc_payment_status}} / {{basicdetails.[0].doc_payment_status_lang2}} </span>
+          </td>
+          {{/ifFlag}}
         </tr>
     </table>
 
