@@ -14,7 +14,7 @@
     }
     body{
         font-family: ibmplexsansarabic, Arial, sans-serif;
-        font-size: 12.5px;
+        font-size: 10px
         line-height: 1.35;
         color: #000;
         margin: 0 5.5mm;
@@ -26,11 +26,15 @@
         width: 100%;
         border-collapse: collapse;
         table-layout: fixed;
-        font-size: 12.5px;
+        font-size: 10px;
         color: #000;
     }
-    td, th{
-        font-size: 12.5px;
+    td{
+        font-size: 10px;
+        word-wrap: break-word;
+    }
+    td{
+        font-size: 9.5px;
         word-wrap: break-word;
     }
     .arab{ font-family: 'ibmplexsansarabic', 'Cairo', 'Noto Sans Arabic', sans-serif; }
@@ -66,8 +70,7 @@
     .ttl_en{
         width: 53%;
         text-align: center;
-        font-size: 25px;
-        line-height: 26px;
+        font-size: 20px;
     }
     .ttl_ar{
         width: 47%;
@@ -80,7 +83,7 @@
     }
     .meta td{
         padding: 0;
-        font-size: 12px;
+        font-size: 10px;
         line-height: 17px;
         vertical-align: top;
     }
@@ -94,23 +97,20 @@
     .items th{
         background-color: #333333;
         color: #fff;
-        font-size: 12px;
+        font-size: 10px
         font-weight: bold;
         text-align: center;
         padding: 4px 2px;
-        line-height: 16px;
         border-left: 1px solid #fff;
     }
     .items th:first-child{ border-left: 0; }
     .items th span{
         display: block;
-        font-size: 10px;
-        line-height: 15px;
+        font-size: 9.5px;
     }
     .items td{
         padding: 1px 3px;
-        font-size: 12px;
-        line-height: 14.4px;
+        font-size: 9.5px;
         text-align: center;
         vertical-align: top;
         border: 0;
@@ -118,8 +118,26 @@
     .items td.desc{ text-align: left; padding-left: 6px; }
     .items .sub{
         display: block;
-        font-size: 10.5px;
+        font-size: 9.5px;
         color: #444;
+    }
+
+    /* ── Terms & conditions (left of totals) ───────────── */
+    .terms{
+        padding-right: 12px;
+    }
+    .terms td{
+        padding: 0;
+        font-size: 9.5px;
+        line-height: 16px;
+        vertical-align: top;
+    }
+    .terms .t_head{
+        font-weight: bold;
+    }
+    .terms .t_body{
+        padding-top: 2px;
+        word-wrap: break-word;
     }
 
     /* ── Totals summary ────────────────────────────────── */
@@ -129,11 +147,12 @@
     .sum_wrap > tbody > tr > td{ padding: 0; border: 0; }
     .summary{
         border: 1px solid #333;
+       
+        font-size: 9.5px;
     }
     .summary td{
         border: 1px solid #333;
         padding: 4px 6px;
-        line-height: 17px;
         white-space: nowrap;
     }
     .summary .s_lbl{ padding-left: 12px; }
@@ -157,13 +176,13 @@
     }
     .words_box td{
         padding: 3px 11px;
-        font-size: 11px;
+        font-size: 9.5px;
         line-height: 18px;
     }
 
     /* ── Bank details ──────────────────────────────────── */
     .bank_wrap{
-        margin-top: 23px;
+        margin-top: 10px;
     }
     .bank_wrap > tbody > tr > td{
         padding: 0;
@@ -171,10 +190,11 @@
         vertical-align: top;
     }
     .bank_head{
+        font-size: 9.5px;
         font-weight: bold;
         padding-left: 11px;
         line-height: 17px;
-        margin-bottom: 5px;
+        margin-bottom: 3px;
     }
     .bank td{
         padding: 0;
@@ -219,7 +239,7 @@
             <td style="width:50%">
                 <table class="ttl">
                     <tr>
-                        <td class="ttl_en">PROFORMA<br>INVOICE</td>
+                        <td class="ttl_en">PROFORMA INVOICE</td>
                         <td class="ttl_ar arab">الفاتورة الأولية</td>
                     </tr>
                 </table>
@@ -262,9 +282,14 @@
     {{!-- ── Items ─────────────────────────────────────── --}}
     <table class="items">
         <colgroup>
-            <col style="width:7%"><col style="width:36%"><col style="width:5%">
-            <col style="width:7%"><col style="width:13%"><col style="width:10%">
-            <col style="width:10%"><col style="width:12%">
+            <col style="width:4%">
+            <col style="width:35%">
+            <col style="width:8%">
+            <col style="width:7%">
+            <col style="width:12%">
+            <col style="width:11%">
+            <col style="width:11%">
+            <col style="width:12%">
         </colgroup>
         <thead>
             <tr>
@@ -284,7 +309,8 @@
                 <td>{{addOne @index}}</td>
                 <td class="desc">
                     {{item_name}}
-                    {{#if name_lang2}}<span class="sub arab" dir="rtl">{{name_lang2}}</span>{{/if}}
+                    {{#if name_lang2}}<br><span class="sub arab" dir="rtl">{{name_lang2}}</span>{{/if}}
+                    {{#if description}}<br><span class="sub arab" dir="">{{description}}</span>{{/if}}
                 </td>
                 <td>{{quantity}}</td>
                 <td>{{unit}}</td>
@@ -297,38 +323,63 @@
         </tbody>
     </table>
 
-    {{!-- ── Totals ────────────────────────────────────── --}}
+    {{!-- ── Terms & conditions + Totals ───────────────── --}}
     <table class="sum_wrap">
         <tr>
-            <td style="width:50%"></td>
             <td style="width:50%">
-                {{#with basicdetails.[0]}}
-                <table class="summary">
+                {{#if basicdetails.[0].terms_and_condition}}
+                {{!-- ── Terms & conditions ────────────────── --}}
+                <table class="terms">
+                    <tr>
+                        <td class="ts t_head" style="width:52%">Terms and Conditions</td>
+                        <td class="ts t_head arab" style="width:48%">الأحكام والشروط</td>
+                    </tr>
+                    <tr>
+                        <td class="ts t_body" colspan="2">{{nl2br basicdetails.[0].terms_and_condition}}</td>
+                    </tr>
+                </table>
+                {{/if}}
+            </td>
+            <td style="width:50%">
+                <table class="summary" style="font-size: 9px">
                     <colgroup>
-                        <col style="width:34%"><col style="width:34%"><col style="width:32%">
+                        <col style="width:37%"><col style="width:34%"><col style="width:20%">
                     </colgroup>
                     <tr>
                         <td class="s_lbl">Subtotal</td>
                         <td class="s_ar arab">المجموع الفرعي</td>
-                        <td class="s_val">{{formatAmount (divide subtotal ../ccrate) ../bcdp}}</td>
+                        <td class="s_val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
                     </tr>
-                    <tr>
-                        <td class="s_lbl">Discount</td>
-                        <td class="s_ar arab">خصومات</td>
-                        <td class="s_val">{{formatAmount (divide discount ../ccrate) ../bcdp}}</td>
-                    </tr>
+                    {{#if zatcadiscount.[0]}}
+                        {{#each zatcadiscount}}
+                            <tr>
+                                <td class="s_lbl">{{reason_name}}</td>
+                                <td class="s_ar arab">خصومات</td>
+                                <td class="s_val">{{formatAmount (divide dld ../ccrate) ../bcdp}}</td>
+                            </tr>
+                        {{/each}}
+                    {{else}}
+
+                        {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
+                            <tr>
+                                <td class="s_lbl">Discount</td>
+                                <td class="s_ar arab">خصومات</td>
+                                <td class="s_val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+                            </tr>
+                        {{/if}}
+
+                    {{/if}}
                     <tr>
                         <td class="s_lbl">VAT ({{#if ../itemdetails.[0].vat_perc}}{{../itemdetails.[0].vat_perc}}{{else}}15{{/if}}%)</td>
                         <td class="s_ar arab">ضريبة القيمة المضافة</td>
-                        <td class="s_val">{{formatAmount (divide vatamt ../ccrate) ../bcdp}}</td>
+                        <td class="s_val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
                     </tr>
                     <tr>
-                        <td class="s_lbl">Total Amount In {{../isocode}}</td>
+                        <td class="s_lbl">Total Amount In</td>
                         <td class="s_ar arab">المبلغ الإجمالي</td>
-                        <td class="s_val">{{../isocode}} {{formatAmount (divide grand_total ../ccrate) ../bcdp}}</td>
+                        <td class="s_val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
                     </tr>
                 </table>
-                {{/with}}
             </td>
         </tr>
     </table>
