@@ -49,7 +49,7 @@
         padding: 0;
     }
     .billhead{
-        width: 64%;
+        width: 100%;
     }
     .billhead td{
         font-weight: bold;
@@ -59,8 +59,18 @@
     .billbody{
         margin-top: 17px;
     }
+    .billbody > tbody > tr > td{
+        padding: 0;
+        vertical-align: top;
+    }
     .billbody div{
         line-height: 16px;
+    }
+    .billbody .bb_ar{
+        text-align: right;
+        direction: rtl;
+        unicode-bidi: isolate;
+        padding-left: 8px;
     }
 
     .ttl td{
@@ -71,10 +81,11 @@
         width: 53%;
         text-align: center;
         font-size: 20px;
+        padding-left: 18px;
     }
     .ttl_ar{
         width: 47%;
-        text-align: center;
+        text-align: right;
         font-size: 23px;
         line-height: 30px;
     }
@@ -87,8 +98,9 @@
         line-height: 17px;
         vertical-align: top;
     }
-    .meta .m_lbl{ padding-left: 18px; }
-    .meta .m_ar{ text-align: right; padding-right: 14px; white-space: nowrap; }
+    .meta .m_lbl{ padding-left: 18px; text-align: left;}
+    .meta .m_value{ text-align: center;}
+    .meta .m_ar{ text-align: right; white-space: nowrap; }
 
     /* ── Items ─────────────────────────────────────────── */
     .items{
@@ -225,16 +237,31 @@
             <td style="width:50%">
                 <table class="billhead">
                     <tr>
-                        <td class="ts">Bill To</td>
-                        <td class="te arab">تمت محاسبته على</td>
+                        <td class="ts" style="width:58%">Bill To</td>
+                        <td class="te arab" style="width:37%">تمت محاسبته على</td>
+                        <td class="te arab" style="width:5%"></td>
                     </tr>
                 </table>
-                <div class="billbody">
-                    <div>{{billing_address.[0].name}}</div>
-                    <div>&nbsp; {{joinAddress billing_address.[0] ' '}} &nbsp;<span class="arab">{{joinAddress billing_address_lang2.[0] ' '}}</span></div>
-                    <div>Customer VAT Number : {{customer_details.[0].VAT_number}}</div>
-                    <div>CR Number : {{customer_details.[0].cr_no}}</div>
-                </div>
+                <table class="billbody">
+                    <tr>
+                        {{!-- English billing address --}}
+                        <td style="width:58%">
+                            {{#if billing_address.[0].name}}<div>{{billing_address.[0].name}}</div>{{/if}}
+                            <div>{{joinAddress billing_address.[0] '<br>'}}</div>
+                            {{#if customer_details.[0].VAT_number}}<div>Customer VAT Number : {{customer_details.[0].VAT_number}}</div>{{/if}}
+                            {{#if customer_details.[0].cr_no}}<div>CR Number : {{customer_details.[0].cr_no}}</div>{{/if}}
+                            {{#if basicdetails.[0].payment_terms}}<div>Payment Terms <br> {{basicdetails.[0].payment_terms}}</div>{{/if}}
+                        </td>
+                        {{!-- Arabic billing address (under the Arabic heading) --}}
+                        <td class="bb_ar arab" style="width:37%">
+                            {{#if billing_address_lang2.[0].name}}<div>{{billing_address_lang2.[0].name}}</div>{{/if}}
+                            <div>{{joinAddress billing_address_lang2.[0] '<br>'}}</div>
+                            {{#if customer_details.[0].VAT_number_lang2}}<div>رقم ضريبة القيمة  : {{customer_details.[0].VAT_number_lang2}}</div>{{/if}}
+                            {{#if customer_details.[0].cr_no_lang2}}<div>رقم السجل التجاري : {{customer_details.[0].cr_no_lang2}}</div>{{/if}}
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
             </td>
             <td style="width:50%">
                 <table class="ttl">
@@ -250,27 +277,27 @@
                     </colgroup>
                     <tr>
                         <td class="m_lbl">Invoice Number</td>
-                        <td>{{inv_no}}</td>
+                        <td class="m_value">{{inv_no}}</td>
                         <td class="m_ar arab">رقم الفاتورة</td>
                     </tr>
                     <tr>
                         <td class="m_lbl">Invoice Date</td>
-                        <td>{{inv_date}}</td>
+                        <td class="m_value">{{inv_date}}</td>
                         <td class="m_ar arab">تاريخ الفاتورة</td>
                     </tr>
                     <tr>
                         <td class="m_lbl">PO Number</td>
-                        <td>{{order_no}}</td>
+                        <td class="m_value">{{order_no}}</td>
                         <td class="m_ar arab">رقم طلب الشراء</td>
                     </tr>
                     <tr>
                         <td class="m_lbl">PO Date</td>
-                        <td>{{po_date}}</td>
+                        <td class="m_value">{{order_date}}</td>
                         <td class="m_ar arab">تاريخ أمر الشراء</td>
                     </tr>
                     <tr>
                         <td class="m_lbl">Reference No</td>
-                        <td>{{reference_no}}</td>
+                        <td class="m_value">{{reference_no}}</td>
                         <td class="m_ar arab">رقم المرجع</td>
                     </tr>
                 </table>
@@ -375,7 +402,7 @@
                         <td class="s_val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
                     </tr>
                     <tr>
-                        <td class="s_lbl">Total Amount In</td>
+                        <td class="s_lbl">Total Amount In {{basicdetails.[0].isocode}}</td>
                         <td class="s_ar arab">المبلغ الإجمالي</td>
                         <td class="s_val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
                     </tr>
