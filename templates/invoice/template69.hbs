@@ -211,6 +211,30 @@
         text-align: right;
       }
       
+      /* Payment Made cell — one line per payment mode */
+      .pay-list {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 9.5px;
+      }
+      .pay-list td {
+        border: none;
+        padding: 0 2px;
+        line-height: 1.35;
+        vertical-align: top;
+      }
+      .pay-list .pay-name {
+        text-align: left;
+      }
+      .pay-list .pay-sep {
+        width: 6px;
+        text-align: center;
+      }
+      .pay-list .pay-amt {
+        text-align: right;
+        white-space: nowrap;
+      }
+
       .amount-table{
         width: 100%;
         border-collapse: collapse;
@@ -655,7 +679,21 @@
         <td>{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
         <td>{{formatAmount basicdetails.[0].vatamt bcdp}}</td>
         <td>{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
-        <td>{{basicdetails.[0].modeofpayment}} : {{basicdetails.[0].received}}</td>
+        <td>
+            {{#if (or paymentdistribution basicdetails.[0].paymentdistribution)}}
+            <table class="pay-list">
+                {{#each (or paymentdistribution basicdetails.[0].paymentdistribution)}}
+                <tr>
+                    <td class="pay-name">{{acc_name}}</td>
+                    <td class="pay-sep">:</td>
+                    <td class="pay-amt">{{formatAmount amount @root.bcdp}}</td>
+                </tr>
+                {{/each}}
+            </table>
+            {{else}}
+            {{basicdetails.[0].modeofpayment}} : {{basicdetails.[0].received}}
+            {{/if}}
+        </td>
         <td>{{formatAmount basicdetails.[0].discount bcdp}}</td>
         <td>{{formatAmount basicdetails.[0].balance bcdp}}</td>
     </tr>
