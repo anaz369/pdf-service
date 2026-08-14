@@ -247,7 +247,7 @@
                         {{!-- English billing address --}}
                         <td style="width:58%">
                             {{#if billing_address.[0].name}}<div>{{billing_address.[0].name}}</div>{{/if}}
-                            <div>{{joinAddress billing_address.[0] ' '}}</div>
+                            <div>{{joinAddress billing_address.[0] '<br>'}}</div>
                             {{#if customer_details.[0].VAT_number}}<div>Customer VAT Number : {{customer_details.[0].VAT_number}}</div>{{/if}}
                             {{#if customer_details.[0].cr_no}}<div>CR Number : {{customer_details.[0].cr_no}}</div>{{/if}}
                             {{#if basicdetails.[0].payment_terms}}<div>Payment Terms <br> {{basicdetails.[0].payment_terms}}</div>{{/if}}
@@ -255,7 +255,7 @@
                         {{!-- Arabic billing address (under the Arabic heading) --}}
                         <td class="bb_ar arab" style="width:37%">
                             {{#if billing_address_lang2.[0].name}}<div>{{billing_address_lang2.[0].name}}</div>{{/if}}
-                            {{#if (joinAddress billing_address_lang2.[0] ' ')}}<div>{{joinAddress billing_address_lang2.[0] ' '}}</div>{{/if}}
+                            <div>{{joinAddress billing_address_lang2.[0] '<br>'}}</div>
                             {{#if customer_details.[0].VAT_number_lang2}}<div>رقم ضريبة القيمة  : {{customer_details.[0].VAT_number_lang2}}</div>{{/if}}
                             {{#if customer_details.[0].cr_no_lang2}}<div>رقم السجل التجاري : {{customer_details.[0].cr_no_lang2}}</div>{{/if}}
                         </td>
@@ -402,7 +402,7 @@
                         <td class="s_val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
                     </tr>
                     <tr>
-                        <td class="s_lbl">Total Amount In</td>
+                        <td class="s_lbl">Total Amount In {{basicdetails.[0].isocode}}</td>
                         <td class="s_ar arab">المبلغ الإجمالي</td>
                         <td class="s_val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
                     </tr>
