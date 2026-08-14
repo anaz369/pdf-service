@@ -81,12 +81,12 @@
         width: 53%;
         text-align: center;
         font-size: 20px;
-        padding-left: 18px;
+        padding-left: 20px;
     }
     .ttl_ar{
         width: 47%;
         text-align: right;
-        font-size: 23px;
+        font-size: 22px;
         line-height: 30px;
     }
     .meta{
@@ -441,8 +441,12 @@
                 </table>
             </td>
             <td style="width:40%" class="sign_cell">
-                {{#if Signature}}<img class="sig" src="{{Signature}}" alt="Signature">{{/if}}
-                {{#if Seal}}<img class="stamp" src="{{Seal}}" alt="Seal">{{/if}}
+                {{#if Signature}}
+                    <img src="{{Signature}}" alt="Seal" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/>
+                {{/if}}
+                {{#if Seal}}
+                    <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/>
+                {{/if}}
             </td>
         </tr>
     </table>
