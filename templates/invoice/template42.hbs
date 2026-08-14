@@ -541,10 +541,10 @@
         <div class="ba-row"><span class="lbl">Branch Name</span><span class="val">: {{bankdetails.branch_name}}</span></div>
       </td>
       <td class="signature-cell">
-        {{#if Signature}}<img src="{{Signature}}" alt="Signature" style="text-align:right;max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+        {{#if Signature}}<img class="Signature" src="{{Signature}}" alt="Signature" style="max-height:min({{default datasettings.d459 '120'}}px,100%); max-width:min({{default datasettings.d459 '120'}}px,100%);" onerror="this.style.display='none'"/>{{/if}}
       </td>
       <td class="stamp-cell">
-        {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>{{/if}}
+        {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:min({{default datasettings.d458 '120'}}px,100%); max-width:min({{default datasettings.d458 '120'}}px,100%);" onerror="this.style.display='none'"/>{{/if}}
       </td>
     </tr>
   </table>
