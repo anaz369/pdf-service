@@ -338,7 +338,7 @@
             <td class="lbl" colspan="2">PROJECT DETAILS / <span class="ar">تفاصيل المشروع</span></td>
         </tr>
         <tr>
-            <td class="val_l b" colspan="2">{{basicdetails.[0].project_name}}</td>
+            <td class="val_l" colspan="2">{{basicdetails.[0].project_name}}</td>
         </tr>
     </table>
 
@@ -445,7 +445,7 @@
                         <td class="words_cell">
                             <div class="words">
                                 <div class="w_en">{{bcamountinwords}} only.</div>
-                                <div class="w_ar ar">فقط&nbsp;&nbsp; {{bcamountinwordsar}} لا غير.</div>
+                                <div class="w_ar ar">{{bcamountinwordsar}} فقط</div>
                             </div>
                         </td>
                     </tr>
@@ -551,9 +551,17 @@
     </table>
 
     {{!-- ── Footer note ────────────────────────────────── --}}
+    {{#if datasettingstextvalue.d265}}
     <div class="note">
-        <div>{{#if datasettingstextvalue.d265}}{{datasettingstextvalue.d265}}{{/if}}</div>
+        {{#each (langParts datasettingstextvalue.d265)}}
+            {{#if (eq lang 'ar')}}
+            <div class="n_ar ar">{{text}}</div>
+            {{else}}
+            <div>{{text}}</div>
+            {{/if}}
+        {{/each}}
     </div>
+    {{/if}}
 
     </div>{{!-- /footer-block --}}
 
