@@ -523,6 +523,13 @@ class TemplateService {
       if (cents > 0) words += ' and ' + toWords(cents) + ' Cents';
       return words + ' Only';
     });
+    // Latin digits → Arabic-Indic digits (٠١٢٣٤٥٦٧٨٩), separators kept as-is.
+    // Used by bilingual templates that print the same figure twice.
+    Handlebars.registerHelper('arabicDigits', function (val) {
+      if (val === null || val === undefined) return '';
+      const ar = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+      return String(val).replace(/[0-9]/g, (d) => ar[d]);
+    });
     // ✅ END OF ADDED LINES
 
   }
