@@ -530,6 +530,41 @@ class TemplateService {
       const ar = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
       return String(val).replace(/[0-9]/g, (d) => ar[d]);
     });
+    // Splits a bilingual setting value into separate lines so each language can
+    // be styled on its own row. Existing line breaks are honoured first; a line
+    // holding both scripts is cut at the Arabic ↔ Latin boundary (digits,
+    // spaces and punctuation stay with the run they follow).
+    // Returns [{ lang: 'ar' | 'en', text }] — empty array when there is nothing.
+    Handlebars.registerHelper('langParts', function (text) {
+      if (!text) return [];
+      const AR = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/;
+      const LAT = /[A-Za-z]/;
+      const parts = [];
+
+      String(text).split(/\r\n|\n|\r/).forEach((line) => {
+        let buf = '';
+        let lang = null;
+        const push = () => {
+          const t = buf.trim();
+          if (t) parts.push({ lang: lang || 'en', text: t });
+          buf = '';
+        };
+
+        for (const ch of line) {
+          const chLang = AR.test(ch) ? 'ar' : LAT.test(ch) ? 'en' : null;
+          if (chLang && lang && chLang !== lang) {
+            push();
+            lang = chLang;
+          } else if (chLang && !lang) {
+            lang = chLang;
+          }
+          buf += ch;
+        }
+        push();
+      });
+
+      return parts;
+    });
     // ✅ END OF ADDED LINES
 
   }
