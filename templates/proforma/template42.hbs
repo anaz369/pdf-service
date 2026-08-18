@@ -325,8 +325,8 @@
                 <th>Qty<span class="arab">الكمية</span></th>
                 <th>UOM<span class="arab">وحدة قياس</span></th>
                 <th>Unit Rate<span class="arab">معدل الوحدة</span></th>
-                <th>Total<span class="arab">المجموع</span></th>
-                <th>Tax({{#if itemdetails.[0].vat_perc}}{{itemdetails.[0].vat_perc}}{{else}}15{{/if}}%)<span class="arab">الضريبة</span></th>
+                <th>Gross Total<span class="arab">الإجمالي الكلي</span></th>
+                <th>Tax ({{#if itemdetails.[0].vat_perc}}{{itemdetails.[0].vat_perc}}{{else}}15{{/if}}%)<span class="arab">الضريبة</span></th>
                 <th>Grand Total<span class="arab">المجموع الإجمالي</span></th>
             </tr>
         </thead>
@@ -402,7 +402,7 @@
                         <td class="s_val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
                     </tr>
                     <tr>
-                        <td class="s_lbl">Total Amount In {{basicdetails.[0].isocode}}</td>
+                        <td class="s_lbl">Total Amount In {{basicdetails.[0].currency_isocode}}</td>
                         <td class="s_ar arab">المبلغ الإجمالي</td>
                         <td class="s_val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
                     </tr>
