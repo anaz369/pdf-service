@@ -66,27 +66,35 @@ class PdfController {
       const bd0 = pdfRequest.basicdetails?.[0] || {};
       const qrNotEmpty = (v) =>
         v !== undefined && v !== null && String(v).trim() !== "";
-      const qrSource = qrNotEmpty(bd0.cleared_qr)
-        ? bd0.cleared_qr
-        : qrNotEmpty(bd0.reported_inv_qr)
-          ? bd0.reported_inv_qr
-          : pdfRequest.qrcode;
 
-      if (needsQr && qrNotEmpty(qrSource)) {
-        console.log("↻ Generating QR image from ZATCA TLV string...");
+      // Candidates in priority order — the first one that is present AND
+      // actually encodes wins, so a malformed cleared/reported QR falls back
+      // to the next source instead of leaving the invoice with no QR at all.
+      const qrCandidates = [
+        ["cleared_qr", bd0.cleared_qr],
+        ["reported_inv_qr", bd0.reported_inv_qr],
+        ["qrcode", pdfRequest.qrcode],
+      ].filter(([, v]) => qrNotEmpty(v));
+
+      if (needsQr && qrCandidates.length > 0) {
         preprocessingTasks.push(
-          qrCodeService
-            .generateQrCodeBase64(qrSource)
-            .then((base64) => {
-              pdfRequest.qrCodeBase64 = base64;
-              console.log(
-                `✓ QR image generated successfully (${base64.length} chars)`,
-              );
-            })
-            .catch((err) => {
-              console.error("✗ QR code generation failed:", err.message);
-              pdfRequest.qrCodeBase64 = "";
-            }),
+          (async () => {
+            for (const [name, value] of qrCandidates) {
+              try {
+                console.log(`↻ Generating QR image from ${name}...`);
+                pdfRequest.qrCodeBase64 =
+                  await qrCodeService.generateQrCodeBase64(value);
+                console.log(
+                  `✓ QR image generated from ${name} (${pdfRequest.qrCodeBase64.length} chars)`,
+                );
+                return;
+              } catch (err) {
+                console.error(`✗ QR generation from ${name} failed:`, err.message);
+              }
+            }
+            pdfRequest.qrCodeBase64 = "";
+            console.error("✗ No QR source could be encoded");
+          })(),
         );
       } else {
         console.log("✓ QR skipped (not required for this template)");
