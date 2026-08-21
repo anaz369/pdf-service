@@ -7,14 +7,14 @@ const qrCodeService = require("./qrCodeService");
 
 // ── Currency symbols ───────────────────────────────────────
 const CURRENCY_SYMBOLS = {
-  AED: "د.إ",
+  AED: "AED",
   USD: "$",
   EUR: "€",
   GBP: "£",
-  QAR: "ر.ق",
-  KWD: "د.ك",
-  BHD: "د.ب",
-  OMR: "ر.ع",
+  QAR: "QAR",
+  KWD: "KWD",
+  BHD: "BHD",
+  OMR: "OMR",
   MYR: "RM",
   INR: "₹",
   JPY: "¥",
@@ -462,6 +462,14 @@ class TemplateService {
         (i) => i.remark && String(i.remark).trim() !== "",
       );
       return hasRemarks ? options.fn(this) : options.inverse(this);
+    });
+
+    Handlebars.registerHelper("hasDiscount", function (items, options) {
+      const hasDiscount = (items || []).some(
+        (i) => (parseFloat(String(i.disc_amt || 0).replace(/,/g, "")) || 0) > 0,
+      );
+
+      return hasDiscount ? options.fn(this) : options.inverse(this);
     });
 
     Handlebars.registerHelper("hasItemCode", function (items, options) {
