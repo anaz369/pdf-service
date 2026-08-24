@@ -549,7 +549,7 @@
 
       {{#if (gt basicdetails.[0].uaeadvclamedamt 0)}}
       <div class="fin-row">
-        <span class="f-lbl orange">Advance Claim</span>
+        <span class="f-lbl orange">Advance Claim ({{uaeadvclamedperc}} %)</span>
         <span class="f-amt deduct">{{basicdetails.[0].base_country_isocode}} {{formatAmount (divide basicdetails.[0].uaeadvclamedamt ccrate) bcdp}}</span>
       </div>
       {{/if}}
