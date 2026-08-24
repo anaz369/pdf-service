@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Delivery Note - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: ibmplexsansarabic, Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #000;
+      background: #fff;
+      margin: 0 5mm;
+    }
+
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+    /* page wrapper: thead repeats the title + header block on every printed page */
+    .pagewrap > thead { display: table-header-group; }
+    .pagewrap > tbody { display: table-row-group; }
+    .pagewrap > thead > tr > td,
+    .pagewrap > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+
+    /* ── Title ─────────────────────────────────────────── */
+    .title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 4px 0 10px;
+    }
+    .title .en { color: #b72031; }
+    .title .ar { color: #606261; direction: rtl; unicode-bidi: isolate; }
+
+    /* ── Header blocks ─────────────────────────────────── */
+    .hdr-wrap > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+
+    .info td {
+      border: 1px solid #b9b9b9;
+      padding: 6px 8px;
+      vertical-align: top;
+      word-wrap: break-word;
+    }
+    .info .lbl { font-weight: 700; }
+    .info .val { font-weight: 400; }
+    .info .ar-name { direction: rtl; text-align: left; unicode-bidi: isolate; }
+    .info .addr { padding-top: 4px; line-height: 1.6; }
+
+    /* ── Items ─────────────────────────────────────────── */
+    .items { margin-top: 14px; }
+    .items th {
+      background: #cccccc;
+      border: 1px solid #b9b9b9;
+      font-weight: 700;
+      text-align: center;
+      vertical-align: middle;
+      padding: 5px 4px;
+    }
+    .items th .ar { display: block; direction: rtl; font-size: 10px; }
+    .items th .en { display: block; font-size: 10px; }
+    .items td {
+      border: 1px solid #b9b9b9;
+      padding: 2px 6px;
+      vertical-align: top;
+    }
+    .items .sn  { text-align: center; vertical-align: middle; }
+    .items .qty { text-align: center; vertical-align: middle; }
+    .items .uom { text-align: center; vertical-align: middle; }
+    .items .desc-ar {
+      display: block;
+      direction: rtl;
+      text-align: right;
+      unicode-bidi: isolate;
+    }
+    .items .desc-en { display: block; padding-top: 3px; }
+    .items .desc-note { display: block; padding-top: 2px; color: #333; }
+
+    /* ── Signatures ────────────────────────────────────── */
+    .bottom { break-inside: avoid; page-break-inside: avoid; }
+    .sign { margin-top: 16px; }
+    .sign > tbody > tr > td { border: none; padding: 0; vertical-align: top; text-align: center; }
+    /* shrink-to-fit block so the field labels line up on the heading's right
+       edge instead of the page edge */
+    .sign .col { display: inline-block; text-align: center; }
+    .sign .col-title {
+      font-weight: 700;
+      text-transform: uppercase;
+      white-space: nowrap;
+      padding-bottom: 4px;
+    }
+    .sign .fld { text-align: center; padding: 2px 0; white-space: nowrap; }
+    .sign .marks { text-align: center; padding-top: 5px; }
+    .sign .marks img { display: block; margin: 2px auto 0; }
+  </style>
+</head>
+<body>
+
+<table class="pagewrap">
+<thead>
+<tr>
+<td>
+
+  <!-- TITLE -->
+  <div class="title">
+    <span class="en">Delivery Note /</span> <span class="ar">مذكرة تسليم</span>
+  </div>
+
+  <!-- HEADER: customer block (left) + document block (right) -->
+  <table class="hdr-wrap">
+    <colgroup>
+      <col style="width:59%">
+      <col style="width:1%">
+      <col style="width:40%">
+    </colgroup>
+    <tr>
+      <td>
+        <table class="info">
+          <colgroup>
+            <col style="width:21%">
+            <col style="width:79%">
+          </colgroup>
+          <tr>
+            <td class="lbl">Customer Name</td>
+            <td class="val" style="">
+              {{billing_address.[0].name}}
+              {{#with (default customer_details.[0].name_lang2 billing_address_lang2.[0].name) as |lang2|}}
+                  <div class="ar-name">{{lang2}}</div>
+              {{/with}}
+              {{#if (joinAddress billing_address.[0] ", ")}}
+                <div class="addr">{{joinAddress billing_address.[0] ",  "}}</div>
+              {{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td class="lbl">Attention</td>
+            <td class="val">{{nl2br basicdetails.[0].attention}}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Date</td>
+            <td class="val">{{basicdetails.[0].inv_date}}</td>
+          </tr>
+        </table>
+      </td>
+      <td></td>
+      <td>
+        <table class="info">
+          <colgroup>
+            <col style="width:29%">
+            <col style="width:71%">
+          </colgroup>
+          <tr>
+            <td class="lbl">DN Number</td>
+            <td class="val">{{basicdetails.[0].inv_no}}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Invoice No</td>
+            <td class="val">{{basicdetails.[0].invoice_no}}</td>
+          </tr>
+          <tr>
+            <td class="lbl">PO No</td>
+            <td class="val">{{basicdetails.[0].reference_no}}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Reference No</td>
+            <td class="val">{{basicdetails.[0].reference}}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Location</td>
+            <td class="val">{{joinAddress location.[0] ", "}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</td>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>
+
+  <!-- ITEMS -->
+  <table class="items">
+    <colgroup>
+      <col style="width:5%">
+      <col style="width:72%">
+      <col style="width:11%">
+      <col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th><span class="ar">م</span><span class="en">S.N</span></th>
+        <th><span class="ar">الوصف</span><span class="en">Description</span></th>
+        <th><span class="ar">الكمية</span><span class="en">QTY</span></th>
+        <th><span class="ar">الوحدة</span><span class="en">UOM</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="sn">{{addOne @index}}</td>
+        <td>
+          <span class="desc-en">{{item_name}}</span>
+          <span class="desc-ar">{{name_lang2}}</span>
+          {{#if description}}<span class="desc-note">{{description}}</span>{{/if}}
+        </td>
+        <td class="qty">{{#if (notEmpty quantity)}}{{formatAmount quantity 0}}{{/if}}</td>
+        <td class="uom">{{default unit txtf1}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+</td>
+</tr>
+<tr>
+<td>
+
+  <!-- SIGNATURES -->
+  <div class="bottom">
+    <table class="sign">
+      <colgroup>
+        <col style="width:50%">
+        <col style="width:50%">
+      </colgroup>
+      <tr>
+        <td>
+          <div class="col">
+            <div class="col-title">Delivered By</div>
+            <div class="fld">Name:</div>
+            <div class="fld">Date:</div>
+            <div class="fld">Signature:</div>
+          </div>
+          <div class="marks">
+            {{#if Signature}}
+            <img src="{{Signature}}" alt="Signature"
+                 style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;"
+                 onerror="this.style.display='none'" />
+            {{/if}}
+            {{#if Seal}}
+            <img src="{{Seal}}" alt="Seal"
+                 style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;"
+                 onerror="this.style.display='none'" />
+            {{/if}}
+          </div>
+        </td>
+        <td>
+          <div class="col">
+            <div class="col-title">Received By</div>
+            <div class="fld">Name:</div>
+            <div class="fld">Date:</div>
+            <div class="fld">Signature:</div>
+            <div class="fld">Stamp:</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>
