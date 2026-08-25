@@ -42,6 +42,15 @@ function findSvgPath(filename) {
   );
 }
 
+// Ink-tight viewBox per file (measured once by rasterising the artwork). Some
+// files are drawn on a padded canvas — sar.svg is a square with ~12% empty on
+// each side — which made the glyph occupy more room than a text code like BHD.
+// Re-cropping the viewBox at load removes that padding.
+const SVG_INK_VIEWBOX = {
+  "sar.svg": "31.09 19.62 202.41 225.12",
+  // aed.svg is already cropped tight (0 0 184 161)
+};
+
 function loadCurrencySvg(filename, fallbackText, height = "0.75em") {
   const svgPath = findSvgPath(filename);
   const result = { inline: "", dataUri: "" };
@@ -58,14 +67,26 @@ function loadCurrencySvg(filename, fallbackText, height = "0.75em") {
   try {
     const raw = fsSync.readFileSync(svgPath, "utf-8");
 
+    const inkViewBox = SVG_INK_VIEWBOX[filename];
+
     result.inline = raw
       .replace(/<\?xml[^?]*\?>/gi, "")
       .trim()
       .replace(/<svg([^>]*)>/i, (match, attrs) => {
-        const cleaned = attrs
+        let cleaned = attrs
           .replace(/\s*width\s*=\s*["'][^"']*["']/gi, "")
           .replace(/\s*height\s*=\s*["'][^"']*["']/gi, "");
-        return `<svg${cleaned} style="height:${height};width:auto;vertical-align:middle;display:inline-block;margin-right:2px;">`;
+
+        if (inkViewBox) {
+          cleaned = cleaned.replace(
+            /\s*viewBox\s*=\s*["'][^"']*["']/i,
+            ` viewBox="${inkViewBox}"`,
+          );
+        }
+
+        // margin in em, not px — the gap before the amount then scales with the
+        // template's font-size, matching the spacing after a text code.
+        return `<svg${cleaned} style="height:${height};width:auto;vertical-align:middle;display:inline-block;margin-right:0.08em;">`;
       });
 
     result.dataUri = `data:image/svg+xml;base64,${Buffer.from(raw).toString("base64")}`;
@@ -80,9 +101,27 @@ function loadCurrencySvg(filename, fallbackText, height = "0.75em") {
   return result;
 }
 
+// ── Currency glyph sizing ─────────────────────────────────
+// Heights are always in `em`, so a glyph scales with whatever font-size the
+// template puts it in — no per-template numbers to keep in sync.
+//
+// Two measured constants decide the em value (measured by rasterising at
+// font-size:100px and reading the ink bounds):
+//   TEXT_INK_EM  — height of digits/capitals in the body font (0.73em)
+//   SVG_INK_EM   — ink height of each SVG when its box is 1em. Both files are
+//                  cropped to their ink at load (see SVG_INK_VIEWBOX), so the
+//                  ink fills the box and the factor is 1.
+// height = TEXT_INK_EM / SVG_INK_EM makes the glyph's ink the same height as
+// the digits next to it.
+const TEXT_INK_EM = 0.73;
+const SVG_INK_EM = { SAR: 1.0, AED: 1.0 };
+
+const glyphHeight = (iso, targetInkEm = TEXT_INK_EM) =>
+  `${+(targetInkEm / (SVG_INK_EM[iso] || 1)).toFixed(3)}em`;
+
 // ── Load SAR + AED SVGs at startup ────────────────────────
-let sarSvg = loadCurrencySvg("sar.svg", "﷼");
-let aedSvg = loadCurrencySvg("aed.svg", "د.إ", "0.62em");
+let sarSvg = loadCurrencySvg("sar.svg", "SAR", glyphHeight("SAR"));
+let aedSvg = loadCurrencySvg("aed.svg", "AED", glyphHeight("AED"));
 
 // Map iso → svg object for easy lookup
 const SVG_CURRENCY_MAP = {
@@ -404,13 +443,28 @@ class TemplateService {
 });
 
     // ── Currency symbol helpers ────────────────────────────
-    Handlebars.registerHelper("currencySymbol", function (isocode) {
-      const iso = (isocode || "SAR").toUpperCase().trim();
-
+    // SVG currencies (SAR, AED) already default to the height that matches the
+    // digits beside them, at whatever font-size the template uses — nothing to
+    // pass. The optional 2nd arg scales that: 1 = match the text (default),
+    // 1.2 = 20% bigger, 0.8 = smaller. Text currencies (BHD, KWD…) are font
+    // glyphs, so they match by definition.
+    Handlebars.registerHelper("currencySymbol", function (currency_isocode, scale) {
+      const iso = (currency_isocode || "SAR").toUpperCase().trim();
+      const factor = parseFloat(scale) > 0 ? parseFloat(scale) : 1;
 
       if (SVG_CURRENCY_MAP[iso]) {
         const svg = SVG_CURRENCY_MAP[iso]();
-        if (svg.inline) return new Handlebars.SafeString(svg.inline);
+        if (svg.inline) {
+          const inline =
+            factor === 1
+              ? svg.inline
+              : svg.inline.replace(
+                  /height\s*:\s*[^;"]+/i,
+                  `height:${glyphHeight(iso, TEXT_INK_EM * factor)}`,
+                );
+
+          return new Handlebars.SafeString(inline);
+        }
       }
 
       return new Handlebars.SafeString(
@@ -695,8 +749,8 @@ class TemplateService {
   // ── CACHE ─────────────────────────────────────────────────
   clearCache() {
     this.compiledTemplates.clear();
-    sarSvg = loadCurrencySvg("sar.svg", "﷼");
-    aedSvg = loadCurrencySvg("aed.svg", "د.إ");
+    sarSvg = loadCurrencySvg("sar.svg", "SAR");
+    aedSvg = loadCurrencySvg("aed.svg", "AED");
     console.log("Template cache cleared");
   }
 

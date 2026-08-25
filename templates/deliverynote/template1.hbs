@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Delivery Note - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #333;
+      background: #fff;
+      margin: 0 5mm;
+    }
+
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+    /* ── Title ─────────────────────────────────────────── */
+    .title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #2c4a8a;
+      padding: 10px 0 10px;
+    }
+    .title .ar {
+      font-family: ibmplexsansarabic, Arial, Helvetica, sans-serif;
+      direction: rtl;
+      unicode-bidi: isolate;
+    }
+
+    /* ── Outer box ─────────────────────────────────────── */
+    .box { border: 2px solid #000; }
+
+    /* ── Top block: customer (left) | document fields (right) ── */
+    .top { border-bottom: 2px solid #000; }
+    .top > tbody > tr > td { vertical-align: top; padding: 0; border: none; }
+    .top .cust {
+      width: 45%;
+      border-right: 2px solid #000;
+      padding: 5px 6px 2px;
+      line-height: 16px;
+      word-wrap: break-word;
+    }
+    .top .cust .name { font-weight: 700; }
+    
+    .top .meta { width: 55%; padding: 0; }
+
+    .meta-tbl { table-layout: fixed; }
+    .meta-tbl td {
+      border-right: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+      padding: 6px 6px 9px;
+      text-align: center;
+      vertical-align: top;
+    }
+    .meta-tbl td:last-child { border-right: none; }
+    .meta-tbl .lbl { font-size: 11px; line-height: 15px; }
+    .meta-tbl .val { font-size: 10px; font-weight: 700; line-height: 15px; }
+
+    /* ── Items ─────────────────────────────────────────── */
+    .items th {
+      border-right: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+      padding: 4px 6px;
+      font-weight: 400;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 16px;
+    }
+    .items td {
+      border-right: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+      padding: 4px 6px;
+      vertical-align: top;
+      line-height: 16px;
+    }
+    .items th:last-child, .items td:last-child { border-right: none; }
+
+    .items .lt { text-align: left; }
+    .items .ct { text-align: center; }
+    .items .rt { text-align: right; padding-right: 10px; }
+
+    /* ── Blank body, then the signature strip at the foot of the box ── */
+    .spacer { height: 132px; }
+
+    .sign { table-layout: fixed; }
+    .sign td {
+      border: none;
+      text-align: center;
+      vertical-align: bottom;
+      padding: 0 6px 19px;
+    }
+    .sign .rule {
+      display: block;
+      width: 81px;
+      margin: 0 auto;
+      border-bottom: 1px dotted #333;
+    }
+    .sign .slbl { font-size: 11px; padding-top: 9px; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="title">Delivery Note - <span class="">مذكرة تسليم </span></div>
+
+  <div class="box">
+
+    <!-- TOP BLOCK -->
+    <table class="top">
+      <tr>
+        <td class="cust">
+          <div class="name">{{billing_address.[0].name}}</div>
+          <div class="addr">{{joinAddress billing_address.[0] '<br>'}}</div>
+          <div class="vat">VAT : {{billing_address.[0].vat}}</div>
+        </td>
+        <td class="meta">
+          <table class="meta-tbl">
+            <colgroup>
+              <col style="width:25%">
+              <col style="width:23%">
+              <col style="width:26%">
+              <col style="width:26%">
+            </colgroup>
+            <tr>
+              <td>
+                <div class="lbl">Deliverynote No</div>
+                <div class="val">{{basicdetails.[0].inv_no}}</div>
+              </td>
+              <td>
+                <div class="lbl">Invoice No</div>
+                <div class="val">{{basicdetails.[0].invoice_no}}</div>
+              </td>
+              <td>
+                <div class="lbl">Invoice Date</div>
+                <div class="val">{{basicdetails.[0].inv_date}}</div>
+              </td>
+              <td>
+                <div class="lbl">Supply Date</div>
+                <div class="val">{{basicdetails.[0].sup_date}}</div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- ITEMS -->
+    <table class="items">
+      <colgroup>
+        <col style="width:4%">
+        <col style="width:30%">
+        <col style="width:9%">
+        <col style="width:7%">
+        <col style="width:6%">
+        <col style="width:10%">
+        <col style="width:12%">
+        <col style="width:11%">
+        <col style="width:11%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="lt">#</th>
+          <th class="lt">Description</th>
+          <th>Rate</th>
+          <th>Quantity</th>
+          <th>UOM</th>
+          <th>Discount</th>
+          <th>Taxable Amt</th>
+          <th>Tax Amt</th>
+          <th>Item Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each itemdetails}}
+        <tr>
+          <td class="lt">{{addOne @index}}</td>
+          <td class="lt">{{item_name}}</td>
+          <td class="rt">{{formatAmount price ../bcdp}}</td>
+          <td class="ct">{{quantity}}</td>
+          <td class="ct">{{unit}}</td>
+          <td class="rt">{{default disc_amt '0'}} ({{default disc_perc '0'}}%)</td>
+          <td class="rt">{{formatAmount taxable ../bcdp}}</td>
+          <td class="rt">{{formatAmount vat_amt ../bcdp}} ({{vat_perc}}%)</td>
+          <td class="rt">{{formatAmount amount ../bcdp}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <!-- BLANK BODY -->
+    <div class="spacer"></div>
+
+    <!-- SIGNATURES -->
+    <table class="sign">
+      <colgroup>
+        <col style="width:33.34%">
+        <col style="width:33.33%">
+        <col style="width:33.33%">
+      </colgroup>
+      <tr>
+        <td>
+          
+          <span class="rule"></span>
+          <div class="slbl">Prepared By</div>
+        </td>
+        <td>
+          <span class="rule"></span>
+          <div class="slbl">Delivered By</div>
+        </td>
+        <td>
+          <span class="rule"></span>
+          <div class="slbl">Received By</div>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+</body>
+</html>
