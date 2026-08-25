@@ -300,13 +300,13 @@
         font-weight: bold;
         padding-right: 5px;
     }
-    .itemcurrency {
-        font-size:9px ;
-    }
+    /* Symbol spans inherit the amount's font-size, so the SAR/AED glyph and the
+       BHD/KWD text codes both come out the same size as the digits. */
+
 
     .currency {
         font-weight: bold;
-        font-size:9px ;
+        font-size: inherit;
     }
 
     /* Bank details & signature */
