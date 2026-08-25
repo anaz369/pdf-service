@@ -75,6 +75,18 @@
     .items .desc-en { display: block; padding-top: 3px; }
     .items .desc-note { display: block; padding-top: 2px; color: #333; }
 
+    /* ── Terms & conditions ────────────────────────────── */
+    .terms {
+      margin-top: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #b9b9b9;   /* the rule under the terms */
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .terms-title { font-weight: 700; padding-bottom: 3px; }
+    .terms-title .ar { direction: rtl; unicode-bidi: isolate; }
+    .terms-body { line-height: 1.5; }
+
     /* ── Signatures ────────────────────────────────────── */
     .bottom { break-inside: avoid; page-break-inside: avoid; }
     .sign { margin-top: 16px; }
@@ -158,7 +170,7 @@
           </tr>
           <tr>
             <td class="lbl">PO No</td>
-            <td class="val">{{basicdetails.[0].reference_no}}</td>
+            <td class="val">{{basicdetails.[0].order_no}}</td>
           </tr>
           <tr>
             <td class="lbl">Reference No</td>
@@ -166,7 +178,7 @@
           </tr>
           <tr>
             <td class="lbl">Location</td>
-            <td class="val">{{joinAddress location.[0] ", "}}</td>
+            <td class="val">{{basicdetails.[0].destination}}</td>
           </tr>
         </table>
       </td>
@@ -206,8 +218,8 @@
           <span class="desc-ar">{{name_lang2}}</span>
           {{#if description}}<span class="desc-note">{{description}}</span>{{/if}}
         </td>
-        <td class="qty">{{#if (notEmpty quantity)}}{{formatAmount quantity 0}}{{/if}}</td>
-        <td class="uom">{{default unit txtf1}}</td>
+        <td class="qty">{{quantity}}</td>
+        <td class="uom">{{unit}}</td>
       </tr>
       {{/each}}
     </tbody>
@@ -217,6 +229,14 @@
 </tr>
 <tr>
 <td>
+
+  <!-- TERMS & CONDITIONS — only when the document carries them -->
+  {{#if basicdetails.[0].terms_and_condition}}
+  <div class="terms">
+    <div class="terms-title">Terms &amp; Conditions <span class="ar">الشروط والأحكام</span></div>
+    <div class="terms-body">{{nl2br basicdetails.[0].terms_and_condition}}</div>
+  </div>
+  {{/if}}
 
   <!-- SIGNATURES -->
   <div class="bottom">
