@@ -136,9 +136,9 @@
         <td>{{item_name}}{{#if name_lang2}}<div class="idesc">{{name_lang2}}</div>{{/if}}{{#if description}}<div class="idesc">{{description}}</div>{{/if}}</td>
         <td class="num">{{unit}}</td>
         <td class="num">{{formatAmount quantity ../bcdp}}</td>
-        <td class="rt"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount price ../bcdp}}</td>
-        <td class="rt"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount tax ../bcdp}}</td>
-        <td class="rt"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount amount ../bcdp}}</td>
+        <td class="rt"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount price ../bcdp}}</td>
+        <td class="rt"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount tax ../bcdp}}</td>
+        <td class="rt"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
     </tbody>
@@ -151,17 +151,17 @@
       <td style="padding-top:4px;"><span class="h">In Words :</span> {{bcamountinwords}}</td>
       <td>
         <table class="stbl">
-          <tr><td class="sl">Gross Amount</td><td class="sv"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td></tr>
-          <tr><td class="sl">Discount</td><td class="sv"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td></tr>
-          <tr><td class="sl">VAT Amount</td><td class="sv"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td></tr>
-          <tr><td class="sl">Net Amount</td><td class="sv"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td></tr>
+          <tr><td class="sl">Gross Amount</td><td class="sv"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td></tr>
+          <tr><td class="sl">Discount</td><td class="sv"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td></tr>
+          <tr><td class="sl">VAT Amount</td><td class="sv"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td></tr>
+          <tr><td class="sl">Net Amount</td><td class="sv"><span style="font-size:16px;">{{currencySymbol basicdetails.[0].isocode}}</span>{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td></tr>
         </table>
       </td>
     </tr>
   </table>
 
   <!-- TERMS -->
-  <div class="mt"><span class="h">Terms and Conditions</span></div>
+  <div class="mt"><span class="h">{{#if basicdetails.[0].terms_and_condition}}Terms and Conditions{{/if}}</span></div>
   <div class="terms-txt">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
 
   <!-- SIGNATURE -->
