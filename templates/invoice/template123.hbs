@@ -80,6 +80,20 @@
         width: 64%;
         background-color: #f5f5f5;
       }
+      /* payment breakdown shown in the Payment Mode cell when the invoice is paid */
+      .pay-dist {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .pay-dist td {
+        border: none;
+        padding: 0;
+        font-size: 9.5px;
+        background: none;
+      }
+      .ar-inline { direction: rtl; unicode-bidi: isolate; }
+      .pay-dist td.sep { width: 8px; text-align: center; }
+      .pay-dist td.amt { text-align: right; }
       .qr-cell {
         text-align: center;
         vertical-align: middle;
@@ -310,28 +324,44 @@
     <table class="top-wrap">
       <tr>
         <td style="width:62%;padding-right:8px;">
-          <table class="top-table">
-            <tr>
-              <td class="lbl">Invoice Number<span class="ar">رقم الفاتورة</span></td>
-              <td class="val">{{basicdetails.[0].inv_no}}</td>
-            </tr>
-            <tr>
-              <td class="lbl">Invoice Issue Date<span class="ar">تاريخ إصدار الفاتورة</span></td>
-              <td class="val">{{basicdetails.[0].inv_date}}</td>
-            </tr>
-            <tr>
-              <td class="lbl">PO Number<span class="ar">رقم طلب الشراء</span></td>
-              <td class="val">{{basicdetails.[0].order_no}}</td>
-            </tr>
-            <tr>
-              <td class="lbl">PO Date<span class="ar">تاريخ أمر الشراء</span></td>
-              <td class="val">{{basicdetails.[0].po_date}}</td>
-            </tr>
-            <tr>
-              <td class="lbl">Payment Mode<span class="ar">وضع الدفع</span></td>
-              <td class="val"></td>
-            </tr>
-          </table>
+            <table class="top-table">
+              <tr>
+                <td class="lbl">Invoice Number<span class="ar">رقم الفاتورة</span></td>
+                <td class="val">{{basicdetails.[0].inv_no}}</td>
+              </tr>
+              <tr>
+                <td class="lbl">Invoice Issue Date<span class="ar">تاريخ إصدار الفاتورة</span></td>
+                <td class="val">{{basicdetails.[0].inv_date}}</td>
+              </tr>
+              <tr>
+                <td class="lbl">PO Number<span class="ar">رقم طلب الشراء</span></td>
+                <td class="val">{{basicdetails.[0].order_no}}</td>
+              </tr>
+              {{#if basicdetails.[0].po_date}}
+              <tr>
+                <td class="lbl">PO Date<span class="ar">تاريخ أمر الشراء</span></td>
+                <td class="val">{{basicdetails.[0].po_date}}</td>
+              </tr>
+              {{/if}}
+              <tr>
+                <td class="lbl">Payment Mode<span class="ar">وضع الدفع</span></td>
+                <td class="val">
+                  {{#if (eq (default basicdetails.[0].payment_status '0') '0')}}
+                    {{basicdetails.[0].doc_payment_status}}{{#if basicdetails.[0].doc_payment_status_lang2}} / <span class="ar-inline">{{basicdetails.[0].doc_payment_status_lang2}}</span>{{/if}}
+                  {{else}}
+                    <table class="pay-dist">
+                      {{#each basicdetails.[0].paymentdistribution}}
+                      <tr>
+                        <td>{{acc_name}}</td>
+                        <td class="sep">:</td>
+                        <td class="amt">{{formatAmount amount ../bcdp}}</td>
+                      </tr>
+                      {{/each}}
+                    </table>
+                  {{/if}}
+                </td>
+              </tr>
+            </table>
         </td>
         <td class="qr-cell" style="width:38%;">
           <div class="qr-wrap">{{{qrDataUri qrCodeBase64}}}</div>
@@ -601,22 +631,5 @@
         </td>
       </tr>
     </table>
-
-    <!-- SIGNATURES -->
-    {{!-- <table class="sign-table">
-      <tr>
-        <td class="s-head">Company Stamp<span class="ar">ختم الشركة</span></td>
-        <td class="s-head">Prepared By<span class="ar">أعدت بواسطة</span></td>
-        <td class="s-head">Authorized Signature<span class="ar">توقيع معتمد</span></td>
-        <td class="s-head">Received By<span class="ar">استلمت من قبل</span></td>
-      </tr>
-      <tr>
-        <td class="s-body">{{#if Seal}}<img src="{{Seal}}" alt="" onerror="this.style.display='none'"/>{{/if}}</td>
-        <td class="s-body">{{basicdetails.[0].created_user}}</td>
-        <td class="s-body">{{#if Signature}}<img src="{{Signature}}" alt="" onerror="this.style.display='none'"/>{{/if}}</td>
-        <td class="s-body"></td>
-      </tr> --}}
-    </table>
-
   </body>
 </html>
