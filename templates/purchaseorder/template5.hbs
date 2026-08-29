@@ -7,7 +7,8 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
+      {{!-- font-family: Arial, Helvetica, sans-serif; --}}
+      font-family: ibmplexsansarabic;
       font-size: 11px;
       color: #000;
       background: #fff;
@@ -18,15 +19,13 @@
     .mt { margin-top: 8px; }
 
     /* title */
-    .title-box { border: 1px solid #000; text-align: center; padding: 5px; }
+    .title-box { border: 1px solid #000; text-align: center; padding: 3px; }
     .title-box .t { font-family: "Times New Roman", Times, serif; font-size: 20px; }
 
     /* top boxes */
     .top td { border: 1px solid #ccc; vertical-align: top; padding: 8px 10px; }
     .kv { width: 100%; border-collapse: collapse; }
     .kv td { border: none; padding: 2px 2px; font-size: 11px; vertical-align: top; }
-    .kv .k { width: 26%; }
-    .kv .c { width: 4%; }
     .hd { font-weight: 700; margin-bottom: 6px; }
     .po .k, .po .c, .po td { color: #000000; }
 
@@ -54,25 +53,32 @@
 
   <!-- TO | PO DETAILS -->
   <table class="top mt">
-    <colgroup><col style="width:60%"><col style="width:40%"></colgroup>
+    <colgroup>
+      <col style="width:60%">
+      <col style="width:40%">
+    </colgroup>
     <tr>
       <td>
         <div class="hd">To</div>
         <table class="kv">
+          <colgroup>
+            <col style="width:15%">
+            <col style="width:4%">
+            <col style="width:81%">
+          </colgroup>
           <tr><td class="k">Name</td><td class="c">:</td><td>{{billing_address.[0].name}}</td></tr>
           <tr><td class="k">VAT No</td><td class="c">:</td><td>{{billing_address.[0].vat}}</td></tr>
-          <tr><td class="k">Address</td><td class="c">:</td><td>
-            {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}<br>{{/if}}
-            {{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}<br>{{/if}}
-            {{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}<br>{{/if}}
-            {{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}<br>{{/if}}
-            {{billing_address.[0].address_code}}
-          </td></tr>
+          <tr><td class="k">Address</td><td class="c">:</td><td>{{joinAddress billing_address.[0] '<br> '}}</td></tr>
           <tr><td class="k">Attention</td><td class="c">:</td><td>{{basicdetails.[0].attention}}</td></tr>
         </table>
       </td>
       <td>
         <table class="kv po">
+          <colgroup>
+            <col style="width:20%">
+            <col style="width:4%">
+            <col style="width:76%">
+          </colgroup>
           <tr><td class="k">Po No</td><td class="c">:</td><td>{{basicdetails.[0].inv_no}}</td></tr>
           <tr><td class="k">PO Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
           <tr><td class="k">Your Ref</td><td class="c">:</td><td>{{basicdetails.[0].reference_no}}</td></tr>
@@ -85,7 +91,12 @@
   <!-- ITEMS -->
   <table class="items mt">
     <colgroup>
-      <col style="width:5%"><col style="width:50%"><col style="width:11%"><col style="width:11%"><col style="width:12%"><col style="width:11%">
+      <col style="width:5%">
+      <col style="width:48%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:12%">
+      <col style="width:13%">
     </colgroup>
     <thead>
       <tr>
@@ -101,11 +112,11 @@
       {{#each itemdetails}}
       <tr>
         <td class="num">{{addOne @index}}</td>
-        <td>{{item_name}}{{description}}</td>
+        <td>{{item_name}}{{name_lang2}}{{description}}</td>
         <td class="num">{{unit}}</td>
         <td class="num">{{quantity}}</td>
-        <td class="rt">{{formatAmount price ../bcdp}}</td>
-        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+        <td class="rt"><span style="font-size:11px;">{{currencySymbol ../basicdetails.[0].isocode}}</span> {{formatAmount price ../bcdp}}</td>
+        <td class="rt"><span style="font-size:11px;">{{currencySymbol ../basicdetails.[0].isocode}}</span> {{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
       <tr>
@@ -114,19 +125,19 @@
           <div class="arw">{{bcamountinwordsar}}</div>
         </td>
         <td class="tlbl" colspan="2">Gross Amount</td>
-        <td class="tval">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+        <td class="tval"><span style="font-size:11px;">{{currencySymbol basicdetails.[0].isocode}}</span> {{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
       </tr>
       <tr>
         <td class="tlbl" colspan="2">Discount</td>
-        <td class="tval">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+        <td class="tval"><span style="font-size:11px;">{{currencySymbol basicdetails.[0].isocode}}</span> {{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
       </tr>
       <tr>
         <td class="tlbl" colspan="2">VAT Amount</td>
-        <td class="tval">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+        <td class="tval"><span style="font-size:11px;">{{currencySymbol basicdetails.[0].isocode}}</span> {{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
       </tr>
       <tr>
         <td class="tlbl" colspan="2">Net Amount</td>
-        <td class="tval">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+        <td class="tval"><span style="font-size:11px;">{{currencySymbol basicdetails.[0].isocode}}</span> {{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
       </tr>
     </tbody>
   </table>
@@ -137,9 +148,10 @@
     <tr>
       <td style="border:none;vertical-align:top;">
         <div class="h">Terms and Conditions</div>
-        <div>{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+        <div>
+          {{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
       </td>
-      <td style="border:none;text-align:center;vertical-align:bottom;">
+      <td style="border:none;text-align:center;vertical-align:top;">
         <div class="h">Administrator</div>
       </td>
     </tr>
