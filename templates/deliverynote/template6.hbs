@@ -138,7 +138,7 @@
             <td class="lbl">Customer Name</td>
             <td class="val" style="">
               {{billing_address.[0].name}}
-              {{#if (billing_address_lang2.[0].name)}}
+              {{#if billing_address_lang2.[0].name}}
                   <div class="ar-name">{{billing_address_lang2.[0].name}}</div>
               {{/if}}
               {{#if (joinAddress billing_address.[0] ", ")}}
