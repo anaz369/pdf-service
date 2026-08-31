@@ -322,22 +322,7 @@
                 <div class="cline"><span class="clbl">Att:</span>&nbsp; <b>{{basicdetails.[0].attention}}</b></div>
                 <div class="cline"><span class="clbl">VAT NO</span>&nbsp;&nbsp; <b class="green">{{billing_address.[0].vat}}</b></div>
                 {{#if billing_address.[0].address_line1}}
-                <div class="cline"><span class="clbl">Building No</span>&nbsp; {{billing_address.[0].address_line1}}</div>
-                {{/if}}
-                {{#if billing_address.[0].address_line2}}
-                <div class="cline"><span class="clbl">Street</span>&nbsp; {{billing_address.[0].address_line2}}</div>
-                {{/if}}
-                {{#if billing_address.[0].address_line3}}
-                <div class="cline"><span class="clbl">District</span>&nbsp; {{billing_address.[0].address_line3}}</div>
-                {{/if}}
-                {{#if billing_address.[0].address_line4}}
-                <div class="cline"><span class="clbl">City</span>&nbsp; {{billing_address.[0].address_line4}}</div>
-                {{/if}}
-                {{#if billing_address.[0].address_code}}
-                <div class="cline"><span class="clbl">Postal Code</span>&nbsp; {{billing_address.[0].address_code}}</div>
-                {{/if}}
-                {{#if billing_address.[0].address_line5}}
-                <div class="cline"><span class="clbl">Country</span>&nbsp; {{billing_address.[0].address_line5}}</div>
+                <div class="cline"><span class="">Building No:</span>{{billing_address.[0].address_line1}} {{#if billing_address.[0].address_line2}}Street-{{billing_address.[0].address_line2}} {{/if}}{{#if billing_address.[0].address_line3}} - {{billing_address.[0].address_line3}} {{/if}}{{#if billing_address.[0].address_line4}}District-{{billing_address.[0].address_line4}} {{/if}}{{#if billing_address.[0].address_code}}-{{billing_address.[0].address_code}} {{/if}}{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}</div>
                 {{/if}}
                 {{!-- {{#if customer_details.[0].additional_no}}
                 <div class="cline"><span class="clbl">Additional No</span>&nbsp; {{customer_details.[0].additional_no}}</div>
@@ -536,7 +521,7 @@
 
     {{!-- ── Bank details / terms & conditions ──────────── --}}
     <table class="bank_wrap">
-        <colgroup><col style="width:42%"><col style="width:58%"></colgroup>
+        <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
         <tr>
             <td>
                 <div class="blk_ttl">BANK DETAILS</div>
