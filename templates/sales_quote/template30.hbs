@@ -88,7 +88,14 @@
   .items-table .center { text-align: center; }
   .items-table .right  { text-align: right; }
   .items-table .left   { text-align: left; }
-
+  .item-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
   /* ── Remark row ────────────────────────────── */
   .remark-cell { padding: 4px 10px; min-height: 24px; }
 
@@ -208,6 +215,7 @@
             <tr>
               <td class="center" style="border-left:1px solid #000;">{{addOne @index}}</td>
               <td class="left">
+                 {{#if image1DataUri}}<img class="item-img" src="{{image1DataUri}}" alt=""/>{{/if}}
                 {{item_name}}
                 {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
                 {{#if description}}<div>{{description}}</div>{{/if}}
