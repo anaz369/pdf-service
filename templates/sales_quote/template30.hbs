@@ -11,7 +11,7 @@
   body {
     background: #ffffff;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     color: #222;
     line-height: 1.45;
     margin: 0 8mm;
@@ -22,7 +22,7 @@
   /* ── Title ─────────────────────────────────── */
   .main-title {
     text-align: center;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: ibmplexsansarabic;
     font-size: 24px;
     font-weight: bold;
     color: #1f3a6b;
@@ -40,11 +40,11 @@
     border: 1px solid #000;
     padding: 0;
     vertical-align: top;
-    font-size: 11px;
+    font-size: 10px;
   }
 
   /* ── Top customer info ─────────────────────── */
-  .cust-block { padding: 8px 10px; }
+  .cust-block { padding: 4px 10px; }
   .cust-name { font-weight: bold; }
   .cust-line { line-height: 1.55; }
 
@@ -56,8 +56,8 @@
     table-layout: fixed;
   }
   .ref-head-table td {
-    padding: 8px 10px;
-    font-size: 11px;
+    padding: 4px 10px;
+    font-size: 10px;
     text-align: center;
     vertical-align: middle;
   }
@@ -73,9 +73,9 @@
   }
   .items-table th,
   .items-table td {
-    font-size: 11px;
-    vertical-align: top;
-    padding: 6px 8px;
+    font-size: 10px;
+    vertical-align: middle;
+    padding: 3px 8px;
     border: 1px solid #ccc;
   }
   .items-table thead th {
@@ -99,8 +99,8 @@
     table-layout: fixed;
   }
   .totals-table td {
-    padding: 6px 10px;
-    font-size: 11px;
+    padding: 3px 10px;
+    font-size: 10px;
     border-top: 1px solid #ccc;
     vertical-align: middle;
   }
@@ -124,8 +124,8 @@
     table-layout: fixed;
   }
   .words-table td {
-    padding: 6px 10px;
-    font-size: 11px;
+    padding: 4px 10px;
+    font-size: 10px;
     vertical-align: top;
   }
   .words-table .w-lbl {
@@ -243,11 +243,11 @@
           </tr>
           <tr>
             <td class="t-lbl">Discount</td>
-            <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+            <td class="t-val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
           </tr>
           <tr>
             <td class="t-lbl">Taxable Amount</td>
-            <td class="t-val">{{formatAmount (divide (subtract basicdetails.[0].subtotal basicdetails.[0].discount) ccrate) bcdp}}
+            <td class="t-val">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}
                 
             </td>
           </tr>
@@ -286,7 +286,7 @@
       <td colspan="3">
         <div class="signoff-cell">
           <div>For {{#if compprof.name}}{{compprof.name}}{{else}}{{basicdetails.[0].branchname}}{{/if}}</div>
-          {{#if Signature}}<div><img class="sign-img" src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d458 '80'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/></div>{{/if}}
+          {{#if Signature}}<div><img class="sign-img" src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d459 '80'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/></div>{{/if}}
           <div class="auth-sig">Authorized Signatory</div>
         </div>
       </td>
