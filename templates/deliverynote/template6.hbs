@@ -63,9 +63,6 @@
       padding: 2px 6px;
       vertical-align: top;
     }
-    /* no rule between item rows — only the last row closes the table */
-    .items tbody td { border-top: none; border-bottom: none; }
-    .items tbody tr:last-child td { border-bottom: 1px solid #b9b9b9; }
     .items .sn  { text-align: center; vertical-align: middle; }
     .items .qty { text-align: center; vertical-align: middle; }
     .items .uom { text-align: center; vertical-align: middle; }
@@ -138,9 +135,9 @@
             <td class="lbl">Customer Name</td>
             <td class="val" style="">
               {{billing_address.[0].name}}
-              {{#with (default customer_details.[0].name_lang2 billing_address_lang2.[0].name) as |lang2|}}
-                  <div class="ar-name">{{lang2}}</div>
-              {{/with}}
+              {{#if (billing_address_lang2.[0].name)}}
+                  <div class="ar-name">{{billing_address_lang2.[0].name}}</div>
+              {{/if}}
               {{#if (joinAddress billing_address.[0] ", ")}}
                 <div class="addr">{{joinAddress billing_address.[0] ",  "}}</div>
               {{/if}}
@@ -236,7 +233,7 @@
   <!-- TERMS & CONDITIONS — only when the document carries them -->
   {{#if basicdetails.[0].terms_and_condition}}
   <div class="terms">
-    <div class="terms-title">Terms &amp; Conditions <span class="ar">الشروط والأحكام</span></div>
+    <div class="terms-title">Terms &amp; Conditions / <span class="ar">الشروط والأحكام</span></div>
     <div class="terms-body">{{nl2br basicdetails.[0].terms_and_condition}}</div>
   </div>
   {{/if}}
