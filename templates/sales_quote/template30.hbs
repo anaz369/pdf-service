@@ -17,7 +17,31 @@
     margin: 0 8mm;
   }
 
-  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+  {{#if UseBGWatermark}}
+  {{#if WatermarkCss}}
+  /* WATERMARK — fixed, so it repeats on every printed page */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('{{{WatermarkCss}}}');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 100% auto;
+    background-origin: border-box;
+    opacity: 0.30;
+    pointer-events: none;
+    z-index: -1;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  {{/if}}
+  {{/if}}
+
+  .page { width: 100%; margin: 0 auto; padding-top: 6px; position: relative; z-index: 1; }
 
   /* ── Title ─────────────────────────────────── */
   .main-title {

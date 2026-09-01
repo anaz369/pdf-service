@@ -266,14 +266,20 @@ class PdfService {
       const cachedDataUri = this.cache.get(cacheKey);
       if (cachedDataUri) return cachedDataUri;
 
-      const imageBytes = await this.getHighQualityImageBytes(imageUrl, opacity);
+      // keepTransparency: a watermark sits BEHIND the content, so a flattened
+      // white background would paint over the page. The CSS `opacity` in the
+      // template does the fading, so the alpha channel must survive here.
+      const imageBytes = await this.getHighQualityImageBytes(imageUrl, opacity, true);
       if (!imageBytes) {
         console.warn('Watermark image bytes are NULL');
         return '';
       }
 
       const base64 = imageBytes.toString('base64');
-      const dataUri = `data:image/jpeg;base64,${base64}`;
+      // getHighQualityImageBytes only emits PNG when the source was a PNG, so
+      // read the magic bytes rather than assuming the type
+      const isPng = imageBytes[0] === 0x89 && imageBytes[1] === 0x50;
+      const dataUri = `data:image/${isPng ? 'png' : 'jpeg'};base64,${base64}`;
 
       console.log(`Generated watermark data URI with opacity ${opacity}. Length: ${dataUri.length}`);
 
