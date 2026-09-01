@@ -192,7 +192,8 @@
         <table class="items-table">
           <colgroup>
             <col style="width:5%">
-            <col style="width:34%">
+            <col style="width:8%">
+            <col style="width:26%">
             <col style="width:12%">
             <col style="width:11%">
             <col style="width:12%">
@@ -202,6 +203,7 @@
           <thead>
             <tr>
               <th style="border-left:1px solid #000;">#</th>
+              <th>Image</th>
               <th class="desc-h">Description</th>
               <th>Quantity</th>
               <th>Unit Price</th>
@@ -214,8 +216,8 @@
             {{#each itemdetails}}
             <tr>
               <td class="center" style="border-left:1px solid #000;">{{addOne @index}}</td>
+              <td class="center">{{#if image1DataUri}}<img class="item-img" src="{{image1DataUri}}" alt=""/>{{/if}}</td>
               <td class="left">
-                 {{#if image1DataUri}}<img class="item-img" src="{{image1DataUri}}" alt=""/>{{/if}}
                 {{item_name}}
                 {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
                 {{#if description}}<div>{{description}}</div>{{/if}}
