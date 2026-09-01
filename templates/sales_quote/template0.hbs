@@ -192,12 +192,12 @@
     <tr>
       <td class="t-en">Discount</td>
       <td class="t-ar">تخفيض</td>
-      <td class="t-val"><span style="font-size:12px">{{{currencySymbol basicdetails.[0].isocode}}}</span>{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+      <td class="t-val"><span style="font-size:12px">{{{currencySymbol basicdetails.[0].isocode}}}</span>{{formatAmount basicdetails.[0].discount bcdp}}</td>
     </tr>
     <tr>
       <td class="t-en">Total Taxable Amount (Excluding VAT)</td>
       <td class="t-ar">إجمالي المبلغ الخاضع للضريبة (غير شامل ضريبة القيمة المضافة)</td>
-      <td class="t-val"><span style="font-size:12px">{{{currencySymbol basicdetails.[0].isocode}}}</span>{{formatAmount (divide (subtract basicdetails.[0].subtotal basicdetails.[0].discount) ccrate) bcdp}}</td>
+      <td class="t-val"><span style="font-size:12px">{{{currencySymbol basicdetails.[0].isocode}}}</span>{{formatAmount (subtract basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</td>
     </tr>
     <tr>
       <td class="t-en">Total VAT</td>
