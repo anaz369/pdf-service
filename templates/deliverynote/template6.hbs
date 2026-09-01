@@ -257,16 +257,16 @@
             <div class="fld">Signature:</div>
           </div>
           <div class="marks">
-            {{#if Signature}}
+            {{#ifFlag datasettings "d679"}}
             <img src="{{Signature}}" alt="Signature"
                  style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;"
                  onerror="this.style.display='none'" />
-            {{/if}}
-            {{#if Seal}}
+            {{/ifFlag}}
+            {{#ifFlag datasettings "d612"}}
             <img src="{{Seal}}" alt="Seal"
                  style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;"
                  onerror="this.style.display='none'" />
-            {{/if}}
+            {{/ifFlag}}
           </div>
         </td>
         <td>
