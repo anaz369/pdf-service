@@ -438,14 +438,15 @@
     <thead>
       <tr>
         <th style="width:4%;">S.N<span class="ar">الرقم</span></th>
-        <th class="th-desc" style="width:{{#if (gt basicdetails.[0].uaeadvclamedamt 0)}}32%{{else}}46%{{/if}};">DESCRIPTION<span class="ar"> الوصف</span></th>
+        {{!-- <th class="th-desc" style="width:{{#if (gt basicdetails.[0].uaeadvclamedamt 0)}}32%{{else}}46%{{/if}};">DESCRIPTION<span class="ar"> الوصف</span></th> --}}
+        <th class="th-desc" style="width:32%;">DESCRIPTION<span class="ar"> الوصف</span></th>
         <th style="width:10%;">QTY<span class="ar">الكمية</span></th>
         <th style="width:12%;">RATE<span class="ar">الوحدة</span></th>
         <th style="width:12%;">VAT<span class="ar">ضريبة </span></th>
         <th style="width:13%;">TOTAL PRICE<span class="ar">القيمه الإجمالي</span></th>
-        {{#if (gt basicdetails.[0].uaeadvclamedamt 0)}}
+        {{!-- {{#if (gt basicdetails.[0].uaeadvclamedamt 0)}} --}}
         <th style="width:17%;">TOTAL PROJECT VALUE<span class="ar">القيمة الإجمالية للمشروع</span></th>
-        {{/if}}
+        {{!-- {{/if}} --}}
       </tr>
     </thead>
     <tbody>
@@ -462,9 +463,9 @@
         <td>{{formatAmount vat_amt ../bcdp}}</td>
         <td class="td-total">{{formatAmount amount ../bcdp}}</td>
         {{!-- project value is document-level, so it spans all the item rows --}}
-        {{#if (gt ../basicdetails.[0].uaeadvclamedamt 0)}}{{#if @first}}
+        {{!-- {{#if (gt ../basicdetails.[0].uaeadvclamedamt 0)}}{{#if @first}} --}}
         <td class="td-tpv" rowspan="{{../itemdetails.length}}">{{formatAmount ../basicdetails.[0].project_cost ../bcdp}}</td>
-        {{/if}}{{/if}}
+        {{!-- {{/if}}{{/if}} --}}
       </tr>
       {{/each}}
     </tbody>
