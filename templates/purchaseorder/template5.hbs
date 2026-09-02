@@ -23,14 +23,14 @@
     .title-box .t { font-family: "Times New Roman", Times, serif; font-size: 20px; }
 
     /* top boxes */
-    .top td { border: 1px solid #ccc; vertical-align: top; padding: 8px 10px; }
+    .top td { border: 1px solid #ccc; vertical-align: top; padding: 5px 10px; }
     .kv { width: 100%; border-collapse: collapse; }
     .kv td { border: none; padding: 2px 2px; font-size: 11px; vertical-align: top; }
     .hd { font-weight: 700; margin-bottom: 6px; }
     .po .k, .po .c, .po td { color: #000000; }
 
     /* items */
-    .items td, .items th { border: 1px solid #ccc; padding: 4px 6px; font-size: 11px; vertical-align: middle; }
+    .items td, .items th { border: 1px solid #ccc; padding: 3px 6px; font-size: 11px; vertical-align: middle; }
     .items th { font-weight: 700; text-align: center; }
     .items td.num { text-align: center; }
     .items td.rt { text-align: right; }
@@ -149,7 +149,8 @@
       <td style="border:none;vertical-align:top;">
         <div class="h">Terms and Conditions</div>
         <div>
-          {{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+          {{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}
+        </div>
       </td>
       <td style="border:none;text-align:center;vertical-align:top;">
         <div class="h">Administrator</div>
