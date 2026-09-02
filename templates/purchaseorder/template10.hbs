@@ -7,7 +7,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: ibmplexsansarabic;
       font-size: 11px;
       color: #000000;
       background: #fff;
@@ -42,7 +42,7 @@
     .h { font-weight: 700; }
 
     /* sign */
-    .sign td { border: 1px solid #000000; text-align: center; vertical-align: middle; padding: 6px; font-size: 11px; }
+    .sign td { border: 1px solid #000000; text-align: center; vertical-align: middle; padding: 4px; font-size: 11px; }
     .sign .sh { font-weight: 700; }
     .sign .sa { direction: rtl; }
     .sign .sbody { height: 120px; }
@@ -70,13 +70,7 @@
           </colgroup>
           <tr><td class="k">Name</td><td class="c">:</td><td>{{billing_address.[0].name}}</td></tr>
           <tr><td class="k">VAT</td><td class="c">:</td><td>{{billing_address.[0].vat}}</td></tr>
-          <tr><td class="k">Address</td><td class="c">:</td><td>
-            {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}<br>{{/if}}
-            {{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}<br>{{/if}}
-            {{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}<br>{{/if}}
-            {{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}<br>{{/if}}
-            {{billing_address.[0].address_code}}
-          </td></tr>
+          <tr><td class="k">Address</td><td class="c">:</td><td>{{joinAddress billing_address.[0] '<br>'}}</td></tr>
           <tr><td class="k">Attention</td><td class="c">:</td><td>{{basicdetails.[0].attention}}</td></tr>
         </table>
       </td>
@@ -116,7 +110,7 @@
       {{#each itemdetails}}
       <tr>
         <td class="num">{{addOne @index}}</td>
-        <td>{{item_name}}{{description}}</td>
+        <td>{{item_name}}{{name_lang2}}{{description}}</td>
         <td class="num">{{unit}}</td>
         <td class="num">{{quantity}}</td>
         <td class="rt">{{formatAmount price ../bcdp}}</td>
@@ -147,9 +141,10 @@
   </table>
 
   <!-- TERMS -->
-  <div class="mt"><span class="h">Terms and Conditions</span></div>
-  <div>{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
-
+  {{#if basicdetails.[0].terms_and_condition}}
+    <div class="mt"><span class="h">Terms and Conditions</span></div>
+    <div>{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+  {{/if}} 
   <!-- SIGNATURE -->
   <table class="sign mt" style="margin-top:14px;">
     <colgroup><col style="width:33%"><col style="width:34%"><col style="width:33%"></colgroup>
@@ -172,10 +167,10 @@
         <div style="margin-top:4px;">{{basicdetails.[0].created_user}}</div>
       </td>
       <td>
-        <div class="sbody">{{#if Seal}}<img src="{{Seal}}" alt="Seal" onerror="this.style.display='none'"/>{{/if}}</div>
+        <div class="sbody">{{#ifFlag datasettings "d292"}}<img src="{{Seal}}" alt="Seal" style="text-align:center;max-height:{{ datasettings.d458 }}px; max-width:{{ datasettings.d458}}px;" onerror="this.style.display='none'"/>{{/ifFlag}}</div>
       </td>
       <td>
-        <div class="sbody">{{#if Signature}}<img src="{{Signature}}" alt="Signature" onerror="this.style.display='none'"/>{{/if}}</div>
+        <div class="sbody">{{#if Signature}}<img src="{{Signature}}" alt="Signature" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>{{/if}}</div>
       </td>
     </tr>
   </table>
