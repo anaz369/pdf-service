@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: ibmplexsansarabic, Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+      margin: 0 5mm;
+    }
+
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+    /* ── Title ─────────────────────────────────────────── */
+    .toprule { border-top: 1px solid #000; }
+    .title {
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 6px 0 8px;
+    }
+
+    /* ── Outer document box ────────────────────────────── */
+    .doc { border: 1px solid #000; }
+    .doc > tbody > tr > td { border: 1px solid #000; padding: 0; vertical-align: top; }
+
+    /* ── Top block ─────────────────────────────────────── */
+    .party { padding: 5px 7px; line-height: 1.9; }
+    .party .pline { display: block; }
+
+    .docmeta { width: 100%; border-collapse: collapse; }
+    .docmeta td { padding: 2px 6px; text-align: center; border: none; }
+    .docmeta .mval { padding-bottom: 6px; }
+
+    /* ── Items ─────────────────────────────────────────── */
+    .items th {
+      border: 1px solid #000;
+      border-top: none;
+      padding: 2px 5px;
+      font-weight: 400;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .items th.h-sn, .items th.h-desc { text-align: left; }
+    .items td {
+      border: 1px solid #000;
+      padding: 2px 5px;
+      vertical-align: top;
+      text-align: right;
+    }
+    .items td.sn, .items td.desc { text-align: left; }
+    /* the outer edges are already drawn by the .doc cell this table sits in —
+       without this the two 1px borders stack and read as a thick rule */
+    .items th:first-child, .items td:first-child { border-left: none; }
+    .items th:last-child,  .items td:last-child  { border-right: none; }
+    .items tbody tr:last-child td { border-bottom: none; }
+
+    /* ── Terms ─────────────────────────────────────────── */
+    .terms { padding: 4px 7px; line-height: 1.6; }
+
+    /* ── Totals ────────────────────────────────────────── */
+    .tot { width: 100%; border-collapse: collapse; }
+    .tot td { border: none; padding: 3px 7px; vertical-align: top; }
+    .tot .w-txt { width: 55%; text-align: left; }
+    .tot .t-lbl { width: 30%; text-align: right; }
+    .tot .t-val { width: 15%; text-align: right; }
+    /* dashed rule closing the figures column */
+    {{!-- .tot tr:last-child .t-lbl,
+    .tot tr:last-child .t-val { border-bottom: 1px dashed #000;padding-bottom: 5px; } --}}
+
+    /* ── Footer note ───────────────────────────────────── */
+    .fnote { padding: 3px 7px; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="toprule"></div>
+  <div class="title">Purchase Order</div>
+
+  <table class="doc">
+    <colgroup>
+      <col style="width:50%">
+      <col style="width:50%">
+    </colgroup>
+
+    <!-- TOP BLOCK : company (left) | document meta + vendor (right) -->
+    
+    <tr>
+      <td>
+        <div class="party">
+          <span class="pline">{{compprof.name}}</span>
+          {{#if branch.[0].address_line1}}<span class="pline">{{branch.[0].address_line1}}</span>{{/if}}
+          {{#if branch.[0].address_line2}}<span class="pline">{{branch.[0].address_line2}}</span>{{/if}}
+          {{#if branch.[0].address_line3}}<span class="pline">{{branch.[0].address_line3}}</span>{{/if}}
+          {{#if branch.[0].address_line4}}<span class="pline">{{branch.[0].address_line4}}</span>{{/if}}
+          {{#if branch.[0].address_line5}}<span class="pline">{{branch.[0].address_line5}}</span>{{/if}}
+          {{#if branch.[0].address_code}}<span class="pline">{{branch.[0].address_code}}</span>{{/if}}
+          {{#if branch.[0].vat}}<span class="pline">VAT:{{branch.[0].vat}}</span>{{/if}}
+        </div>
+      </td>
+      <td>
+        <table class="docmeta">
+          <colgroup>
+            <col style="width:50%">
+            <col style="width:50%">
+          </colgroup>
+          <tr>
+            <td>Number</td>
+            <td>Date</td>
+          </tr>
+          <tr>
+            <td class="mval">{{basicdetails.[0].inv_no}}</td>
+            <td class="mval">{{basicdetails.[0].inv_date}}</td>
+          </tr>
+        </table>
+        <div class="party" style="padding-top:0;">
+          <span class="pline">{{billing_address.[0].name}}</span>
+          {{#if billing_address.[0].address_line1}}<span class="pline">{{billing_address.[0].address_line1}}</span>{{/if}}
+          {{#if billing_address.[0].address_line2}}<span class="pline">{{billing_address.[0].address_line2}}</span>{{/if}}
+          {{#if billing_address.[0].address_line3}}<span class="pline">{{billing_address.[0].address_line3}}</span>{{/if}}
+          {{#if billing_address.[0].address_line4}}<span class="pline">{{billing_address.[0].address_line4}}</span>{{/if}}
+          {{#if billing_address.[0].address_line5}}<span class="pline">{{billing_address.[0].address_line5}}</span>{{/if}}
+          {{#if billing_address.[0].vat}}<span class="pline">VAT : {{billing_address.[0].vat}}</span>{{/if}}
+          {{#if billing_address.[0].contact_no1}}<span class="pline">Phone : {{vendor_details.[0].contact_no1}}</span>{{/if}}
+          {{#if billing_address.[0].email}}<span class="pline">Email : {{vendor_details.[0].email}}</span>{{/if}}
+        </div>
+      </td>
+    </tr>
+
+    <!-- ITEMS -->
+    <tr>
+      <td colspan="2" style="padding:0;">
+        <table class="items">
+          <colgroup>
+            <col style="width:2.5%">
+            <col style="width:35.7%">
+            <col style="width:8.3%">
+            <col style="width:8.1%">
+            <col style="width:12%">
+            <col style="width:9.4%">
+            <col style="width:11.9%">
+            <col style="width:12.1%">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="h-sn">#</th>
+              <th class="h-desc">Description</th>
+              <th>Rate</th>
+              <th>Quantity</th>
+              <th>Amount</th>
+              <th>VAT Rate</th>
+              <th>VAT Amount</th>
+              <th>Item Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each itemdetails}}
+            <tr>
+              <td style="text-align: center;" class="sn">{{addOne @index}}</td>
+              <td class="desc">{{item_name}}{{#if name_lang2}} {{name_lang2}}{{/if}}{{#if description}} {{description}}{{/if}}</td>
+              <td>{{formatAmount price ../bcdp}}</td>
+              <td style="text-align: center;">{{quantity}}</td>
+              <td>{{formatAmount taxable ../bcdp}}</td>
+              <td style="text-align: center;">{{vat_perc}}</td>
+              <td>{{formatAmount vat ../bcdp}}</td>
+              <td>{{formatAmount amount ../bcdp}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+
+    <!-- TERMS -->
+    <tr style="padding:0; border-top:none;">
+      <td colspan="2" style="padding:0; border-top:none;">
+        <div class="terms">Terms And Conditions{{#if basicdetails.[0].terms_and_condition}} {{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+      </td>
+    </tr>
+
+    <!-- TOTALS -->
+    <tr>
+      <td colspan="2" style="padding:0;">
+        <table class="tot">
+          <tr>
+            <td class="w-txt">Amount chargeable in words</td>
+            <td class="t-lbl">Total (Excluding VAT )</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="w-txt">{{bcamountinwords}}</td>
+            <td class="t-lbl">VAT</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="w-txt">VAT Amount in words</td>
+            <td class="t-lbl">Amount Chargeable</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- FOOTER NOTE -->
+    {{#ifFlag datasettings "d339"}}
+    <tr>
+      <td colspan="2" style="padding:0;">
+        <div class="fnote">{{datasettingstextvalue.d340}}</div>
+      </td>
+    </tr>
+    {{/ifFlag}}
+  </table>
+
+</body>
+</html>
