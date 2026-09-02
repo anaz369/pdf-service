@@ -319,7 +319,7 @@
                 {{#if billing_address_lang2.[0].name}}
                 <div class="cname_ar ar rtl">{{billing_address_lang2.[0].name}}</div>
                 {{/if}}
-                <div class="cline"><span class="clbl">Att:</span>&nbsp; <b>{{basicdetails.[0].attention}}</b></div>
+                <div class="cline"><span class="clbl">Att:</span>&nbsp; <b>{{basicdetails.[0].payment_terms}}</b></div>
                 <div class="cline"><span class="clbl">VAT NO</span>&nbsp;&nbsp; <b class="green">{{billing_address.[0].vat}}</b></div>
                 {{#if billing_address.[0].address_line1}}
                 <div class="cline"><span class="">Building No:</span>{{billing_address.[0].address_line1}} {{#if billing_address.[0].address_line2}}Street-{{billing_address.[0].address_line2}} {{/if}}{{#if billing_address.[0].address_line3}} - {{billing_address.[0].address_line3}} {{/if}}{{#if billing_address.[0].address_line4}}District-{{billing_address.[0].address_line4}} {{/if}}{{#if billing_address.[0].address_code}}-{{billing_address.[0].address_code}} {{/if}}{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}</div>
