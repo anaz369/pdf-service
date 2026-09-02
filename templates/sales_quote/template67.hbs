@@ -266,11 +266,11 @@
 
       <tr class="totals-row">
         <td colspan="5"  class="t-label">Sub Total</td>
-        <td class="t-value">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+        <td class="t-value">{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
       </tr>
       <tr class="totals-row">
         <td colspan="5"  class="t-label">Discount</td>
-        <td class="t-value">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].uaedldamt) ccrate) bcdp}}</td>
+        <td class="t-value">{{formatAmount (add basicdetails.[0].discount basicdetails.[0].uaedldamt) bcdp}}</td>
       </tr>
       <tr class="totals-row">
         <td colspan="5"  class="t-label">VAT</td>
