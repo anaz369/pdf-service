@@ -7,19 +7,14 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: ibmplexsansarabic, Arial, Helvetica, sans-serif;
+      font-family: ibmplexsansarabic, Arial, sans-serif;
       font-size: 11px;
       color: #000;
       background: #fff;
       margin: 0 5mm;
-      /* fill the printable page height so the totals / signature block always
-         sits at the foot — the items table takes whatever height is left over,
-         so a short invoice has no gap and a long one still flows normally */
-      display: flex;
-      flex-direction: column;
-      min-height: calc(99vh - {{#if FooterImageUrl}}max(45px, {{default datasettings.d75 '45'}}px){{else}}0px{{/if}});
     }
-    body > * { flex: 0 0 auto; position: relative; z-index: 1; }
+    /* keeps content above the watermark */
+    body > * { position: relative; z-index: 1; }
 
     {{#if UseBGWatermark}}
     {{#if WatermarkCss}}
@@ -93,7 +88,11 @@
     }
 
     /* ── Items ─────────────────────────────────────────── */
-    .items { border: 1px solid #000; flex: 1 1 auto; }   /* absorbs the leftover page height */
+    .items { border: 1px solid #000; }
+    /* reprint the column headings at the top of every page the table spans */
+    .items thead { display: table-header-group; }
+    /* keep an item row whole rather than sliced by a page break */
+    .items tbody tr:not(.spacer) { page-break-inside: avoid; break-inside: avoid; }
     .items th {
       background: #cae2f4;
       border: 1px solid #000;
@@ -112,9 +111,18 @@
       line-height: 1.4;
     }
     .items .rt { text-align: right; }
+    /* Item text may carry &, <, >, quotes, newlines and mixed RTL/LTR. The
+       double-stache above already escapes the markup characters; these rules
+       cover the rest — newlines render as breaks without the unescaped nl2br
+       helper, long unbroken strings wrap instead of overflowing the fixed
+       column, and each script is isolated so punctuation keeps its side. */
+    .items .desc { overflow-wrap: anywhere; word-break: break-word; }
     .items .desc .d-ar { display: inline; direction: rtl; unicode-bidi: isolate; }
-    /* runs the column rules down to the totals block */
-    .items tr.filler td { height: 100%; }
+    .items .desc .d-note { display: block; white-space: pre-line; unicode-bidi: isolate; }
+    /* Height is set by the pin script below (0 by default). It grows the items
+       box down so the footer block lands at the foot of its page, and keeps the
+       normal cell borders so the column rules carry on down the empty grid. */
+    .items .spacer td { height: 0; }
 
     /* ── Totals ────────────────────────────────────────── */
     .tot { border: 1px solid #000; border-top: none; }
@@ -194,8 +202,11 @@
     <tr>
       <td class="k">Customer's Address :</td>
       <td class="v">
-              {{joinAddress billing_address.[0] ', '}}
-              {{#if billing_address_lang2.[0].address_line1}}<span class="v-ar">{{joinAddress billing_address_lang2.[0] '، '}}</span>{{/if}}
+              {{!-- address_line1..5 joined inline rather than via joinAddress: that
+                    helper also appends address_code, and the postal code has its own
+                    row below. The helper is shared, so it is left untouched. --}}
+              {{billing_address.[0].address_line1}}{{#if billing_address.[0].address_line2}}, {{billing_address.[0].address_line2}}{{/if}}{{#if billing_address.[0].address_line3}}, {{billing_address.[0].address_line3}}{{/if}}{{#if billing_address.[0].address_line4}}, {{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_line5}}, {{billing_address.[0].address_line5}}{{/if}}
+              {{#if billing_address_lang2.[0].address_line1}}<span class="v-ar">{{billing_address_lang2.[0].address_line1}}{{#if billing_address_lang2.[0].address_line2}}، {{billing_address_lang2.[0].address_line2}}{{/if}}{{#if billing_address_lang2.[0].address_line3}}، {{billing_address_lang2.[0].address_line3}}{{/if}}{{#if billing_address_lang2.[0].address_line4}}، {{billing_address_lang2.[0].address_line4}}{{/if}}{{#if billing_address_lang2.[0].address_line5}}، {{billing_address_lang2.[0].address_line5}}{{/if}}</span>{{/if}}
             </td>
       <td class="k-ar">العنوان الوطني للعميل :</td>
       <td class="gap"></td>
@@ -245,14 +256,14 @@
   <!-- ITEMS -->
   <table class="items">
     <colgroup>
-      <col style="width:4%">
-      <col style="width:12%">
-      <col style="width:34%">
+      <col style="width:3%">
+      <col style="width:16%">
+      <col style="width:33%">
+      <col style="width:8%">
       <col style="width:7%">
-      <col style="width:9%">
       <col style="width:10%">
       <col style="width:10%">
-      <col style="width:14%">
+      <col style="width:13%">
     </colgroup>
     <thead>
       <tr>
@@ -262,7 +273,7 @@
         <th><span class="ar">الكمية</span>Qty</th>
         <th><span class="ar">الوحدة</span>Unit</th>
         <th><span class="ar">سعر الوحدة</span>Unit Price</th>
-        <th><span class="ar">الخصم</span>Discount</th>
+        <th><span class="ar">تخفيض</span>Discount</th>
         <th><span class="ar">الاجمالي ريال</span>Total Amount {{basicdetails.[0].currency_isocode}}</th>
       </tr>
     </thead>
@@ -271,7 +282,7 @@
       <tr>
         <td>{{addOne @index}}</td>
         <td>{{item_code}}</td>
-        <td class="desc" style="text-align: left;">{{item_name}}{{#if name_lang2}} <span class="d-ar">{{name_lang2}}</span>{{/if}}{{#if description}} {{description}}{{/if}}</td>
+        <td class="desc" style="text-align: left;">{{asciiPunct item_name}}{{#if name_lang2}} <span class="d-ar">{{asciiPunct name_lang2}}</span>{{/if}}</td>
         <td>{{quantity}}</td>
         <td>{{unit}}</td>
         <td class="rt">{{formatAmount price ../bcdp}}</td>
@@ -279,7 +290,7 @@
         <td class="rt">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
-      <tr class="filler">
+      <tr class="spacer">
         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
       </tr>
     </tbody>
@@ -372,6 +383,87 @@
   </table>
 
   </div>
+
+{{!-- ══════════════════════════════════════════════════════════════════════
+  PIN SCRIPT — grows the items table's spacer row so the footer block lands at
+  the FOOT of its page instead of the top of the next one. If the block does
+  not fit in the space left, it moves to the bottom of the NEXT page.
+  Adapted from invoice/template40. Accurate only when the render viewport
+  matches the PDF page size.
+═══════════════════════════════════════════════════════════════════════════ --}}
+<script>
+(function () {
+  var fb = document.querySelector('.footer-block');
+  var sp = document.querySelector('.items .spacer td');
+  if (!fb || !sp) return;
+
+  var SAFE = 20;   // clearance between the block's foot and the page edge
+
+  // Printable height = A4 at 96dpi less the margins page.pdf() applies for
+  // invoices (controllers/pdfController.js, doc_type 1 -> d74 / d75).
+  var MT = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d74 "120"}}{{else}}10{{/if}}') || 0;
+  var MB = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d75 "5"}}{{else}}10{{/if}}') || 0;
+
+  function h(el) { return el ? el.getBoundingClientRect().height : 0; }
+
+  function pin() {
+    sp.style.height = '0px';                            // reset before measuring
+
+    // Measure at the width page.pdf() lays out at, or long descriptions wrap
+    // differently here than on paper and every row measures wrong.
+    document.documentElement.style.width =
+      (794.5 - {{#if UseHeaderFooter}}0{{else}}20{{/if}}) + 'px';
+    void document.body.offsetHeight;
+
+    // A4 at 96dpi is 1122.5px. template40 used a 1095 fudge here, which throws
+    // away ~27px of usable page and pushes an invoice that genuinely fits onto
+    // a second page. SAFE below is the real clearance.
+    var PAGE_H = 1122.5 - MT - MB;
+    if (!(PAGE_H > 0)) return;
+
+    // The items <thead> is a header group, so Chrome reprints it atop every
+    // page the table spans. That reprint costs page space but does not exist
+    // in this continuous DOM, so a continuation page only holds
+    // (PAGE_H - head) of document flow.
+    var table  = document.querySelector('.items');
+    var head   = table ? h(table.querySelector('thead')) : 0;
+    var stride = PAGE_H - head;
+    if (!(stride > 0)) return;
+
+    var rect   = fb.getBoundingClientRect();
+    var top    = rect.top + window.pageYOffset;
+    var bottom = rect.bottom + window.pageYOffset;
+    if (rect.height + SAFE >= stride) return;           // block ~ a whole page: leave it
+
+    function pageBottom(k) { return PAGE_H + k * stride; }
+
+    var k = (top < PAGE_H) ? 0 : 1 + Math.floor((top - PAGE_H) / stride);
+    if (bottom > pageBottom(k)) k++;                    // genuinely overflows: next page
+
+    var pageStart    = (k === 0) ? 0 : PAGE_H + ((k - 1) * stride);
+    // Page 1 holds PAGE_H of document flow; every continuation page holds only
+    // `stride`, because Chrome reprints the <thead> at its top and that reprint
+    // costs page space without existing in this DOM. Measuring the remainder
+    // against PAGE_H on a continuation page overshoots by one header height,
+    // which grew the spacer too far and spilled the footer onto a further page.
+    var avail        = (k === 0) ? PAGE_H : stride;
+    var footerBottom = bottom - pageStart;
+    var remaining    = avail - footerBottom;
+
+    sp.style.height = (remaining > SAFE) ? (remaining - SAFE) + 'px' : '0px';
+  }
+
+  // Measure only once the webfont is applied — ibmplexsansarabic is injected as
+  // a base64 @font-face and loads asynchronously, so measuring early takes row
+  // heights in the fallback font.
+  function runPin() {
+    requestAnimationFrame(function () { requestAnimationFrame(pin); });
+  }
+  runPin();
+  if (document.readyState !== 'complete') window.addEventListener('load', runPin);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(runPin);
+})();
+</script>
 
 </body>
 </html>
