@@ -288,6 +288,31 @@ class TemplateService {
     // ── String helpers ─────────────────────────────────────
     Handlebars.registerHelper("upper", (str) => (str ? str.toUpperCase() : ""));
     Handlebars.registerHelper("default", (v, d) => v || d);
+
+    // ── Fullwidth / CJK punctuation → ASCII ────────────────
+    // Clients paste part descriptions containing fullwidth forms (U+FF01-FF5E)
+    // and CJK punctuation, e.g. "Lower bumper grille，LEFT" with U+FF0C. The
+    // only font the PDF is guaranteed to have is the injected IBM Plex Sans
+    // Arabic, which has no Fullwidth Forms block, so those characters print as
+    // tofu boxes. Fold them to their ASCII equivalents.
+    // Additive helper — opt in per template; nothing existing changes.
+    const CJK_PUNCT = {
+      "、": ", ", "。": ". ", "〈": "<", "〉": ">",
+      "《": "<<", "》": ">>", "「": '"', "」": '"',
+      "『": '"', "』": '"', "【": "[", "】": "]",
+      "‘": "'", "’": "'", "“": '"', "”": '"',
+      "　": " ",
+    };
+    Handlebars.registerHelper("asciiPunct", function (text) {
+      if (text === null || text === undefined || text === "") return "";
+      return String(text)
+        // Fullwidth ASCII block maps 1:1 onto U+0021-007E
+        .replace(/[！-～]/g, (ch) =>
+          String.fromCharCode(ch.charCodeAt(0) - 0xfee0),
+        )
+        .replace(/[、。〈-】　‘’“”]/g,
+          (ch) => CJK_PUNCT[ch] || ch);
+    });
     Handlebars.registerHelper("json", (ctx) => JSON.stringify(ctx, null, 2));
     Handlebars.registerHelper("nl2br", (text) =>
       text ? new Handlebars.SafeString(text.replace(/\n/g, "<br/>")) : "",
