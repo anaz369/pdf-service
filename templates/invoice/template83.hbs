@@ -165,7 +165,9 @@
     .sign td { border: none; padding: 0; vertical-align: top; }
     .sign .s-lbl { text-align: center; font-weight: 700; line-height: 1.4; }
     .sign .s-lbl .ar { display: block; font-weight: 400; }
-    .sign .s-line { border-bottom: 1px solid #000; height: 1px; margin: 12px 10px 0 6px; }
+    /* the label cell is two lines tall (Arabic over English, ~31px), so the
+       rule needs to clear that block rather than sit across the middle of it */
+    .sign .s-line { border-bottom: 1px solid #000; height: 1px; margin: 45px 10px 0 6px; }
     .sign .s-gap { height: 40px; }
     .sign .qr { text-align: right; }
     .sign .qr img { width: 120px !important; height: 120px !important; display: inline-block; }
@@ -273,7 +275,7 @@
         <th><span class="ar">الكمية</span>Qty</th>
         <th><span class="ar">الوحدة</span>Unit</th>
         <th><span class="ar">سعر الوحدة</span>Unit Price</th>
-        <th><span class="ar">تخفيض</span>Discount</th>
+        <th><span class="ar">خصم</span>Discount</th>
         <th><span class="ar">الاجمالي ريال</span>Total Amount {{basicdetails.[0].currency_isocode}}</th>
       </tr>
     </thead>
@@ -329,7 +331,7 @@
       <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
     </tr>
     <tr>
-      <td class="t-lbl">Discount <span class="ar"> تخفيض</span></td>
+      <td class="t-lbl">Discount <span class="ar"> خصم</span></td>
       <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
     </tr>
     <tr>
