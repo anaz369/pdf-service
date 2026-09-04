@@ -10,7 +10,7 @@
 
   body {
     background: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: ibmplexsansarabic;
     font-size: 11px;
     color: #222;
     line-height: 1.45;
@@ -36,20 +36,21 @@
     margin-bottom: 4px;
   }
   .info-table {
-    width: 50%;
+    width: 60%;
     border-collapse: collapse;
-    margin: 0 auto 0 30%;
+    margin: 0 auto 0 20%;
     table-layout: fixed;
      text-align: left;
   }
   .info-table td {
     border: 1px solid #bfbfbf;
-    padding: 6px 8px;
+    padding: 4px 8px;
     font-size: 11px;
     vertical-align: top;
   }
   .info-table .info-lbl {
-    width: 35%;
+    width: 30%;
+    font-weight: 700;
     background: #d9d9d9;
   }
   .info-table .info-val { background: #ffffff; }
@@ -59,19 +60,22 @@
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-top: 10px;
+    margin-top: 4px;
     border: 1px solid #000;
     border-bottom:none;
   }
-  .items-wrap th,
-  .items-wrap td {
+  .items-wrap th {
     font-size: 11px;
     vertical-align: top;
-    padding: 6px 6px;
+    padding: 4px 6px;
+  }
+  .items-wrap td {
+    font-size: 11px;
+    vertical-align: middle;
+    padding: 2px 6px;
   }
   .items-wrap td {
     border: 1px solid #bfbfbf;
-    border-bottom: none;
     border-top: none;
   }
   .items-wrap thead th {
@@ -94,11 +98,29 @@
   .items-wrap .right  { text-align: right; }
   .items-wrap .left   { text-align: left; }
 
+  /* The gap under the last item is whatever the page break leaves, not a fixed
+     280px block: a short quote used to carry a large hole, and a long one had
+     the spacer shoved onto a page of its own. The row stays so the column rules
+     carry on below the last item. */
   .item-spacer td {
-    height: 280px;
+    height: 0;
     border-top: none;
     border-bottom: none;
   }
+
+  /* ── FOOTER BLOCK : kept together, pushed to next page if needed ── */
+  .footer-block {
+    overflow: hidden;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* keep an item row whole rather than sliced by a page break */
+  .items-wrap tbody tr:not(.item-spacer) {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* reprint the column headings atop every page the table spans */
+  .items-wrap thead { display: table-header-group; }
 
   /* ── Totals ───────────────────────────────── */
   .totals-wrap {
@@ -133,10 +155,10 @@
     border-collapse: collapse;
     table-layout: fixed;
     border: 1px solid #bfbfbf;
-    margin-top: 8px;
+    margin-top: 4px;
   }
   .words-wrap td {
-    padding: 6px 10px;
+    padding: 4px 10px;
     font-size: 11px;
   }
 
@@ -145,11 +167,11 @@
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-top: 8px;
+    margin-top: 4px;
   }
   .bottom-wrap > tbody > tr > td {
     border: 1px solid #bfbfbf;
-    padding: 8px 10px;
+    padding: 6px 10px;
     vertical-align: top;
     font-size: 11px;
   }
@@ -177,7 +199,6 @@
     padding: 2px 0;
     font-size: 11px;
     vertical-align: top;
-    line-height: 1.6;
   }
   .bank-detail-table .bd-lbl { width: 30%; white-space: nowrap; }
   .bank-detail-table .bd-sep { width: 12px; padding: 2px 6px; }
@@ -208,6 +229,7 @@
           {{#if billing_address.[0].address_line2}}<div>{{billing_address.[0].address_line2}}</div>{{/if}}
           {{#if billing_address.[0].address_line3}}<div>{{billing_address.[0].address_line3}}</div>{{/if}}
           {{#if billing_address.[0].address_line4}}<div>{{billing_address.[0].address_line4}}</div>{{/if}}
+          {{#if billing_address.[0].address_code}}<div>{{billing_address.[0].address_code}}</div>{{/if}}
           {{#if billing_address.[0].address_line5}}<div>{{billing_address.[0].address_line5}}</div>{{/if}}
         </td>
       </tr>
@@ -225,13 +247,13 @@
   <!-- Items Table -->
   <table class="items-wrap">
     <colgroup>
-      <col style="width:6%">
+      <col style="width:4%">
       <col style="width:12%">
-      <col style="width:30%">
-      <col style="width:11%">
-      <col style="width:10%">
-      <col style="width:14%">
-      <col style="width:17%">
+      <col style="width:43%">
+      <col style="width:7%">
+      <col style="width:9%">
+      <col style="width:12%">
+      <col style="width:13%">
     </colgroup>
     <thead>
       <tr>
@@ -248,7 +270,7 @@
           <span class="head-en">Description</span>
         </th>
         <th>
-          <span class="head-ar">نوع الوحدة</span>
+          <span class="head-ar">الوحدة</span>
           <span class="head-en">UOM</span>
         </th>
         <th>
@@ -287,6 +309,8 @@
     </tbody>
   </table>
 
+  <div class="footer-block">
+
   <!-- Totals -->
   <table class="totals-wrap">
     <colgroup>
@@ -301,12 +325,13 @@
     <tr>
 
       <td class="t-lbl">Discount / <span class="ar-lbl">تخفيض</span></td>
-      <td class="t-val">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+      <td class="t-val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
     </tr>
     <tr>
 
       <td class="t-lbl">Net Amount / <span class="ar-lbl">المبلغ الصافي</span></td>
-      <td class="t-val">{{formatAmount (subtract (divide basicdetails.[0].subtotal ccrate) (divide basicdetails.[0].discount ccrate)) bcdp}}</td>
+      {{!-- subtotal - discount + dld --}}
+      <td class="t-val">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
     </tr>
     <tr>
 
@@ -350,6 +375,8 @@
       </td>
     </tr>
   </table>
+
+  </div>
 
 </div>
 
