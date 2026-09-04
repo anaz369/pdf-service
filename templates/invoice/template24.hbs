@@ -20,6 +20,33 @@
         margin: 0 4mm;
       }
 
+      /* keeps content above the watermark */
+      body > * { position: relative; z-index: 1; }
+
+      {{#if UseBGWatermark}}
+      {{#if WatermarkCss}}
+      /* WATERMARK — fixed, so it repeats on every printed page */
+      body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('{{{WatermarkCss}}}');
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 100% auto;
+        background-origin: border-box;
+        opacity: 0.7;
+        pointer-events: none;
+        z-index: -1;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      {{/if}}
+      {{/if}}
+
       .ar {
         direction: rtl;
       }
@@ -34,6 +61,7 @@
       .doc-title {
         text-align: center;
         font-size: 20px;
+        font-weight: 700;
         color: #b72031;
         margin-bottom: 6px;
       }
@@ -73,7 +101,14 @@
       .info td.val { text-align: center; }
       /* QR sits under the document block, matching the reference */
       .top-qr { text-align: center; padding-top: 14px; }
-      .top-qr img { width: 118px !important; height: 118px !important; display: inline-block; }
+      /* the qrDataUri helper hardcodes style="display:block" on the img, and an
+         inline style beats the stylesheet — so text-align:center on the wrapper
+         does nothing. margin:0 auto centres it while it stays a block. */
+      .top-qr img {
+        width: 118px !important;
+        height: 118px !important;
+        margin: 0 auto;
+      }
       .info td.lbl {
         background-color:#ccc;
         
@@ -95,13 +130,20 @@
       .items-table {
         margin-top: 8px;
       }
-      .items-table th,
-      .items-table td {
+      .items-table th {
         font-size: 9px;
         border: 1px solid #bfbfbf;
         padding: 3px 5px;
         vertical-align: top;
       }
+      .items-table td {
+        font-size: 9px;
+        border: 1px solid #bfbfbf;
+        border-bottom: none;
+        border-top: none;
+        padding: 3px 5px;
+        vertical-align: top;
+        }
       .items-table thead th {
         font-size: 10px;
         text-align: center;
@@ -122,10 +164,26 @@
       .items-table td.right {
         text-align: right;
       }
-      .items-table tbody tr {
+      .items-table tbody tr:not(.spacer) {
         page-break-inside: avoid;
         break-inside: avoid;
       }
+      /* reprint the column headings atop every page the table spans */
+      .items-table thead { display: table-header-group; }
+      /* Height is set by the pin script below (0 by default). Only the side
+         rules carry through the empty area — no top/bottom rule, so the gap
+         reads as one continuous grid down to the footer. */
+      .items-table .spacer td {
+        height: 0;
+        border-top: none;
+        border-bottom: none;
+      }
+      /* The spacer declares no top border, but with border-collapse the shared
+         edge still draws if the row ABOVE declares one — so drop the last item
+         row's bottom rule and the grid flows unbroken into the empty area.
+         The table then has no bottom edge either, so the footer's own top
+         border becomes the single rule that closes it. */
+      .items-table tbody tr:nth-last-child(2) td { border-bottom: none; }
 
       /* ── MID : QR | TOTALS ────────────────────────── */
       .mid {
@@ -174,30 +232,31 @@
         
       }
 
-      /* ── AMOUNT IN WORDS ──────────────────────────── */
+      /* ── AMOUNT IN WORDS + NOTE (attached under the footer) ───── */
       .words-bar {
-        margin-top: 6px;
+        margin-top: 0;
       }
       .words-bar td {
         font-size: 9.5px;
-        border: 1px solid #bfbfbf;
+        border: 1px solid #000;
         padding: 5px 8px;
+        vertical-align: middle;
       }
-      .words-bar .words-en {
-        width: 55%;
-      }
+      /* the footer table already closes with its own bottom rule */
+      .words-bar tr:first-child td { border-top: none; }
       .words-bar .words-ar {
-        width: 45%;
         text-align: right;
         direction: rtl;
+        unicode-bidi: isolate;
       }
+      .words-bar .note-row { text-align: center; }
 
       /* ── FOOTER : BANK | SIGNATURES ───────────────── */
       .footer{
           width:100%;
           border-collapse:collapse;
           table-layout:fixed;
-          margin-top:8px;
+          margin-top:0;   /* attached to the items grid above */
       }
 
       .footer td{
@@ -244,11 +303,11 @@
       }
 
       .bank-lines .bl{
-          width:38%;
+          width:26%;
       }
 
       .bank-lines .bc{
-          width:6%;
+          width:3%;
           text-align:center;
       }
 
@@ -259,6 +318,11 @@
 
       /* ── FOOTER BLOCK : kept together, pushed to next page if needed ── */
 
+      .footer td.tl { vertical-align: middle; padding: 3px 6px; }
+      .footer td.tl .ar { float: right; direction: rtl; }
+      .footer td.tv { vertical-align: middle; text-align: right; padding: 3px 6px; }
+      .footer tr.b td.tl, .footer tr.b td.tv { font-weight: 700; }
+
       .footer-block {
           overflow: hidden;
           page-break-inside: avoid;
@@ -266,13 +330,9 @@
       }
 
       /* ── FOOTER NOTE ──────────────────────────────── */
-      .note-text {
-        text-align: center;
-        
-        font-size: 11px;
-        color: #b72031;
-        margin-top: 8px;
-      }
+      /* last row of the footer table, so it is attached to the Prepared By
+         block and shares its rule rather than stacking a second 1px border */
+
     </style>
   </head>
   <body>
@@ -357,7 +417,7 @@
             <tr><td class="lbl">DN No</td><td class="val">{{basicdetails.[0].deliverynote_no}}</td><td class="arl">رقم الاقتباس</td></tr>
             <tr><td class="lbl">DN Date</td><td class="val">{{basicdetails.[0].deliverynote_date}}</td><td class="arl">اشاره العملاء</td></tr>
             <tr><td class="lbl">Mode of Pay</td><td class="val">{{basicdetails.[0].doc_payment_status}}{{#if basicdetails.[0].doc_payment_status_lang2}} / <span class="ar">{{basicdetails.[0].doc_payment_status_lang2}}</span>{{/if}}</td><td class="arl">طريقة الدفع</td></tr>
-            <tr><td class="lbl">PO No</td><td class="val">{{basicdetails.[0].order_no}}</td><td class="arl">رقم الطلب الشراء</td></tr>
+            <tr><td class="lbl">PO No</td><td class="val">{{basicdetails.[0].order_no}}</td><td class="arl">رقم طلب الشراء</td></tr>
             <tr><td class="lbl">PO Date</td><td class="val">{{basicdetails.[0].po_date}}</td><td class="arl">تاريخ امر الشراء</td></tr>
             <tr><td class="lbl">Employee Name</td><td class="val">{{basicdetails.[0].created_user}}</td><td class="arl">اسم الموظف</td></tr>
           </table>
@@ -370,13 +430,13 @@
     <table class="items-table">
       <thead>
         <tr>
-          <th style="width:5%"><span class="ar">م</span><span class="en">S.N</span></th>
-          <th style="width:35%"><span class="ar">الوصف</span><span class="en">Description</span></th>
+          <th style="width:3.5%"><span class="ar">م</span><span class="en">S.N</span></th>
+          <th style="width:48.5%"><span class="ar">الوصف</span><span class="en">Description</span></th>
           <th style="width:8%"><span class="ar">الكمية</span><span class="en">QTY</span></th>
-          <th style="width:8%"><span class="ar">الوحدة</span><span class="en">Unit</span></th>
+          <th style="width:7%"><span class="ar">الوحدة</span><span class="en">Unit</span></th>
           <th style="width:10%"><span class="ar">سعر الوحدة</span><span class="en">U.Rate</span></th>
           <th style="width:10%"><span class="ar">مبلغ</span><span class="en">Amount</span></th>
-          <th style="width:12%"><span class="ar">قيمة الضريبة</span><span class="en">VAT Value</span></th>
+          <th style="width:11%"><span class="ar">قيمة الضريبة</span><span class="en">VAT Value</span></th>
           <th style="width:12%"><span class="ar">القيمة الاجمالي</span><span class="en">Total Price</span></th>
         </tr>
       </thead>
@@ -393,143 +453,217 @@
           <td class="right">{{formatAmount amount ../bcdp}}</td>
         </tr>
         {{/each}}
+        {{!-- empty row whose height the pin script sets: it runs the column
+             rules down to the footer, with no horizontal lines through it --}}
+        <tr class="spacer">
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
       </tbody>
     </table>
 
-    <!-- MID : QR | TOTALS -->
-    <table class="mid">
-      <tr>
-        <td style="width:100%;padding:0;vertical-align:top">
-          <table class="totals2">
-            <tr>
-              <td class="tl">Total Amount / <span>المبلغ الإجمالي</span></td>
-              <td class="tv">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
-            </tr>
-            {{#if zatcadiscount.[0]}}
-              {{#each zatcadiscount}}
-                <tr>
-                  <td class="tl">{{reason_name}} / <span>{{reason_name_lang2}}</span></td>
-                  <td class="tv">{{formatAmount (divide dld ../ccrate) ../bcdp}}</td>
-                </tr>
-                {{/each}}
-                <tr class="b">
-                  <td class="tl">Net Amount / <span>صافي المجموع</span></td>
-                  <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td>
-                </tr>
-            {{else}}
-
-              {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
-              <tr>
-                <td class="tl">Discount / <span>الخصم</span></td>
-                <td class="tv">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
-              </tr>
-              <tr class="b">
-                <td class="tl">Net Amount / <span>صافي المجموع</span></td>
-                <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
-              </tr>
-              {{/if}}
-
-          {{/if}}
-            <tr>
-              <td class="tl">{{datasettingstextvalue.d828}} / <span>ضريبة القيمة المضافة</span></td>
-              <td class="tv">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
-            </tr>
-            <tr class="b">
-              <td class="tl">Grand Total / <span>المبلغ الإجمالي</span></td>
-              <td class="tv">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-
-    <!-- AMOUNT IN WORDS -->
+    {{!-- <!-- AMOUNT IN WORDS -->
     <table class="words-bar">
       <tr>
         <td class="words-en">{{bcamountinwords}}</td>
         <td class="words-ar">{{bcamountinwordsar}}</td>
       </tr>
-    </table>
+    </table> --}}
 
     <!-- FOOTER BLOCK : bank/signatures (kept together) -->
     <div class="footer-block">
 
-    <!-- FOOTER : BANK | SIGNATURES -->
+    {{!-- FOOTER — ONE table. The totals used to be a nested <table> inside a
+         cell, so its rows sized independently of the signature/bank columns.
+         Here every column is a cell of the same table, and the three left
+         columns span all the totals rows, so all four line up exactly. --}}
     <table class="footer" cellpadding="0" cellspacing="0">
+      <colgroup>
+        <col style="width:18%">
+        <col style="width:20%">
+        <col style="width:31%">
+        <col style="width:20%">
+        <col style="width:11%">
+      </colgroup>
+
+      <tbody>
       <tr>
-          <td class="fhd" style="width:31%;">
-              <table width="100%">
-                  <tr>
-                      <td style="border:none;padding:0;">Bank Details</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;">تفاصيل البنك</td>
-                  </tr>
-              </table>
-          </td>
-
-          <td class="fhd" style="width:23%;">
-              <table width="100%">
-                  <tr>
-                      <td style="border:none;padding:0;">Prepared By</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;">أعدت بواسطة</td>
-                  </tr>
-              </table>
-          </td>
-
-          <td class="fhd" style="width:23%;">
-              <table width="100%">
-                  <tr>
-                      <td style="border:none;padding:0;">Approved By</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;">تمت بواسطة</td>
-                  </tr>
-              </table>
-          </td>
-
-          <td class="fhd" style="width:23%;">
-              <table width="100%">
-                  <tr>
-                      <td style="border:none;padding:0;">Received By</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;">الاستلام</td>
-                  </tr>
-              </table>
-          </td>
-
+        <td class="fhd">
+          <table width="100%"><tr>
+            <td style="border:none;padding:0;">Prepared By:</td>
+            <td style="border:none;padding:0;text-align:right;direction:rtl;">أعدت بواسطة</td>
+          </tr></table>
+        </td>
+        <td class="fhd">
+          <table width="100%"><tr>
+            <td style="border:none;padding:0;">Received By:</td>
+            <td style="border:none;padding:0;text-align:right;direction:rtl;">الاستلام</td>
+          </tr></table>
+        </td>
+        <td class="fhd">
+          <table width="100%"><tr>
+            <td style="border:none;padding:0;">Bank Details</td>
+            <td style="border:none;padding:0;text-align:right;direction:rtl;">تفاصيل البنك</td>
+          </tr></table>
+        </td>
+        <td class="tl">Total Amount / <span class="ar">المبلغ الإجمالي</span></td>
+        <td class="tv">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
       </tr>
 
       <tr>
+        {{!-- rowspan is clamped by the browser to the rows that actually
+             remain, so it covers however many totals lines get rendered --}}
+        <td class="sig" rowspan="99">
+          {{!-- d146 on: print the company seal here instead of the signature --}}
+          {{#ifFlag datasettings "d146"}}
+            {{#if Seal}}
+            <img src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>
+            {{/if}}
+          {{/ifFlag}}
+        </td>
+        <td class="rb" rowspan="99">
+          <div style="margin-bottom:20px;">Name :<br><span class="ar">الاسم</span></div>
+          <div style="margin-bottom:20px;">Signature :<br><span class="ar">التوقيع</span></div>
+          <div>Date :<br><span class="ar">التاريخ</span></div>
+        </td>
+        <td class="bankcell" rowspan="99">
+          <table class="bank-lines">
+            <tr><td class="bl">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
+            <tr><td class="bl">A/C Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
+            <tr><td class="bl">A/C No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
+            <tr><td class="bl">IBAN</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
+            <tr><td class="bl">SWIFT</td><td class="bc">:</td><td>{{bankdetails.swift_no}}</td></tr>
+          </table>
+        </td>
 
-          <td class="bankcell">
-              <table class="bank-lines">
-                  <tr><td class="bl">Bank Name</td><td class="bc">:</td><td>{{bankdetails.name}}</td></tr>
-                  <tr><td class="bl">A/C Name</td><td class="bc">:</td><td>{{bankdetails.acc_name}}</td></tr>
-                  <tr><td class="bl">A/C No</td><td class="bc">:</td><td>{{bankdetails.acc_no}}</td></tr>
-                  <tr><td class="bl">IBAN</td><td class="bc">:</td><td>{{bankdetails.iban_no}}</td></tr>
-                  <tr><td class="bl">SWIFT</td><td class="bc">:</td><td>{{bankdetails.swift_no}}</td></tr>
-              </table>
-          </td>
-
-          <td class="sig">
-              {{#if Seal}}
-              <img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '120'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>
-              {{/if}}
-          </td>
-
-          <td class="sig">
-              {{#if Signature}}
-              <img src="{{Signature}}" alt="Signature" style="text-align:right;max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>
-              {{/if}}
-          </td>
-
-          <td class="rb">
-              <div style="margin-bottom:20px;">Name :<br><span class="ar">الاسم</span></div>
-              <div style="margin-bottom:20px;">Signature :<br><span class="ar">التوقيع</span></div>
-              <div>Date :<br><span class="ar">التاريخ</span></div>
-          </td>
-
+        {{#if zatcadiscount.[0]}}
+          <td class="tl">{{zatcadiscount.[0].reason_name}} / <span class="ar">{{zatcadiscount.[0].reason_name_lang2}}</span></td>
+          <td class="tv">{{formatAmount (divide zatcadiscount.[0].dld ccrate) bcdp}}</td>
+        {{else}}
+          <td class="tl">Discount / <span class="ar">الخصم</span></td>
+          <td class="tv">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+        {{/if}}
       </tr>
 
-  </table>
+      {{#if zatcadiscount.[0]}}
+        {{#each zatcadiscount}}
+          {{#unless @first}}
+          <tr>
+            <td class="tl">{{reason_name}} / <span class="ar">{{reason_name_lang2}}</span></td>
+            <td class="tv">{{formatAmount (divide dld ../ccrate) ../bcdp}}</td>
+          </tr>
+          {{/unless}}
+        {{/each}}
+        <tr class="b">
+          <td class="tl">Net Amount / <span class="ar">صافي المجموع</span></td>
+          <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td>
+        </tr>
+      {{else}}
+        <tr class="b">
+          <td class="tl">Net Amount / <span class="ar">صافي المجموع</span></td>
+          <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
+        </tr>
+      {{/if}}
+
+      <tr>
+        <td class="tl">{{datasettingstextvalue.d828}} / <span class="ar">ضريبة القيمة المضافة</span></td>
+        <td class="tv">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+      </tr>
+      <tr class="b">
+        <td class="tl">Grand Total / <span class="ar">المبلغ الإجمالي</span></td>
+        <td class="tv">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+      </tr>
+
+      </tbody>
+
+    </table>
+
+    {{!-- own table, attached under the footer: its first row drops border-top
+         so the two tables share a single rule instead of stacking two --}}
+    <table class="words-bar">
+      <colgroup>
+        <col style="width:55%">
+        <col style="width:45%">
+      </colgroup>
+      <tr>
+        <td class="words-en">{{bcamountinwords}}</td>
+        <td class="words-ar">{{bcamountinwordsar}}</td>
+      </tr>
+      <tr>
+        <td class="note-row" colspan="2">This document is an Electronically generated and approved, does not required a signature</td>
+      </tr>
+    </table>
 
     </div><!-- /footer-block -->
+
+  {{!-- ══════════════════════════════════════════════════════════════════
+    PIN SCRIPT — grows the items table's spacer row so the footer block lands
+    at the FOOT of its page instead of straight under the last item. If the
+    block does not fit in the space left, it moves to the bottom of the NEXT
+    page. Accurate only when the render viewport matches the PDF page size.
+  ═══════════════════════════════════════════════════════════════════════ --}}
+  <script>
+  (function () {
+    var fb = document.querySelector('.footer-block');
+    var sp = document.querySelector('.items-table .spacer td');
+    if (!fb || !sp) return;
+
+    var SAFE = 20;   // clearance between the block's foot and the page edge
+
+    // Printable height = A4 at 96dpi less the margins page.pdf() applies for
+    // invoices (controllers/pdfController.js, doc_type 1 -> d74 / d75).
+    var MT = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d74 "120"}}{{else}}10{{/if}}') || 0;
+    var MB = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d75 "5"}}{{else}}10{{/if}}') || 0;
+
+    function h(el) { return el ? el.getBoundingClientRect().height : 0; }
+
+    function pin() {
+      sp.style.height = '0px';                       // reset before measuring
+
+      // measure at the width page.pdf() lays out at, or rows wrap differently
+      // here than on paper and every row measures wrong
+      document.documentElement.style.width =
+        (794.5 - {{#if UseHeaderFooter}}0{{else}}20{{/if}}) + 'px';
+      void document.body.offsetHeight;
+
+      var PAGE_H = 1122.5 - MT - MB;
+      if (!(PAGE_H > 0)) return;
+
+      // The <thead> is a header group, so Chrome reprints it atop every page
+      // the table spans. That reprint costs page space but does not exist in
+      // this DOM, so a continuation page holds only (PAGE_H - head).
+      var table  = document.querySelector('.items-table');
+      var head   = table ? h(table.querySelector('thead')) : 0;
+      var stride = PAGE_H - head;
+      if (!(stride > 0)) return;
+
+      var rect   = fb.getBoundingClientRect();
+      var top    = rect.top + window.pageYOffset;
+      var bottom = rect.bottom + window.pageYOffset;
+      if (rect.height + SAFE >= stride) return;      // block ~ a whole page: leave it
+
+      function pageBottom(k) { return PAGE_H + k * stride; }
+
+      var k = (top < PAGE_H) ? 0 : 1 + Math.floor((top - PAGE_H) / stride);
+      if (bottom > pageBottom(k)) k++;               // genuinely overflows: next page
+
+      var pageStart    = (k === 0) ? 0 : PAGE_H + ((k - 1) * stride);
+      var avail        = (k === 0) ? PAGE_H : stride;
+      var footerBottom = bottom - pageStart;
+      var remaining    = avail - footerBottom;
+
+      sp.style.height = (remaining > SAFE) ? (remaining - SAFE) + 'px' : '0px';
+    }
+
+    // measure only once the webfont is applied — ibmplexsansarabic is injected
+    // as a base64 @font-face and loads asynchronously
+    function runPin() {
+      requestAnimationFrame(function () { requestAnimationFrame(pin); });
+    }
+    runPin();
+    if (document.readyState !== 'complete') window.addEventListener('load', runPin);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(runPin);
+  })();
+  </script>
 
   </body>
 </html>
