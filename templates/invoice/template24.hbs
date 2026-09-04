@@ -13,7 +13,7 @@
       }
 
       body {
-        font-family: "IBM Plex Sans Arabic", Arial, sans-serif;
+        font-family: ibmplexsansarabic;
         font-size: 9px;
         line-height: 1.3;
         color: #000;
@@ -34,7 +34,6 @@
       .doc-title {
         text-align: center;
         font-size: 20px;
-        font-weight: 800;
         color: #b72031;
         margin-bottom: 6px;
       }
@@ -60,20 +59,33 @@
         vertical-align: middle;
       }
       .buyer td.lbl {
-        font-weight: 700;
+        
       }
+      /* grey banner across the whole buyer header row */
+      .buyer tr.bhd td {
+        background-color: #ccc;
+        
+      }
+      .buyer tr.bhd td:first-child { border-right: none; }
+      .buyer tr.bhd td:nth-child(2) { border-left: none; border-right: none; }
+      .buyer tr.bhd td:last-child { border-left: none; text-align: right; direction: rtl; }
+      .buyer .ar-name { direction: rtl; unicode-bidi: isolate; }
+      .info td.val { text-align: center; }
+      /* QR sits under the document block, matching the reference */
+      .top-qr { text-align: center; padding-top: 14px; }
+      .top-qr img { width: 118px !important; height: 118px !important; display: inline-block; }
       .info td.lbl {
         background-color:#ccc;
-        font-weight: 700;
+        
         width: 30%;
       }
       .info td.arl {
         background-color:#ccc;
-        font-weight: 700;
+        
       }
       .buyer td.arl,
       .info td.arl {
-        font-weight: 700;
+        
         text-align: right;
         direction: rtl;
         width: 24%;
@@ -98,11 +110,11 @@
       .items-table thead th .ar {
         display: block;
         direction: rtl;
-        font-weight: 700;
+        
       }
       .items-table thead th .en {
         display: block;
-        font-weight: 700;
+        
       }
       .items-table td.num {
         text-align: center;
@@ -159,7 +171,7 @@
       }
       .totals2 .b .tl,
       .totals2 .b .tv {
-        font-weight: 700;
+        
       }
 
       /* ── AMOUNT IN WORDS ──────────────────────────── */
@@ -256,7 +268,7 @@
       /* ── FOOTER NOTE ──────────────────────────────── */
       .note-text {
         text-align: center;
-        font-weight: 700;
+        
         font-size: 11px;
         color: #b72031;
         margin-top: 8px;
@@ -276,54 +288,80 @@
           <table class="buyer">
             <colgroup>
                 <col style="width:20%;">
-                <col style="width:60%;">
-                <col style="width:20%;">
+                <col style="width:62%;">
+                <col style="width:18%;">
             </colgroup>
-            <tr>
-              <td style="border: 1px solid #bfbfbf;border-right:none;font-weight:700;">BUYER DETAILS</td>
-              <td style="border: 1px solid #bfbfbf;border-right:none;border-left:none;"></td>
-              <td style="border: 1px solid #bfbfbf;border-left:none;font-weight:700;" class="ar">تفاصيل العميل</td>
+            <tr class="bhd">
+              <td>BUYER DETAILS</td>
+              <td></td>
+              <td class="ar">تفاصيل المشتري</td>
             </tr>
             <tr>
               <td class="lbl">Name</td>
-              <td>{{billing_address.[0].name}}{{#if billing_address_lang2.[0].name}}<br>{{billing_address_lang2.[0].name}}{{/if}}</td>
-              <td class="arl">الاسم</td>
+              <td>{{billing_address.[0].name}}{{#if billing_address_lang2.[0].name}}<div class="ar-name">{{billing_address_lang2.[0].name}}</div>{{/if}}</td>
+              <td class="arl">الإسم</td>
+            </tr>
+            <tr>
+              <td class="lbl">Building Number</td>
+              <td>{{default location.[0].building billing_address.[0].address_line1}}</td>
+              <td class="arl">رقم المبنى</td>
+            </tr>
+            <tr>
+              <td class="lbl">Street Name</td>
+              <td>{{default location.[0].street billing_address.[0].address_line2}}</td>
+              <td class="arl">اسم الشارع</td>
+            </tr>
+            <tr>
+              <td class="lbl">District</td>
+              <td>{{default location.[0].city billing_address.[0].address_line3}}</td>
+              <td class="arl">الحي</td>
+            </tr>
+            <tr>
+              <td class="lbl">City</td>
+              <td>{{default location.[0].city_subdivision billing_address.[0].address_line4}}</td>
+              <td class="arl">المدينة</td>
+            </tr>
+            <tr>
+              <td class="lbl">Country</td>
+              <td>{{billing_address.[0].address_line5}}</td>
+              <td class="arl">البلد</td>
+            </tr>
+            <tr>
+              <td class="lbl">Postal Code</td>
+              <td>{{default location.[0].postal_zone billing_address.[0].address_code}}</td>
+              <td class="arl">الرمز بريدي</td>
+            </tr>
+            <tr>
+              <td class="lbl">Additional NO</td>
+              <td>{{customer_details.[0].additional_no}}</td>
+              <td class="arl">الرقم إضافي</td>
             </tr>
             <tr>
               <td class="lbl">VAT Number</td>
               <td>{{billing_address.[0].vat}}</td>
-              <td class="arl">الرقم الضريبي</td>
-            </tr>
-            <tr>
-              <td class="lbl">Contact No</td>
-              <td>{{customer_details.[0].contact_no1}}</td>
-              <td class="arl">رقم الاتصال</td>
-            </tr>
-            <tr>
-              <td class="lbl">Address</td>
-              <td>{{joinAddress billing_address.[0] ', '}}</td>
-              <td class="arl">العنوان</td>
+              <td class="arl">الرقم ظريبه الشراء</td>
             </tr>
           </table>
         </td>
 
-        <!-- INFO -->
+        <!-- INFO + QR -->
         <td style="width:42%">
           <table class="info">
             <colgroup>
-              <col style="width:29%;">
-              <col style="width:44%;">
-              <col style="width:27%;">
+              <col style="width:25%;">
+              <col style="width:51%;">
+              <col style="width:24%;">
           </colgroup>
-            <tr><td class="lbl">Invoice No</td><td style="text-align: center;">{{basicdetails.[0].inv_no}}</td><td class="arl">رقم الفاتورة</td></tr>
-            <tr><td class="lbl">Invoice Date</td><td style="text-align: center;">{{basicdetails.[0].inv_date}}</td><td class="arl">تاريخ الفاتورة</td></tr>
-            <tr><td class="lbl">DN No</td><td style="text-align: center;">{{basicdetails.[0].deliverynote_no}}</td><td class="arl">رقم الإشعار</td></tr>
-            <tr><td class="lbl">DN Date</td><td style="text-align: center;">{{basicdetails.[0].deliverynote_date}}</td><td class="arl">تاريخ الإشعار</td></tr>
-            <tr><td class="lbl">Mode of Pay</td style="text-align: center;"><td>{{basicdetails.[0].modeofpayment}}</td><td class="arl">طريقة الدفع</td></tr>
-            <tr><td class="lbl">PO No</td><td style="text-align: center;">{{basicdetails.[0].order_no}}</td><td class="arl">رقم أمر الشراء</td></tr>
-            <tr><td class="lbl">PO Date</td><td style="text-align: center;">{{basicdetails.[0].po_date}}</td><td class="arl">تاريخ أمر الشراء</td></tr>
-            <tr><td class="lbl">Payment Terms</td><td style="text-align: center;">{{basicdetails.[0].payment_terms}}</td><td class="arl">شروط الدفع</td></tr>
+            <tr><td class="lbl">Invoice Number</td><td class="val">{{basicdetails.[0].inv_no}}</td><td class="arl">رقم الفاتورة</td></tr>
+            <tr><td class="lbl">Invoice Date</td><td class="val">{{basicdetails.[0].inv_date}}</td><td class="arl">تاريخ الفاتورة</td></tr>
+            <tr><td class="lbl">DN No</td><td class="val">{{basicdetails.[0].deliverynote_no}}</td><td class="arl">رقم الاقتباس</td></tr>
+            <tr><td class="lbl">DN Date</td><td class="val">{{basicdetails.[0].deliverynote_date}}</td><td class="arl">اشاره العملاء</td></tr>
+            <tr><td class="lbl">Mode of Pay</td><td class="val">{{basicdetails.[0].doc_payment_status}}{{#if basicdetails.[0].doc_payment_status_lang2}} / <span class="ar">{{basicdetails.[0].doc_payment_status_lang2}}</span>{{/if}}</td><td class="arl">طريقة الدفع</td></tr>
+            <tr><td class="lbl">PO No</td><td class="val">{{basicdetails.[0].order_no}}</td><td class="arl">رقم الطلب الشراء</td></tr>
+            <tr><td class="lbl">PO Date</td><td class="val">{{basicdetails.[0].po_date}}</td><td class="arl">تاريخ امر الشراء</td></tr>
+            <tr><td class="lbl">Employee Name</td><td class="val">{{basicdetails.[0].created_user}}</td><td class="arl">اسم الموظف</td></tr>
           </table>
+          <div class="top-qr">{{{qrDataUri qrCodeBase64}}}</div>
         </td>
       </tr>
     </table>
@@ -361,10 +399,7 @@
     <!-- MID : QR | TOTALS -->
     <table class="mid">
       <tr>
-        <td class="qrcell" style="width:40%">
-          <div class="qr-wrap">{{{qrDataUri qrCodeBase64}}}</div>
-        </td>
-        <td style="width:60%;padding:0;vertical-align:top">
+        <td style="width:100%;padding:0;vertical-align:top">
           <table class="totals2">
             <tr>
               <td class="tl">Total Amount / <span>المبلغ الإجمالي</span></td>
@@ -425,8 +460,8 @@
           <td class="fhd" style="width:31%;">
               <table width="100%">
                   <tr>
-                      <td style="border:none;padding:0;font-weight:bold;">Bank Details</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;font-weight:bold;">تفاصيل البنك</td>
+                      <td style="border:none;padding:0;">Bank Details</td>
+                      <td style="border:none;padding:0;text-align:right;direction:rtl;">تفاصيل البنك</td>
                   </tr>
               </table>
           </td>
@@ -434,8 +469,8 @@
           <td class="fhd" style="width:23%;">
               <table width="100%">
                   <tr>
-                      <td style="border:none;padding:0;font-weight:bold;">Prepared By</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;font-weight:bold;">أعدت بواسطة</td>
+                      <td style="border:none;padding:0;">Prepared By</td>
+                      <td style="border:none;padding:0;text-align:right;direction:rtl;">أعدت بواسطة</td>
                   </tr>
               </table>
           </td>
@@ -443,8 +478,8 @@
           <td class="fhd" style="width:23%;">
               <table width="100%">
                   <tr>
-                      <td style="border:none;padding:0;font-weight:bold;">Approved By</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;font-weight:bold;">تمت بواسطة</td>
+                      <td style="border:none;padding:0;">Approved By</td>
+                      <td style="border:none;padding:0;text-align:right;direction:rtl;">تمت بواسطة</td>
                   </tr>
               </table>
           </td>
@@ -452,8 +487,8 @@
           <td class="fhd" style="width:23%;">
               <table width="100%">
                   <tr>
-                      <td style="border:none;padding:0;font-weight:bold;">Received By</td>
-                      <td style="border:none;padding:0;text-align:right;direction:rtl;font-weight:bold;">الاستلام</td>
+                      <td style="border:none;padding:0;">Received By</td>
+                      <td style="border:none;padding:0;text-align:right;direction:rtl;">الاستلام</td>
                   </tr>
               </table>
           </td>
