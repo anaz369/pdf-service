@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invoice - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: ibmplexsansarabic, Arial, sans-serif;
+      font-size: 10px;
+      color: #000;
+      background: #fff;
+      margin: 0 5mm;
+    }
+    /* keeps content above the watermark */
+    body > * { position: relative; z-index: 1; }
+
+    {{#if UseBGWatermark}}
+    {{#if WatermarkCss}}
+    /* WATERMARK — fixed, so it repeats on every printed page */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url('{{{WatermarkCss}}}');
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      background-size: 100% auto;
+      background-origin: border-box;
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: -1;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    {{/if}}
+    {{/if}}
+
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .ar { direction: rtl; unicode-bidi: isolate; }
+    .lb { color: #1a17d0; font-weight: 700; }   /* every label on this doc is blue */
+
+    /* ── Title ─────────────────────────────────────────── */
+    .title { text-align: center; font-size: 16px; font-weight: 700; padding: 2px 0 5px; }
+    .title .en { color: #cc0000; }
+    .title .ar { color: #606261; }
+
+    /* ── Header : customer (left) | document (right) ──── */
+    .hdr > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
+
+    .box .gap { border: none; padding: 0; }
+    /* a collapsed edge draws if EITHER side declares it, so both the row above
+       (no-b) and the row below (no-t) have to drop it */
+    .box .no-b { border-bottom: none; }
+    .box .no-t { border-top: none; }
+    .box td {
+      border: 1px solid #000;
+      padding: 3px 6px;
+      vertical-align: middle;
+      height: 24px;
+    }
+    .box .v-ar { direction: rtl; unicode-bidi: isolate; }
+    /* Arabic label parked at the right edge of the cell it shares */
+    .box .in-ar { float: right; direction: rtl; unicode-bidi: isolate; }
+
+    /* ── Items ─────────────────────────────────────────── */
+    .items { border: 1px solid #000; }
+    .items thead { display: table-header-group; }
+    .items tbody tr:not(.spacer) { page-break-inside: avoid; break-inside: avoid; }
+    .items th {
+      border: 1px solid #000;
+      padding: 2px 3px;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 1.3;
+    }
+    .items th .ar { display: block; }
+    .items td {
+      border: 1px solid #000;
+      border-top: none;
+      border-bottom: none;
+      padding: 3px 5px;
+      vertical-align: top;
+      text-align: center;
+    }
+    .items .desc { text-align: left; overflow-wrap: anywhere; word-break: break-word; }
+    .items .desc .d-ar { display: block; direction: rtl; unicode-bidi: isolate; text-align: right; }
+    .items .rt { text-align: right; }
+    /* Height set by the pin script below. Only the side rules carry through the
+       empty area, so the grid reads as one block down to the footer. */
+    .items .spacer td { height: 0; }
+
+    /* ── Footer block ──────────────────────────────────── */
+    .footer-block { overflow: hidden; page-break-inside: avoid; break-inside: avoid; }
+
+    .foot { border: 1px solid #000; border-top: none; }
+    .foot > tbody > tr > td {
+      border: 1px solid #000;
+      padding: 4px 6px;
+      vertical-align: top;
+      /* definite (tiny) height so the nested height:100% totals table resolves;
+         the cells still grow to the tallest column of the row */
+      height: 1px;
+    }
+    /* the items table already closes with its own bottom rule — without this the
+       two 1px borders stack at the seam and read as one thick line */
+    .foot > tbody > tr:first-child > td { border-top: none; }
+    /* totals sit in a nested table; height:100% makes it fill the cell so its
+       last row lands level with the terms and QR columns instead of leaving a gap */
+    /* no height here: .foot td already sets the definite 1px the nested
+       height:100% table needs, and a 100% here would override it back to auto */
+    .foot .totcell { padding: 0; }
+    .foot .qrcell { text-align: center; vertical-align: middle; padding: 4px; }
+    .foot .qrcell img { width: 100px !important; height: 100px !important; margin: 0 auto; }
+    .terms-hd { font-weight: 700; color: #1a17d0; padding-bottom: 2px; }
+    .terms-body {
+      direction: rtl;
+      unicode-bidi: isolate;
+      text-align: justify;
+      font-size: 9.5px;
+      line-height: 1.35;
+      white-space: pre-line;
+    }
+
+    .tot { width: 100%; height: 100%; border-collapse: collapse; }
+    .tot td { border: 1px solid #000; padding: 3px 6px; vertical-align: middle; }
+    /* This is a nested table, so its outer edges cannot collapse with the
+       footer cell that already draws them — without this every side stacks two
+       1px borders and reads as a thick rule. Let the .foot cell own the frame. */
+    .tot tr td:first-child { border-left: none; }
+    .tot tr td:last-child  { border-right: none; }
+    .tot tr:first-child td { border-top: none; }
+    .tot tr:last-child td  { border-bottom: none; }
+    .tot .t-en { color: #1a17d0; font-weight: 700; width: 35.3%; }
+    .tot .t-ar { color: #1a17d0; font-weight: 700; direction: rtl; unicode-bidi: isolate;
+                 text-align: right; width: 35%; }
+    .tot .t-val { text-align: right; width: 29.7%; }
+    .tot tr:last-child td { font-weight: 700; }
+
+    /* ── Words + signatures ────────────────────────────── */
+    .words { border: 1px solid #000; border-top: none; }
+    .words td { border: 1px solid #000; border-top: none; padding: 3px 6px; vertical-align: middle; }
+    .words .w-ar { direction: rtl; unicode-bidi: isolate; text-align: right; }
+
+    .sign { margin-top: 14px; }
+    .sign td { border: none; padding: 0; text-align: center; vertical-align: top; }
+    .sign .s-lbl { color: #1a17d0; font-weight: 700; }
+    .sign .s-line { border-bottom: 1px solid #000; height: 1px; width: 150px; margin: 26px auto 0; }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <div class="title"><span class="en">TAX INVOICE</span> / <span class="ar">فاتورة ضريبية</span></div>
+
+  {{!-- HEADER — ONE table with a blank spacer column. Two side-by-side tables
+       size their rows independently, so the row rules would not line up across
+       the gap; here every cell of a row shares one row box. --}}
+  <table class="box">
+    <colgroup>
+      <col style="width:15%">
+      <col style="width:40%">
+      <col style="width:1%">
+      <col style="width:14%">
+      <col style="width:21%">
+      <col style="width:9%">
+    </colgroup>
+    <tr>
+      <td class="lb">اسم العميل</td>
+      <td class="v-ar">{{billing_address_lang2.[0].name}}</td>
+      <td class="gap"></td>
+      <td class="lb">Customer No</td>
+      <td>{{customer_details.[0].profile_code}}</td>
+      <td class="lb" style="text-align:right;">رقم العميل</td>
+    </tr>
+    <tr>
+      <td class="lb">Customer Name</td>
+      <td>{{billing_address.[0].name}}</td>
+      <td class="gap"></td>
+      <td class="lb">Invoice No</td>
+      <td>{{basicdetails.[0].inv_no}}</td>
+      <td class="lb ar" style="text-align:right;">رقم الفاتورة</td>
+    </tr>
+    <tr>
+      <td class="lb no-b">العنوان</td>
+      <td class="v-ar">{{joinAddress billing_address_lang2.[0] '، '}}</td>
+      <td class="gap"></td>
+      <td class="lb">Invoice Date</td>
+      <td>{{basicdetails.[0].inv_date}}</td>
+      <td class="lb ar" style="text-align:right;">تاريخ الفاتورة</td>
+    </tr>
+    <tr>
+      <td class="lb no-t">Address</td>
+      <td class="">{{joinAddress billing_address.[0] ', '}}</td>
+      <td class="gap"></td>
+      {{!-- the PO cell spans the Address and Phone rows, as in the reference --}}
+      <td class="lb" rowspan="2"><span class="" style="display:block;">رقم امر الشراء</span>P O Number</td>
+      <td colspan="2" rowspan="2">{{basicdetails.[0].order_no}}</td>
+    </tr>
+    <tr>
+      <td class="lb">Phone <span class="in-ar">هاتف</span></td>
+      <td>{{customer_details.[0].contact_no1}}</td>
+      <td class="gap"></td>
+    </tr>
+    <tr>
+      <td class="lb">Customer VAT No</td>
+      <td>{{billing_address.[0].vat}}<span class="in-ar lb">رقم ضريبة العميل</span></td>
+      <td class="gap"></td>
+      <td class="lb">Mode of Payment</td>
+      <td>{{basicdetails.[0].paymentslist}} / <span class="ar">{{basicdetails.[0].doc_payment_status_lang2}}</span></td>
+      <td class="lb ar" style="text-align:right;">طريقة الدفع</td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items" style="margin-top:5px;">
+    <colgroup>
+      <col style="width:4%">
+      <col style="width:40%">
+      <col style="width:6%">
+      <col style="width:7%">
+      <col style="width:9%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr class="lb">
+        <th><span class="ar">م</span>S.N</th>
+        <th><span class="ar">الوصف</span>Description</th>
+        <th><span class="ar">الكمية</span>QTY</th>
+        <th><span class="ar">الوحدة</span>Unit</th>
+        <th><span class="ar">سعر الوحدة</span>U.Rate</th>
+        <th><span class="ar">مبلغ</span>Amount</th>
+        <th><span class="ar">قيمة الضريبة</span>VAT Value</th>
+        <th><span class="ar">القيمة الاجمالي</span>Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td>{{addOne @index}}</td>
+        <td class="desc">{{item_name}}{{#if name_lang2}}<span class="d-ar">{{name_lang2}}</span>{{/if}}</td>
+        <td>{{formatAmount quantity 0}}</td>
+        <td>{{unit}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="rt">{{formatAmount taxable ../bcdp}}</td>
+        <td class="rt">{{formatAmount vat_amt ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+      <tr class="spacer"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+
+  <!-- FOOTER BLOCK -->
+  <div class="footer-block">
+
+  <table class="foot">
+    <colgroup>
+      <col style="width:15%">
+      <col style="width:44%">
+      <col style="width:41%">
+    </colgroup>
+    <tr>
+      <td class="qrcell">{{{qrDataUri qrCodeBase64}}}</td>
+      <td>
+        <div class="terms-hd">Terms &amp; Conditions</div>
+        <div class="terms-body">{{#if basicdetails.[0].terms_and_condition}}{{basicdetails.[0].terms_and_condition}}{{else}}{{invterms}}{{/if}}</div>
+      </td>
+      <td class="totcell">
+        <table class="tot">
+          <tr>
+            <td class="t-en">Total Amount</td>
+            <td class="t-ar">المبلغ الإجمالي</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+          </tr>
+          {{#if zatcadiscount.[0]}}
+            {{#each zatcadiscount}}
+              <tr>
+                <td class="t-en">{{reason_name}}</td>
+                <td class="t-ar">{{reason_name_lang2}}</td>
+                <td class="t-val">{{formatAmount (divide dld ../ccrate) bcdp}}</td>
+              </tr>
+            {{/each}}
+              <tr>
+                <td class="t-en"> Net Amount</td>
+                <td class="t-ar">صافي المجموع</td>
+                <td class="t-val">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td>
+              </tr>
+            {{else}}
+
+                {{#if (or basicdetails.[0].discount basicdetails.[0].dld)}}
+                  <tr>
+                    <td class="t-en">Discount</td>
+                    <td class="t-ar">الخصم</td>
+                    <td class="t-val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+                  </tr>
+                  <tr>
+                    <td class="t-en">Net Amount</td>
+                    <td class="t-ar">صافي المجموع</td>
+                    <td class="t-val">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
+                  </tr>
+                {{/if}}
+          {{/if}}
+          <tr>
+            <td class="t-en">{{datasettingstextvalue.d828}}</td>
+            <td class="t-ar">ضريبة القيمة المضافة</td>
+            {{!-- VAT is charged on the NET, so it is recomputed here rather than
+                 read from vatamt, which is the pre-discount figure --}}
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="t-en">Grand Total</td>
+            <td class="t-ar">المبلغ الإجمالي</td>
+            <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- AMOUNT IN WORDS -->
+  <table class="words">
+    <colgroup><col style="width:53%"><col style="width:47%"></colgroup>
+    <tr>
+      <td>{{bcamountinwords}}</td>
+      <td class="w-ar">{{bcamountinwordsar}}</td>
+    </tr>
+  </table>
+
+  <!-- SIGNATURES -->
+  <table class="sign">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td><span class="s-lbl">Accountant/<span class="ar">محاسب</span></span><div class="s-line"></div></td>
+      <td><span class="s-lbl">Received by/<span class="ar">المتلقي</span></span><div class="s-line"></div></td>
+    </tr>
+  </table>
+
+  </div>
+
+  {{!-- PIN SCRIPT — grows the items spacer so the footer block lands at the
+       foot of its page. Adapted from invoice/template83. --}}
+  <script>
+  (function () {
+    var fb = document.querySelector('.footer-block');
+    var sp = document.querySelector('.items .spacer td');
+    if (!fb || !sp) return;
+
+    var SAFE = 20;
+    var MT = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d74 "120"}}{{else}}10{{/if}}') || 0;
+    var MB = parseFloat('{{#if UseHeaderFooter}}{{default datasettings.d75 "5"}}{{else}}10{{/if}}') || 0;
+
+    function h(el) { return el ? el.getBoundingClientRect().height : 0; }
+
+    function pin() {
+      sp.style.height = '0px';
+      document.documentElement.style.width =
+        (794.5 - {{#if UseHeaderFooter}}0{{else}}20{{/if}}) + 'px';
+      void document.body.offsetHeight;
+
+      var PAGE_H = 1095.5 - MT - MB;
+      if (!(PAGE_H > 0)) return;
+
+      // the <thead> reprints atop every continuation page, costing page space
+      // that does not exist in this DOM
+      var table  = document.querySelector('.items');
+      var head   = table ? h(table.querySelector('thead')) : 0;
+      var stride = PAGE_H - head;
+      if (!(stride > 0)) return;
+
+      var rect   = fb.getBoundingClientRect();
+      var top    = rect.top + window.pageYOffset;
+      var bottom = rect.bottom + window.pageYOffset;
+      if (rect.height + SAFE >= stride) return;
+
+      function pageBottom(k) { return PAGE_H + k * stride; }
+      var k = (top < PAGE_H) ? 0 : 1 + Math.floor((top - PAGE_H) / stride);
+      if (bottom > pageBottom(k)) k++;
+
+      var pageStart    = (k === 0) ? 0 : PAGE_H + ((k - 1) * stride);
+      var avail        = (k === 0) ? PAGE_H : stride;
+      var footerBottom = bottom - pageStart;
+      var remaining    = avail - footerBottom;
+
+      sp.style.height = (remaining > SAFE) ? (remaining - SAFE) + 'px' : '0px';
+    }
+
+    function runPin() { requestAnimationFrame(function () { requestAnimationFrame(pin); }); }
+    runPin();
+    if (document.readyState !== 'complete') window.addEventListener('load', runPin);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(runPin);
+  })();
+  </script>
+
+</body>
+</html>

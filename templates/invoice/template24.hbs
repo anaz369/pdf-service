@@ -545,14 +545,6 @@
       </tr>
 
       {{#if zatcadiscount.[0]}}
-        {{#each zatcadiscount}}
-          {{#unless @first}}
-          <tr>
-            <td class="tl">{{reason_name}} / <span class="ar">{{reason_name_lang2}}</span></td>
-            <td class="tv">{{formatAmount (divide dld ../ccrate) ../bcdp}}</td>
-          </tr>
-          {{/unless}}
-        {{/each}}
         <tr class="b">
           <td class="tl">Net Amount / <span class="ar">صافي المجموع</span></td>
           <td class="tv">{{formatAmount (divide (subtract basicdetails.[0].subtotal zatcadiscount.[0].dld) ccrate) bcdp}}</td>
