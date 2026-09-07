@@ -300,8 +300,7 @@
     <table class="hdr">
         <colgroup>
             <col style="width:55%">
-            <col style="width:25%">
-            <col style="width:20%">
+            <col style="width:45%">
         </colgroup>
         <tr>
             <td class="lbl">
@@ -310,16 +309,15 @@
                     <span class="ar">اسم للعميل</span>
                 </span>
             </td>
-            <td class="lbl">JOB/<span class="ar">رقم العمل</span></td>
-            <td class="lbl">JOB DATE/<span class="ar">تاريخ العمل</span></td>
+            <td class="lbl" style="text-align: center;">JOB DATE/<span class="ar">تاريخ العمل</span></td>
         </tr>
         <tr>
-            <td class="cust" rowspan="5">
+            <td class="cust" rowspan="3">
                 <div class="cname green">{{billing_address.[0].name}}</div>
                 {{#if billing_address_lang2.[0].name}}
                 <div class="cname_ar ar rtl">{{billing_address_lang2.[0].name}}</div>
                 {{/if}}
-                <div class="cline"><span class="clbl">Att:</span>&nbsp; <b>{{basicdetails.[0].payment_terms}}</b></div>
+                <div class="cline"><span class="clbl">Att:</span>&nbsp; <b></b></div>
                 <div class="cline"><span class="clbl">VAT NO</span>&nbsp;&nbsp; <b class="green">{{billing_address.[0].vat}}</b></div>
                 {{#if billing_address.[0].address_line1}}
                 <div class="cline"><span class="">Building No:</span>{{billing_address.[0].address_line1}} {{#if billing_address.[0].address_line2}}Street-{{billing_address.[0].address_line2}} {{/if}}{{#if billing_address.[0].address_line3}} - {{billing_address.[0].address_line3}} {{/if}}{{#if billing_address.[0].address_line4}}District-{{billing_address.[0].address_line4}} {{/if}}{{#if billing_address.[0].address_code}}-{{billing_address.[0].address_code}} {{/if}}{{#if billing_address.[0].address_line5}}{{billing_address.[0].address_line5}}{{/if}}</div>
@@ -328,22 +326,13 @@
                 <div class="cline"><span class="clbl">Additional No</span>&nbsp; {{customer_details.[0].additional_no}}</div>
                 {{/if}} --}}
             </td>
-            <td class="val" style="vertical-align: middle;">{{basicdetails.[0].job_reference}}</td>
-            <td class="val" style="vertical-align: middle;">{{basicdetails.[0].inv_date}}</td>
+            <td class="val" style="vertical-align: middle;">{{#if basicdetails.[0].payment_terms}}{{basicdetails.[0].payment_terms}}{{else}}&nbsp;{{/if}}</td>
         </tr>
         <tr>
-            <td class="lbl">LOCATION/<span class="ar">الموقع</span></td>
-            <td class="lbl" colspan="2">CONTRACT / <span class="ar">رقم العقد</span></td>
+            <td class="lbl">PROJECT DETAILS / <span class="ar">تفاصيل المشروع</span></td>
         </tr>
         <tr>
-            <td class="val_l" style="vertical-align: middle;">{{#if basicdetails.[0].location}}{{basicdetails.[0].location}}{{else}}{{location.[0].city}}{{/if}}</td>
-            <td class="val_l" colspan="2" style="vertical-align: middle;">{{basicdetails.[0].order_no}}</td>
-        </tr>
-        <tr>
-            <td class="lbl" colspan="2">PROJECT DETAILS / <span class="ar">تفاصيل المشروع</span></td>
-        </tr>
-        <tr>
-            <td class="val_l" colspan="2" style="vertical-align: middle;">{{basicdetails.[0].project_name}}</td>
+            <td class="val_l" style="vertical-align: middle;">{{#if basicdetails.[0].project_name}}{{basicdetails.[0].project_name}}{{else}}&nbsp;{{/if}}</td>
         </tr>
     </table>
 
