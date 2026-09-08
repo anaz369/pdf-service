@@ -123,6 +123,12 @@
         float: right;
     }
 
+    /* project line above the items table */
+    .proj_line{
+        padding: 4px 2px 0 2px;
+        line-height: 14px;
+    }
+
     /* ── Items ─────────────────────────────────────────── */
     .items th{
         padding: 4px 3px;
@@ -234,7 +240,11 @@
         font-weight: bold;
         line-height: 13px;
         padding: 0 5px 1px 5px;
+        /* no rule between the signature area and its caption — a collapsed edge
+           draws if EITHER side declares it, so .sig drops its bottom too */
+        border-top: 0;
     }
+    .bank .sig{ border-bottom: 0; }
 </style>
 </head>
 <body>
@@ -347,6 +357,11 @@
         </tr>
     </table>
 
+    {{!-- project line — plain row between the blocks, only when set --}}
+    {{#if basicdetails.[0].project_name}}
+    <div class="proj_line"><span class="b">Project :</span> {{basicdetails.[0].project_name}}</div>
+    {{/if}}
+
     {{!-- ── Items ─────────────────────────────────────── --}}
     <table class="sec items" style="margin-top:5px;">
         <colgroup>
@@ -378,11 +393,11 @@
                 </td>
                 <td class="tc">{{unit}}</td>
                 <td class="tc">{{formatAmount quantity ../bcdp}}</td>
-                <td class="te">{{formatAmount price ../bcdp}}</td>
-                <td class="te">{{formatAmount taxable ../bcdp}}</td>
+                <td class="te">{{{currencySymbol (default isocode ../isocode)}}} {{formatAmount price ../bcdp}}</td>
+                <td class="te">{{{currencySymbol (default isocode ../isocode)}}} {{formatAmount taxable ../bcdp}}</td>
                 <td class="tc">{{vat_perc}}%</td>
-                <td class="te">{{formatAmount vat_amt ../bcdp}}</td>
-                <td class="te">{{formatAmount amount ../bcdp}}</td>
+                <td class="te">{{{currencySymbol (default isocode ../isocode)}}} {{formatAmount vat_amt ../bcdp}}</td>
+                <td class="te">{{{currencySymbol (default isocode ../isocode)}}} {{formatAmount amount ../bcdp}}</td>
             </tr>
             {{/each}}
         </tbody>
@@ -492,7 +507,9 @@
             <td class="ts">Bank Name / <span class="arab">اسم الحساب</span></td>
             <td class="ts bval">{{bankdetails.name}}{{#if bankdetails_lang2.name}} / <span class="arab">{{bankdetails_lang2.name}}</span>{{/if}}</td>
             <td class="sig" rowspan="5">
-                {{#if Signature}}<img src="{{Signature}}" alt="Signature">{{/if}}
+                {{!-- d165 prints the signature here; if that is off, d146 puts
+                     the seal in the same cell instead --}}
+                {{#ifFlag datasettings "d165"}}<img class="Signature" src="{{Signature}}" alt="Signature" style="max-height:min({{default datasettings.d459 '120'}}px,100%); max-width:min({{default datasettings.d459 '120'}}px,100%);" onerror="this.style.display='none'"/>{{else}}{{#ifFlag datasettings "d146"}}<img class="Seal" src="{{Seal}}" alt="Seal" style="max-height:min({{default datasettings.d458 '120'}}px,100%); max-width:min({{default datasettings.d458 '120'}}px,100%);" onerror="this.style.display='none'"/>{{/ifFlag}}{{/ifFlag}}
             </td>
             <td class="sig" rowspan="5"></td>
         </tr>
