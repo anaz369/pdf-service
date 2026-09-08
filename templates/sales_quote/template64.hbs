@@ -10,7 +10,7 @@
 
   body {
     background: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: ibmplexsansarabic;
     font-size: 11px;
     color: #222;
     line-height: 1.45;
@@ -157,14 +157,13 @@
     padding: 3px 0;
     font-size: 11px;
     vertical-align: top;
-    line-height: 1.6;
   }
   .bank-detail-table .bd-lbl { width: 36%; }
   .bank-detail-table .bd-sep { width: 16px; padding: 3px 6px; text-align: center; }
   .bank-detail-table .bd-val { width: auto; }
 
-  .seal-cell { text-align: right; vertical-align: middle; }
-  .seal-img  { max-height: 130px; max-width: 160px; display: inline-block; }
+  .seal-cell { text-align: left; vertical-align: middle; }
+  {{!-- .seal-img  { max-height: 130px; max-width: 160px; display: inline-block; } --}}
 </style>
 </head>
 <body>
@@ -175,14 +174,29 @@
   <div class="title-bar">QUOTATION</div>
 
   <!-- Top Info Table -->
+  {{!-- table-layout:fixed takes its column widths from the FIRST row only, so
+       the per-cell widths on the later rows were being ignored — row 1's
+       colspan="3" was deciding columns 2-4. This colgroup states them once for
+       the whole table; 29+6+10 = 45%, which is exactly what that colspan needs,
+       so the first three rows are unchanged. --}}
   <table class="info-table">
+    <colgroup>
+      <col style="width:5%">
+      <col style="width:27%">
+      <col style="width:6%">
+      <col style="width:12%">
+      <col style="width:10%">
+      <col style="width:15%">
+      <col style="width:10%">
+      <col style="width:15%">
+    </colgroup>
     <tr>
       <td class="info-lbl" style="width: 5%;">To</td>
       <td colspan="3" style="width: 45%;">{{billing_address.[0].name}}</td>
       <td class="info-lbl" style="width:10%;">Date</td>
       <td style="width: 15%;">{{basicdetails.[0].inv_date}}</td>
       <td class="info-lbl" style="width:10%;">Prepared By</td>
-      <td style="width: 15%;">{{basicdetails.[0].salesman_name}}</td>
+      <td style="width: 15%;">{{basicdetails.[0].employeename}}</td>
     </tr>
     <tr>
       <td class="info-lbl" style="width: 5%;">Attn</td>
@@ -190,21 +204,21 @@
       <td class="info-lbl" style="width:10%;">Payment</td>
       <td style="width: 15%;">{{basicdetails.[0].payment_terms}}</td>
       <td class="info-lbl" style="width:10%;">Mobile</td>
-      <td style="width: 15%;">{{basicdetails.[0].salesman_no}}</td>
+      <td style="width: 15%;">{{basicdetails.[0].employeecontact_no1}}</td>
     </tr>
     <tr>
       <td class="info-lbl" style="width: 5%;">Tel</td>
       <td colspan="3" style="width: 45%;">{{basicdetails.[0].contactno}}</td>
       <td class="info-lbl" style="width:10%;">Validity</td>
-      <td style="width: 15%;">{{basicdetails.[0].due_date}}</td>
+      <td style="width: 15%;">{{basicdetails.[0].validity}}</td>
       <td class="info-lbl" style="width:10%;">Email</td>
-      <td style="width: 15%;">{{basicdetails.[0].salesman_email}}</td>
+      <td style="width: 15%;">{{basicdetails.[0].employeeemail}}</td>
     </tr>
     <tr>
       <td class="info-lbl" style="width: 5%;">Email</td>
-      <td style="width: 25%;">{{basicdetails.[0].contactemail}}</td>
+      <td style="width: 29%;">{{basicdetails.[0].contactemail}}</td>
       <td class="info-lbl" style="width: 6%;">Ref No</td>
-      <td style="width: 14%;">{{basicdetails.[0].reference_no}}</td>
+      <td style="width: 10%;">{{basicdetails.[0].reference_no}}</td>
       <td class="info-lbl" style="width:10%;">VAT Number</td>
       <td style="width: 15%;">{{billing_address.[0].vat}}</td>
       <td class="info-lbl" style="width:10%;">Quote</td>
@@ -215,8 +229,8 @@
   <!-- Items Table -->
   <table class="items-wrap">
     <colgroup>
-      <col style="width:5%">
-      <col style="width:10%">
+      <col style="width:4%">
+      <col style="width:11%">
     {{#hasRemarks itemdetails}}
       <col style="width:25%">
       {{else}}
@@ -236,7 +250,7 @@
       <tr>
         <th>
           <span class="head-ar">رقم</span>
-          <span class="head-en">Sl No</span>
+          <span class="head-en">Sl</span>
         </th>
         <th>
           <span class="head-ar">رمز المنتج</span>
@@ -351,15 +365,16 @@
   </table>
 
   <!-- Terms & Conditions -->
-  <table class="terms-table">
-    <tr>
-      <td class="tc-head">Terms &amp; Conditions</td>
-    </tr>
-    <tr>
-      <td class="tc-body">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{else}}{{#if invterms}}{{{nl2br invterms}}}{{/if}}{{/if}}</td>
-    </tr>
-  </table>
-
+  {{#if basicdetails.[0].terms_and_condition}}
+    <table class="terms-table">
+      <tr>
+        <td class="tc-head">Terms &amp; Conditions</td>
+      </tr>
+      <tr>
+        <td class="tc-body">{{{nl2br basicdetails.[0].terms_and_condition}}}</td>
+      </tr>
+    </table>
+  {{/if}}
   <!-- Bottom: Bank Details (left) | Seal (right) -->
   <table class="bottom-wrap">
     <tr>
@@ -375,7 +390,7 @@
         </table>
       </td>
       <td style="width:40%;" class="seal-cell">
-        {{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="seal"/>{{/if}}
+        {{#ifFlag datasettings "d249"}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '120'}}px; max-width:{{default datasettings.d458 '180'}}px;" onerror="this.style.display='none'"/>{{/ifFlag}}
       </td>
     </tr>
   </table>

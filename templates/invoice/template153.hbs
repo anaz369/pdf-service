@@ -241,7 +241,10 @@
       {{#each itemdetails}}
       <tr>
         <td>{{addOne @index}}</td>
-        <td class="desc">{{item_name}}{{#if name_lang2}}<span class="d-ar">{{name_lang2}}</span>{{/if}}</td>
+        <td class="desc">{{item_name}}{{#if name_lang2}}
+          <span class="d-ar">{{name_lang2}}</span>{{/if}}
+          {{#if description}}<div class="sub">{{description}}</div>{{/if}}
+        </td>
         <td>{{formatAmount quantity 0}}</td>
         <td>{{unit}}</td>
         <td class="rt">{{formatAmount price ../bcdp}}</td>
