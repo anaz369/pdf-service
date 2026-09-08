@@ -289,7 +289,8 @@
         {{/with}}
     </table>
 
-    {{!-- ── Our details ───────────────────────────────── --}}
+    {{!-- ── Our details — only when d570 is on ────────── --}}
+    {{#ifFlag datasettings "d570"}}
     <table class="sec detail">
         <colgroup>
             <col style="width:10%"><col style="width:18%"><col style="width:7%">
@@ -322,6 +323,7 @@
             <td class="te arab bg-l">الرقم الضريبي</td>
         </tr>
     </table>
+    {{/ifFlag}}
 
     {{!-- ── Customer details ──────────────────────────── --}}
     <table class="sec detail">
