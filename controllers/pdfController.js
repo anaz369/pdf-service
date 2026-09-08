@@ -410,110 +410,116 @@ class PdfController {
       const useHeaderFooter =
         paperConfig.useHeaderFooter && pdfRequest.UseHeaderFooter;
 
+      // Page margins come from the per-doc_type datasettings REGARDLESS of
+      // whether the header/footer artwork is printed. UseHeaderFooter used to
+      // gate this switch as well, so a no-header print silently fell back to a
+      // hardcoded 10px and the content sat on the page edge.
+      const ds = pdfRequest.datasettings || {};
+      const withUnit = (v, fallback) => {
+        if (v === undefined || v === null || v === "") return fallback;
+        return /^[d.]+$/.test(String(v)) ? `${v}px` : String(v);
+      };
+
+      const docMargin = (() => {
+          switch (pdfRequest.doc_type) {
+            case 2:
+              // Sales Quote
+              return {
+                top: withUnit(ds.d783, "120px"),
+                bottom: withUnit(ds.d811, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+              case 3:
+              // Proforma invoice
+              return {
+                top: withUnit(ds.d881, "120px"),
+                bottom: withUnit(ds.d882, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+              case 4:
+              // Sales Order
+              return {
+                top: withUnit(ds.d935, "120px"),
+                bottom: withUnit(ds.d817, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+              case 5:
+              // Purchase Order
+              return {
+                top: withUnit(ds.d931, "120px"),
+                bottom: withUnit(ds.d813, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+               case 6:
+              // Purchase 
+              return {
+                top: withUnit(ds.d932, "120px"),
+                bottom: withUnit(ds.d814, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+              case 7:
+              // Credit note 
+              return {
+                top: withUnit(ds.d936, "120px"),
+                bottom: withUnit(ds.d818, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+              case 8:
+              // Purchase Return
+              return {
+                top: withUnit(ds.d933, "120px"),
+                bottom: withUnit(ds.d815, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+              case 9:
+              // Sales Return 
+              return {
+                top: withUnit(ds.d934, "120px"),
+                bottom: withUnit(ds.d816, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+              case 10:
+              // Deliverynote 
+              return {
+                top: withUnit(ds.d803, "120px"),
+                bottom: withUnit(ds.d810, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+            case 1:
+            default:
+              // Invoice (and fallback)
+              return {
+                top: withUnit(ds.d74, "120px"),
+                bottom: withUnit(ds.d75, "5px"),
+                left: "0px",
+                right: "0px",
+              };
+              break;
+          }
+      })();
+
       if (useHeaderFooter) {
         console.log("Configuring PDF with HEADER/FOOTER mode");
-
         pdfOptions.displayHeaderFooter = true;
-
-        const ds = pdfRequest.datasettings || {};
-        const withUnit = (v, fallback) => {
-          if (v === undefined || v === null || v === "") return fallback;
-          return /^[\d.]+$/.test(String(v)) ? `${v}px` : String(v);
-        };
-
-        switch (pdfRequest.doc_type) {
-          case 2:
-            // Sales Quote
-            pdfOptions.margin = {
-              top: withUnit(ds.d783, "120px"),
-              bottom: withUnit(ds.d811, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-            case 3:
-            // Proforma invoice
-            pdfOptions.margin = {
-              top: withUnit(ds.d881, "120px"),
-              bottom: withUnit(ds.d882, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-            case 4:
-            // Sales Order
-            pdfOptions.margin = {
-              top: withUnit(ds.d935, "120px"),
-              bottom: withUnit(ds.d817, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-            case 5:
-            // Purchase Order
-            pdfOptions.margin = {
-              top: withUnit(ds.d931, "120px"),
-              bottom: withUnit(ds.d813, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-             case 6:
-            // Purchase 
-            pdfOptions.margin = {
-              top: withUnit(ds.d932, "120px"),
-              bottom: withUnit(ds.d814, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-            case 7:
-            // Credit note 
-            pdfOptions.margin = {
-              top: withUnit(ds.d936, "120px"),
-              bottom: withUnit(ds.d818, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-            case 8:
-            // Purchase Return
-            pdfOptions.margin = {
-              top: withUnit(ds.d933, "120px"),
-              bottom: withUnit(ds.d815, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-            case 9:
-            // Sales Return 
-            pdfOptions.margin = {
-              top: withUnit(ds.d934, "120px"),
-              bottom: withUnit(ds.d816, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-            case 10:
-            // Deliverynote 
-            pdfOptions.margin = {
-              top: withUnit(ds.d803, "120px"),
-              bottom: withUnit(ds.d810, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-          case 1:
-          default:
-            // Invoice (and fallback)
-            pdfOptions.margin = {
-              top: withUnit(ds.d74, "120px"),
-              bottom: withUnit(ds.d75, "5px"),
-              left: "0px",
-              right: "0px",
-            };
-            break;
-        }
+        pdfOptions.margin = docMargin;
 
         console.log(
           `✓ Margins for doc_type=${pdfRequest.doc_type}:`,
@@ -556,10 +562,17 @@ class PdfController {
         console.log(`Configuring PDF with ${mode} mode`);
 
         pdfOptions.displayHeaderFooter = false;
+        // same configured margins as the header/footer path — only the artwork is
+        // dropped here. Thermal / custom stock still prints edge to edge.
         pdfOptions.margin =
           isThermal || isCustom
             ? { top: "0", bottom: "0", left: "0", right: "0" }
-            : { top: "10px", bottom: "10px", left: "10px", right: "10px" };
+            : docMargin;
+
+        console.log(
+          `✓ Margins for doc_type=${pdfRequest.doc_type} (no header/footer):`,
+          pdfOptions.margin,
+        );
       }
 
       const optionsTime = Date.now();
