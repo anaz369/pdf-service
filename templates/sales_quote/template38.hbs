@@ -246,10 +246,12 @@
 
   <!-- Items Table -->
   <table class="items-wrap">
+    {{!-- the Item Code column only exists when at least one line has a code;
+         its 12% goes to Description when it is dropped --}}
     <colgroup>
       <col style="width:4%">
-      <col style="width:12%">
-      <col style="width:43%">
+      {{#hasItemCode itemdetails}}<col style="width:12%">{{/hasItemCode}}
+      <col style="width:{{#hasItemCode itemdetails}}43{{else}}55{{/hasItemCode}}%">
       <col style="width:7%">
       <col style="width:9%">
       <col style="width:12%">
@@ -261,10 +263,12 @@
           <span class="head-ar">م</span>
           <span class="head-en">S.N</span>
         </th>
+        {{#hasItemCode itemdetails}}
         <th>
           <span class="head-ar">رمز الصنف</span>
           <span class="head-en">Item Code</span>
         </th>
+        {{/hasItemCode}}
         <th>
           <span class="head-ar">الوصف</span>
           <span class="head-en">Description</span>
@@ -291,7 +295,9 @@
       {{#each itemdetails}}
       <tr>
         <td class="center">{{addOne @index}}</td>
-        <td class="center">{{#if part_number}}{{part_number}}{{else}}{{item_code}}{{/if}}</td>
+        {{#hasItemCode ../itemdetails}}
+        <td class="center">{{item_code}}</td>
+        {{/hasItemCode}}
         <td class="left">
           {{item_name}}
           {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
