@@ -463,6 +463,13 @@
                     <td class="val">{{branch.[0].vat}}</td>
                     <td class="arl">الرقم الضريبي</td>
                 </tr>
+                {{#if branch.[0].cr_no}}
+                <tr>
+                    <td class="lbl">CR No</td>
+                    <td class="val">{{branch.[0].cr_no}}</td>
+                    <td class="arl">السجل التجاري</td>
+                </tr>
+                {{/if}}
             </table>
         </td>
 
@@ -532,6 +539,15 @@
                     <td class="val">{{billing_address.[0].vat}}</td>
                     <td class="arl">الرقم الضريبي</td>
                 </tr>
+                {{!-- billing_address carries no CR field, so the buyer's comes
+                     from customer_details --}}
+                {{#if customer_details.[0].cr_no}}
+                <tr>
+                    <td class="lbl">CR No</td>
+                    <td class="val">{{customer_details.[0].cr_no}}</td>
+                    <td class="arl">السجل التجاري</td>
+                </tr>
+                {{/if}}
             </table>
         </td>
       </tr>
