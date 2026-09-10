@@ -677,6 +677,13 @@ class TemplateService {
 
     data.tax_label_ar = countryIso === "AED" ? "رقم التسجيل" : "رقم ضريبة";
 
+    const taxRateMap = { SAR: 15, AED: 5, OMR: 5, BHD: 10 };
+    const rate = taxRateMap[countryIso] || 15;
+    data.tax_label_in_item =
+      countryIso === "AED"
+        ? "VAT (5%)"
+        : `VAT (${rate}%)`;
+
     data.ccrate =
       parseFloat(String(data.ccrate || basic.ccrate || 1).replace(/,/g, "")) ||
       1;
