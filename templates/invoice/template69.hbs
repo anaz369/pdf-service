@@ -691,7 +691,7 @@
                 {{/each}}
             </table>
             {{else}}
-            {{basicdetails.[0].modeofpayment}} : {{basicdetails.[0].received}}
+            {{basicdetails.[0].doc_payment_status}} / {{basicdetails.[0].doc_payment_status_lang2}}
             {{/if}}
         </td>
         <td>{{formatAmount basicdetails.[0].discount bcdp}}</td>
