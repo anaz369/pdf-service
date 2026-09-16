@@ -378,7 +378,7 @@
     <thead>
       <tr>
         <th style="width: 4%;">Sl<br><span class="ar">سرق</span></th>
-        {{#hasDiscount ../itemdetails}}
+        {{#hasDiscount itemdetails}}
         <th style="width: 23%;">Item Description<br><span class="ar">وصف السلعة</span></th>
         {{else}}
         <th style="width: 33%;">Item Description<br><span class="ar">وصف السلعة</span></th>
@@ -386,7 +386,7 @@
         <th style="width: 8%;">Qty<br><span class="ar">كمية</span></th>
         <th style="width: 7%;">UOM<br><span class="ar">وحدة</span></th>
         <th style="width: 11%;">Unit Rate<br><span class="ar">معدل الوحدة</span></th>
-        {{#hasDiscount ../itemdetails}}
+        {{#hasDiscount itemdetails}}
         <th style="width: 10%;">Discount<br><span class="ar">تخفيض</span></th>
         {{/hasDiscount}}
         <th style="width: 12%;">Total<br><span class="ar">المجموع</span></th>
