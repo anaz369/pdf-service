@@ -379,9 +379,17 @@
       <tr>
         <th style="width: 4%;">Sl<br><span class="ar">سرق</span></th>
         {{#hasDiscount itemdetails}}
-        <th style="width: 23%;">Item Description<br><span class="ar">وصف السلعة</span></th>
+            {{#hasVat itemdetails}}
+              <th style="width: 23%;">Item Description<br><span class="ar">وصف السلعة</span></th>
+            {{else}}
+              <th style="width: 33%;">Item Description<br><span class="ar">وصف السلعة</span></th>
+            {{/hasVat}}
         {{else}}
-        <th style="width: 33%;">Item Description<br><span class="ar">وصف السلعة</span></th>
+            {{#hasVat itemdetails}}
+              <th style="width: 33%;">Item Description<br><span class="ar">وصف السلعة</span></th>
+            {{else}}
+              <th style="width: 44%;">Item Description<br><span class="ar">وصف السلعة</span></th>
+            {{/hasVat}}
         {{/hasDiscount}}
         <th style="width: 8%;">Qty<br><span class="ar">كمية</span></th>
         <th style="width: 7%;">UOM<br><span class="ar">وحدة</span></th>
@@ -390,7 +398,10 @@
         <th style="width: 10%;">Discount<br><span class="ar">تخفيض</span></th>
         {{/hasDiscount}}
         <th style="width: 12%;">Total<br><span class="ar">المجموع</span></th>
+        {{#hasVat itemdetails}}
         <th style="width: 11%;">{{tax_label_in_item}}<br><span class="ar">قيمة الضريبة</span></th>
+        {{/hasVat}}
+
         <th style="width: 14%;">Grand Total<br><span class="ar">المجموع الإجمالي</span></th>
       </tr>
     </thead>
@@ -406,7 +417,9 @@
         <td style="text-align: right;">{{formatAmount disc_amt ../bcdp}}</td>
         {{/hasDiscount}}
         <td style="text-align: right;">{{formatAmount taxable ../bcdp}}</td>
+        {{#hasVat ../itemdetails}}
         <td style="text-align: right;">{{formatAmount vat_amt ../bcdp}}</td>
+        {{/hasVat}}
         <td style="text-align: right;">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
@@ -435,11 +448,13 @@
         <td class="t-amount">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
       </tr>
       {{/if_gt}}
+      {{#if_gt basicdetails.[0].vatamt 0}}
       <tr>
         <td class="t-label">{{tax_label_in_item}}</td>
         <td class="t-label-ar">ضريبة القيمة المضافة</td>
         <td class="t-amount">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
       </tr>
+      {{/if_gt}}
       <tr>
         <td class="t-label">Total Amount in {{basicdetails.[0].currency_isocode}}</td>
         <td class="t-label-ar">المبلغ الإجمالي</td>
