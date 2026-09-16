@@ -404,9 +404,8 @@
         <td style="text-align: right;">{{formatAmount price ../bcdp}}</td>
         {{#hasDiscount ../itemdetails}}
         <td style="text-align: right;">{{formatAmount disc_amt ../bcdp}}</td>
-        {{else}}
-        <td style="text-align: right;">{{formatAmount taxable ../bcdp}}</td>
         {{/hasDiscount}}
+        <td style="text-align: right;">{{formatAmount taxable ../bcdp}}</td>
         <td style="text-align: right;">{{formatAmount vat_amt ../bcdp}}</td>
         <td style="text-align: right;">{{formatAmount amount ../bcdp}}</td>
       </tr>
