@@ -96,7 +96,7 @@
     padding: 2px 6px;
   }
   .items-wrap td {
-    font-size: 11px;
+    font-size: 10px;
     vertical-align: middle;
     padding: 2px 6px;
   }
@@ -162,7 +162,7 @@
     font-size: 11px;
   }
   .totals-wrap .t-lbl {
-    text-align: right;
+    text-align: center;
     font-weight: bold;
   }
   .totals-wrap .t-ar {
@@ -304,10 +304,10 @@
          its 12% goes to Description when it is dropped --}}
     <colgroup>
       <col style="width:4%">
-      {{#hasItemCode itemdetails}}<col style="width:12%">{{/hasItemCode}}
-      <col style="width:{{#hasItemCode itemdetails}}43{{else}}55{{/hasItemCode}}%">
+      {{#hasItemCode itemdetails}}<col style="width:13%">{{/hasItemCode}}
+      <col style="width:{{#hasItemCode itemdetails}}43{{else}}56{{/hasItemCode}}%">
       <col style="width:7%">
-      <col style="width:9%">
+      <col style="width:8%">
       <col style="width:12%">
       <col style="width:13%">
     </colgroup>
@@ -350,7 +350,7 @@
       <tr>
         <td class="center">{{addOne @index}}</td>
         {{#hasItemCode ../itemdetails}}
-        <td class="center">{{item_code}}</td>
+        <td class="center">{{part_number}}</td>
         {{/hasItemCode}}
         <td class="left">
           {{item_name}}{{#if name_lang2}}{{name_lang2}}{{/if}}{{#if description}}{{description}}{{/if}}
@@ -361,7 +361,7 @@
         <td class="right">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
-      <tr class="item-spacer">
+      <tr class="item-spacer" style="height: 390px;">
         <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
       </tr>
     </tbody>
@@ -372,34 +372,40 @@
   <!-- Totals -->
   <table class="totals-wrap">
     <colgroup>
-      <col style="width:60%">
+      <col style="width:45%">
+      <col style="width:15%">
       <col style="width:15%">
       <col style="width:25%">
     </colgroup>
     <tr>
-      <td class="t-lbl">Total</td>
-      <td class="t-ar">الإجمالي</td>
+      <td class="t-lbl" style="border-right: none !important;"></td>
+      <td class="t-lbl" style="border-left: none !important;border-right: none !important;">Total</td>
+      <td class="t-ar" style="border-left: none !important;">الإجمالي</td>
       <td class="t-val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
     </tr>
     <tr>
-      <td class="t-lbl">Discount</td>
-      <td class="t-ar">الخصم</td>
+      <td class="t-lbl" style="border-right: none !important;"></td>
+      <td class="t-lbl" style="border-left: none !important;border-right: none !important;">Discount</td>
+      <td class="t-ar" style="border-left: none !important;">الخصم</td>
       <td class="t-val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
     </tr>
     <tr>
-      <td class="t-lbl">Net Amount</td>
-      <td class="t-ar">المبلغ الصافي</td>
+      <td class="t-lbl" style="border-right: none !important;"></td>
+      <td class="t-lbl" style="border-left: none !important;border-right: none !important;">Net Amount</td>
+      <td class="t-ar" style="border-left: none !important;">المبلغ الصافي</td>
       {{!-- subtotal - discount + dld --}}
       <td class="t-val">{{formatAmount (divide (subtract basicdetails.[0].subtotal (add basicdetails.[0].discount basicdetails.[0].dld)) ccrate) bcdp}}</td>
     </tr>
     <tr>
-      <td class="t-lbl">VAT</td>
-      <td class="t-ar">ضريبة</td>
+      <td class="t-lbl" style="border-right: none !important;"></td>
+      <td class="t-lbl" style="border-left: none !important;border-right: none !important;">VAT</td>
+      <td class="t-ar" style="border-left: none !important;">ضريبة</td>
       <td class="t-val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
     </tr>
     <tr>
-      <td class="t-lbl">TOTAL AMOUNT</td>
-      <td class="t-ar">المبلغ الإجمالي</td>
+      <td class="t-lbl" style="border-right: none !important;"></td>
+      <td class="t-lbl" style="border-left: none !important;border-right: none !important;">TOTAL AMOUNT</td>
+      <td class="t-ar" style="border-left: none !important;">المبلغ الإجمالي</td>
       <td class="t-val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
     </tr>
   </table>
