@@ -805,6 +805,50 @@ class TemplateService {
     }
   }
 
+  // ── RENDER TIMESHEET ─────────────────────────────────────
+  // Reads from /templates/timesheet/<templateName>.hbs
+  async renderTimesheetToString(templateName, data) {
+    try {
+      const cacheKey = `timesheet/${templateName}`;
+
+      if (!this.compiledTemplates.has(cacheKey)) {
+        const templatePath = path.join(
+          __dirname,
+          "..",
+          "templates",
+          "timesheet",
+          `${templateName}.hbs`,
+        );
+        console.log(`Loading timesheet template: ${templatePath}`);
+        const source = await fs.readFile(templatePath, "utf-8");
+        this.compiledTemplates.set(cacheKey, Handlebars.compile(source));
+      }
+
+      let html = this.compiledTemplates.get(cacheKey)(data);
+
+      html = injectFonts(html);
+
+      if (bootstrapCss && html.includes("cdn.jsdelivr.net")) {
+        html = html.replace(
+          /<link[^<]*bootstrap[^<]*>/gi,
+          `<style>${bootstrapCss}</style>`,
+        );
+        console.log(
+          "[Bootstrap] ✓ Injected into timesheet template:",
+          templateName,
+        );
+      }
+
+      console.log(
+        `Timesheet template rendered: ${cacheKey} (${html.length} chars)`,
+      );
+      return html;
+    } catch (error) {
+      console.error(`Error rendering timesheet template ${templateName}:`, error);
+      throw new Error(`Report template rendering failed: ${error.message}`);
+    }
+  }
+
   // ── RAHATH PAGINATION ─────────────────────────────────────
   prepareRahathData(data, maxRowsPerPage = 22) {
     const items = data.itemdetails || [];
