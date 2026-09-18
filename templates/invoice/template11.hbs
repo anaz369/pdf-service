@@ -177,7 +177,8 @@
         padding: 6px;
         margin-top: 14px;
     }
-    .qr_box img{
+    .qr_box img,
+    .qr_box svg{
         display: block;
         width: 90px !important;
         height: 90px !important;
@@ -370,7 +371,13 @@
             </td>
             <td class="sep_col2"><div class="sep_line2"></div></td>
             <td class="qr_col">
-                <div class="qr_box">{{{qrDataUri qrCodeBase64}}}</div>
+                <div class="qr_box">
+                    {{#if compprof.website}}
+                    {{{qrCodeUrl compprof.website 90}}}
+                    {{else}}
+                    {{{qrDataUri qrCodeBase64}}}
+                    {{/if}}
+                </div>
             </td>
         </tr>
     </table>
@@ -406,11 +413,11 @@
                         <div class="cname">{{shipping_address.[0].name}}</div>
                         <div class="line">{{joinAddress shipping_address.[0] ', '}}</div>
                         <table class="info_tbl">
-                            {{#if basicdetails.[0].attention}}
-                            <tr><td class="i_lbl">Contact Person</td><td class="i_sep">:</td><td>{{basicdetails.[0].attention}}</td></tr>
+                            {{#if basicdetails.[0].invoice_contactname}}
+                            <tr><td class="i_lbl">Contact Person</td><td class="i_sep">:</td><td>{{basicdetails.[0].invoice_contactname}}</td></tr>
                             {{/if}}
-                            {{#if customer_details.[0].contact_no1}}
-                            <tr><td class="i_lbl">Tel</td><td class="i_sep">:</td><td>{{default customer_details.[0].contact_no2 customer_details.[0].contact_no1}}</td></tr>
+                            {{#if basicdetails.[0].invoice_contactno}}
+                            <tr><td class="i_lbl">Tel</td><td class="i_sep">:</td><td>{{basicdetails.[0].invoice_contactno}}</td></tr>
                             {{/if}}
                         </table>
                     </div>
@@ -442,8 +449,8 @@
             {{#each itemdetails}}
             <tr>
                 <td class="tc">{{addOne @index}}</td>
-                <td class="ts">{{item_name}}</td>
-                <td class="tc">{{description}}</td>
+                <td class="ts">{{item_name}}{{description}}</td>
+                <td class="tc">{{remark}}</td>
                 <td class="tc">{{formatAmount quantity ../bcdp}}</td>
                 <td class="tc">{{unit}}</td>
                 <td class="te">{{formatAmount price ../bcdp}}</td>
@@ -457,7 +464,7 @@
     {{!-- ── Payment Terms / Bank Details  |  Summary ────── --}}
     <table class="bottom_wrap">
         <tr>
-            <td class="bl_col">
+            <td class="bl_col" style="padding-top:10px;">
                 {{#if basicdetails.[0].payment_terms}}
                 <div class="blk_hd">
                     <svg class="ic" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#c9962c" stroke-width="2"/><path d="M12 6v12M9 9.3c0-1.4 1.3-2.3 3-2.3s3 .9 3 2.3-1.3 1.9-3 1.9-3 .5-3 1.9 1.3 2.3 3 2.3 3-.9 3-2.3" fill="none" stroke="#c9962c" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -521,8 +528,8 @@
                             {{#if basicdetails.[0].salesman_name}}
                             <div class="sign_name">{{basicdetails.[0].salesman_name}}</div>
                             {{/if}}
-                            {{#if basicdetails.[0].employeedesignation}}
-                            <div class="sign_desig">{{basicdetails.[0].employeedesignation}}</div>
+                            {{#if basicdetails.[0].salesman_designation}}
+                            <div class="sign_desig">{{basicdetails.[0].salesman_designation}}</div>
                             {{/if}}
                         </td>
                         <td class="tc">
