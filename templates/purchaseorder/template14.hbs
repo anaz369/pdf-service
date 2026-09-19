@@ -7,33 +7,38 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 11px;
+      font-family: ibmplexsansarabic;
+      font-size: 10px;
       color: #000;
       background: #fff;
       margin: 0 6mm;
     }
-    .ar { direction: rtl; }
     table { border-collapse: collapse; width: 100%; table-layout: fixed; }
 
-    .doc-title { text-align: center; font-family: "Times New Roman", Times, serif; font-size: 20px; margin: 6px 0 12px; }
+    .doc-title { text-align: center; font-family: "Times New Roman", Times, serif; font-size: 19px; margin: 6px 0 12px; }
 
     /* PO no / date */
-    .po-bar td { padding: 3px 10px; font-size: 11px; text-align: center; }
+    .po-bar td { padding: 2px 10px; font-size: 10px; text-align: center; }
 
     /* parties */
-    .parties td { border: 1px solid #000; padding: 6px 8px; font-size: 11px; vertical-align: top; }
-    .crow { display: flex; justify-content: space-between; }
-    .crow .ar { text-align: right; }
+    .parties td { border: 1px solid #000; padding: 6px 8px; font-size: 10px; vertical-align: top; }
+    .parties .gap { height: 10px; }
+    .cinfo td { border: none; padding: 0; font-size: 10px; line-height: 1.4; }
+    .cinfo .clbl { width: 45px; white-space: nowrap; }
 
     /* items */
-    .items td, .items th { border: 1px solid #000; padding: 4px 5px; font-size: 11px; vertical-align: middle; }
+    /* thead defaults to display:table-header-group, which browsers repeat at
+       the top of every page a table spans. Rows carrying over to page 2 here
+       are terms/totals, not more products, so the column header has nothing
+       to sit above — drop it back to a plain row group so it only prints once. */
+    .items thead { display: table-row-group; }
+    .items td, .items th { border: 1px solid #000; padding: 4px 5px; font-size: 10px; vertical-align: middle; }
     .items th { font-weight: bold; text-align: center; line-height: 1.15; }
     .items td.num { text-align: center; }
     .items td.rt { text-align: right; }
     .items td.lft { text-align: left; }
-    .items .terms-cell { font-size: 11px; }
-    .items .terms-cell .th { font-weight: bold; font-size: 12px; }
+    .items .terms-cell { font-size: 10px; }
+    .items .terms-cell .th { font-weight: bold; font-size: 11px; }
     .items .twords { vertical-align: top; text-align: left; }
     .items .tlbl { text-align: right; }
     .items .tval { text-align: right; }
@@ -63,22 +68,40 @@
     <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
     <tr>
       <td>
-        <div class="crow"><span>{{compprof.name}}</span><span class="ar">{{branch_lang2.[0].name}}</span></div>
-        <div class="crow"><span>{{branch.[0].address_line1}}</span><span class="ar">{{branch_lang2.[0].address_line1}}</span></div>
-        <div class="crow"><span>{{branch.[0].address_line2}}</span><span class="ar">{{branch_lang2.[0].address_line2}}</span></div>
-        <div class="crow"><span>{{branch.[0].address_line3}}</span><span class="ar">{{branch_lang2.[0].address_line3}}</span></div>
-        <div>VAT: {{branch.[0].vat}}</div>
-        <div>Phone: {{compprof.contact_no1}}</div>
-        <div>Email: {{compprof.email}}</div>
+        <div>{{compprof.name}}</div>
+        <div>{{branch.[0].address_line1}}</div>
+        <div>{{branch.[0].address_line2}}</div>
+        <div>{{branch.[0].address_line4}}</div>
+        <div>{{branch.[0].address_line3}}</div>
+        <div>{{branch.[0].address_line5}}</div>
+        <table class="cinfo">
+          <colgroup>
+            <col style="width: 15%;">
+            <col style="width: 2%;">
+            <col style="width: 83%;">
+          </colgroup>
+          <tr><td class="clbl">VAT </td><td class="csep">:</td><td>{{branch.[0].vat}}</td></tr>
+          <tr><td class="clbl">Phone </td><td class="csep">:</td><td>{{compprof.[0].contact_no1}}</td></tr>
+          <tr><td class="clbl">Email </td><td class="csep">:</td><td>{{compprof.[0].email}}</td></tr>
+        </table>
       </td>
       <td>
         <div>{{vendor_details.[0].name}}</div>
         <div>{{billing_address.[0].address_line1}}</div>
         <div>{{billing_address.[0].address_line2}}</div>
+        <div>{{billing_address.[0].address_line4}}</div>
         <div>{{billing_address.[0].address_line3}}</div>
-        <div>VAT: {{billing_address.[0].vat}}</div>
-        <div>Phone: {{vendor_details.[0].contact_no1}}</div>
-        <div>Email: {{vendor_details.[0].email}}</div>
+        <div>{{billing_address.[0].address_line5}}</div>
+        <table class="cinfo">
+          <colgroup>
+            <col style="width: 15%;">
+            <col style="width: 2%;">
+            <col style="width: 83%;">
+          </colgroup>
+          <tr><td class="clbl">VAT </td><td class="csep">:</td><td>{{billing_address.[0].vat}}</td></tr>
+          <tr><td class="clbl">Phone </td><td class="csep">:</td><td>{{vendor_details.[0].contact_no1}}</td></tr>
+          <tr><td class="clbl">Email </td><td class="csep">:</td><td>{{vendor_details.[0].email}}</td></tr>
+        </table>
       </td>
     </tr>
   </table>
@@ -120,25 +143,33 @@
       <!-- TERMS AND CONDITIONS -->
       <tr>
         <td colspan="9" class="terms-cell">
-          <div class="th">Terms And Conditions</div>
-          {{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}
+          {{#if basicdetails.[0].terms_and_condition}}
+          <div class="th">Terms And Conditions</div>{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}
         </td>
       </tr>
 
       <!-- WORDS | TOTALS -->
       <tr>
-        <td class="twords" colspan="5" rowspan="3" style="border: 1px solid #000;border-right:none;">
+        <td class="twords" colspan="5" rowspan="{{#if (gt basicdetails.[0].discount 0)}}4{{else}}3{{/if}}" style="border: 1px solid #000;border-right:none;">
           <div style="font-weight: bold;">Amount chargeable in words :</div>
           <div>{{bcamountinwords}}</div>
+          {{#if vatamountinwords}}
           <div style="font-weight: bold;">VAT Amount in words :</div>
-          <div>{{bcamountinwordsar}}</div>
+          <div>{{vatamountinwords}}</div>
+          {{/if}}
         </td>
         <td class="tlbl" colspan="3" style="border: 1px solid #000;border-right:none;border-left:none;border-bottom:none;border-top:none;">Total (Excluding VAT)</td>
         <td class="tval" style="border: 1px solid #000;border-left:none;border-bottom:none;border-bottom:none;border-top:none;">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
       </tr>
+      {{#if (gt basicdetails.[0].discount 0)}}
+      <tr>
+        <td class="tlbl" colspan="3" style="border: 1px solid #000;border-right:none;border-left:none;border-bottom:none;border-top:none;">Total Discount</td>
+        <td class="tval" style="border: 1px solid #000;border-left:none;border-bottom:none;border-top:none;">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+      </tr>
+      {{/if}}
       <tr>
         <td class="tlbl" colspan="3" style="border: 1px solid #000;border-right:none;border-left:none;border-bottom:none;border-top:none;">VAT</td>
-        <td class="tval" style="border: 1px solid #000;border-left:none;border-bottom:none;border-bottom:none;border-top:none;">{{itemdetails.[0].vat_perc}} %</td>
+        <td class="tval" style="border: 1px solid #000;border-left:none;border-bottom:none;border-bottom:none;border-top:none;">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
       </tr>
       <tr>
         <td class="tlbl" colspan="3" style="border: 1px solid #000;border-right:none;border-left:none;border-top:none;">Amount Chargeable</td>
