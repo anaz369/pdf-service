@@ -17,7 +17,17 @@
     margin: 0 8mm;
   }
 
-  .page { width: 100%; margin: 0 auto; padding-top: 6px; }
+  /* Flex column so the item-spacer row (flex:1 on .items-wrap below) can
+     push the footer-block to the bottom of the page when there are few
+     items, without a hard-coded height — see .item-spacer further down. */
+  .page {
+    width: 100%;
+    margin: 0 auto;
+    padding-top: 6px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
 
   /* ── Title ─────────────────────────────────── */
   .main-title {
@@ -89,6 +99,9 @@
     margin-top: 4px;
     border: 1px solid #bfbfbf;
     border-bottom:none;
+    /* grow to soak up leftover page height; item-spacer (below) is the only
+       row that actually stretches, so real item rows keep their own size */
+    flex: 1 0 auto;
   }
   .items-wrap th {
     font-size: 11px;
@@ -124,18 +137,26 @@
   .items-wrap .right  { text-align: right; }
   .items-wrap .left   { text-align: left; }
 
-  /* The gap under the last item is whatever the page break leaves, not a fixed
-     280px block: a short quote used to carry a large hole, and a long one had
-     the spacer shoved onto a page of its own. The row stays so the column rules
-     carry on below the last item. */
+  /* The gap under the last item grows to fill whatever room .items-wrap's
+     flex-grow gives it (see .items-wrap above) — not a fixed px block: a
+     short quote used to carry a large hole, and a long one had the spacer
+     shoved onto a page of its own. height:100% on this one row is what
+     concentrates all of that extra space here instead of stretching every
+     row equally; the row stays so the column rules carry on below the last
+     item either way. */
+  .item-spacer {
+    height: 100%;
+  }
   .item-spacer td {
-    height: 0;
+    height: 100%;
     border-top: none;
     border-bottom: none;
+    padding: 0;
   }
 
   /* ── FOOTER BLOCK : kept together, pushed to next page if needed ── */
   .footer-block {
+    flex: 0 0 auto;
     overflow: hidden;
     page-break-inside: avoid;
     break-inside: avoid;
@@ -361,8 +382,8 @@
         <td class="right">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
-      <tr class="item-spacer" style="height: 330px;">
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      <tr class="item-spacer">
+        <td></td>{{#hasItemCode itemdetails}}<td></td>{{/hasItemCode}}<td></td><td></td><td></td><td></td><td></td>
       </tr>
     </tbody>
   </table>
