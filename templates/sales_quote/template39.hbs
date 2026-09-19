@@ -60,6 +60,11 @@
     vertical-align: top;
     padding: 0;
   }
+  .quote-to-hdr {
+    font-weight: bold;
+    text-align: center;
+    padding: 4px 0;
+  }
   .left-detail-table {
     width: 100%;
     border-collapse: collapse;
@@ -252,6 +257,16 @@
   }
   .bank-detail-table .bd-lbl {white-space: nowrap; }
   .bank-detail-table .bd-sep {padding: 2px 6px; }
+
+  /* ── Prepared by ─────────────────────────── */
+  .prepared-by {
+    margin-top: 16px;
+    font-weight: bold;
+    font-size: 11px;
+  }
+  .prepared-by .pb-lbl {
+    margin-right: 8px;
+  }
 </style>
 </head>
 <body>
@@ -274,14 +289,15 @@
       </colgroup>
       <tr>
         <td class="info-left" rowspan="4">
+          <div class="quote-to-hdr">Quote to</div>
           <table class="left-detail-table">
             <colgroup>
-              <col style="width:24%">
+              <col style="width:10%">
               <col style="width:2%">
-              <col style="width:74%">
+              <col style="width:88%">
             </colgroup>
             <tr>
-              <td class="ld-lbl">Customer Name</td>
+              <td class="ld-lbl">Name</td>
                <td class="ld-lbl">:</td>
               <td class="ld-val">{{billing_address.[0].name}}</td>
             </tr>
@@ -340,7 +356,7 @@
         </th>
         {{#hasItemCode itemdetails}}
         <th>
-          <span class="head-ar">رمز الصنف</span>
+          <span class="head-ar"> رقم القطعة</span>
           <span class="head-en">Part Number</span>
         </th>
         {{/hasItemCode}}
@@ -459,6 +475,13 @@
       </td>
     </tr>
   </table>
+
+  {{#if basicdetails.[0].employeename}}
+  <div class="prepared-by">
+    <span class="pb-lbl">Prepare by :</span>
+    <span class="pb-val">{{basicdetails.[0].employeename}}{{#if basicdetails.[0].employeedesignation}} - {{basicdetails.[0].employeedesignation}}{{/if}}</span>
+  </div>
+  {{/if}}
 
   </div>
 
