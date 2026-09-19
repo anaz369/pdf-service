@@ -196,7 +196,7 @@
     margin-top: 4px;
   }
   .bottom-wrap > tbody > tr > td {
-    border: 1px solid #bfbfbf;
+    border: 1px solid #000000;
     padding: 6px 10px;
     vertical-align: top;
     font-size: 11px;
@@ -328,7 +328,7 @@
           <span class="head-en">Description</span>
         </th>
         <th>
-          <span class="head-ar">الوحدة</span>
+          <span class="head-ar">نوع الوحدة</span>
           <span class="head-en">UOM</span>
         </th>
         <th>
@@ -429,11 +429,11 @@
                 <col style="width:3%">
                 <col style="width:78%">
             </colgroup>
-          <tr><td class="bd-lbl">Bank Name</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.name}}</td></tr>
-          <tr><td class="bd-lbl">A/c Name</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.acc_name}}</td></tr>
-          <tr><td class="bd-lbl">A/c No</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.acc_no}}</td></tr>
+          <tr><td class="bd-lbl">Account Name</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.acc_name}}</td></tr>
+          <tr><td class="bd-lbl">Account No</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.acc_no}}</td></tr>
           <tr><td class="bd-lbl">IBAN</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.iban_no}}</td></tr>
-          <tr><td class="bd-lbl">SWIFT</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.swift_no}}</td></tr>
+          <tr><td class="bd-lbl">Bank Name</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.name}}</td></tr>
+          {{!-- <tr><td class="bd-lbl">SWIFT</td><td class="bd-sep">:</td><td class="bd-val">{{bankdetails.swift_no}}</td></tr> --}}
         </table>
       </td>
     </tr>
