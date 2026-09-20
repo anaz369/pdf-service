@@ -132,6 +132,10 @@
         <td class="tval"><span style="font-size:11px;">{{currencySymbol basicdetails.[0].isocode}}</span> {{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
       </tr>
       <tr>
+        <td class="tlbl" colspan="2">Amount After Discount</td>
+        <td class="tval"><span style="font-size:11px;">{{currencySymbol basicdetails.[0].isocode}}</span> {{formatAmount (divide (subtract basicdetails.[0].subtotal basicdetails.[0].discount) ccrate) bcdp}}</td>
+      </tr>
+      <tr>
         <td class="tlbl" colspan="2">VAT Amount</td>
         <td class="tval"><span style="font-size:11px;">{{currencySymbol basicdetails.[0].isocode}}</span> {{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
       </tr>
