@@ -33,8 +33,8 @@
     .hdr-wrap > tbody > tr > td { border: none; padding: 0; vertical-align: top; }
 
     .info td {
-      border: 1px solid #999;
-      padding: 5px 8px;
+      border: 1px solid #bfbfbf;
+      padding: 3px 8px;
       vertical-align: top;
       word-wrap: break-word;
     }
@@ -43,25 +43,26 @@
     .info .addr { padding-top: 2px; line-height: 1.5; }
 
     /* ── Items ─────────────────────────────────────────── */
-    .items { margin-top: 14px; }
+    .items { margin-top: 8px; }
     .items th {
-      border: 1px solid #999;
+      border: 1px solid #bfbfbf;
+      background-color: #ccc;
       font-weight: 700;
       text-align: center;
       vertical-align: middle;
-      padding: 5px 4px;
+      padding: 3px 4px;
     }
     .items th .ar { display: block; direction: rtl; unicode-bidi: isolate; font-size: 10px; }
     .items th .en { display: block; font-size: 10px; }
     .items td {
-      border: 1px solid #999;
-      padding: 5px 6px;
-      vertical-align: top;
+      border: 1px solid #bfbfbf;
+      padding: 3px 6px;
+      vertical-align: middle;
     }
     .items .sn,
     .items .num  { text-align: center; }
     .items .desc-ar { display: block; direction: rtl; text-align: right; unicode-bidi: isolate; }
-    .items .desc-note { display: block; padding-top: 2px; }
+    .items .desc-note { padding-top: 2px; }
 
     /* ── Terms & conditions ────────────────────────────── */
     .terms { margin-top: 16px; }
@@ -70,8 +71,10 @@
 
     /* ── Signatures ────────────────────────────────────── */
     .bottom { margin-top: 24px; break-inside: avoid; page-break-inside: avoid; }
-    .divider { border: none; border-top: 1px solid #999; margin-bottom: 14px; }
-    .sign-labels td { border: none; padding: 0; text-align: center; font-weight: 700; }
+    .divider { border: none; border-top: 1px solid #bfbfbf; margin-bottom: 14px; }
+    .sign-labels td { border: none; padding: 0; text-align: center; font-weight: 700; vertical-align: bottom; }
+    .sign-labels .sig { font-weight: 400; }
+    .sign-labels .sig img { display: block; margin: 0 auto; }
     .sign-box { border: 1px solid #000; height: 30px; margin-top: 8px; }
   </style>
 </head>
@@ -145,11 +148,11 @@
           </tr>
           <tr>
             <td class="lbl">Dispatched Date</td>
-            <td class="val">{{basicdetails.[0].inv_date}}</td>
+            <td class="val">{{basicdetails.[0].due_date}}</td>
           </tr>
           <tr>
             <td class="lbl">Order Date</td>
-            <td class="val">{{basicdetails.[0].due_date}}</td>
+            <td class="val">{{basicdetails.[0].inv_date}}</td>
           </tr>
           <tr>
             <td class="lbl">Our Reference No</td>
@@ -161,11 +164,11 @@
           </tr>
           <tr>
             <td class="lbl">Delivery Mode</td>
-            <td class="val">{{basicdetails.[0].destination}}</td>
+            <td class="val">{{basicdetails.[0].terms_of_delivery}}</td>
           </tr>
           <tr>
             <td class="lbl">Sales Person</td>
-            <td class="val"></td>
+            <td class="val">{{basicdetails.[0].salesman_name}}</td>
           </tr>
         </table>
       </td>
@@ -181,13 +184,19 @@
   <table class="items">
     <colgroup>
       <col style="width:5%">
-      <col style="width:13%">
-      <col style="width:29%">
+      <col style="width:16%">
+      {{#if (gt (sumProperty itemdetails "order_qty") 0)}}
+      <col style="width:36%">
       <col style="width:8%">
       <col style="width:8%">
       <col style="width:9%">
       <col style="width:9%">
-      <col style="width:19%">
+      <col style="width:9%">
+      {{else}}
+      <col style="width:51%">
+      <col style="width:14%">
+      <col style="width:14%">
+      {{/if}}
     </colgroup>
     <thead>
       <tr>
@@ -196,9 +205,11 @@
         <th><span class="ar">الوصف</span><span class="en">Description</span></th>
         <th><span class="ar">الكمية</span><span class="en">QTY</span></th>
         <th><span class="ar">الوحدة</span><span class="en">UOM</span></th>
+        {{#if (gt (sumProperty itemdetails "order_qty") 0)}}
         <th><span class="ar">الأمر</span><span class="en">Ordered</span></th>
         <th><span class="ar">التوصيل</span><span class="en">Delivered</span></th>
         <th><span class="ar">منتهي</span><span class="en">Outstanding</span></th>
+        {{/if}}
       </tr>
     </thead>
     <tbody>
@@ -213,9 +224,11 @@
         </td>
         <td class="num">{{quantity}}</td>
         <td class="num">{{unit}}</td>
-        <td class="num">{{quantity}}</td>
-        <td class="num">{{quantity}}</td>
-        <td class="num">0</td>
+        {{#if (gt (sumProperty ../itemdetails "order_qty") 0)}}
+        <td class="num">{{order_qty}}</td>
+        <td class="num">{{delivered_qty}}</td>
+        <td class="num">{{subtract order_qty delivered_qty}}</td>
+        {{/if}}
       </tr>
       {{/each}}
     </tbody>
@@ -239,15 +252,23 @@
     <hr class="divider">
     <table class="sign-labels">
       <colgroup>
-        <col style="width:50%">
-        <col style="width:50%">
+        <col style="width:40%">
+        <col style="width:20%">
+        <col style="width:40%">
       </colgroup>
       <tr>
         <td>DELIVERED BY</td>
+        <td class="sig">
+          {{#ifFlag datasettings "d679"}}
+          <img src="{{Signature}}" alt="Signature"
+               style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;"
+               onerror="this.style.display='none'" />
+          {{/ifFlag}}
+        </td>
         <td>RECEIVED BY</td>
       </tr>
     </table>
-    <div class="sign-box"></div>
+    <div class="sign-box">{{datasettingstextvalue.d344}}</div>
   </div>
 
 </td>
