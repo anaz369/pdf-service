@@ -341,9 +341,9 @@
          its 12% goes to Description when it is dropped --}}
     <colgroup>
       <col style="width:4%">
-      {{#hasItemCode itemdetails}}<col style="width:13%">{{/hasItemCode}}
-      <col style="width:{{#hasItemCode itemdetails}}42{{else}}55{{/hasItemCode}}%">
-      <col style="width:9%">
+      {{#hasItemCode itemdetails}}<col style="width:15%">{{/hasItemCode}}
+      <col style="width:{{#hasItemCode itemdetails}}41{{else}}54{{/hasItemCode}}%">
+      <col style="width:8%">
       <col style="width:8%">
       <col style="width:11%">
       <col style="width:13%">
@@ -390,7 +390,10 @@
         <td class="center">{{part_number}}</td>
         {{/hasItemCode}}
         <td class="left">
-          {{item_name}}{{#if name_lang2}}{{name_lang2}}{{/if}}
+          <div style="display: flex; justify-content: space-between;">
+            <span>{{item_name}}</span>
+            {{#if name_lang2}}<span style="text-align: right;">{{name_lang2}}</span>{{/if}}
+          </div>
         </td>
         <td class="center">{{unit}}</td>
         <td class="center">{{formatAmount quantity 0}}</td>
