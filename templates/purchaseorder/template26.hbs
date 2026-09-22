@@ -7,7 +7,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family:ibmplexsansarabic;
       font-size: 10px;
       color: #000;
       background: #fff;
@@ -74,9 +74,9 @@
       <td class="cellL">
         <div class="hd" style="padding-left:4px;">From,</div>
         <table class="kv">
-          <tr><td class="k">Name</td><td class="c">:</td><td>{{compprof.name}}</td></tr>
+          <tr><td class="k">Name</td><td class="c">:</td><td>{{branch.[0].name}}</td></tr>
           <tr><td class="k">Address</td><td class="c">:</td><td>{{joinAddress branch.[0] ', '}}</td></tr>
-          <tr><td class="k">CR.No</td><td class="c">:</td><td>{{compprof.cr_no}}</td></tr>
+          <tr><td class="k">CR.No</td><td class="c">:</td><td>{{branch.[0].cr_no}}</td></tr>
         </table>
       </td>
       <td class="cellR" style="border-left: 1px solid #bfbfbf;">
@@ -142,23 +142,31 @@
   </table>
 
   <!-- TERMS -->
+  {{#if basicdetails.[0].terms_and_condition}}
   <div class="mt"><span class="h">Terms and Conditions</span></div>
-  <div class="terms-txt">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+  <div class="terms-txt">{{{nl2br basicdetails.[0].terms_and_condition}}}</div>
+  {{/if}}
 
-  <!-- SIGNATURE -->
+   <!-- SIGNATURE -->
   <table class="sign" style="margin-top:30px;">
+    {{#ifFlag datasettings "d292"}}
     <colgroup><col style="width:33%"><col style="width:34%"><col style="width:33%"></colgroup>
+    {{else}}
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    {{/ifFlag}}
     <tr>
       <td>
         <div class="sh">Prepared By</div>
         <div class="sa">أعدت بواسطة</div>
-        <div style="margin-top:6px;">{{basicdetails.[0].salesman_name}}</div>
+        <div style="margin-top:6px;">{{basicdetails.[0].created_user}}</div>
       </td>
+      {{#ifFlag datasettings "d292"}}
       <td>
         <div class="sh">Company Stamp</div>
         <div class="sa">ختم الشركة</div>
         <div class="simg">{{#if Seal}}<img src="{{Seal}}" alt="Seal" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>{{/if}}</div>
       </td>
+      {{/ifFlag}}
       <td>
         <div class="sh">Authorized Signature</div>
         <div class="sa">توقيع معتمد</div>
