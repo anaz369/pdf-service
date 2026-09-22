@@ -150,8 +150,10 @@
   </table>
 
   <!-- TERMS -->
+  {{#if basicdetails.[0].terms_and_condition}}
   <div class="mt"><span class="h">Terms and Conditions</span></div>
-  <div class="terms-txt">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+  <div class="terms-txt">{{{nl2br basicdetails.[0].terms_and_condition}}}</div>
+  {{/if}}
 
    <!-- SIGNATURE -->
   <table class="sign" style="margin-top:30px;">
