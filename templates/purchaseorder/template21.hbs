@@ -35,7 +35,7 @@
     .hd { font-weight: 700; margin-bottom: 4px; }
     .kv { width: 100%; border-collapse: collapse; }
     .kv td { padding: 3px 4px; font-size: 10px; vertical-align: top; }
-    .kv .k { width: 22%; }
+    .kv .k { width: 15%; }
     .kv .c { width: 4%; }
 
     /* ── ITEMS ── */
@@ -59,8 +59,8 @@
 
     /* ── SIGN ── */
     .sign td { text-align: left; vertical-align: top; padding: 6px; font-size: 11px; border: none; }
-    .sign .dots { margin: 40px 0 4px; letter-spacing: 1px; }
-    .sign .sline { margin-top: 22px; }
+    .sign .dots { margin: 35px 0 4px; letter-spacing: 1px; }
+    .sign .sline { margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -126,7 +126,7 @@
         <td class="num">{{unit}}</td>
         <td class="num">{{formatAmount quantity ../bcdp}}</td>
         <td class="rt">{{formatAmount price ../bcdp}}</td>
-        <td class="rt">{{formatAmount tax ../bcdp}}<div class="perc">{{vat_perc}}%</div></td>
+        <td class="rt">{{formatAmount tax ../bcdp}}</td>
         <td class="rt">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
@@ -150,8 +150,10 @@
   </table>
 
   <!-- TERMS -->
+  {{#if basicdetails.[0].terms_and_condition}}
   <div class="mt"><span class="h">Terms and Conditions</span></div>
-  <div class="terms-txt">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+  <div class="terms-txt">{{{nl2br basicdetails.[0].terms_and_condition}}}</div>
+  {{/if}}
 
   <!-- SIGNATURE : ORDERED BY | APPROVED BY | ACCEPTED BY -->
   <table class="sign" style="margin-top:30px;">
