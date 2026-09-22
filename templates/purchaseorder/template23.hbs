@@ -76,11 +76,11 @@
                 <col style="width:4%">
                 <col style="width:76%">
               </colgroup>
-              <tr><td class="k">Buyer</td><td class="c">:</td><td>{{compprof.name}}</td></tr>
+              <tr><td class="k">Buyer</td><td class="c">:</td><td>{{branch.[0].name}}</td></tr>
               <tr><td class="k">Address</td><td class="c">:</td><td class="addr">{{#if branch.[0].address_line4}}<span>{{branch.[0].address_line4}}</span>{{/if}}{{#if branch.[0].address_line5}}<span>{{branch.[0].address_line5}}</span>{{/if}}</td></tr>
               <tr><td class="k">Buyer Email</td><td class="c">:</td><td>{{compprof.email}}</td></tr>
               <tr><td class="k">Buyer Tel</td><td class="c">:</td><td>{{compprof.contact_no1}}</td></tr>
-              <tr><td class="k">VAT Number</td><td class="c">:</td><td>{{compprof.gstin}}</td></tr>
+              <tr><td class="k">VAT Number</td><td class="c">:</td><td>{{branch.[0].vat}}</td></tr>
             </table>
           </div>
         </div>
