@@ -404,7 +404,7 @@
                     <tr>
                         <td class="s_lbl">Total Amount In {{basicdetails.[0].currency_isocode}}</td>
                         <td class="s_ar arab">المبلغ الإجمالي</td>
-                        <td class="s_val">{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
+                        <td class="s_val">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
                     </tr>
                 </table>
             </td>
