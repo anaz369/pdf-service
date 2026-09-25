@@ -8,7 +8,7 @@
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 9.5px;
+      font-size: 10.5px;
       color: #000000;
       background: #fff;
       margin: 0 5mm;
@@ -20,27 +20,27 @@
     /* ── TITLE ── */
     .title-bar {
       background: #ffff00; color: #000; text-align: center;
-      font-size: 15px; font-weight: 800; padding: 6px; letter-spacing: 0.5px;
+      font-size: 16px; font-weight: 800; padding: 6px; letter-spacing: 0.5px;
     }
 
     /* ── INFO BOXES ── */
     .box { border: 1px solid #bfbfbf; }
-    .box .hd { font-weight: 700; font-size: 10px; padding: 4px 8px; }
+    .box .hd { font-weight: 700; font-size: 11px; padding: 4px 8px; }
     .kv { width: 100%; border-collapse: collapse; }
-    .kv td { padding: 2px 8px; font-size: 9.5px; vertical-align: top; }
-    .kv .k { width: 25%; }
+    .kv td { padding: 2px 8px; font-size: 10.5px; vertical-align: top; }
+    .kv .k { width: 27%; }
     .kv .c { width: 2%; }
-    .hd { font-weight: bold; padding-left:8px; font-size: 12px; padding-top:5px;}
+    .hd { font-weight: bold; padding-left:8px; font-size: 13px; padding-top:5px;}
     .split > tbody > tr > td { vertical-align: top; border: none; padding: 0; }
     .split .cellL { border: 1px solid #bfbfbf; }
     .split .cellR { border: 1px solid #bfbfbf; border-left: none; }
 
     /* ── ITEMS ── */
-    .items td, .items th { border: 1px solid #bfbfbf; padding: 3px 5px; font-size: 9px; vertical-align: top; }
+    .items td, .items th { border: 1px solid #bfbfbf; padding: 3px 5px; font-size: 10px; vertical-align: top; }
     .items th { font-weight: 700; text-align: center; }
     .items td.num { text-align: center; }
     .items td.rt { text-align: right; }
-    .items .idesc { font-size: 8.5px; }
+    .items .idesc { font-size: 9.5px; }
     /* item rows: no horizontal lines between them; only the last item gets a bottom border */
     .items tbody tr.item-row td { border-top: none; border-bottom: none; }
     .items tbody tr.item-row.item-last td { border-bottom: 1px solid #bfbfbf; }
@@ -50,7 +50,7 @@
     .sum > tbody > tr > td { vertical-align: top; padding: 4px 6px; }
     .sum .words { width: 50%; }
     .sum .stbl { width: 100%; border-collapse: collapse; }
-    .sum .stbl td { padding: 2px 4px; font-size: 9.5px; }
+    .sum .stbl td { padding: 2px 4px; font-size: 10.5px; }
     .sum .stbl .sl { text-align: right; }
     .sum .stbl .sv { text-align: right; width: 32%; }
 
@@ -60,7 +60,7 @@
     .sig-img img { max-height: 60px; max-width: 130px; }
 
     /* ── ACCEPTANCE ── */
-    .accept-bar { background: #ffff00; text-align: center; font-weight: 700; padding: 4px; font-size: 10px; }
+    .accept-bar { background: #ffff00; text-align: center; font-weight: 700; padding: 4px; font-size: 11px; }
     .accept-mid { text-align: center; padding: 4px; }
   </style>
 </head>
@@ -76,9 +76,10 @@
       <td class="cellL">
         <div class="hd">VENDOR INORMATION</div>
         <table class="kv">
+            <colgroup><col style="width:27%"><col style="width:2%"><col style="width:69%"></colgroup>
           <tr><td class="k">Vendor Id</td><td class="c">:</td><td>{{vendor_details.[0].profile_code}}</td></tr>
           <tr><td class="k">Company Name</td><td class="c">:</td><td>{{vendor_details.[0].name}}</td></tr>
-          <tr><td class="k">VAT No</td><td class="c">:</td><td>{{vendor_details.[0].VAT_number}}</td></tr>
+          <tr><td class="k">GST No</td><td class="c">:</td><td>{{billing_address.[0].gstin}}</td></tr>
           <tr><td class="k">Address</td><td class="c">:</td><td>{{#if billing_address.[0]}}{{joinAddress billing_address.[0] ', '}}{{/if}}</td></tr>
           <tr><td class="k">Phone</td><td class="c">:</td><td>{{vendor_details.[0].contact_no1}}</td></tr>
           <tr><td class="k">Email</td><td class="c">:</td><td>{{vendor_details.[0].email}}</td></tr>
@@ -106,20 +107,20 @@
         <div class="hd">Ship To:</div>
         <table class="kv" style="padding: 2px 8px;">
           <tr><td class="k">Company</td><td class="c">:</td><td>{{shipping_address.[0].name}}</td></tr>
-          <tr><td class="k">Location</td><td class="c">:</td><td>{{shipping_address.[0].address_line3}}</td></tr>
+          <tr><td class="k">District</td><td class="c">:</td><td>{{shipping_address.[0].address_line3}}</td></tr>
           <tr><td class="k">City</td><td class="c">:</td><td>{{shipping_address.[0].address_line4}}</td></tr>
-          <tr><td class="k">Country</td><td class="c">:</td><td>{{shipping_address.[0].address_line5}}</td></tr>
           <tr><td class="k">Postal Code</td><td class="c">:</td><td>{{shipping_address.[0].address_code}}</td></tr>
+          <tr><td class="k">Country</td><td class="c">:</td><td>{{shipping_address.[0].address_line5}}</td></tr>
         </table>
       </td>
       <td class="cellR">
         <div class="hd">Bill To:</div>
         <table class="kv">
           <tr><td class="k">Company</td><td class="c">:</td><td>{{billing_address.[0].name}}</td></tr>
-          <tr><td class="k">Location</td><td class="c">:</td><td>{{billing_address.[0].address_line3}}</td></tr>
+          <tr><td class="k">District</td><td class="c">:</td><td>{{billing_address.[0].address_line3}}</td></tr>
           <tr><td class="k">City</td><td class="c">:</td><td>{{billing_address.[0].address_line4}}</td></tr>
-          <tr><td class="k">Country</td><td class="c">:</td><td>{{billing_address.[0].address_line5}}</td></tr>
           <tr><td class="k">Postal Code</td><td class="c">:</td><td>{{billing_address.[0].address_code}}</td></tr>
+          <tr><td class="k">Country</td><td class="c">:</td><td>{{billing_address.[0].address_line5}}</td></tr>
         </table>
       </td>
     </tr>
@@ -129,27 +130,37 @@
   <table class="items mt">
     <colgroup>
       <col style="width:5%">
-      <col style="width:10%">
-      <col style="width:19%">
+      {{#if (gt basicdetails.[0].igst 0)}}
+      <col style="width:38%">
+      {{else}}
+      <col style="width:27%">
+      {{/if}}
       <col style="width:8%">
       <col style="width:8%">
       <col style="width:9%">
       <col style="width:9%">
-      <col style="width:9%">
+      {{#if (gt basicdetails.[0].igst 0)}}
       <col style="width:11%">
+      {{else}}
+      <col style="width:11%">
+      <col style="width:11%">
+      {{/if}}
       <col style="width:12%">
     </colgroup>
     <thead>
       <tr>
         <th>S.N</th>
-        <th>Itemcode</th>
         <th>Description</th>
         <th>Unit</th>
         <th>QTY</th>
         <th>U.Rate</th>
         <th>Disc</th>
-        <th>VAT %</th>
-        <th>VAT Amt</th>
+        {{#if (gt basicdetails.[0].igst 0)}}
+        <th>IGST</th>
+        {{else}}
+        <th>SGST</th>
+        <th>CGST</th>
+        {{/if}}
         <th>Total Price</th>
       </tr>
     </thead>
@@ -157,14 +168,17 @@
       {{#each itemdetails}}
       <tr class="item-row{{#if @last}} item-last{{/if}}">
         <td class="num">{{addOne @index}}</td>
-        <td class="num">{{item_code}}</td>
         <td>{{item_name}}{{#if name_lang2}}<div class="idesc">{{name_lang2}}</div>{{/if}}{{#if description}}<div class="idesc">{{description}}</div>{{/if}}</td>
         <td class="num">{{unit}}</td>
         <td class="num">{{formatAmount quantity ../bcdp}}</td>
         <td class="rt">{{formatAmount price ../bcdp}}</td>
-        <td class="rt">{{formatAmount disc_amt ../bcdp}}</td>
-        <td class="num">{{vat_perc}}</td>
-        <td class="rt">{{formatAmount tax ../bcdp}}</td>
+        <td class="rt">{{formatAmount discount ../bcdp}}</td>
+        {{#if (gt ../basicdetails.[0].igst 0)}}
+        <td class="rt">{{formatAmount igst_amt ../bcdp}}</td>
+        {{else}}
+        <td class="rt">{{formatAmount sgst_amt ../bcdp}}</td>
+        <td class="rt">{{formatAmount cgst_amt ../bcdp}}</td>
+        {{/if}}
         <td class="rt">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
@@ -180,9 +194,14 @@
         <table class="stbl">
           <tr><td class="sl">Sub Total</td><td class="sv">{{formatAmount basicdetails.[0].subtotal bcdp}}</td></tr>
           <tr><td class="sl">Discount</td><td class="sv">{{formatAmount basicdetails.[0].discount bcdp}}</td></tr>
-          <tr><td class="sl">Total Amount Excl. VAT</td><td class="sv">{{formatAmount (subtract basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</td></tr>
-          <tr><td class="sl">VAT</td><td class="sv">{{formatAmount basicdetails.[0].vatamt bcdp}}</td></tr>
-          <tr><td class="sl">Total Amount Incl. VAT</td><td class="sv">{{formatAmount basicdetails.[0].grand_total bcdp}}</td></tr>
+          <tr><td class="sl">Total Amount Excl. Tax</td><td class="sv">{{formatAmount (subtract basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</td></tr>
+          {{#if (gt basicdetails.[0].igst 0)}}
+          <tr><td class="sl">IGST</td><td class="sv">{{formatAmount basicdetails.[0].igst bcdp}}</td></tr>
+          {{else}}
+          <tr><td class="sl">SGST</td><td class="sv">{{formatAmount basicdetails.[0].sgst bcdp}}</td></tr>
+          <tr><td class="sl">CGST</td><td class="sv">{{formatAmount basicdetails.[0].cgst bcdp}}</td></tr>
+          {{/if}}
+          <tr><td class="sl">Total Amount Incl. Tax</td><td class="sv">{{formatAmount basicdetails.[0].grand_total bcdp}}</td></tr>
         </table>
       </td>
     </tr>
