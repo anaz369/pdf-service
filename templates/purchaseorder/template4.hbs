@@ -7,12 +7,18 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'DejaVu Sans', 'Noto Sans', Arial, sans-serif;
-      font-size: 9px;
+      font-family: ibmplexsansarabic;
+      font-size: 10.5px;
       color: #000;
       background: #fff;
       margin: 0 6mm;
+      /* fill the printable page height so the totals / signature block always
+         sits at the bottom — the gap below terms absorbs whatever is left over */
+      display: flex;
+      flex-direction: column;
+      min-height: calc(99vh - {{#if FooterImageUrl}}max(45px, {{default datasettings.d75 '45'}}px){{else}}0px{{/if}});
     }
+    body > * { flex: 0 0 auto; }
     table { border-collapse: collapse; width: 100%; table-layout: fixed; }
     .b { font-weight: bold; }
 
@@ -20,49 +26,50 @@
       text-align: center;
       color: #2e3e57;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 17.5px;
       padding-bottom: 8px;
     }
 
     /* outer frame */
-    .frame { border: 2px solid #000; }
+    .frame { border: 2px solid #000; flex: 1 0 auto; display: flex; flex-direction: column; }
+    .frame > * { flex: 0 0 auto; }
+    .frame > .fill { flex: 1 0 auto; }
+    .bottom-block { page-break-inside: avoid; break-inside: avoid; }
 
     /* ── top: company | PO no + date + vendor ── */
-    .top > tbody > tr > td { vertical-align: top; font-weight: bold; }
-    .top .co { border-right: 1px solid #000; padding: 12px 10px 2px; line-height: 1.5; }
-    .top .rhs { padding: 10px 6px 4px; }
-    .meta td { text-align: center; padding: 0 4px; line-height: 1.5; }
-    .vend { padding: 22px 12px 0; line-height: 1.5; }
-    .vend-vat { padding: 16px 12px 0; }
+    .top > tbody > tr > td { vertical-align: top; }
+    .top .co { border-right: 1px solid #000; padding: 0; }
+    .top .rhs { padding: 0; }
+    .meta { text-align: center; padding: 8px 6px; border-bottom: 1px solid #000; line-height: 1.5; }
+    .vend { padding: 10px 12px 0; font-weight: 700; }
+    .vend-vat { padding: 6px 12px 10px; line-height: 1.5; }
 
     /* ── items ── */
-    .items-wrap { min-height: 235px; border-top: 1px solid #000; }
-    .items th, .items td { border: 1px solid #000; padding: 1px 3px; font-size: 9px; vertical-align: top; }
+    .items th, .items td { border: 1px solid #000; padding: 3px 5px; font-size: 10.5px; vertical-align: top; }
     .items tr > :first-child { border-left: none; }
     .items tr > :last-child  { border-right: none; }
-    .items th { font-weight: bold; text-align: right; white-space: nowrap; }
+    .items th { font-weight: bold; text-align: center; white-space: nowrap; padding: 6px 3px;  }
     .items th.l, .items td.l { text-align: left; }
     .items th.c, .items td.c { text-align: center; }
     .items td { text-align: right; }
     .items tr { page-break-inside: avoid; }
 
     /* ── terms ── */
-    .terms { min-height: 190px; padding: 0 2px 6px; }
-    .terms .th { font-weight: bold; }
+    .terms {padding: 6px 6px 8px; }
+    .terms .th { font-weight: bold; text-align: left;vertical-align: top;}
 
     /* ── totals ── */
     .tot { border-top: 1px solid #000; }
-    .tot td { font-weight: bold; padding: 1px 2px; line-height: 1.6; }
-    .tot .tl { text-align: right; padding-right: 30px; }
+    .tot td { padding: 2px 6px; line-height: 1.6; }
+    .tot .tl { font-weight: bold; text-align: right; padding-right: 30px; }
     .tot .tv { text-align: right; }
-    .tot .last td { border-bottom: 1px solid #000; }
+    {{!-- .tot .last td { border-bottom: 1px solid #000; } --}}
 
     /* ── seal / signature ── */
-    .seal td { vertical-align: top; height: 40px; padding: 2px; font-weight: bold; }
-    .seal .lhs { border-right: 2px solid #000; }
-    .seal .rhs { border-top: 2px dashed #000; text-align: right; position: relative; padding-top: 4px; }
-    .seal .auth { font-size: 7px; margin-top: 14px; }
-    .seal img { max-height: {{default datasettings.d458 '80'}}px; max-width: {{default datasettings.d458 '120'}}px; }
+    .seal td { text-align: center;vertical-align: top; height: 40px; padding: 6px; }
+    .seal .lhs { border-right: 1px solid #000;border-top: 2px dashed #000; }
+    .seal .rhs { border-top: 2px dashed #000; text-align: center; position: relative; padding-top: 6px; }
+    .seal .auth { font-size: 10px; margin-top: 14px; }
   </style>
 </head>
 <body>
@@ -74,9 +81,12 @@
     <!-- TOP -->
     <table class="top">
       <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+      
       <tr>
         <td class="co">
-          <div>{{branch.[0].name}}</div>
+          <div class="meta"><span class="b">Purchase Order Number</span><br>{{basicdetails.[0].inv_no}}</div>
+          <div class="vend">{{branch.[0].name}}</div>
+          <div class="vend-vat">
           {{#if branch.[0].address_line1}}<div>{{branch.[0].address_line1}}</div>{{/if}}
           {{#if branch.[0].address_line2}}<div>{{branch.[0].address_line2}}</div>{{/if}}
           {{#if branch.[0].address_line3}}<div>{{branch.[0].address_line3}}</div>{{/if}}
@@ -84,17 +94,20 @@
           {{#if branch.[0].address_line5}}<div>{{branch.[0].address_line5}}</div>{{/if}}
           {{#if branch.[0].address_code}}<div>{{branch.[0].address_code}}</div>{{/if}}
           {{#if branch.[0].vat}}<div>{{branch.[0].vat}}</div>{{/if}}
+          </div>
         </td>
         <td class="rhs">
-          <table class="meta">
-            <colgroup><col style="width:62%"><col style="width:38%"></colgroup>
-            <tr>
-              <td>Purchase Order Number<br>{{basicdetails.[0].inv_no}}</td>
-              <td>Date<br>{{basicdetails.[0].inv_date}}</td>
-            </tr>
-          </table>
+          <div class="meta"><span class="b">Date</span><br>{{basicdetails.[0].inv_date}}</div>
           <div class="vend">{{#if vendor_details.[0].name}}{{vendor_details.[0].name}}{{else}}{{billing_address.[0].name}}{{/if}}</div>
-          <div class="vend-vat">VAT : {{#if vendor_details.[0].VAT_number}}{{vendor_details.[0].VAT_number}}{{else}}{{billing_address.[0].vat}}{{/if}}</div>
+          <div class="vend-vat">
+            {{#if vendor_details.[0].address_line1}}<div>{{vendor_details.[0].address_line1}}</div>{{/if}}
+            {{#if vendor_details.[0].address_line2}}<div>{{vendor_details.[0].address_line2}}</div>{{/if}}
+            {{#if vendor_details.[0].address_line3}}<div>{{vendor_details.[0].address_line3}}</div>{{/if}}
+            {{#if vendor_details.[0].address_line4}}<div>{{vendor_details.[0].address_line4}}</div>{{/if}}
+            {{#if vendor_details.[0].address_line5}}<div>{{vendor_details.[0].address_line5}}</div>{{/if}}
+            {{#if vendor_details.[0].address_code}}<div>{{vendor_details.[0].address_code}}</div>{{/if}}
+            {{#if vendor_details.[0].vat}}<div>{{vendor_details.[0].vat}}</div>{{/if}}
+          </div>
         </td>
       </tr>
     </table>
@@ -103,24 +116,24 @@
     <div class="items-wrap">
       <table class="items">
         <colgroup>
-          <col style="width:2%">
-          <col style="width:29.5%">
-          <col style="width:11.5%">
-          <col style="width:7.5%">
+          <col style="width:4%">
+          <col style="width:30%">
+          <col style="width:9%">
+          <col style="width:7%">
+          <col style="width:10%">
+          <col style="width:11%">
           <col style="width:8%">
-          <col style="width:11%">
-          <col style="width:8.5%">
-          <col style="width:11%">
+          <col style="width:10%">
           <col style="width:11%">
         </colgroup>
         <thead>
           <tr>
-            <th class="l">#</th>
-            <th class="l">Description</th>
+            <th>#</th>
+            <th>Description</th>
             <th>Quantity</th>
             <th>Unit</th>
             <th>Unit Price</th>
-            <th class="c">Taxable Amount</th>
+            <th class="c">Taxable</th>
             <th class="c">Tax Rate</th>
             <th>Tax Amount</th>
             <th class="c">Item Subtotal</th>
@@ -131,11 +144,11 @@
           <tr>
             <td class="c">{{addOne @index}}</td>
             <td class="l">{{item_name}}{{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}{{#if description}}<div>{{description}}</div>{{/if}}</td>
-            <td>{{quantity}}</td>
-            <td>{{unit}}</td>
+            <td style="text-align: center;">{{quantity}}</td>
+            <td style="text-align: center;">{{unit}}</td>
             <td>{{formatAmount (divide price ../ccrate) ../bcdp}}</td>
             <td>{{formatAmount (divide taxable ../ccrate) ../bcdp}}</td>
-            <td>{{vat_perc}}</td>
+            <td style="text-align: center;">{{vat_perc}}</td>
             <td>{{formatAmount (divide tax ../ccrate) ../bcdp}}</td>
             <td>{{formatAmount (divide amount ../ccrate) ../bcdp}}</td>
           </tr>
@@ -146,15 +159,19 @@
 
     <!-- TERMS -->
     <div class="terms">
+      {{#if basicdetails.[0].terms_and_condition}}
       <div class="th">Terms And Conditions</div>
-      {{#if basicdetails.[0].terms_and_condition}}<div>{{{nl2br basicdetails.[0].terms_and_condition}}}</div>{{/if}}
+      <div>{{{nl2br basicdetails.[0].terms_and_condition}}}</div>{{/if}}
     </div>
 
+    <div class="fill"></div>
+
+    <div class="bottom-block">
     <!-- TOTALS -->
     <table class="tot">
       <colgroup><col style="width:50%"><col style="width:38%"><col style="width:12%"></colgroup>
       <tr>
-        <td>Amount chargeable in words</td>
+        <td class="b">Amount chargeable in words</td>
         <td class="tl">Total (Excluding VAT )</td>
         <td class="tv">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
       </tr>
@@ -164,12 +181,12 @@
         <td class="tv">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
       </tr>
       <tr>
-        <td>VAT Amount in words</td>
-        <td class="tl" rowspan="2" style="vertical-align: top;">Amount Chargeable</td>
+        <td class="b">{{#if vatamountinwords}}VAT Amount in words{{/if}}</td>
+        <td class="tl" rowspan="2" style="vertical-align: top;">Grand Total</td>
         <td class="tv" rowspan="2" style="vertical-align: top;">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
       </tr>
       <tr class="last">
-        <td>{{#if bcvatinwords}}{{bcvatinwords}}{{else}}{{vatamountinwords}}{{/if}}</td>
+        <td>{{#if vatamountinwords}}{{vatamountinwords}}{{/if}}</td>
       </tr>
     </table>
 
@@ -177,14 +194,15 @@
     <table class="seal">
       <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
       <tr>
-        <td class="lhs">Seal and Signature</td>
+        <td class="lhs b">Seal and Signature</td>
         <td class="rhs">
           <div>For {{branch.[0].name}}</div>
-          {{#if Seal}}<div><img src="{{Seal}}" alt="" onerror="this.style.display='none'"/></div>{{/if}}
-          <div class="auth">Authorised Signatory</div>
+          {{#if Seal}}<div><img src="{{Seal}}" alt="Seal" style="text-align:center;max-height:{{ datasettings.d458 }}px; max-width:{{ datasettings.d458}}px;" onerror="this.style.display='none'"/></div>{{/if}}
+          <div class="auth b">Authorised Signatory</div>
         </td>
       </tr>
     </table>
+    </div>
 
   </div>
 
