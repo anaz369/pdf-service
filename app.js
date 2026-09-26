@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const Handlebars = require('handlebars');
 const pdfController = require('./controllers/pdfController');
 const reportController = require('./controllers/reportController');
+const timesheetController = require('./controllers/timesheetController');
 
 const app = express();
 
@@ -70,6 +71,10 @@ app.post('/api/pdf/cleanup-browser-pool', (req, res) =>
 // ── Report routes ─────────────────────────────────────────
 app.get('/api/report/test', (req, res) => reportController.test(req, res));
 app.post('/api/report/generate-pdf', (req, res) => reportController.generateReportPdf(req, res));
+
+// ── Timesheet routes ───────────────────────────────────────
+app.get('/api/timesheet/test', (req, res) => timesheetController.test(req, res));
+app.post('/api/timesheet/generate-pdf', (req, res) => timesheetController.generateTimesheetPdf(req, res));
 // ============================================
 // ERROR HANDLING
 // ============================================
@@ -86,6 +91,8 @@ app.use((req, res) => {
       'POST /api/pdf/cleanup-browser-pool',
       'GET /api/report/test',
       'POST /api/report/generate-pdf',
+      'GET /api/timesheet/test',
+      'POST /api/timesheet/generate-pdf',
     ]
   });
 });

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{{report_title}}</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #1a1a1a;
+    margin: 0 5mm;
+    background-color: #fff;
+}
+
+.container { width: 100%; padding: 10px 0; }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #0b5a69;
+}
+.header-left { flex: 1; }
+.header-center { flex: 2; text-align: center; }
+.header-right { flex: 1; text-align: right; }
+.company-logo { max-height: 55px; max-width: 150px; }
+
+.title { font-size: 19px; font-weight: 700; color: #0b5a69; letter-spacing: 0.3px; }
+.subtitle { font-size: 10.5px; color: #667; margin-top: 2px; }
+
+.info-section { display: flex; gap: 12px; margin-bottom: 16px; }
+.info-block {
+    flex: 1;
+    background: linear-gradient(135deg, #f4f8f9 0%, #eef3f4 100%);
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #dde5e6;
+}
+.info-label {
+    font-weight: 700; font-size: 8px; color: #0b5a69;
+    letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 3px;
+}
+.info-value { font-size: 10.5px; font-weight: 600; }
+
+.employee-sheet { margin-bottom: 14px; page-break-inside: avoid; }
+.employee-meta { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 6px; }
+.employee-meta td { padding: 3px 6px; vertical-align: middle; font-size: 8.5px; }
+.employee-meta .meta-label { width: 12%; color: #0b5a69; font-weight: 700; }
+.employee-meta .meta-value { width: 38%; color: #1a1a1a; }
+.employee-meta .meta-label.right { width: 12%; }
+.employee-meta .meta-value.right { width: 38%; }
+.employee-meta .meta-value.strong { font-weight: 700; }
+.metric-strip { display: flex; gap: 6px; margin-bottom: 6px; }
+.metric { flex: 1; border: 1px solid #d3d9da; border-top: 2px solid #0b5a69; background: #f4f8f9; padding: 5px 7px; }
+.metric.amount { border-top-color: #f57f17; background: #fff8e8; }
+.metric-label { display: block; color: #667; font-size: 6.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.metric-value { display: block; color: #083f4b; font-size: 10px; font-weight: 700; margin-top: 2px; }
+.metric.amount .metric-value { color: #704600; }
+.details-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 6px; }
+.details-table th, .details-table td { border: 1px solid #d3d9da; padding: 4px 5px; font-size: 7.5px; line-height: 1.15; white-space: nowrap; text-align: right; }
+.details-table thead th { background: #eef1f3; color: #083f4b; font-size: 7px; font-weight: 700; text-transform: uppercase; text-align: center; }
+.details-table th, .details-table td { width: 16%; }
+.details-table th:last-child, .details-table td:last-child { width: 20%; }
+.details-table tbody tr:nth-child(even) { background: #fafcfc; }
+
+.month-section { margin-bottom: 20px; page-break-inside: avoid; }
+.month-title {
+    font-size: 13px; font-weight: 700; color: #fff;
+    background: #0b5a69; padding: 6px 10px; border-radius: 4px 4px 0 0;
+}
+
+table.grid { width: 100%; max-width: 100%; border-collapse: collapse; table-layout: fixed; }
+table.grid th, table.grid td {
+    border: 1px solid #d3d9da; text-align: center; padding: 3px 1px; font-size: 7px; line-height: 1.15; white-space: nowrap;
+}
+table.grid thead th {
+    background: #12707f; color: #fff; font-weight: 700; font-size: 7.5px; padding: 5px 2px;
+}
+.row-info-col { width: 78px; text-align: left !important; font-size: 8px; }
+.day-col { width: 20px; font-size: 6.5px; }
+.day-col.weekend { background-color: #fdeef0; }
+th.day-col.weekend { background: #8f2f3d; }
+
+/* IMPROVED: Total column styling - wider to accommodate header and data */
+.total-col { 
+    width: 40px;
+    font-weight: 700; 
+    background-color: #e8f2f0; 
+    text-align: right; 
+    padding: 3px 3px !important;
+    border-left: 2px solid #0b5a69;
+    white-space: nowrap;
+    overflow: visible;
+}
+th.total-col {
+    background: #0b5a69 !important;
+    padding: 5px 3px !important;
+}
+
+/* IMPROVED: Amount column styling - more prominent and properly sized */
+.amount-col { 
+    width: 56px;
+    font-weight: 700; 
+    background-color: #ffd54f; 
+    text-align: right; 
+    padding: 3px 3px !important;
+    border-left: 2px solid #f57f17;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 6.5px;
+}
+.amount-value { display: block; width: 100%; text-align: right; white-space: nowrap; }
+th.amount-col {
+    background: #f57f17 !important;
+    color: #fff !important;
+    padding: 5px 3px !important;
+}
+
+tbody tr:nth-child(even) td:not(.day-col.weekend):not(.amount-col):not(.total-col) { background-color: #fafcfc; }
+tbody tr:nth-child(even) td.day-col.weekend { background-color: #fbe6e9; }
+tbody tr:nth-child(even) td.total-col { background-color: #e8f2f0; }
+tbody tr:nth-child(even) td.amount-col { background-color: #ffe082; }
+
+.row-name { font-weight: 700; color: #0b5a69; }
+.row-sub { color: #667; font-size: 7px; }
+
+.status-badge {
+    display: inline-block; padding: 1px 5px; border-radius: 3px;
+    font-size: 7px; font-weight: 700; text-transform: uppercase;
+}
+.status-approved { background: #d4edda; color: #155724; }
+.status-rejected { background: #f8d7da; color: #721c24; }
+.status-submitted { background: #fff3cd; color: #856404; }
+.status-draft { background: #e2e3e5; color: #383d41; }
+
+.no-data {
+    text-align: center; padding: 30px; color: #999; font-style: italic;
+    border: 1px dashed #ccc; border-radius: 5px;
+}
+
+.summary-section {
+    margin-top: 16px; padding: 10px 12px; background: #f5f8f8;
+    border: 1px solid #d3d9da; border-radius: 5px;
+}
+.summary-title { font-weight: 700; color: #0b5a69; margin-bottom: 6px; font-size: 10.5px; }
+.summary-row { display: flex; justify-content: space-between; font-size: 9.5px; margin-bottom: 3px; }
+.summary-label { font-weight: 600; color: #444; }
+.signature-section { display: flex; justify-content: space-around; margin-top: 30px; gap: 20px; }
+.signature-box { flex: 1; text-align: center; border-top: 1px solid #000; padding-top: 5px; }
+.signature-label { font-size: 10px; font-weight: 700; margin-top: 5px; }
+
+.footer {
+    margin-top: 18px; text-align: center; font-size: 8.5px; color: #888;
+    border-top: 1px solid #d3d9da; padding-top: 8px;
+}
+
+.watermark { {{#if WatermarkCss}}{{{WatermarkCss}}}{{/if}} }
+</style>
+</head>
+<body>
+
+<div class="watermark"></div>
+
+<div class="container">
+
+    <div class="header">
+        <div class="header-left">
+        </div>
+        <div class="header-center">
+            <div class="title">{{report_title}}</div>
+            <div class="subtitle">{{#if project_details.name}} &middot; {{project_details.name}}{{/if}}</div>
+        </div>
+        <div class="header-right">
+            <div class="info-value">{{company_name}}</div>
+            <div class="row-sub">{{current_date}}</div>
+        </div>
+    </div>
+
+    
+
+    {{#if months.length}}
+        {{#each months}}
+        <div class="month-section">
+            <div class="month-title">{{month_name}}</div>
+            {{#each rows}}
+            <div class="employee-sheet">
+                <table class="employee-meta">
+                    <tr>
+                        <td class="meta-label">Project</td>
+                        <td class="meta-value strong">{{#if project_name}}{{project_name}}{{else}}{{../../project_details.name}}{{/if}}</td>
+                        <td class="meta-label right">Vendor</td>
+                        <td class="meta-value right">{{../../company_name}}</td>
+                    </tr>
+                    <tr>
+                        <td class="meta-label">Equipment</td>
+                        <td class="meta-value strong">{{code}} - {{name}}</td>
+                        <td class="meta-label right">Month / Year</td>
+                        <td class="meta-value right">{{../month_name}}</td>
+                    </tr>
+                    <tr>
+                        <td class="meta-label">Operator</td>
+                        <td class="meta-value">{{person}}</td>
+                        <td class="meta-label right">Status</td>
+                        <td class="meta-value right"><span class="status-badge status-{{status}}">{{status}}</span></td>
+                    </tr>
+                </table>
+                <div class="metric-strip">
+                    <div class="metric"><span class="metric-label">Total Hours</span><span class="metric-value">{{total_hours}}</span></div>
+                    <div class="metric"><span class="metric-label">Normal Hours</span><span class="metric-value">{{total_normal_hours}}</span></div>
+                    <div class="metric"><span class="metric-label">Overtime Hours</span><span class="metric-value">{{total_overtime_hours}}</span></div>
+                    <div class="metric amount"><span class="metric-label">Total Amount</span><span class="metric-value">{{total_amount}}</span></div>
+                </div>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th class="row-info-col">Date / Day</th>
+                            {{#each ../days}}
+                                <th class="day-col{{#if is_weekend}} weekend{{/if}}">{{day}}</th>
+                            {{/each}}
+                            <th class="total-col">Total</th>
+                            <th class="amount-col">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="row-info-col"><div class="row-name">Daily Hours</div><div class="row-sub">{{name}}</div></td>
+                            {{#each ../days}}
+                                <td class="day-col{{#if is_weekend}} weekend{{/if}}">{{lookup ../day_hours date}}</td>
+                            {{/each}}
+                            <td class="total-col">{{total_hours}}</td>
+                            <td class="amount-col"><span class="amount-value">{{total_amount}}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="details-table">
+                    <thead><tr><th>Normal Hrs</th><th>OT Hrs</th><th>Total Hrs</th><th>Rate / Hr</th><th>OT Rate / Hr</th><th>Amount</th></tr></thead>
+                    <tbody><tr><td>{{total_normal_hours}}</td><td>{{total_overtime_hours}}</td><td>{{total_hours}}</td><td>{{hourly_rate}}</td><td>{{overtime_rate}}</td><td>{{total_amount}}</td></tr></tbody>
+                </table>
+            </div>
+            {{/each}}
+        </div>
+        {{/each}}
+    {{else}}
+        <div class="no-data">No equipment timesheet data available</div>
+    {{/if}}
+
+   
+    {{!-- <div class="signature-section">
+        <div class="signature-box"><div class="signature-label">Prepared By</div></div>
+        <div class="signature-box"><div class="signature-label">Verified By</div></div>
+        <div class="signature-box"><div class="signature-label">Approved By</div></div>
+    </div> --}}
+
+    {{!-- <div class="footer">
+        <p>This document is generated by Ethicfin{{#if print_date}} | Generated on: {{print_date}}{{/if}}</p>
+        {{#if WatermarkCss}}<p style="font-size:7.5px;color:#aaa;">This document contains confidential information</p>{{/if}}
+    </div> --}}
+
+</div>
+</body>
+</html>

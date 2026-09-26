@@ -27,6 +27,10 @@ async function startServer() {
       console.log(`  GET  http://localhost:${PORT}/`);
       console.log(`  GET  http://localhost:${PORT}/api/pdf/test`);
       console.log(`  POST http://localhost:${PORT}/api/pdf/razor-view-pdf`);
+      console.log(`  GET  http://localhost:${PORT}/api/report/test`);
+      console.log(`  POST http://localhost:${PORT}/api/report/generate-pdf`);
+      console.log(`  GET  http://localhost:${PORT}/api/timesheet/test`);
+      console.log(`  POST http://localhost:${PORT}/api/timesheet/generate-pdf`);
       console.log('\nServer is ready to accept requests!\n');
     });
 

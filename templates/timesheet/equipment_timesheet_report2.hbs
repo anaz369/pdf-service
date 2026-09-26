@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{{report_title}}</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --ink: #222;
+    --muted: #667785;
+    --line: #bfbfbf;
+    --soft: #f4f7f8;
+    --brand: #344767;
+    --brand-dark: #243653;
+    --accent: #d8a23a;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: var(--ink);
+    margin: 0 5mm;
+    background-color: #fff;
+}
+
+.container { width: 100%; padding: 10px 0; }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--brand);
+}
+.header-left { flex: 1; }
+.header-center { flex: 2; text-align: center; }
+.header-right { flex: 1; text-align: right; }
+.company-logo { max-height: 48px; max-width: 140px; }
+
+.title { font-size: 17px; font-weight: 700; color: var(--brand); letter-spacing: 0.2px; }
+.subtitle { font-size: 9px; color: var(--muted); margin-top: 3px; }
+.project-name { display: block; font-size: 10.5px; color: var(--brand); font-weight: 700; margin-top: 2px; }
+.header-right .info-value { color: var(--brand); font-size: 9px; }
+
+.info-section { display: flex; gap: 12px; margin-bottom: 16px; }
+.info-block {
+    flex: 1;
+    background: var(--soft);
+    padding: 6px 8px;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--brand);
+}
+.info-label {
+    font-weight: 700; font-size: 7px; color: var(--brand);
+    letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 2px;
+}
+.info-value { font-size: 10px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.month-section { margin-bottom: 14px; page-break-inside: avoid; }
+.month-title {
+    font-size: 12.5px; font-weight: 700; color: #fff;
+    background: var(--brand); padding: 6px 8px; border-radius: 2px 2px 0 0;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.month-title .month-meta { font-size: 8.5px; font-weight: 500; opacity: 0.9; }
+
+table.summary-grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
+table.summary-grid th, table.summary-grid td {
+    border: 1px solid var(--line); text-align: left; padding: 4px 5px; font-size: 8.5px; vertical-align: middle; white-space: nowrap;
+}
+table.summary-grid thead th {
+    background: var(--brand-dark); color: #fff; font-weight: 700; font-size: 7.5px;
+    text-transform: uppercase; letter-spacing: 0.3px;
+}
+table.summary-grid td.num { text-align: right; }
+table.summary-grid th:first-child, table.summary-grid td:first-child { width: 24%; white-space: normal; }
+table.summary-grid th:nth-child(2), table.summary-grid td:nth-child(2) { width: 10%; }
+table.summary-grid th:nth-child(n+3), table.summary-grid td:nth-child(n+3) { width: 11%; }
+table.summary-grid th:last-child, table.summary-grid td:last-child { width: 12%; text-align: right; white-space: nowrap; }
+table.summary-grid tbody tr:nth-child(even) { background-color: #f8fafb; }
+
+.subtotal-row td {
+    background: #eef1f3 !important; font-weight: 700; border-top: 2px solid var(--brand);
+}
+
+.row-name { font-weight: 700; color: var(--brand); }
+.row-sub { color: var(--muted); font-size: 7.5px; }
+
+.status-badge {
+    display: inline-block; padding: 1px 5px; border-radius: 3px;
+    font-size: 7px; font-weight: 700; text-transform: uppercase;
+}
+.status-approved { background: #d4edda; color: #155724; }
+.status-rejected { background: #f8d7da; color: #721c24; }
+.status-submitted { background: #fff3cd; color: #856404; }
+.status-draft { background: #e2e3e5; color: #383d41; }
+
+.no-data {
+    text-align: center; padding: 30px; color: #999; font-style: italic;
+    border: 1px dashed #ccc; border-radius: 5px;
+}
+
+.grand-summary {
+    margin-top: 12px; padding: 10px 12px; background: var(--soft);
+    border: 1px solid var(--line); border-left: 3px solid var(--brand); border-radius: 2px;
+}
+.grand-summary-title {
+    font-weight: 700; color: var(--brand); margin-bottom: 8px; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+}
+.grand-summary-grid { display: flex; gap: 10px; }
+.grand-stat {
+    flex: 1; background: #fff; border: 1px solid var(--line); border-radius: 2px;
+    padding: 8px 10px; text-align: center;
+}
+.grand-stat-label { font-size: 7.5px; color: #776; text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px; }
+.grand-stat-value { font-size: 13px; font-weight: 700; color: var(--brand); margin-top: 3px; }
+
+.signature-section { display: flex; justify-content: space-around; margin-top: 30px; gap: 20px; }
+.signature-box { flex: 1; text-align: center; border-top: 1px solid #000; padding-top: 5px; }
+.signature-label { font-size: 10px; font-weight: 700; margin-top: 5px; }
+
+.footer {
+    margin-top: 12px; text-align: center; font-size: 7.5px; color: #888;
+    border-top: 1px solid var(--line); padding-top: 6px;
+}
+
+.watermark { {{#if WatermarkCss}}{{{WatermarkCss}}}{{/if}} }
+</style>
+</head>
+<body>
+
+<div class="watermark"></div>
+
+<div class="container">
+
+    <div class="header">
+        <div class="header-left">
+            {{#if Companylogo}}<img src="{{Companylogo}}" class="company-logo"/>{{/if}}
+        </div>
+        <div class="header-center">
+            <div class="title">{{report_title}}</div>
+            {{#if project_details.name}}
+                <div class="project-name">{{project_details.name}}</div>
+            {{/if}}
+        </div>
+        <div class="header-right">
+            <div class="info-value">{{company_name}}</div>
+            <div class="row-sub">{{current_date}}</div>
+        </div>
+    </div>
+
+    {{#if months.length}}
+        {{#each months}}
+        <div class="month-section">
+            <div class="month-title">
+                <span>{{month_name}}</span>
+                <span class="month-meta">{{rows.length}} equipment &middot; {{total_hours}} hrs &middot; {{total_amount}}</span>
+            </div>
+            <table class="summary-grid">
+                <thead>
+                    <tr>
+                        <th>Equipment / Operator</th>
+                        <th>Status</th>
+                        <th class="num">Normal Hrs</th>
+                        <th class="num">OT Hrs</th>
+                        <th class="num">Total Hrs</th>
+                        <th class="num">Rate</th>
+                        <th class="num">OT Rate</th>
+                        <th class="num">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each rows}}
+                        <tr>
+                            <td>
+                                <div class="row-name">{{code}}</div>
+                                <div class="row-sub">{{name}}</div>
+                                <div class="row-sub">{{person}}</div>
+                            </td>
+                            <td><span class="status-badge status-{{status}}">{{status}}</span></td>
+                            <td class="num">{{total_normal_hours}}</td>
+                            <td class="num">{{total_overtime_hours}}</td>
+                            <td class="num">{{total_hours}}</td>
+                            <td class="num">{{hourly_rate}}</td>
+                            <td class="num">{{overtime_rate}}</td>
+                            <td class="num">{{total_amount}}</td>
+                        </tr>
+                    {{/each}}
+                    <tr class="subtotal-row">
+                        <td colspan="4">Month Subtotal</td>
+                        <td class="num">{{total_hours}}</td>
+                        <td colspan="2"></td>
+                        <td class="num">{{total_amount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {{/each}}
+    {{else}}
+        <div class="no-data">No equipment timesheet data available</div>
+    {{/if}}
+
+   
+
+    
+
+</div>
+</body>
+</html>
