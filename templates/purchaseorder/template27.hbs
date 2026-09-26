@@ -189,8 +189,10 @@
   </table>
 
   <!-- TERMS -->
+  {{#if basicdetails.[0].terms_and_condition}}
   <div class="mt"><span class="h">Terms and Conditions</span></div>
-  <div>{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+  <div>{{{nl2br basicdetails.[0].terms_and_condition}}}</div>
+  {{/if}}
 
   <!-- PREPARED / SIGNATURE -->
   <table class="sign-tbl mt">
@@ -199,34 +201,26 @@
       <td>
         <table class="kv1" style="padding-top: 8px;">
           <colgroup>
-            <col style="width:20%">
+            <col style="width:22%">
             <col style="width:2%">
-            <col style="width:78%">
+            <col style="width:76%">
           </colgroup>
-          <tr><td class="k" style="padding-top: 8px;"><span class="h">PREPARED BY</span></td><td class="c">:</td><td>{{basicdetails.[0].salesman_name}}</td></tr>
-          <tr><td class="k" style="padding-top: 8px;"><span class="h">DATE &amp; TIME</span></td><td class="c">:</td><td><span id="dt1">{{basicdetails.[0].current_date_time}}</span></td></tr>
+          <tr><td class="k" style="padding-top: 8px;"><span class="h">PREPARED BY</span></td><td class="c" style="padding-top: 10px;">:</td><td style="padding-top: 10px;">{{basicdetails.[0].created_user}}</td></tr>
+          <tr><td class="k" style="padding-top: 8px;"><span class="h">DATE &amp; TIME</span></td><td class="c" style="padding-top: 10px;">:</td><td style="padding-top: 10px;"><span id="dt1">{{basicdetails.[0].current_date_time}}</span></td></tr>
+          <tr><td class="k" style="padding-top: 8px;"><span class="h">RECEIVER NOTE</span></td><td class="c" style="padding-top: 10px;">:</td><td><span id="dt1"></span></td></tr>
         </table>
       </td>
       <td>
         <div style="text-align:center;">For {{compprof.name}}</div>
         <div class="h" style="margin-top:4px;">AUTHORIZED SIGNATURE :</div>
+        {{#ifFlag datasettings "d292"}}
         <div class="sig-img" style="text-align: center;">
-           {{#if Signature}}<img src="{{Signature}}" alt="Signature" style="text-align:center;max-height:{{ datasettings.d458 }}px; max-width:{{ datasettings.d458}}px;" onerror="this.style.display='none'"/>{{/if}}
-
+           <img src="{{Signature}}" alt="Signature" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>
         </div>
-      </td>
-    </tr>
-  </table>
+        {{/ifFlag}}
 
-  <!-- RECEIVER | ACCEPTANCE -->
-  <table class="sign-tbl mt">
-    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
-    <tr>
-      <td>
-        <span class="h">RECEIVER NOTE</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-      </td>
-      <td>
-        <div><span class="h">DATE &amp; TIME :</span><span id="dt2">{{basicdetails.[0].current_date_time}}</span></div>
+        <!-- ACCEPTANCE -->
+        <div style="margin-top:14px;"><span class="h">DATE &amp; TIME :</span><span id="dt2">{{basicdetails.[0].current_date_time}}</span></div>
         <div class="accept-bar" style="margin-top:4px;">ORDER ACCEPTANCE</div>
         <div class="accept-mid">We Confirm Acceptance of this Order</div>
         <div style="margin-top:10px;"><span class="h">NAME :</span></div>

@@ -375,14 +375,14 @@
                     <tr>
                         <td class="s_lbl">Subtotal</td>
                         <td class="s_ar arab">المجموع الفرعي</td>
-                        <td class="s_val">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+                        <td class="s_val">{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
                     </tr>
                     {{#if zatcadiscount.[0]}}
                         {{#each zatcadiscount}}
                             <tr>
                                 <td class="s_lbl">{{reason_name}}</td>
                                 <td class="s_ar arab">خصومات</td>
-                                <td class="s_val">{{formatAmount (divide dld ../ccrate) ../bcdp}}</td>
+                                <td class="s_val">{{formatAmount dld ../bcdp}}</td>
                             </tr>
                         {{/each}}
                     {{else}}
@@ -391,7 +391,7 @@
                             <tr>
                                 <td class="s_lbl">Discount</td>
                                 <td class="s_ar arab">خصومات</td>
-                                <td class="s_val">{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+                                <td class="s_val">{{formatAmount (add basicdetails.[0].discount basicdetails.[0].dld) bcdp}}</td>
                             </tr>
                         {{/if}}
 
@@ -399,7 +399,7 @@
                     <tr>
                         <td class="s_lbl">VAT ({{#if ../itemdetails.[0].vat_perc}}{{../itemdetails.[0].vat_perc}}{{else}}15{{/if}}%)</td>
                         <td class="s_ar arab">ضريبة القيمة المضافة</td>
-                        <td class="s_val">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
+                        <td class="s_val">{{formatAmount basicdetails.[0].vatamt bcdp}}</td>
                     </tr>
                     <tr>
                         <td class="s_lbl">Total Amount In {{basicdetails.[0].currency_isocode}}</td>

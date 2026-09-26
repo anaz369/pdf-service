@@ -150,23 +150,31 @@
   </table>
 
   <!-- TERMS -->
+  {{#if basicdetails.[0].terms_and_condition}}
   <div class="mt"><span class="h">Terms and Conditions</span></div>
-  <div class="terms-txt">{{#if basicdetails.[0].terms_and_condition}}{{{nl2br basicdetails.[0].terms_and_condition}}}{{/if}}</div>
+  <div class="terms-txt">{{{nl2br basicdetails.[0].terms_and_condition}}}</div>
+  {{/if}}
 
-  <!-- SIGNATURE -->
+   <!-- SIGNATURE -->
   <table class="sign" style="margin-top:30px;">
+    {{#ifFlag datasettings "d292"}}
     <colgroup><col style="width:33%"><col style="width:34%"><col style="width:33%"></colgroup>
+    {{else}}
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    {{/ifFlag}}
     <tr>
       <td>
         <div class="sh">Prepared By</div>
         <div class="sa">أعدت بواسطة</div>
-        <div style="margin-top:6px;">{{basicdetails.[0].salesman_name}}</div>
+        <div style="margin-top:6px;">{{basicdetails.[0].created_user}}</div>
       </td>
+      {{#ifFlag datasettings "d292"}}
       <td>
         <div class="sh">Company Stamp</div>
         <div class="sa">ختم الشركة</div>
         <div class="simg">{{#if Seal}}<img src="{{Seal}}" alt="Seal" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>{{/if}}</div>
       </td>
+      {{/ifFlag}}
       <td>
         <div class="sh">Authorized Signature</div>
         <div class="sa">توقيع معتمد</div>
@@ -174,6 +182,5 @@
       </td>
     </tr>
   </table>
-
 </body>
 </html>

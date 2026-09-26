@@ -19,7 +19,7 @@
     /* title */
     .title-bar {
       background: #6d6daf; color: #fff; font-weight: 700; font-size: 14px;
-      text-align: center; padding: 8px; width: 260px; margin: 0 auto 12px; border-radius: 4px;
+      text-align: center; padding: 4px; width: 260px; margin: 0 auto 12px; border-radius: 4px;
     }
 
     /* top boxes */
@@ -75,11 +75,8 @@
           <tr>
             <td colspan="2" style="">
               {{vendor_details.[0].name}}<br>
-              {{#if billing_address.[0].address_line1}}{{billing_address.[0].address_line1}}<br>{{/if}}
-              {{#if billing_address.[0].address_line2}}{{billing_address.[0].address_line2}}<br>{{/if}}
-              {{#if billing_address.[0].address_line3}}{{billing_address.[0].address_line3}}<br>{{/if}}
-              {{#if billing_address.[0].address_line4}}{{billing_address.[0].address_line4}}<br>{{/if}}
-              VAT: {{billing_address.[0].vat}}
+              {{joinAddress billing_address.[0] '<br>'}}
+              {{#if billing_address.[0].vat}} VAT: {{billing_address.[0].vat}}{{/if}}
             </td>
           </tr>
           <tr>
@@ -95,7 +92,7 @@
           <tr><td colspan="2" class="poval">{{basicdetails.[0].inv_no}}</td></tr>
           <tr><td class="plbl" style="width:48%">Order Date</td><td>{{basicdetails.[0].inv_date}}</td></tr>
           <tr><td class="plbl">Delivery Date</td><td>{{basicdetails.[0].delivery_date}}</td></tr>
-          <tr><td class="plbl">Currency</td><td>{{basicdetails.[0].base_country_isocode}}</td></tr>
+          <tr><td class="plbl">Currency</td><td>{{basicdetails.[0].isocode}}</td></tr>
           <tr><td class="plbl">PR Number</td><td></td></tr>
           <tr><td class="plbl">Department</td><td></td></tr>
         </table>
@@ -114,8 +111,8 @@
         <th>Qty</th>
         <th>Part No</th>
         <th>Part Description</th>
-        <th>Unit Pric in {{basicdetails.[0].base_country_isocode}}</th>
-        <th>Total Price in {{basicdetails.[0].base_country_isocode}}</th>
+        <th>Unit Pric in {{basicdetails.[0].isocode}}</th>
+        <th>Total Price in {{basicdetails.[0].isocode}}</th>
       </tr>
     </thead>
     <tbody>
@@ -130,15 +127,15 @@
       </tr>
       {{/each}}
       <tr>
-        <td colspan="5" class="ptot">Total in {{basicdetails.[0].base_country_isocode}}</td>
+        <td colspan="5" class="ptot">Total in {{basicdetails.[0].isocode}}</td>
         <td class="ptot-v">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
       </tr>
       <tr>
-        <td colspan="5" class="ydisc">Discount {{basicdetails.[0].base_country_isocode}}</td>
+        <td colspan="5" class="ydisc">Discount {{basicdetails.[0].isocode}}</td>
         <td class="ydisc-v">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
       </tr>
       <tr>
-        <td colspan="5" class="ptot">Net amount {{basicdetails.[0].base_country_isocode}}</td>
+        <td colspan="5" class="ptot">Net amount {{basicdetails.[0].isocode}}</td>
         <td class="ptot-v">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
       </tr>
       <tr class="words">

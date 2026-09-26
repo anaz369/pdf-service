@@ -318,6 +318,12 @@
                   <td class="t-lbl">Total Taxable Amount (Excluding VAT)</td>
                   <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
                 </tr>
+                 {{#if basicdetails.[0].discount}}
+                <tr>
+                  <td class="t-lbl">Total Discount</td>
+                  <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide (add basicdetails.[0].discount basicdetails.[0].dld) ccrate) bcdp}}</td>
+                </tr>
+                {{/if}}
                 <tr>
                   <td class="t-lbl">VAT</td>
                   <td class="t-val"><span style="font-size:14px;">{{currencySymbol basicdetails.[0].base_country_isocode}}</span>{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>

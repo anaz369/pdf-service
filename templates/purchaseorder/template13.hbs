@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: ibmplexsansarabic, Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      color: #000;
+      background: #fff;
+      margin: 0 8mm;
+    }
+
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+
+    .page { position: relative; }
+    /* decorative right-hand accent bar, matches the reference layout */
+    .page::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      height: 100%;
+    }
+
+    /* ── TITLE ── */
+    .title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 8px 0 6px;
+    }
+
+    /* ── META BAR ── */
+    .meta { border: 1px solid #000; }
+    .meta td { border: 1px solid #000; padding: 4px 8px; text-align: center; }
+    .meta .lbl { font-weight: 700; }
+
+    /* ── SELLER / BUYER ── */
+    .parties { border: 1px solid #000; border-top: none;  border-bottom: none; }
+    .parties > tbody > tr > td { border: none; padding: 6px 10px; vertical-align: top; }
+    .parties .divider { border-left: 1px solid #000; }
+    .hd { font-weight: 700; color: #1746a2; padding-bottom: 2px; }
+    .addr-row td { padding: 0; }
+    .addr-pair { width: 100%; }
+    .addr-pair td { border: none; padding: 0; }
+    .addr-pair .en { text-align: left; }
+    .addr-pair .ar { text-align: left; unicode-bidi: isolate; }
+
+    /* ── ITEMS ── */
+    .items { border: 1px solid #000; border-top: none; }
+    .items th, .items td { border: 1px solid #000; padding: 4px 6px; vertical-align: middle; }
+    .items th { font-weight: 700; text-align: center; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .desc-ar { display: block; direction: rtl; unicode-bidi: isolate; }
+    .items .desc-note { display: block; }
+
+    /* ── TERMS ── */
+    .terms { border: 1px solid #000; border-top: none; padding: 4px 10px; min-height: 60px; }
+    .terms-title { font-weight: 700; }
+
+    /* ── SUMMARY ── */
+    .summary { border: 1px solid #000; border-top: none; }
+    .sum-row1 { display: flex; }
+    .sum-words { flex: 0 0 50%; padding: 8px 10px; }
+    .sw-label { font-weight: 700; }
+    .sum-totals { flex: 1;  }
+    .sum-totals .tl { display: flex; justify-content: space-between; padding: 3px 10px; }
+    .sum-totals .tl.final { border-top: 1px solid #000; font-weight: 700; }
+
+    .sum-for { border-top: 1px solid #000; text-align: right; font-weight: 700; padding: 8px 5px; }
+
+    .sum-sign { border-top: 1px solid #000; min-height: 170px; padding: 10px 16px; position: relative; }
+    .sign-lbl {
+      text-align: right;
+      font-weight: 700;
+      font-style: italic;
+      font-family: Georgia, 'Times New Roman', serif;
+      color: #1a1a5e;
+      font-size: 12px;
+    }
+    .sum-sign .seal-wrap { position: absolute; right: 20px; bottom: 10px; text-align: right; }
+    .sum-sign .seal-wrap img { max-height: 110px; max-width: 130px; }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- TITLE -->
+  <div class="title">Purchase Order</div>
+
+  <!-- META BAR -->
+  <table class="meta">
+    <colgroup><col style="width:33%"><col style="width:34%"><col style="width:33%"></colgroup>
+    <tr>
+      <td class="lbl">Purchase Order No</td>
+      <td class="lbl">Reference No</td>
+      <td class="lbl">Date</td>
+    </tr>
+    <tr>
+      <td>{{basicdetails.[0].inv_no}}</td>
+      <td>{{basicdetails.[0].reference_no}}</td>
+      <td>{{basicdetails.[0].inv_date}}</td>
+    </tr>
+  </table>
+
+  <!-- SELLER / BUYER -->
+  <table class="parties">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td>
+        <div class="hd">Seller/ البائع</div>
+         {{#if branch.[0].name}}
+        <table class="addr-pair"><tr>
+          <td class="en">{{branch.[0].name}}</td>
+          <td class="ar" style="text-align: right;">{{branch_lang2.[0].name}}</td>
+        </tr></table>
+        {{/if}}
+         {{#if branch.[0].address_line1}}
+        <table class="addr-pair"><tr>
+          <td class="en">{{branch.[0].address_line1}}</td>
+          <td class="ar" style="text-align: right;">{{branch_lang2.[0].address_line1}}</td>
+        </tr></table>
+        {{/if}}
+        {{#if branch.[0].address_line2}}
+        <table class="addr-pair"><tr>
+          <td class="en">{{branch.[0].address_line2}}</td>
+          <td class="ar" style="text-align: right;">{{branch_lang2.[0].address_line2}}</td>
+        </tr></table>
+        {{/if}}
+        {{#if branch.[0].address_line3}}
+        <table class="addr-pair"><tr>
+          <td class="en">{{branch.[0].address_line3}}</td>
+          <td class="ar" style="text-align: right;">{{branch_lang2.[0].address_line3}}</td>
+        </tr></table>
+        {{/if}}
+        {{#if branch.[0].vat}}
+        <table class="addr-pair"><tr>
+          <td class="en">VAT: {{branch.[0].vat}}</td>
+          <td class="ar" style="text-align: right;">{{#if branch_lang2.[0].vat}} ضريبة  : {{branch_lang2.[0].vat}}{{/if}}</td>
+        </tr></table>
+        {{/if}}
+      </td>
+      <td class="divider">
+        <div class="hd">Buyer/ المشتري</div>
+        {{#if billing_address.[0].name}}
+        <table class="addr-pair"><tr>
+          <td class="en">{{billing_address.[0].name}}</td>
+          <td class="ar" style="text-align: right;">{{billing_address_lang2.[0].name}}</td>
+        </tr></table>
+        {{/if}}
+        {{#if billing_address.[0].address_line1}}
+        <table class="addr-pair"><tr>
+          <td class="en">{{billing_address.[0].address_line1}}</td>
+          <td class="ar" style="text-align: right;">{{billing_address_lang2.[0].address_line1}}</td>
+        </tr></table>
+        {{/if}}
+        {{#if billing_address.[0].address_line2}}
+        <table class="addr-pair"><tr>
+          <td class="en">{{billing_address.[0].address_line2}}</td>
+          <td class="ar" style="text-align: right;">{{billing_address_lang2.[0].address_line2}}</td>
+        </tr></table>
+        {{/if}}
+        {{#if billing_address.[0].address_line3}}
+        <table class="addr-pair"><tr>
+          <td class="en">{{billing_address.[0].address_line3}}</td>
+          <td class="ar" style="text-align: right;">{{billing_address_lang2.[0].address_line3}}</td>
+        </tr></table>
+        {{/if}}
+         {{#if billing_address.[0].vat}}
+        <table class="addr-pair"><tr>
+          <td class="en">VAT: {{billing_address.[0].vat}}</td>
+          <td class="ar" style="text-align: right;">{{#if vendor_details.[0].VAT_number_lang2}}ضريبة  : {{vendor_details.[0].VAT_number_lang2}}{{/if}}</td>
+        </tr></table>
+        {{/if}}
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table class="items">
+    <colgroup>
+      <col style="width:5%">
+      <col style="width:33%">
+      <col style="width:7%">
+      <col style="width:7%">
+      <col style="width:11%">
+      <col style="width:11%">
+      <col style="width:8%">
+      <col style="width:9%">
+      <col style="width:9%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Unit</th>
+        <th>Unit Price</th>
+        <th>Excl. VAT Amount</th>
+        <th>VAT</th>
+        <th>VAT Amount</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each itemdetails}}
+      <tr>
+        <td class="num">{{addOne @index}}</td>
+        <td>
+          {{item_name}}
+          {{#if name_lang2}}<span class="desc-ar">{{name_lang2}}</span>{{/if}}
+          {{#if description}}<span class="desc-note">{{description}}</span>{{/if}}
+        </td>
+        <td class="num">{{quantity}}</td>
+        <td class="num">{{unit}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="rt">{{formatAmount taxable ../bcdp}}</td>
+        <td class="num">{{vat_perc}} %</td>
+        <td class="rt">{{formatAmount tax ../bcdp}}</td>
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <!-- TERMS -->
+  <div class="terms">
+    <div class="terms-title">Terms And Condition:</div>
+    {{#if basicdetails.[0].terms_and_condition}}
+    <div>{{{nl2br basicdetails.[0].terms_and_condition}}}</div>
+    {{/if}}
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary">
+    <div class="sum-row1">
+      <div class="sum-words">
+        <div class="sw-label">Amount in words</div>
+        <div>{{bcamountinwords}}</div>
+      </div>
+      <div class="sum-totals">
+        <div class="tl"><span>Total (Excluding VAT)</span><span>{{formatAmount basicdetails.[0].subtotal bcdp}}</span></div>
+        <div class="tl"><span>VAT Rate</span><span>{{multiply (divide basicdetails.[0].vatamt basicdetails.[0].subtotal) 100}} %</span></div>
+        <div class="tl"><span>VAT Amount</span><span>{{formatAmount basicdetails.[0].vatamt bcdp}}</span></div>
+        <div class="tl"><span>Total Amount</span><span>{{formatAmount basicdetails.[0].grand_total bcdp}}</span></div>
+      </div>
+    </div>
+
+    <div class="sum-for">For {{branch.[0].name}}</div>
+
+    <div class="sum-sign">
+      <div class="sign-lbl">Signature with stamp</div>
+      <div class="seal-wrap">
+        {{#if Seal}}<img src="{{Seal}}" alt="Seal" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>{{/if}}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Invoice - {{basicdetails.[0].inv_no}}</title>
+<style>
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: ibmplexsansarabic;
+        font-size: 10px;
+        line-height: 1.4;
+        color: #1a1a1a;
+        margin: 0 6mm;
+    }
+    table{
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        font-size: 10px;
+        color: #1a1a1a;
+    }
+    td, th{
+        font-size: 10px;
+        word-wrap: break-word;
+    }
+    .tc{ text-align: center; }
+    .ts{ text-align: left; }
+    .te{ text-align: right; }
+    .b{ font-weight: bold; }
+
+    /* ── Title ─────────────────────────────────────────── */
+    .doc_head{
+        text-align: center;
+        font-weight: bold;
+        font-size: 26px;
+        letter-spacing: 1px;
+        color: #001435;
+        padding-top: 6px;
+    }
+
+    /* ── Bill To / Ship To ─────────────────────────────── */
+    .bt_ship_wrap{
+        position: relative;
+        border: 1px solid #001435;
+        margin-top: 8px;
+    }
+    .bt_ship{
+    position: relative;
+    z-index: 1;
+    border-collapse: collapse;   /* removes default cell gap */
+    border-spacing: 0;
+    width: 100%;
+}
+
+.bt_ship td{
+    position: relative;
+    vertical-align: top;
+    padding: 18px 14px 10px 14px;
+}
+
+
+.ship_col{
+    padding: 0;
+      /* line lives on the outer td now */
+}
+
+.sep_col{
+    position: relative;
+    padding: 0;
+    width: 2%;
+}
+.sep_line{
+    position: absolute;
+    left: 0;
+    top: 20px;
+    bottom: 20px;
+    width: 1px;
+    background-color: #d9d9d9;
+}
+
+.ship_inner{
+    padding: 18px 14px 10px 20px;      /* pushes content away from the line */
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border-left: none;                 /* remove — no longer needed here */
+}
+    .badge{
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        background-color: #001435;
+        color: #fff;
+        font-weight: bold;
+        font-size: 10px;
+        letter-spacing: 0.3px;
+        padding: 5px 22px 5px 10px;
+        clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+    }
+    .cname{
+        font-weight: bold;
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+    .bt_ship .line{
+        line-height: 15px;
+    }
+    .info_tbl{
+        margin-top: 2px;
+    }
+    .info_tbl td{
+        padding: 1px 0;
+        line-height: 15px;
+        vertical-align: top;
+    }
+    .info_tbl .i_lbl{
+        width: 88px;
+        white-space: nowrap;
+    }
+    .info_tbl .i_sep{
+        width: 10px;
+    }
+
+    /* ── Invoice meta (top of Bill To) ──────────────────── */
+    .inv_meta{
+        margin-top: 25px;
+    }
+    .inv_meta td{
+        padding: 2px 0;
+        line-height: 15px;
+        vertical-align: top;
+    }
+    .inv_meta .i_lbl{
+        width: 110px;
+        white-space: nowrap;
+    }
+    .inv_meta .i_sep{
+        width: 10px;
+    }
+    .inv_head_row{
+        margin-top: 0;
+    }
+    .inv_head_row > tbody > tr > td{
+        border: 0;
+        padding: 0;
+        vertical-align: top;
+    }
+    .sep_col2{
+        position: relative;
+        width: 2%;
+    }
+    .sep_line2{
+        position: absolute;
+        left: 0;
+        top: 14px;
+        bottom: 14px;
+        width: 1px;
+        background-color: #d9d9d9;
+    }
+    .qr_col{
+        text-align: center;
+        vertical-align: middle !important;
+    }
+    .qr_box{
+        display: inline-block;
+        border: 1px solid #dfa23f;
+        padding: 6px;
+        margin-top: 14px;
+    }
+    .qr_box img,
+    .qr_box svg{
+        display: block;
+        width: 90px !important;
+        height: 90px !important;
+    }
+
+    /* ── Items ─────────────────────────────────────────── */
+    .items_wrap{
+        margin-top: 10px;
+        border-bottom: 0.5px solid #d5d5d5;
+    }
+    .items{
+        margin-top: 0;
+    }
+    .items thead tr{
+        border-bottom: 1.5px solid #dfa23f;
+    }
+    .items th{
+        background-color: #001435;
+        color: #fff;
+        text-align: center;
+        font-weight: bold;
+        font-size: 9.5px;
+        text-transform: uppercase;
+        padding: 6px 5px;
+        line-height: 12px;
+    }
+    .items td{
+        padding: 6px 5px;
+        line-height: 13px;
+        border-left: 0.5px solid #d5d5d5;
+        border-right: 0.5px solid #d5d5d5;
+        border-bottom: 1px dotted #c9c9c9;
+        vertical-align: top;
+    }
+    .items tbody tr:last-child td{
+        border-bottom: 0;
+    }
+
+    /* ── Bottom: terms/bank | summary ──────────────────── */
+    .bottom_wrap{
+        margin-top: 0;
+    }
+    .bottom_wrap > tbody > tr > td{
+        border: 0;
+        padding: 0;
+        vertical-align: top;
+    }
+    .bl_col{
+        width: 60%;
+        padding-right: 14px !important;
+    }
+    .br_col{
+        width: 40%;
+    }
+    .blk_hd{
+        font-weight: bold;
+        font-size: 10.5px;
+        margin-bottom: 4px;
+    }
+    .blk_hd .ic{
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+    .terms_val{
+        margin: 2px 0 10px 19px;
+        line-height: 14px;
+    }
+    .dotted_sep{
+        border-top: 1px dotted #b9b9b9;
+        margin: 4px 65px 8px 0;
+    }
+    .bank_tbl{
+        margin-left: 19px;
+        width: calc(100% - 19px);
+    }
+    .bank_tbl td{
+        padding: 1px 0;
+        line-height: 15px;
+        vertical-align: top;
+    }
+    .bank_tbl .bk_lbl{
+        width: 20%;
+        white-space: nowrap;
+    }
+    .bank_tbl .bk_sep{
+        width: 2%;
+    }
+    .note{
+        margin: 10px 0 0 19px;
+        line-height: 14px;
+        color: #333;
+    }
+    .thanks{
+        margin: 4px 0 0 19px;
+        font-weight: bold;
+    }
+
+    /* ── Summary ───────────────────────────────────────── */
+    .summary_box{
+        border: 1px solid #d5d5d5;
+    }
+    .summary_tbl td{
+        padding: 5px 8px;
+        line-height: 13px;
+        border-bottom: 1px solid #e6e6e6;
+    }
+    .summary_tbl tr:last-child td{
+        border-bottom: 0;
+    }
+    .summary_tbl .s_lbl{
+        font-weight: bold;
+        color: #333;
+    }
+    .summary_tbl .s_val{
+        text-align: right;
+        font-weight: bold;
+    }
+    .total_tbl{
+        margin-top: 0;
+    }
+    .total_tbl td{
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    .total_tbl .s_lbl{
+        background-color: #001435;
+        color: #fff;
+    }
+    .total_tbl .s_val{
+        background-color: #d4912e;
+        color: #1a1a1a;
+        text-align: right;
+    }
+
+    /* ── Signature / Seal ─────────────────────────────── */
+    .sign_wrap{
+        margin-top: 20px;
+    }
+    .sign_wrap td{
+        border: 0;
+        padding: 0;
+        vertical-align: bottom;
+    }
+    .sign_for{
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    .sigimg{
+        display: block;
+        max-height: 45px;
+        max-width: 140px;
+    }
+    .sign_line{
+        border-top: 1px dotted #999;
+        width: 140px;
+        margin-top: 2px;
+    }
+    .sign_name{
+        font-weight: bold;
+        margin-top: 4px;
+        line-height: 13px;
+    }
+    .sign_desig{
+        line-height: 13px;
+    }
+    .sealimg{
+        max-height: 80px;
+        max-width: 80px;
+        float: right;
+    }
+</style>
+</head>
+<body>
+
+    {{!-- ── Title ─────────────────────────────────────── --}}
+    <div class="doc_head">INVOICE</div>
+
+    {{!-- ── Invoice meta / QR ────────────────────────────── --}}
+    <table class="inv_head_row">
+        <colgroup><col style="width:45%"><col style="width:5%"><col style="width:50%"></colgroup>
+        <tr>
+            <td class="inv_meta_col">
+                <table class="inv_meta">
+                    <tr><td class="i_lbl">Invoice No.</td><td class="i_sep">:</td><td class="b">{{basicdetails.[0].inv_no}}</td></tr>
+                    <tr><td class="i_lbl">Invoice Date</td><td class="i_sep">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
+                    <tr><td class="i_lbl">Due Date</td><td class="i_sep">:</td><td>{{basicdetails.[0].due_date}}</td></tr>
+                    <tr><td class="i_lbl">PO / Ref No.</td><td class="i_sep">:</td><td>{{default basicdetails.[0].order_no basicdetails.[0].reference_no}}</td></tr>
+                </table>
+            </td>
+            <td class="sep_col2"><div class="sep_line2"></div></td>
+            <td class="qr_col">
+                <div class="qr_box">
+                    {{#if compprof.website}}
+                    {{{qrCodeUrl compprof.website 90}}}
+                    {{else}}
+                    {{{qrDataUri qrCodeBase64}}}
+                    {{/if}}
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    {{!-- ── Bill To / Ship To ─────────────────────────── --}}
+    <div class="bt_ship_wrap">
+        <table class="bt_ship">
+            <colgroup><col style="width:45%"><col style="width:5%"><col style="width:50%"></colgroup>
+            <tr>
+                <td class="bt_col">
+                    <span class="badge">BILL TO :</span>
+                    <div class="cname" style="padding-top: 10px;">{{billing_address.[0].name}}</div>
+                    {{#if billing_address.[0].address_code}}
+                    <div class="line">P.O. Box: {{billing_address.[0].address_code}}</div>
+                    {{/if}}
+                    <div class="line">{{billing_address.[0].address_line1}}{{#if billing_address.[0].address_line2}}, {{billing_address.[0].address_line2}}{{/if}}{{#if billing_address.[0].address_line3}}, {{billing_address.[0].address_line3}}{{/if}}{{#if billing_address.[0].address_line4}}, {{billing_address.[0].address_line4}}{{/if}}{{#if billing_address.[0].address_line5}}, {{billing_address.[0].address_line5}}{{/if}}</div>
+                    <table class="info_tbl">
+                        {{#if billing_address.[0].vat}}
+                        <tr><td class="i_lbl">VAT No.</td><td class="i_sep">:</td><td>{{billing_address.[0].vat}}</td></tr>
+                        {{/if}}
+                        {{#if customer_details.[0].email}}
+                        <tr><td class="i_lbl">Email</td><td class="i_sep">:</td><td>{{customer_details.[0].email}}</td></tr>
+                        {{/if}}
+                        {{#if customer_details.[0].contact_no1}}
+                        <tr><td class="i_lbl">Tel</td><td class="i_sep">:</td><td>{{customer_details.[0].contact_no1}}</td></tr>
+                        {{/if}}
+                    </table>
+                </td>
+                <td class="sep_col"><div class="sep_line"></div></td>
+                <td class="ship_col">
+                    <div class="ship_inner">
+                        <span class="badge">SHIP TO :</span>
+                        <div class="cname">{{shipping_address.[0].name}}</div>
+                        <div class="line">{{joinAddress shipping_address.[0] ', '}}</div>
+                        <table class="info_tbl">
+                            {{#if basicdetails.[0].invoice_contactname}}
+                            <tr><td class="i_lbl">Contact Person</td><td class="i_sep">:</td><td>{{basicdetails.[0].invoice_contactname}}</td></tr>
+                            {{/if}}
+                            {{#if basicdetails.[0].invoice_contactno}}
+                            <tr><td class="i_lbl">Tel</td><td class="i_sep">:</td><td>{{basicdetails.[0].invoice_contactno}}</td></tr>
+                            {{/if}}
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    {{!-- ── Items ─────────────────────────────────────── --}}
+    <div class="items_wrap">
+    <table class="items">
+        <colgroup>
+            <col style="width:5%"><col style="width:27%"><col style="width:20%">
+            <col style="width:8%"><col style="width:10%"><col style="width:15%">
+            <col style="width:15%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th class="ts">Description</th>
+                <th>Size / Specification</th>
+                <th>Qty</th>
+                <th>Unit</th>
+                <th class="te">Unit Price ({{basicdetails.[0].currency_isocode}})</th>
+                <th class="te">Amount ({{basicdetails.[0].currency_isocode}})</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each itemdetails}}
+            <tr>
+                <td class="tc">{{addOne @index}}</td>
+                <td class="ts">{{item_name}}{{description}}</td>
+                <td class="tc">{{remark}}</td>
+                <td class="tc">{{formatAmount quantity ../bcdp}}</td>
+                <td class="tc">{{unit}}</td>
+                <td class="te">{{formatAmount price ../bcdp}}</td>
+                <td class="te">{{formatAmount amount ../bcdp}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    </div>
+
+    {{!-- ── Payment Terms / Bank Details  |  Summary ────── --}}
+    <table class="bottom_wrap">
+        <tr>
+            <td class="bl_col" style="padding-top:10px;">
+                {{#if basicdetails.[0].payment_terms}}
+                <div class="blk_hd">
+                    <svg class="ic" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#c9962c" stroke-width="2"/><path d="M12 6v12M9 9.3c0-1.4 1.3-2.3 3-2.3s3 .9 3 2.3-1.3 1.9-3 1.9-3 .5-3 1.9 1.3 2.3 3 2.3 3-.9 3-2.3" fill="none" stroke="#c9962c" stroke-width="1.3" stroke-linecap="round"/></svg>
+                    Payment Terms :
+                </div>
+                <div class="terms_val">{{basicdetails.[0].payment_terms}}</div>
+                <div class="dotted_sep"></div>
+                {{/if}}
+
+                <div class="blk_hd">
+                    <svg class="ic" width="13" height="13" viewBox="0 0 24 24"><path d="M12 2 2 8h20L12 2z" fill="#c9962c"/><rect x="3" y="9" width="2.2" height="9.5" fill="#c9962c"/><rect x="7.4" y="9" width="2.2" height="9.5" fill="#c9962c"/><rect x="11.9" y="9" width="2.2" height="9.5" fill="#c9962c"/><rect x="16.4" y="9" width="2.2" height="9.5" fill="#c9962c"/><rect x="20.8" y="9" width="1" height="9.5" fill="#c9962c"/><rect x="2" y="19" width="20" height="2" fill="#c9962c"/></svg>
+                    Bank Details :
+                </div>
+                <table class="bank_tbl">
+                    <tr><td class="bk_lbl">Bank Name</td><td class="bk_sep">:</td><td class="b">{{bankdetails.name}}</td></tr>
+                    <tr><td class="bk_lbl">Account Name</td><td class="bk_sep">:</td><td class="b">{{bankdetails.acc_name}}</td></tr>
+                    <tr><td class="bk_lbl">IBAN</td><td class="bk_sep">:</td><td class="b">{{bankdetails.iban_no}}</td></tr>
+                    <tr><td class="bk_lbl">Account No.</td><td class="bk_sep">:</td><td class="b">{{bankdetails.acc_no}}</td></tr>
+                    <tr><td class="bk_lbl">SWIFT Code</td><td class="bk_sep">:</td><td class="b">{{bankdetails.swift_no}}</td></tr>
+                </table>
+
+                <div class="note">Please make all payments to our bank account.</div>
+                <div class="thanks">Thank you for your business!</div>
+            </td>
+            <td class="br_col">
+                {{#with basicdetails.[0]}}
+                <div class="summary_box">
+                    <table class="summary_tbl">
+                        <tr>
+                            <td class="s_lbl" style="border-top: none; !important">Subtotal</td>
+                            <td class="s_val" style="border-top: none; !important">{{formatAmount (divide subtotal ../ccrate) ../bcdp}}</td>
+                        </tr>
+                        {{#if (gt (add discount dld) 0)}}
+                        <tr>
+                            <td class="s_lbl">Discount</td>
+                            <td class="s_val">- {{formatAmount (divide (add discount dld) ../ccrate) ../bcdp}}</td>
+                        </tr>
+                        {{/if}}
+                        <tr>
+                            <td class="s_lbl">{{default ../datasettingstextvalue.d828 'VAT'}}</td>
+                            <td class="s_val">{{formatAmount (divide vatamt ../ccrate) ../bcdp}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <table class="total_tbl">
+                    <tr>
+                        <td class="s_lbl">Total Due ({{currency_isocode}})</td>
+                        <td class="s_val">{{formatAmount (divide balance ../ccrate) ../bcdp}}</td>
+                    </tr>
+                </table>
+                {{/with}}
+
+                <table class="sign_wrap">
+                    <tr>
+                        <td>
+                            <div class="sign_for">For {{compprof.name}}</div>
+                            {{#ifFlag datasettings "d165"}}
+                            <img class="sigimg" src="{{Signature}}" alt="Signature" onerror="this.style.display='none'"/>
+                            {{/ifFlag}}
+                            <div class="sign_line"></div>
+                            {{#if basicdetails.[0].salesman_name}}
+                            <div class="sign_name">{{basicdetails.[0].salesman_name}}</div>
+                            {{/if}}
+                            {{#if basicdetails.[0].salesman_designation}}
+                            <div class="sign_desig">{{basicdetails.[0].salesman_designation}}</div>
+                            {{/if}}
+                        </td>
+                        <td class="tc">
+                            {{#ifFlag datasettings "d146"}}
+                            <img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d459 '100'}}px; max-width:{{default datasettings.d459 '180'}}px;" onerror="this.style.display='none'"/>
+                            {{/ifFlag}}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

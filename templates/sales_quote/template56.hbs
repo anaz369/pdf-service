@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUOTATION - {{basicdetails.[0].inv_no}}</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    font-family: ibmplexsansarabic;
+    font-size: 11px;
+    color: #222;
+    line-height: 1.4;
+    margin: 0 8mm;
+  }
+
+  .page { width: 100%; margin: 0 auto; }
+
+  /* ── Title ─────────────────────────────────── */
+  .main-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: normal;
+    color: #2e3e57;
+    letter-spacing: 0.5px;
+    padding: 0 0 4px;
+  }
+
+  /* ── Outer doc table ───────────────────────── */
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 2px solid #000;
+  }
+  .doc-table > tbody > tr > td {
+    border: 1px solid #000;
+    padding: 0;
+    vertical-align: top;
+  }
+
+  /* ── Header row ────────────────────────────── */
+  .comp-name {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    vertical-align: middle !important;
+    padding: 6px 8px !important;
+  }
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .ref-table td {
+    text-align: center;
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+  .ref-table td + td { border-left: 1px solid #000; }
+  .ref-table .ref-val { font-weight: bold; font-size: 12px; }
+
+  /* ── Address row ───────────────────────────── */
+  .addr-cell { padding: 6px 6px !important; }
+  .cust-cell { padding: 6px 6px !important; }
+  .cust-name { font-weight: bold; font-size: 12px; }
+
+  /* ── Spacer rows ───────────────────────────── */
+  .gap-sm { height: 16px; }
+  .subj-cell { padding: 4px 6px !important; }
+  .gap-lg { height: 32px; }
+  .terms-cell { padding: 6px !important; line-height: 1.5; }
+
+  /* ── Items table ───────────────────────────── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .items-table th{
+    text-align: center;
+  }
+  .items-table th,
+  .items-table td {
+    border: 1px solid #ccc;
+    padding: 4px 4px;
+    font-size: 11px;
+    vertical-align: top;
+  }
+  .items-table tr > :first-child { border-left: none; }
+  .items-table tr > :last-child  { border-right: none; }
+  .items-table th { font-weight: bold; text-align: left; }
+  .items-table th.center, .items-table td.center { text-align: center; }
+  .items-table td.right { text-align: right; }
+  .items-table tr { page-break-inside: avoid; }
+
+  /* ── Words / Bank | Totals ─────────────────── */
+  .bottom-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .bottom-table td {
+    border: 1px solid #000;
+    padding: 6px 6px;
+    font-size: 11px;
+    vertical-align: middle;
+  }
+  .bottom-table .words { border-bottom: 1px solid #ccc; }
+  .bottom-table .bank-head { text-align: center; font-weight: bold; }
+  .bottom-table .bank { text-align: center; padding: 6px 4px; overflow-wrap: anywhere; }
+  /* edge cells: the outer frame already draws these sides */
+  .bottom-table .et { border-top: none; }
+  .bottom-table .eb { border-bottom: none; }
+  .bottom-table .el { border-left: none; }
+  .bottom-table .er { border-right: none; }
+  .bottom-table .t-lbl { text-align: right; border-right: 1px solid #ccc; padding-right: 5px; }
+  .bottom-table .t-val { text-align: right; padding: 6px 3px; }
+  .bottom-table .grand { font-weight: bold; }
+
+  /* ── Sign-off ──────────────────────────────── */
+  .signoff { padding: 10px 6px 4px !important; }
+  .signoff-for { padding-left: 10px; }
+  .sign-imgs { display: table; width: 100%; margin-top: 4px; }
+  .sign-imgs > div { display: table-cell; vertical-align: bottom; }
+  .sig-img, .seal-img {
+    max-height: {{default datasettings.d459 '80'}}px;
+    max-width: {{default datasettings.d459 '120'}}px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="main-title">QUOTATION</div>
+
+  <table class="doc-table">
+    <colgroup>
+      <col style="width:50%">
+      <col style="width:50%">
+    </colgroup>
+
+    <!-- Company name | Reference + Date -->
+    <tr>
+      <td class="comp-name">Reference<br><span class="ref-val">{{basicdetails.[0].inv_no}}</span></td>
+      <td class="comp-name">Date<br><span class="ref-val">{{basicdetails.[0].inv_date}}</span></td>
+    </tr>
+
+    <!-- Branch address | Customer -->
+    <tr>
+      <td class="addr-cell"><div class="cust-name">{{#if branch.[0].name}}{{branch.[0].name}}{{/if}}</div>
+        {{#if branch.[0].address_line1}}<div>{{branch.[0].address_line1}}</div>{{/if}}
+        {{#if branch.[0].address_line2}}<div>{{branch.[0].address_line2}}</div>{{/if}}
+        {{#if branch.[0].address_line3}}<div>{{branch.[0].address_line3}}</div>{{/if}}
+        {{#if branch.[0].address_line4}}<div>{{branch.[0].address_line4}}</div>{{/if}}
+        {{#if branch.[0].address_line5}}<div>{{branch.[0].address_line5}}</div>{{/if}}
+        {{#if branch.[0].vat}}<div>VAT : {{branch.[0].vat}}</div>{{/if}}
+      </td>
+      <td class="cust-cell">
+        <div class="cust-name">{{#if billing_address.[0].name}}{{billing_address.[0].name}}{{else}}{{basicdetails.[0].customer_name}}{{/if}}</div>
+        {{#if billing_address.[0].address_line1}}<div>{{billing_address.[0].address_line1}}</div>{{/if}}
+        {{#if billing_address.[0].address_line2}}<div>{{billing_address.[0].address_line2}}</div>{{/if}}
+        {{#if billing_address.[0].address_line3}}<div>{{billing_address.[0].address_line3}}</div>{{/if}}
+        {{#if billing_address.[0].address_line4}}<div>{{billing_address.[0].address_line4}}</div>{{/if}}
+        {{#if billing_address.[0].address_line5}}<div>{{billing_address.[0].address_line5}}</div>{{/if}}
+        {{#if billing_address.[0].vat}}<div>VAT : {{billing_address.[0].vat}}</div>{{/if}}
+      </td>
+    </tr>
+
+    {{#if basicdetails.[0].subj}}
+    <tr><td colspan="2" class="subj-cell"><b>Subject :</b> {{basicdetails.[0].subj}}</td></tr>
+    {{else}}
+    <tr><td colspan="2" class="gap-sm"></td></tr>
+    {{/if}}
+
+    <!-- Items -->
+    <tr>
+      <td colspan="2">
+        <table class="items-table">
+          <colgroup>
+            <col style="width:5%">
+            <col style="width:52%">
+            <col style="width:12%">
+            <col style="width:9%">
+            <col style="width:10%">
+            <col style="width:12%">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th class="center">Description</th>
+              <th class="center">Quantity</th>
+              <th class="center">Unit</th>
+              <th class="center">Unit Price</th>
+              <th class="center">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each itemdetails}}
+            <tr>
+              <td class="center">{{addOne @index}}</td>
+              <td>
+                {{#if item_name}}<div>{{item_name}}</div>{{/if}}
+                {{#if name_lang2}}<div>{{name_lang2}}</div>{{/if}}
+                {{#if description}}<div>{{{nl2br description}}}</div>{{/if}}
+              </td>
+              <td class="center">{{quantity}}</td>
+              <td class="center">{{unit}}</td>
+              <td class="right">{{formatAmount price ../bcdp}}</td>
+              <td class="right">{{formatAmount taxable ../bcdp}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+
+    {{#if basicdetails.[0].terms_and_condition}}
+    <tr><td colspan="2" class="terms-cell">{{{nl2br basicdetails.[0].terms_and_condition}}}</td></tr>
+    {{else}}
+    <tr><td colspan="2" class="gap-lg"></td></tr>
+    {{/if}}
+
+    <!-- Words + Bank (left) | Totals (right) -->
+    <tr>
+      <td colspan="2">
+        <table class="bottom-table">
+          <colgroup>
+            <col style="width:17%">
+            <col style="width:17%">
+            <col style="width:15%">
+            <col style="width:26%">
+            <col style="width:12%">
+            <col style="width:13%">
+          </colgroup>
+
+          <tr>
+            <td colspan="4" class="words et el">Amount chargable in words :<b>{{bcamountinwords}}</b></td>
+            <td rowspan="2" class="t-lbl et">Total Amount</td>
+            <td rowspan="2" class="t-val et er">{{formatAmount (divide basicdetails.[0].subtotal ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="el">Cheque should be crossed and made payable to: {{#if branch.[0].name}}{{branch.[0].name}}{{else}}{{compprof.name}}{{/if}}</td>
+          </tr>
+
+          <tr>
+            <td colspan="4" class="bank-head el">BANK DETAILS</td>
+            <td class="t-lbl">Discount</td>
+            <td class="t-val er">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
+          </tr>
+
+          <tr>
+            <td class="bank el">Beneficiary A/C Name</td>
+            <td class="bank">{{bankdetails.acc_name}}</td>
+            <td class="bank">Beneficiary Bank</td>
+            <td class="bank">{{bankdetails.name}}</td>
+            <td rowspan="3" class="t-lbl eb">Total Amount</td>
+            <td rowspan="3" class="t-val grand eb er">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
+          </tr>
+          <tr>
+            <td class="bank el">Beneficiary Branch</td>
+            <td class="bank">{{bankdetails.branch_name}}</td>
+            <td class="bank">Beneficiary A/C NO</td>
+            <td class="bank">{{bankdetails.acc_no}}</td>
+          </tr>
+          <tr>
+            <td class="bank el eb">Swift Code</td>
+            <td class="bank eb">{{bankdetails.swift_no}}</td>
+            <td class="bank eb">IBAN No</td>
+            <td class="bank eb">{{bankdetails.iban_no}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Sign-off -->
+    <tr>
+      <td colspan="2" class="signoff">
+        <div class="signoff-for">For {{#if branch.[0].name}}{{branch.[0].name}}{{else}}{{compprof.name}}{{/if}}</div>
+        <div class="sign-imgs">
+          <div style="width:18%;">{{#if Signature}}<img class="sig-img" src="{{Signature}}" alt="Signature" style="max-height:{{default datasettings.d459 '40'}}px; max-width:{{default datasettings.d459 '60'}}px;" onerror="this.style.display='none'"/> {{/if}}</div>
+          <div>{{#if Seal}}<img class="seal-img" src="{{Seal}}" alt="Seal" style="max-height:{{default datasettings.d458 '40'}}px; max-width:{{default datasettings.d458 '60'}}px;" onerror="this.style.display='none'"/> {{/if}}</div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>

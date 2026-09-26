@@ -1,302 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <title></title>
+  <meta charset="UTF-8" />
+  <title>Purchase Order - {{basicdetails.[0].inv_no}}</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: Arial, sans-serif;
-      font-size: 11px;
-      color: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5px;
+      color: #000000;
       background: #fff;
+      margin: 0 5mm;
     }
 
-    .page {
-      margin: 0 auto;
-      padding: 15px 25px;
+    table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .mt { margin-top: 6px; }
+
+    /* ── TITLE ── */
+    .title-bar {
+      background: #ffff00; color: #000; text-align: center;
+      font-size: 16px; font-weight: 800; padding: 6px; letter-spacing: 0.5px;
     }
 
-    /* ── Title ──────────────────────────────────── */
-    .title {
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+    /* ── INFO BOXES ── */
+    .box { border: 1px solid #bfbfbf; }
+    .box .hd { font-weight: 700; font-size: 11px; padding: 4px 8px; }
+    .kv { width: 100%; border-collapse: collapse; }
+    .kv td { padding: 2px 8px; font-size: 10.5px; vertical-align: top; }
+    .kv .k { width: 27%; }
+    .kv .c { width: 2%; }
+    .hd { font-weight: bold; padding-left:8px; font-size: 13px; padding-top:5px;}
+    .split > tbody > tr > td { vertical-align: top; border: none; padding: 0; }
+    .split .cellL { border: 1px solid #bfbfbf; }
+    .split .cellR { border: 1px solid #bfbfbf; border-left: none; }
 
-    /* ── Top info bar ──────────────────────────── */
-    .top-bar {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 8px;
-    }
-    .top-bar td {
-      border: 1px solid #000;
-      padding: 4px 6px;
-      font-size: 11px;
-    }
-    .top-bar .lbl {
-      font-weight: bold;
-    }
+    /* ── ITEMS ── */
+    .items td, .items th { border: 1px solid #bfbfbf; padding: 3px 5px; font-size: 10px; vertical-align: top; }
+    .items th { font-weight: 700; text-align: center; }
+    .items td.num { text-align: center; }
+    .items td.rt { text-align: right; }
+    .items .idesc { font-size: 9.5px; }
+    /* item rows: no horizontal lines between them; only the last item gets a bottom border */
+    .items tbody tr.item-row td { border-top: none; border-bottom: none; }
+    .items tbody tr.item-row.item-last td { border-bottom: 1px solid #bfbfbf; }
 
-    /* ── Section title ─────────────────────────── */
-    .section-title {
-      font-size: 11px;
-      font-weight: bold;
-      margin-bottom: 2px;
-    }
+    /* ── SUMMARY ── */
+    .sum { border: 1px solid #bfbfbf; border-top: none; }
+    .sum > tbody > tr > td { vertical-align: top; padding: 4px 6px; }
+    .sum .words { width: 50%; }
+    .sum .stbl { width: 100%; border-collapse: collapse; }
+    .sum .stbl td { padding: 2px 4px; font-size: 10.5px; }
+    .sum .stbl .sl { text-align: right; }
+    .sum .stbl .sv { text-align: right; width: 32%; }
 
-    /* ── Vendor info ───────────────────────────── */
-    .vendor-box {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 8px;
-    }
-    .vendor-box td {
-      border: 1px solid #000;
-      padding: 3px 6px;
-      font-size: 11px;
-    }
-    .vendor-box .v-lbl {
-      font-weight: bold;
-      width: 80px;
-    }
+    /* ── TERMS / SIGN ── */
+    .h { font-weight: 700; }
+    .sign-tbl > tbody > tr > td { vertical-align: top; border: none; padding: 4px 0; }
+    .sig-img img { max-height: 60px; max-width: 130px; }
 
-    /* ── Items table ───────────────────────────── */
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 0;
-    }
-    .items-table th {
-      background: #fff;
-      font-size: 10px;
-      font-weight: bold;
-      padding: 4px 4px;
-      text-align: center;
-      border: 1px solid #000;
-    }
-    .items-table td {
-      padding: 3px 4px;
-      font-size: 10px;
-      border: 1px solid #000;
-      text-align: center;
-      vertical-align: middle;
-    }
-    .items-table td.td-left { text-align: left; }
-    .items-table td.td-right { text-align: right; }
-
-    /* ── Tax breakup ───────────────────────────── */
-    .tax-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 0;
-    }
-    .tax-table th {
-      font-size: 10px;
-      font-weight: bold;
-      padding: 4px 4px;
-      text-align: center;
-      border: 1px solid #000;
-    }
-    .tax-table td {
-      padding: 3px 4px;
-      font-size: 10px;
-      border: 1px solid #000;
-      text-align: center;
-    }
-
-    /* ── Totals ─────────────────────────────────── */
-    .totals-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .totals-table td {
-      padding: 3px 6px;
-      font-size: 10px;
-      border: 1px solid #000;
-    }
-    .totals-table .t-lbl {
-      text-align: right;
-      font-weight: bold;
-    }
-    .totals-table .t-val {
-      text-align: right;
-      width: 120px;
-    }
-
-    /* ── Amount in words ───────────────────────── */
-    .amount-words {
-      font-size: 11px;
-      font-weight: bold;
-      margin-top: 8px;
-      margin-bottom: 8px;
-    }
-
-    /* ── Terms ──────────────────────────────────── */
-    .terms-title {
-      font-size: 11px;
-      font-weight: bold;
-      margin-bottom: 2px;
-    }
-    .terms-text {
-      font-size: 10px;
-      line-height: 1.6;
-    }
-
-    /* ── Footer ─────────────────────────────────── */
-    .footer-wrap {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-top: 15px;
-    }
-    .auth-sig {
-      text-align: right;
-      font-size: 11px;
-    }
+    /* ── ACCEPTANCE ── */
+    .accept-bar { background: #ffff00; text-align: center; font-weight: 700; padding: 4px; font-size: 11px; }
+    .accept-mid { text-align: center; padding: 4px; }
   </style>
 </head>
 <body>
-<div class="page">
 
-  {{!-- ══ TITLE ══ --}}
-  <div class="title">PURCHASE ORDER</div>
+  <!-- TITLE -->
+  <div class="title-bar">PURCHASE ORDER</div>
 
-  {{!-- ══ TOP INFO BAR ══ --}}
-  <table class="top-bar">
+  <!-- VENDOR | ORDER INFORMATION -->
+  <table class="split mt">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
     <tr>
-      <td><span class="lbl">Reference No :</span> {{basicdetails.[0].inv_no}}</td>
-      <td><span class="lbl">PO Date:</span> {{basicdetails.[0].inv_date}}</td>
-      <td><span class="lbl">Due Date:</span> {{basicdetails.[0].due_date}}</td>
-      <td><span class="lbl">Vendor Code:</span> {{vendor_details.[0].profile_code}}</td>
+      <td class="cellL">
+        <div class="hd">VENDOR INORMATION</div>
+        <table class="kv">
+            <colgroup><col style="width:27%"><col style="width:2%"><col style="width:69%"></colgroup>
+          <tr><td class="k">Vendor Id</td><td class="c">:</td><td>{{vendor_details.[0].profile_code}}</td></tr>
+          <tr><td class="k">Company Name</td><td class="c">:</td><td>{{vendor_details.[0].name}}</td></tr>
+          <tr><td class="k">GST No</td><td class="c">:</td><td>{{billing_address.[0].gstin}}</td></tr>
+          <tr><td class="k">Address</td><td class="c">:</td><td>{{#if billing_address.[0]}}{{joinAddress billing_address.[0] ', '}}{{/if}}</td></tr>
+          <tr><td class="k">Phone</td><td class="c">:</td><td>{{vendor_details.[0].contact_no1}}</td></tr>
+          <tr><td class="k">Email</td><td class="c">:</td><td>{{vendor_details.[0].email}}</td></tr>
+          <tr><td class="k">Attention</td><td class="c">:</td><td>{{basicdetails.[0].attention}}</td></tr>
+        </table>
+      </td>
+      <td class="cellR">
+        <div class="hd">ORDER INFORMATION</div>
+        <table class="kv">
+          <tr><td class="k">PO No</td><td class="c">:</td><td>{{basicdetails.[0].inv_no}}</td></tr>
+          <tr><td class="k">Order Ref</td><td class="c">:</td><td>{{basicdetails.[0].reference_no}}</td></tr>
+          <tr><td class="k">PO Date</td><td class="c">:</td><td>{{basicdetails.[0].inv_date}}</td></tr>
+          <tr><td class="k">Pay Terms</td><td class="c">:</td><td>{{basicdetails.[0].payment_terms}}</td></tr>
+          <tr><td class="k">Delivery Date</td><td class="c">:</td><td>{{basicdetails.[0].delivery_date}}</td></tr>
+        </table>
+      </td>
     </tr>
   </table>
 
-  {{!-- ══ VENDOR INFORMATION ══ --}}
-  <div class="section-title">Vendor Information</div>
-  <table class="vendor-box">
+  <!-- SHIP TO | BILL TO -->
+  <table class="split mt">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
     <tr>
-      <td class="v-lbl">Vendor:</td>
-      <td colspan="3">{{vendor_details.[0].name}}</td>
-    </tr>
-    <tr>
-      <td class="v-lbl">Address:</td>
-      <td colspan="3">{{#if billing_address.[0]}}{{joinAddress billing_address.[0]}}{{/if}}</td>
-    </tr>
-    <tr>
-      <td class="v-lbl">Attention:</td>
-      <td colspan="3">{{#if vendor_details.[0].contact_no1}}{{vendor_details.[0].contact_no1}}{{/if}}</td>
+      <td class="cellL">
+        <div class="hd">Ship To:</div>
+        <table class="kv" style="padding: 2px 8px;">
+          <tr><td class="k">Company</td><td class="c">:</td><td>{{shipping_address.[0].name}}</td></tr>
+          <tr><td class="k">District</td><td class="c">:</td><td>{{shipping_address.[0].address_line3}}</td></tr>
+          <tr><td class="k">City</td><td class="c">:</td><td>{{shipping_address.[0].address_line4}}</td></tr>
+          <tr><td class="k">Postal Code</td><td class="c">:</td><td>{{shipping_address.[0].address_code}}</td></tr>
+          <tr><td class="k">Country</td><td class="c">:</td><td>{{shipping_address.[0].address_line5}}</td></tr>
+        </table>
+      </td>
+      <td class="cellR">
+        <div class="hd">Bill To:</div>
+        <table class="kv">
+          <tr><td class="k">Company</td><td class="c">:</td><td>{{billing_address.[0].name}}</td></tr>
+          <tr><td class="k">District</td><td class="c">:</td><td>{{billing_address.[0].address_line3}}</td></tr>
+          <tr><td class="k">City</td><td class="c">:</td><td>{{billing_address.[0].address_line4}}</td></tr>
+          <tr><td class="k">Postal Code</td><td class="c">:</td><td>{{billing_address.[0].address_code}}</td></tr>
+          <tr><td class="k">Country</td><td class="c">:</td><td>{{billing_address.[0].address_line5}}</td></tr>
+        </table>
+      </td>
     </tr>
   </table>
 
-  {{!-- ══ ORDER SUMMARY ══ --}}
-  <div class="section-title">Order Summary</div>
-  <table class="items-table">
+  <!-- ITEMS -->
+  <table class="items mt">
+    <colgroup>
+      <col style="width:5%">
+      {{#if (gt basicdetails.[0].igst 0)}}
+      <col style="width:38%">
+      {{else}}
+      <col style="width:27%">
+      {{/if}}
+      <col style="width:8%">
+      <col style="width:8%">
+      <col style="width:9%">
+      <col style="width:9%">
+      {{#if (gt basicdetails.[0].igst 0)}}
+      <col style="width:11%">
+      {{else}}
+      <col style="width:11%">
+      <col style="width:11%">
+      {{/if}}
+      <col style="width:12%">
+    </colgroup>
     <thead>
       <tr>
-        <th style="width:6%;">HSN</th>
-        <th style="width:26%;">Product Title / Description</th>
-        <th style="width:8%;">Quantity</th>
-        <th style="width:7%;">Unit</th>
-        <th style="width:11%;">Rate ({{{currencySymbol basicdetails.[0].isocode}}})</th>
-        <th style="width:8%;">IGST %</th>
-        <th style="width:8%;">CGST %</th>
-        <th style="width:8%;">SGST %</th>
-        <th style="width:8%;">CEST %</th>
-        <th style="width:10%;">Total ({{{currencySymbol basicdetails.[0].isocode}}})</th>
+        <th>S.N</th>
+        <th>Description</th>
+        <th>Unit</th>
+        <th>QTY</th>
+        <th>U.Rate</th>
+        <th>Disc</th>
+        {{#if (gt basicdetails.[0].igst 0)}}
+        <th>IGST</th>
+        {{else}}
+        <th>SGST</th>
+        <th>CGST</th>
+        {{/if}}
+        <th>Total Price</th>
       </tr>
     </thead>
     <tbody>
       {{#each itemdetails}}
-      <tr>
-        <td>{{#if hsn}}{{hsn}}{{/if}}</td>
-        <td class="td-left">{{item_name}}{{#if description}}<br><span style="font-size:9px; color:#555;">{{description}}</span>{{/if}}</td>
-        <td>{{formatAmount quantity ../bcdp}}</td>
-        <td>{{unit}}</td>
-        <td class="td-right">{{formatAmount price ../bcdp}}</td>
-        <td>{{igst_perc}}</td>
-        <td>{{cgst_perc}}</td>
-        <td>{{sgst_perc}}</td>
-        <td>{{cess_perc}}</td>
-        <td class="td-right">{{formatAmount amount ../bcdp}}</td>
+      <tr class="item-row{{#if @last}} item-last{{/if}}">
+        <td class="num">{{addOne @index}}</td>
+        <td>{{item_name}}{{#if name_lang2}}<div class="idesc">{{name_lang2}}</div>{{/if}}{{#if description}}<div class="idesc">{{description}}</div>{{/if}}</td>
+        <td class="num">{{unit}}</td>
+        <td class="num">{{formatAmount quantity ../bcdp}}</td>
+        <td class="rt">{{formatAmount price ../bcdp}}</td>
+        <td class="rt">{{formatAmount discount ../bcdp}}</td>
+        {{#if (gt ../basicdetails.[0].igst 0)}}
+        <td class="rt">{{formatAmount igst_amt ../bcdp}}</td>
+        {{else}}
+        <td class="rt">{{formatAmount sgst_amt ../bcdp}}</td>
+        <td class="rt">{{formatAmount cgst_amt ../bcdp}}</td>
+        {{/if}}
+        <td class="rt">{{formatAmount amount ../bcdp}}</td>
       </tr>
       {{/each}}
     </tbody>
   </table>
 
-  {{!-- ══ TAX BREAKUP & TOTAL ══ --}}
-  <div class="section-title" style="margin-top: 8px;">Tax Breakup & Total</div>
-  <table class="tax-table">
-    <thead>
-      <tr>
-        <th>Integrated GST (IGST) Amount</th>
-        <th>Central GST (CGST) Amount</th>
-        <th>State GST (SGST) Amount</th>
-        <th>CESS Amount</th>
-        <th>Total Tax Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>{{formatAmount basicdetails.[0].igst bcdp}}</td>
-        <td>{{formatAmount basicdetails.[0].cgst bcdp}}</td>
-        <td>{{formatAmount basicdetails.[0].sgst bcdp}}</td>
-        <td>{{formatAmount basicdetails.[0].cess bcdp}}</td>
-        <td>{{formatAmount basicdetails.[0].vatamt bcdp}}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  {{!-- ══ TOTAL PAYABLE ══ --}}
-  <table class="totals-table" style="margin-top: 8px;">
+  <!-- AMOUNT IN WORDS | TOTALS -->
+  <table class="sum">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
     <tr>
-      <td rowspan="3" style="text-align:center; font-weight:bold; vertical-align:middle; width:50%;">Total Payable</td>
-      <td class="t-lbl">Total Taxable Value</td>
-      <td class="t-val">{{formatAmount basicdetails.[0].subtotal bcdp}}</td>
-    </tr>
-    <tr>
-      <td class="t-lbl">Total Tax Amount</td>
-      <td class="t-val">{{formatAmount basicdetails.[0].vatamt bcdp}}</td>
-    </tr>
-    <tr>
-      <td class="t-lbl" style="font-weight:bold;">GRAND TOTAL</td>
-      <td class="t-val" style="font-weight:bold;">{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
+      <td class="words"><span class="h">Amount In Words :</span> {{bcamountinwords}}</td>
+      <td style="padding:0;">
+        <table class="stbl">
+          <tr><td class="sl">Sub Total</td><td class="sv">{{formatAmount basicdetails.[0].subtotal bcdp}}</td></tr>
+          <tr><td class="sl">Discount</td><td class="sv">{{formatAmount basicdetails.[0].discount bcdp}}</td></tr>
+          <tr><td class="sl">Total Amount Excl. Tax</td><td class="sv">{{formatAmount (subtract basicdetails.[0].subtotal basicdetails.[0].discount) bcdp}}</td></tr>
+          {{#if (gt basicdetails.[0].igst 0)}}
+          <tr><td class="sl">IGST</td><td class="sv">{{formatAmount basicdetails.[0].igst bcdp}}</td></tr>
+          {{else}}
+          <tr><td class="sl">SGST</td><td class="sv">{{formatAmount basicdetails.[0].sgst bcdp}}</td></tr>
+          <tr><td class="sl">CGST</td><td class="sv">{{formatAmount basicdetails.[0].cgst bcdp}}</td></tr>
+          {{/if}}
+          <tr><td class="sl">Total Amount Incl. Tax</td><td class="sv">{{formatAmount basicdetails.[0].grand_total bcdp}}</td></tr>
+        </table>
+      </td>
     </tr>
   </table>
 
-  {{!-- ══ AMOUNT IN WORDS ══ --}}
-  {{#if bcamountinwords}}
-  <div class="amount-words">Amount in Words: {{bcamountinwords}}</div>
+  <!-- TERMS -->
+  {{#if basicdetails.[0].terms_and_condition}}
+  <div class="mt"><span class="h">Terms and Conditions</span></div>
+  <div>{{{nl2br basicdetails.[0].terms_and_condition}}}</div>
   {{/if}}
 
-  {{!-- ══ TERMS & CONDITIONS ══ --}}
-  <div class="terms-title">Terms & Conditions:</div>
-  {{#if invterms}}
-  <div class="terms-text">{{{nl2br invterms}}}</div>
-  {{else}}
-  <div class="terms-text">
-    1. All goods must be accompanied by a delivery challan.<br>
-    2. Price includes standard packing.<br>
-    3. Warranty as per vendor standard.
-  </div>
-  {{/if}}
+  <!-- PREPARED / SIGNATURE -->
+  <table class="sign-tbl mt">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr>
+      <td>
+        <table class="kv1" style="padding-top: 8px;">
+          <colgroup>
+            <col style="width:22%">
+            <col style="width:2%">
+            <col style="width:76%">
+          </colgroup>
+          <tr><td class="k" style="padding-top: 8px;"><span class="h">PREPARED BY</span></td><td class="c" style="padding-top: 10px;">:</td><td style="padding-top: 10px;">{{basicdetails.[0].created_user}}</td></tr>
+          <tr><td class="k" style="padding-top: 8px;"><span class="h">DATE &amp; TIME</span></td><td class="c" style="padding-top: 10px;">:</td><td style="padding-top: 10px;"><span id="dt1">{{basicdetails.[0].current_date_time}}</span></td></tr>
+          <tr><td class="k" style="padding-top: 8px;"><span class="h">RECEIVER NOTE</span></td><td class="c" style="padding-top: 10px;">:</td><td><span id="dt1"></span></td></tr>
+        </table>
+      </td>
+      <td>
+        <div style="text-align:center;">For {{compprof.name}}</div>
+        <div class="h" style="margin-top:4px;">AUTHORIZED SIGNATURE :</div>
+        {{#ifFlag datasettings "d292"}}
+        <div class="sig-img" style="text-align: center;">
+           <img src="{{Signature}}" alt="Signature" style="text-align:center;max-height:{{ datasettings.d459 }}px; max-width:{{ datasettings.d459}}px;" onerror="this.style.display='none'"/>
+        </div>
+        {{/ifFlag}}
 
-  {{!-- ══ FOOTER ══ --}}
-  <div class="footer-wrap">
-    <div></div>
-    <div class="auth-sig">
-      {{#if Signature}}
-      <img src="{{Signature}}" alt="Signature" style="max-height:50px; max-width:100px; display:block; margin:0 0 5px auto;" onerror="this.style.display='none'"/>
-      {{/if}}
-      {{#if Seal}}
-      <img src="{{Seal}}" alt="Seal" style="max-height:50px; max-width:100px; display:block; margin:0 0 5px auto;" onerror="this.style.display='none'"/>
-      {{/if}}
-      <div style="font-weight:bold;">Authorized Signatory</div>
-      <div>[cite: Stamp]</div>
-    </div>
-  </div>
+        <!-- ACCEPTANCE -->
+        <div style="margin-top:14px;"><span class="h">DATE &amp; TIME :</span><span id="dt2">{{basicdetails.[0].current_date_time}}</span></div>
+        <div class="accept-bar" style="margin-top:4px;">ORDER ACCEPTANCE</div>
+        <div class="accept-mid">We Confirm Acceptance of this Order</div>
+        <div style="margin-top:10px;"><span class="h">NAME :</span></div>
+        <div style="margin-top:14px;"><span class="h" style="margin-right: 155px;">TITLE :</span><span class="h">DATE :</span></div>
+      </td>
+    </tr>
+  </table>
 
-</div>
 </body>
 </html>

@@ -4,6 +4,7 @@ const fs = require("fs").promises;
 const fsSync = require("fs");
 const path = require("path");
 const qrCodeService = require("./qrCodeService");
+const QRCode = require("qrcode");
 
 // ── Currency symbols ───────────────────────────────────────
 const CURRENCY_SYMBOLS = {
@@ -528,6 +529,43 @@ class TemplateService {
       return new Handlebars.SafeString(
         `<span style="font-size:9px;color:#999;">QR unavailable</span>`,
       );
+    });
+
+    // Renders a QR code that encodes arbitrary text/a URL directly (unlike
+    // qrDataUri, which just embeds an already-generated ZATCA payload image).
+    // Built synchronously as inline SVG since Handlebars helpers can't await.
+    Handlebars.registerHelper("qrCodeUrl", function (text, size) {
+      const px = parseInt(size, 10) > 0 ? parseInt(size, 10) : 130;
+      if (!text || !String(text).trim()) {
+        return new Handlebars.SafeString(
+          `<span style="font-size:9px;color:#999;">QR unavailable</span>`,
+        );
+      }
+      try {
+        const qr = QRCode.create(String(text).trim(), {
+          errorCorrectionLevel: "M",
+        });
+        const n = qr.modules.size;
+        let rects = "";
+        for (let row = 0; row < n; row++) {
+          for (let col = 0; col < n; col++) {
+            if (qr.modules.get(row, col)) {
+              rects += `<rect x="${col}" y="${row}" width="1" height="1"/>`;
+            }
+          }
+        }
+        return new Handlebars.SafeString(
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n} ${n}" ` +
+            `width="${px}" height="${px}" shape-rendering="crispEdges" style="display:block;">` +
+            `<rect x="0" y="0" width="${n}" height="${n}" fill="#fff"/>` +
+            `<g fill="#000">${rects}</g></svg>`,
+        );
+      } catch (err) {
+        console.error("Error generating qrCodeUrl:", err);
+        return new Handlebars.SafeString(
+          `<span style="font-size:9px;color:#999;">QR unavailable</span>`,
+        );
+      }
     });
 
     Handlebars.registerHelper("hasVat", function (items, options) {

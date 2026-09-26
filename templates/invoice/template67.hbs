@@ -44,18 +44,42 @@
     .b{ font-weight: bold; }
 
     /* ── Title ─────────────────────────────────────────── */
+    .head_row td{
+        border: 0;
+        padding: 0;
+        vertical-align: middle;
+    }
     .doc_head{
         text-align: center;
+        padding: 4px 0;
+    }
+    .doc_head_box{
+        display: inline-block;
+        border: 1.2px solid #000;
+        border-radius: 10px;
+        padding: 4px 18px;
         font-weight: bold;
-        font-size: 19px;
-        color: #553838;
-        line-height: 22px;
-        padding: 2px 0 3px 0;
+        font-size: 15px;
+        color: #000;
+        line-height: 18px;
+    }
+    .head_qr{
+        width: 100px;
+        text-align: right;
+    }
+    .head_qr img{
+        width: 90px !important;
+        height: 100px !important;
+        position: relative;
+        {{!-- top: -6px; --}}
     }
 
     /* ── Invoice no bar (top rule only) ────────────────── */
+    .invno_tab{
+        margin-top: 8px;
+    }
     .invno_tab td{
-        border-top: 1px solid #553838;
+        border-top: 0.3px solid #553838;
         font-size: 10px;
         font-weight: bold;
         padding: 3px 2px;
@@ -64,18 +88,18 @@
 
     /* ── Generic bordered blocks ───────────────────────── */
     .sec{
-        border: 1px solid #bfbfbf;
+        border: 0.3px solid #bfbfbf;
         margin-top: 2px;
     }
     .sec td, .sec th{
-        border: 1px solid #bfbfbf;
+        border: 0.3px solid #bfbfbf;
         vertical-align: middle;
     }
     /* Header blocks — dotted inner rules; the solid table border wins
        on the outer frame under border-collapse (solid beats dotted). */
     .dates td, .dates th,
     .detail td, .detail th{
-        border: 1px dotted #bfbfbf;
+        border: 0.3px dotted #bfbfbf;
     }
 
     /* ── Date / reference strip ────────────────────────── */
@@ -155,7 +179,7 @@
         color: #444;
     }
 
-    /* ── QR + summary ──────────────────────────────────── */
+    /* ── Summary ───────────────────────────────────────── */
     .foot_wrap{
         margin-top: 7px;
         border-collapse: collapse;
@@ -166,14 +190,6 @@
     }
     .qr_cell{
         width: 129px;
-        text-align: center;
-        vertical-align: top;
-        padding-top: 12px !important;
-    }
-    .qr_cell img{
-        width: 103px !important;
-        height: 103px !important;
-        margin: 0 auto;
     }
     .summary td{
         padding: 2px 5px;
@@ -227,30 +243,37 @@
     .bank .bval{
         font-weight: bold;
     }
-    .bank .sig{
-        text-align: center;
-        vertical-align: middle;
+
+    /* ── Terms and Conditions ─────────────────────────── */
+    .terms{
+        margin-top: 9px;
     }
-    .bank .sig img{
-        max-height: 90px;
-        max-width: 90%;
-    }
-    .bank .sig_lbl{
-        text-align: center;
-        font-weight: bold;
+    .terms td{
+        padding: 4px 5px;
         line-height: 13px;
-        padding: 0 5px 1px 5px;
-        /* no rule between the signature area and its caption — a collapsed edge
-           draws if EITHER side declares it, so .sig drops its bottom too */
-        border-top: 0;
     }
-    .bank .sig{ border-bottom: 0; }
+    .terms .terms_hd{
+        font-weight: bold;
+        background-color: #E8ECEF;
+    }
+    .terms .terms_body{
+        font-weight: normal;
+    }
 </style>
 </head>
 <body>
 
-    {{!-- ── Title ─────────────────────────────────────── --}}
-    <div class="doc_head">TAX INVOICE / <span class="arab">فاتورة ضريبية</span></div>
+    {{!-- ── Title + QR ───────────────────────────────── --}}
+    <table class="head_row">
+        <colgroup>
+            <col style="width:100px"><col><col style="width:100px">
+        </colgroup>
+        <tr>
+            <td></td>
+            <td class="doc_head"><span class="doc_head_box">TAX INVOICE / <span class="arab">فاتورة ضريبية</span></span></td>
+            <td class="head_qr">{{{qrDataUri qrCodeBase64}}}</td>
+        </tr>
+    </table>
 
     {{!-- ── Invoice number bar ────────────────────────── --}}
     <table class="invno_tab">
@@ -303,7 +326,7 @@
         <tr>
             <td class="ts bg-l">To</td>
             <td class="ts b" colspan="3">{{branch.[0].name}}</td>
-            <td class="te arab" colspan="3" style="font-weight: 700;">{{branch_lang2.[0].name}}</td>
+            <td class="te arab" colspan="3">{{branch_lang2.[0].name}}</td>
             <td class="te arab bg-l">الإسم</td>
         </tr>
         <tr>
@@ -338,7 +361,7 @@
         <tr>
             <td class="ts bg-l">To</td>
             <td class="ts b" colspan="3">{{billing_address.[0].name}}</td>
-            <td class="te arab" colspan="3" style="font-weight: 700;">{{billing_address_lang2.[0].name}}</td>
+            <td class="te arab" colspan="3">{{billing_address_lang2.[0].name}}</td>
             <td class="te arab bg-l">الإسم</td>
         </tr>
         <tr>
@@ -395,20 +418,20 @@
                 </td>
                 <td class="tc">{{unit}}</td>
                 <td class="tc">{{formatAmount quantity ../bcdp}}</td>
-                <td class="te">{{{currencySymbol (default currency_isocode ../currency_isocode)}}} {{formatAmount price ../bcdp}}</td>
-                <td class="te">{{{currencySymbol (default currency_isocode ../currency_isocode)}}} {{formatAmount taxable ../bcdp}}</td>
+                <td class="te">{{{currencySymbol (default isocode ../isocode)}}} {{formatAmount price ../bcdp}}</td>
+                <td class="te">{{{currencySymbol (default isocode ../isocode)}}} {{formatAmount taxable ../bcdp}}</td>
                 <td class="tc">{{vat_perc}}%</td>
-                <td class="te">{{{currencySymbol (default currency_isocode ../currency_isocode)}}} {{formatAmount vat_amt ../bcdp}}</td>
-                <td class="te">{{{currencySymbol (default currency_isocode ../currency_isocode)}}} {{formatAmount amount ../bcdp}}</td>
+                <td class="te">{{{currencySymbol (default isocode ../isocode)}}} {{formatAmount vat_amt ../bcdp}}</td>
+                <td class="te">{{{currencySymbol (default isocode ../isocode)}}} {{formatAmount amount ../bcdp}}</td>
             </tr>
             {{/each}}
         </tbody>
     </table>
 
-    {{!-- ── QR + summary ──────────────────────────────── --}}
+    {{!-- ── Summary ───────────────────────────────────── --}}
     <table class="foot_wrap">
         <tr>
-            <td class="qr_cell">{{{qrDataUri qrCodeBase64}}}</td>
+            <td class="qr_cell"></td>
             <td>
                 <table class="sec summary" style="margin-top:0;">
                     <colgroup>
@@ -417,7 +440,7 @@
                     {{#with basicdetails.[0]}}
                     <tr>
                         <td class="ts">Grand Total Amount (Excl. VAT)</td>
-                        <td class="amt">{{{currencySymbol ../currency_isocode}}} {{formatAmount (divide subtotal ../ccrate) ../bcdp}}</td>
+                        <td class="amt">{{{currencySymbol ../isocode}}} {{formatAmount (divide subtotal ../ccrate) ../bcdp}}</td>
                         <td class="ar arab">المبلغ الإجمالي (بدون ضريبة)</td>
                     </tr>
                     {{!-- Discount rows, three cases:
@@ -428,25 +451,25 @@
                       {{#each ../zatcadiscount}}
                       <tr>
                         <td class="ts">{{#if reason_name}}{{reason_name}}{{else}}Total Discount{{/if}}</td>
-                        <td class="amt">{{{currencySymbol ../../currency_isocode}}} {{formatAmount (divide dld ../../ccrate) ../../bcdp}}</td>
+                        <td class="amt">{{{currencySymbol ../../isocode}}} {{formatAmount (divide dld ../../ccrate) ../../bcdp}}</td>
                         <td class="ar arab">{{#if reason_name_lang2}}{{reason_name_lang2}}{{else}}إجمالي مبلغ الخصم{{/if}}</td>
                       </tr>
                       {{/each}}
                       <tr>
                         <td class="ts">Total Amount After Discount</td>
-                        <td class="amt">{{{currencySymbol ../currency_isocode}}} {{formatAmount (divide (subtract subtotal (sumProperty ../zatcadiscount 'dld')) ../ccrate) ../bcdp}}</td>
+                        <td class="amt">{{{currencySymbol ../isocode}}} {{formatAmount (divide (subtract subtotal (sumProperty ../zatcadiscount 'dld')) ../ccrate) ../bcdp}}</td>
                         <td class="ar arab">المبلغ الإجمالي بعد الخصم</td>
                       </tr>
                     {{else}}
                       {{#if (gt (add discount dld) 0)}}
                       <tr>
                         <td class="ts">Total Discount</td>
-                        <td class="amt">{{{currencySymbol ../currency_isocode}}} {{formatAmount (divide (add discount dld) ../ccrate) ../bcdp}}</td>
+                        <td class="amt">{{{currencySymbol ../isocode}}} {{formatAmount (divide (add discount dld) ../ccrate) ../bcdp}}</td>
                         <td class="ar arab">إجمالي مبلغ الخصم</td>
                       </tr>
                       <tr>
                         <td class="ts">Total Amount After Discount</td>
-                        <td class="amt">{{{currencySymbol ../currency_isocode}}} {{formatAmount (divide (subtract subtotal (add discount dld)) ../ccrate) ../bcdp}}</td>
+                        <td class="amt">{{{currencySymbol ../isocode}}} {{formatAmount (divide (subtract subtotal (add discount dld)) ../ccrate) ../bcdp}}</td>
                         <td class="ar arab">المبلغ الإجمالي بعد الخصم</td>
                       </tr>
                       {{/if}}
@@ -457,24 +480,24 @@
                       {{#each ../zatcacharge}}
                       <tr>
                         <td class="ts">{{#if reason_name}}{{reason_name}}{{else}}Charges{{/if}}</td>
-                        <td class="amt">{{{currencySymbol ../../currency_isocode}}} {{formatAmount (divide dld ../../ccrate) ../../bcdp}}</td>
+                        <td class="amt">{{{currencySymbol ../../isocode}}} {{formatAmount (divide dld ../../ccrate) ../../bcdp}}</td>
                         <td class="ar arab">{{#if reason_name_lang2}}{{reason_name_lang2}}{{else}}الرسوم{{/if}}</td>
                       </tr>
                       {{/each}}
                     {{/if}}
                     <tr>
                         <td class="ts">Total VAT Amount</td>
-                        <td class="amt">{{{currencySymbol ../currency_isocode}}} {{formatAmount (divide vatamt ../ccrate) ../bcdp}}</td>
+                        <td class="amt">{{{currencySymbol ../isocode}}} {{formatAmount (divide vatamt ../ccrate) ../bcdp}}</td>
                         <td class="ar arab">إجمالي مبلغ ضريبة القيمة المضافة</td>
                     </tr>
                     <tr>
                         <td class="ts">Grand Total Amount (Incl. VAT)</td>
-                        <td class="amt">{{{currencySymbol ../currency_isocode}}} {{formatAmount (divide grand_total ../ccrate) ../bcdp}}</td>
+                        <td class="amt">{{{currencySymbol ../isocode}}} {{formatAmount (divide grand_total ../ccrate) ../bcdp}}</td>
                         <td class="ar arab">المبلغ الإجمالي (شامل ضريبة)</td>
                     </tr>
                     <tr>
                         <td class="ts">Net Due Amount</td>
-                        <td class="amt">{{{currencySymbol ../currency_isocode}}} {{formatAmount (divide balance ../ccrate) ../bcdp}}</td>
+                        <td class="amt">{{{currencySymbol ../isocode}}} {{formatAmount (divide balance ../ccrate) ../bcdp}}</td>
                         <td class="ar arab">المبلغ المستحق الصافي</td>
                     </tr>
                     {{/with}}
@@ -494,26 +517,29 @@
         </tr>
     </table>
 
+    {{!-- ── Terms and Conditions ─────────────────────── --}}
+    {{#if basicdetails.[0].terms_and_condition}}
+    <table class="sec terms">
+        <tr>
+            <td class="terms_hd">Notes <span class="arab"></span></td>
+        </tr>
+        <tr>
+            <td class="terms_body">{{{nl2br basicdetails.[0].terms_and_condition}}}</td>
+        </tr>
+    </table>
+    {{/if}}
+
     {{!-- ── Bank details ──────────────────────────────── --}}
     <table class="sec bank">
         <colgroup>
-            <col style="width:18%"><col style="width:40%"><col style="width:21%">
-            <col style="width:21%">
+            <col style="width:18%"><col style="width:82%">
         </colgroup>
         <tr>
             <th colspan="2">Bank Details / <span class="arab">التفاصيل المصرفية</span></th>
-            <th>Approved By / <span class="arab">تمت الموافقة</span></th>
-            <th>Recieved By / <span class="arab">فاتورة مستالم</span></th>
         </tr>
         <tr>
             <td class="ts">Bank Name / <span class="arab">اسم الحساب</span></td>
             <td class="ts bval">{{bankdetails.name}}{{#if bankdetails_lang2.name}} / <span class="arab">{{bankdetails_lang2.name}}</span>{{/if}}</td>
-            <td class="sig" rowspan="5">
-                {{!-- d165 prints the signature here; if that is off, d146 puts
-                     the seal in the same cell instead --}}
-                {{#ifFlag datasettings "d165"}}<img class="Signature" src="{{Signature}}" alt="Signature" style="max-height:min({{default datasettings.d459 '120'}}px,100%); max-width:min({{default datasettings.d459 '120'}}px,100%);" onerror="this.style.display='none'"/>{{else}}{{#ifFlag datasettings "d146"}}<img class="Seal" src="{{Seal}}" alt="Seal" style="max-height:min({{default datasettings.d458 '120'}}px,100%); max-width:min({{default datasettings.d458 '120'}}px,100%);" onerror="this.style.display='none'"/>{{/ifFlag}}{{/ifFlag}}
-            </td>
-            <td class="sig" rowspan="5"></td>
         </tr>
         <tr>
             <td class="ts">Bank / <span class="arab">بنك</span></td>
@@ -534,8 +560,6 @@
         <tr>
             <td class="ts">Branch / <span class="arab">فرع</span></td>
             <td class="ts bval">{{bankdetails.branch_name}}{{#if bankdetails_lang2.branch_name}} / <span class="arab">{{bankdetails_lang2.branch_name}}</span>{{/if}}</td>
-            <td class="sig_lbl"><span class="arab">التوقيع مع الختم</span><br>Signature with Stamp</td>
-            <td class="sig_lbl"><span class="arab">التوقيع مع الختم</span><br>Signature with Stamp</td>
         </tr>
     </table>
 

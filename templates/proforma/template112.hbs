@@ -32,7 +32,7 @@
 
   /* ── LEFT COLUMN ── */
   .left-col {
-    width: 51%;
+    width: 52%;
   }
 
   /* Bill To heading */
@@ -45,7 +45,6 @@
   .addr-en-ar {
     display: flex;
     gap: 0;
-    padding-right: 11px;
   }
 
   .addr-en {
@@ -87,13 +86,10 @@
     font-size: 11px;
     color: #000;
   }
-  .center-col {
-    width: 3%;
-  }
 
   /* ── RIGHT COLUMN ── */
   .right-col {
-    width: 46%;
+    width: 48%;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -304,8 +300,8 @@
         <div class="addr-ar">
           {{#if billing_address_lang2.[0].name}}{{billing_address_lang2.[0].name}}{{/if}}<br>
           {{joinAddress billing_address_lang2.[0] '<br>'}}
-          {{#if billing_address_lang2.[0].vat}}<br>رقم ضريبة : {{billing_address_lang2.[0].vat}}{{/if}}
-          {{#if customer_details.[0].cr_no_lang2}}<br>رقم السجل : {{customer_details.[0].cr_no_lang2}} {{/if}} 
+          {{#if billing_address_lang2.[0].vat}}<br> {{billing_address_lang2.[0].vat}}رقم ضريبة :{{/if}}
+          {{#if customer_details.[0].cr_no_lang2}}<br> {{customer_details.[0].cr_no_lang2}} رقم السجل :{{/if}} 
         </div>
       </div>
 
@@ -321,7 +317,7 @@
         </div>
       </div> --}}
 
-    </div><!-- /left-col --><div class="center-col"></div>
+    </div><!-- /left-col -->
 
     <!-- RIGHT: QR + Title + Meta -->
     <div class="right-col">

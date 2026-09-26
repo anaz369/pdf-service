@@ -7,7 +7,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: ibmplexsansarabic;
       font-size: 10px;
       color: #000;
       background: #fff;
@@ -124,7 +124,7 @@
       </tr>
       {{/each}}
       <tr>
-        <td class="words" colspan="6" rowspan="2">{{basicdetails.[0].base_country_isocode}}({{bcamountinwords}})</td>
+        <td class="words" colspan="6" rowspan="2">{{basicdetails.[0].isocode}} ({{bcamountinwords}})</td>
         <td class="tlbl" colspan="2">VAT Amount</td>
         <td class="tval">{{formatAmount (divide basicdetails.[0].vatamt ccrate) bcdp}}</td>
       </tr>
