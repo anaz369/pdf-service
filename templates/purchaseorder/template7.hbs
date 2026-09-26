@@ -104,7 +104,7 @@
       {{#each itemdetails}}
       <tr>
         <td class="num">{{addOne @index}}</td>
-        <td>{{item_name}}{{description}}</td>
+        <td>{{item_name}}{{name_lang2}}{{description}}</td>
         <td class="num">{{igst_perc}}</td>
         <td class="num">{{quantity}}</td>
         <td class="num">{{unit}}</td>
@@ -119,15 +119,15 @@
       </tr>
       <tr class="tot">
         <td colspan="7" class="tlbl">DISCOUNT</td>
-        <td class="tval">{{formatAmount (sumProperty itemdetails 'disc_amt') bcdp}}</td>
+        <td class="tval">{{formatAmount (divide basicdetails.[0].discount ccrate) bcdp}}</td>
       </tr>
       <tr class="tot">
-        <td colspan="7" class="tlbl">TOTAL PRICE IN {{basicdetails.[0].base_country_isocode}}</td>
+        <td colspan="7" class="tlbl">TOTAL PRICE IN {{basicdetails.[0].isocode}}</td>
         <td class="tval">{{formatAmount (divide basicdetails.[0].grand_total ccrate) bcdp}}</td>
       </tr>
-      {{#if (eq basicdetails.[0].doc_country_isocode "AED")}}
+      {{#if (eq basicdetails.[0].isocode "AED")}}
       <tr class="tot">
-        <td colspan="7" class="tlbl">TOTAL PRICE IN {{basicdetails.[0].doc_country_isocode}}</td>
+        <td colspan="7" class="tlbl">TOTAL PRICE IN {{basicdetails.[0].isocode}}</td>
         <td class="tval">{{formatAmount basicdetails.[0].grand_total bcdp}}</td>
       </tr>
       {{/if}}
@@ -135,7 +135,7 @@
   </table>
 
   <!-- WORDS -->
-  <div class="words">TOTAL PRICE IN WORDS : {{upper bcamountinwords}}</div>
+  <div class="words">TOTAL PRICE IN WORDS : {{bcamountinwords}}</div>
 
   <!-- PAYMENT TERMS -->
   <div class="mt"><span class="u">PAYMENT TERMS:</span> {{vendor_details.[0].credit_period}} DAYS CREDIT</div>
@@ -147,7 +147,7 @@
   <div class="cco mt">
     <div class="nm">{{compprof.name}}</div>
     <div>{{joinAddress branch.[0] ' '}}</div>
-    <div>TRN : {{branch.[0].vat}}</div>
+    <div>GSTIN : {{branch.[0].vat}}</div>
     <table class="kv" style="width:40%;margin-top:4px;">
       <tr><td class="k" style="width:20%;color:#000;">Attn</td><td class="c" style="color:#000;">:</td><td>{{basicdetails.[0].contactname}}</td></tr>
       <tr><td class="k" style="width:20%;color:#000;">EMAIL</td><td class="c" style="color:#000;">:</td><td></td></tr>
