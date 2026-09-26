@@ -45,6 +45,7 @@
   .addr-en-ar {
     display: flex;
     gap: 0;
+    padding-right: 11px;
   }
 
   .addr-en {
@@ -133,7 +134,6 @@
   }
 
   .meta-table td.m-label {
-    padding-left: 5px;
     font-weight: normal;
     color: #000;
   }
@@ -304,8 +304,8 @@
         <div class="addr-ar">
           {{#if billing_address_lang2.[0].name}}{{billing_address_lang2.[0].name}}{{/if}}<br>
           {{joinAddress billing_address_lang2.[0] '<br>'}}
-          {{#if billing_address_lang2.[0].vat}}<br> {{billing_address_lang2.[0].vat}}رقم ضريبة :{{/if}}
-          {{#if customer_details.[0].cr_no_lang2}}<br> {{customer_details.[0].cr_no_lang2}} رقم السجل :{{/if}} 
+          {{#if billing_address_lang2.[0].vat}}<br>رقم ضريبة : {{billing_address_lang2.[0].vat}}{{/if}}
+          {{#if customer_details.[0].cr_no_lang2}}<br>رقم السجل : {{customer_details.[0].cr_no_lang2}} {{/if}} 
         </div>
       </div>
 
